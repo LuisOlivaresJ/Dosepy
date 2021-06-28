@@ -1,0 +1,273 @@
+# -*- coding: utf-8 -*-
+"""
+Última modificación: 28 Junio 2021
+
+@author:
+    Luis Alfonso Olivares Jimenez
+    Maestro en Ciencias (Física Médica)
+    Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Dose:
+    ''' Clase para la representación de una distribución de dosis absorbida.
+
+    Regresa un objeto Dose que contiene la distribución de dosis y la resolución espacial.
+
+    Parámetros
+    -----------
+    array : numpy.ndarray
+        Arreglo (matriz) de datos que representa una distribución de dosis.
+
+    resolution : float
+        Resolución espacial en puntos por milímetro.
+
+    '''
+
+    def __init__(self, array, resolution):
+        ''' Inicialización del objeto Dose. Como primer argumento, array, se espera un objeto ndarray 2D (arreglo matricial de datos).
+            Como segundo argumento, resolution, se espera la resolución espacial en puntos por milímetro.'''
+
+        self.array = array                  #   Valores numéricos de la distribución de dosis
+        self.columns = array.shape[1]       #   Número de columnas en la matriz.
+        self.rows = array.shape[0]          #   Número de filas en la matriz.
+        self.resolution = resolution;     #   Resolución espacial en puntos por milímetro [puntos/mm].
+
+    def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=5, max_as_percentile = True):
+        ''' Cálculo del índice gamma contra una distribución de referencia.
+            Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
+            así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
+
+        Parámetros
+        ----------
+        D_reference : Objeto Dose
+            Distribución de dosis de referencia contra la cual se realizará la comparación.
+            El número de filas y columnas debe de ser igual a la distribución a evaluar (self.array).
+            Lo anterior implica que las dimesiones espaciales de las distribuciones deben de ser iguales.
+
+        dose_t : float, default = 3
+            Tolerancia para la diferencia en dosis.
+            Este valor puede interpretarse de 3 formas diferentes, según los parámetros dose_t_Gy y
+            local_norm que se describen más adelante.
+
+        dist_t : float, default = 3
+            Tolerancia para la distancia, en milímetros (**criterio DTA).
+
+        dose_tresh : float, default = 10
+            Umbral de dosis, en porcentaje (0 a 100). Todo punto en la distribución de dosis con un valor menor al umbral
+            de dosis, es excluido del análisis.
+            Por default, el porcentaje se interpreta con respecto al percentil 99.1 (aproximadamente el máximo)
+            de la distribución a evaluar. Si el porcentaje se requiere con respecto al máximo, modificar
+            el parámetro max_as_percentile = False (ver más adelante).
+
+        dose_t_Gy : bool, default: False
+            Si el argumento es True, entonces "dose_t" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
+            Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
+
+        local_norm : bool, default: False
+            Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
+            Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
+            *percentil 99.1 (aproximadamente el máximo) de la distribución a evaluar (self.aray).
+            Nota: Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+
+        mask_radius : float, default: 5
+            Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
+
+            Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
+            El uso de esta máscara permite reducir el tiempo de cálculo debido al siguiente proceso:
+                Por cada punto en la distribución de referencia, el cálculo de la función Gamma se realiza solamente
+                con aquellos puntos o posiciones de la distribución a evaluar que se encuentren a una distancia relativa
+                menor o igual a mask_radius, es decir, con los puntos que están dentro de la vecindad dada por mask_radius.
+                La longitud de uno de los lados de la máscara cuadrada es de 2*mask_radius + 1.
+            Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
+            una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
+
+        max_as_percentile : bool, default: True
+            -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
+               distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
+               (de utilidad por ejemplo cuando se utiliza película radiocrómica).
+            -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
+
+        Retorno
+        ----------
+        ndarray :
+            Array, o matriz bidimensional con la distribución de índices gamma.
+
+        float :
+            Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones
+            en donde la dosis es menor al umbral de dosis.
+
+        Notas
+        ----------
+             Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo.
+             Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución
+             (de utilidad por ejemplo cuando se utiliza película radiocrómica).
+
+             Se asume que ambas distribuciones a evaluar representan exactamente las mismas dimensiones físicas, y las posiciones
+             espaciales para cada punto conciden entre ellas.
+
+             No se realiza interpolación entre puntos
+
+        Referencias
+        ------------
+            **Para mayor información sobre los mecanismos de operación, efectividad y exactitud de la herramienta gamma consultar:
+
+                [1] M. Miften, A. Olch, et. al. "Tolerance Limits and Methodologies for IMRT Measurement-Based
+                    Verification QA: Recommendations of AAPM Task Group No. 218" Medical Physics, vol. 45, nº 4, pp. e53-e83, 2018.
+                [2] D. Low, W. Harms, S. Mutic y J. Purdy, «A technique for the quantitative evaluation of dose distributions,»
+                    Medical Physics, vol. 25, nº 5, pp. 656-661, 1998.
+                [3] L. A. Olivares Jimenez, "Distribución de dosis en radioterapia de intensidad modulada usando películas de tinte
+                    radiocrómico : irradiación de cerebro completo con protección a hipocampo y columna con protección a médula"
+                    (Tesis de Maestría) Posgrado en Ciencias Físicas, IF-UNAM, México, 2019
+
+        Example
+        ---------
+        #   Importación de paquetes
+        import numpy as np
+        import Dosepy.dose as dp
+
+        #   Cargamos los archivos "D_TPS.txt" y "D_FILM.txt", los cuales se encuentran en formato CSV (comma separated values).
+        #   (Los archivos de ejemplo .txt se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+        >>> tps = np.genfromtxt('./D_TPS.txt', delimiter=',')
+        >>> ref = np.genfromtxt('./D_FILM.txt', delimiter=',')
+
+        #   Generamos los objetos Dose para la distribución a evaluar y de referencia,
+        #   ambos con una resolución de 1 punto por milímetro.
+        >>> D_eval = dp.Dose(tps, 1)
+        >>> D_ref = dp.Dose(ref, 1)
+
+        #   Llamamos al método gamma2D
+        >>> gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2)
+
+        #   Imprimimos el resultado
+        >>> print(f'El índice de aprobación es: {pass_percent:.1f} %')
+        >>> plt.imshow(gamma, vmax = 1.4)
+        >>> plt.show()
+
+        El índice de aprobación es: 98.9 %
+
+        '''
+
+        #%%
+
+        #   Verificar la ocurrencia de excepciones
+        if D_reference.array.shape != self.array.shape:
+            raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+
+        if local_norm and dose_t_Gy:
+            raise Exception("No es posible la selección simultánea de dose_t_Gy y local_norm.")
+
+        #%%
+
+        D_ref = D_reference.array
+        D_eval = self.array
+
+        if max_as_percentile:
+            maximum_dose = np.percentile(D_eval, 99.1)
+        else:
+            maximum_dose = np.amax(D_eval)
+
+        #  Umbral de dosis
+        Dose_threshold = (dose_tresh/100)*maximum_dose
+
+        #   Dosis de tolerancia absoluta o relativa
+        if dose_t_Gy:
+            pass
+        elif local_norm:
+            pass
+        else:
+            dose_t = (dose_t/100) * maximum_dose
+
+        #   Número de pixeles que se usará para definir una vecindad sobre la que se calculará el índice gamma.
+        neighborhood = round(mask_radius*self.resolution)
+
+        #   Matriz que guardará el resultado del índice gamma.
+        gamma = np.zeros( (self.rows, self.columns) )
+
+
+
+
+        #%%
+        for i in np.arange( D_ref.shape[0] ):
+            #   Código que permite incluir puntos cerca de la frontera de la distribución de dosis
+            mi = -(neighborhood - max(0, neighborhood - i))
+            mf = neighborhood - max(0, neighborhood - (D_eval.shape[0] - (i+1))) + 1
+
+            for j in np.arange( D_ref.shape[1] ):
+                ni = -(neighborhood - max(0, neighborhood - j))
+                nf = neighborhood - max(0, neighborhood - (D_eval.shape[1] - (j+1))) + 1
+
+                #   Para almacenar temporalmente los valores de la función Gamma por cada punto en la distribución de referencia
+                Gamma = []
+
+                for m in np.arange(mi , mf):
+                    for n in np.arange(ni, nf):
+
+                        # Distancia entre dos posiciones (en milímetros), por fila
+                        dm = m*(1/self.resolution)
+                        # Distancia entre dos posiciones (en milímetros), por columna
+                        dn = n*(1/self.resolution)
+                        # Distancia total entre dos puntos
+                        distance = np.sqrt(dm**2 + dn**2)
+
+                        # Diferencia en dosis
+                        dose_dif = D_eval[i + m, j + n] - D_ref[i,j]
+
+
+                        if local_norm:
+                            dose_t_local = dose_t * D_ref[i,j] / 100
+                            Gamma.append(
+                                np.sqrt(
+                                    (distance**2) / (dist_t**2)
+                                    + (dose_dif**2) / (dose_t_local**2))
+                                        )
+
+                        else :
+                            Gamma.append(
+                                np.sqrt(
+                                    (distance**2) / (dist_t**2)
+                                    + (dose_dif**2) / (dose_t**2))
+                                        )
+
+                gamma[i,j] = min(Gamma)
+
+                # Si la dosis es menor al umbral de dosis, entonces esa posición no se toma en cuenta en el porcentaje de aprobación.
+                if D_eval[i,j] < Dose_threshold:
+                    gamma[i,j] = np.nan
+
+        # Arroja las coordenadas en donde los valores gamma son menor o igual a 1
+        less_than_1_coordinate = np.where(gamma <= 1)
+        # Cuenta el número de coordenadas en donde se cumple que gamma <= 1
+        less_than_1 = np.shape(less_than_1_coordinate)[1]
+        # Número de valores gamma diferentes de np.nan
+        total_points = np.shape(gamma)[0]*np.shape(gamma)[1] - np.shape(np.where(np.isnan(gamma)))[1]
+
+        #   Índice de aprobación
+        gamma_percent = float(less_than_1)/total_points*100
+        return gamma, gamma_percent
+
+
+
+#%%
+def main():
+
+    "Bloque de código para realizar pruebas"
+
+    tps = np.genfromtxt('../data/D_TPS.txt', delimiter=',')
+    ref = np.genfromtxt('../data/D_FILM.txt', delimiter=',')
+
+    D_eval = Dose(tps, 1)
+    D_ref = Dose(ref, 1)
+
+    gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t=3, dist_t=2)
+
+    print(f'El índice de aprobación es: {pass_percent:.1f} %')
+    plt.imshow(gamma, vmax = 1.4)
+    plt.show()
+
+#%%
+
+if __name__ == "__main__":
+    main()
