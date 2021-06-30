@@ -261,18 +261,17 @@ def from_dicom(file_name):
     ----------------
         La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
-        No se utiliza la coordenada espacial del primer pixel, según se puede obtener desde el archivo DICOM.
+        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
     """
     DS = pydicom.dcmread(file_name)
     array = DS.pixel_array
-    image_orientation = DS.ImageOrientationPatient
+    #image_orientation = DS.ImageOrientationPatient
     if array.ndim != 2:
         raise Exception("La distribución de dosis debe de ser en dos dimensiones")
     dgs = DS.DoseGridScaling
     D_array = array * dgs
     resolution = DS.PixelSpacing
-    #   Verificar la ocurrencia de excepciones
     if resolution[0] != resolution[1]:
         raise Exception("La resolución espacial debe ser igual en ambas dimensiones.")
 
