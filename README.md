@@ -196,3 +196,49 @@ Retorno:
 
 
 ```
+
+Functions
+```
+
+def from_csv(file_name, PixelSpacing)
+    """
+    Importación de un archivo de dosis en formato CSV (Comma separated values).
+    Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
+    que sea descartada (inicio de un comentario).
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    PixelSpacing : float
+        Distancia entre dos píxeles, en mm
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
+
+    """
+
+from_dicom(file_name)
+
+    Importación de un archivo de dosis en formato DICOM
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis
+
+    Consideraciones
+    ----------------
+        La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+        La resolución espacial debe de ser igual en ambas dimensiones.
+        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+
+```
