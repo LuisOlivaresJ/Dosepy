@@ -157,8 +157,8 @@ Parameters:
                    (de utilidad por ejemplo cuando se utiliza película radiocrómica).
                 -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
 
-Retorno
-----------
+Retorno:
+
           ndarray :
                 Array, o matriz bidimensional con la distribución de índices gamma.
 
