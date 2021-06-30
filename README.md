@@ -47,42 +47,36 @@ En *Dosepy* una distribución de dosis es representada como un objeto de la clas
 >>> dose_evaluation = dp.Dose(b, 1)
 ```
 
-La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere
-la distribución de referencia (dose_reference), la diferencia en dosis de tolerancia (dose_t) y la distancia de tolerancia o criterio DTA en mm (dist_t).
+La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
+la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
 
 ```
->>> gamma, g_percent = dose_evaluation.gamma2D(dose_reference, dose_t = 3, dist_t = 3)
+#   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
+>>> g, g_percent = dose_evaluation.gamma2D(dose_reference, 3, 1)
 >>> print(g_percent)
 0.0
 ```
 
 ## Data in CSV format, example 2
 ```
-#   Importación de paquetes
+import Dosepy.dose as dp
 
-    >>> import numpy as np
-    >>> import Dosepy.dose as dp
+#   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv"
+#   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+>>> D_eval = dp.from_csv("D_TPS.csv", 1)
+>>> D_ref = dp.from_csv("D_FILM.csv", 1)
 
-    #   Cargamos los archivos "D_TPS.txt" y "D_FILM.txt", los cuales se encuentran en formato CSV (comma separated values).
-    #   (Los archivos de ejemplo .txt se encuentran dentro del paquete Dosepy y deben de copiarse en la carpeta de trabajo)
-    >>> tps = np.genfromtxt('./D_TPS.txt', delimiter=',')
-    >>> ref = np.genfromtxt('./D_FILM.txt', delimiter=',')
+#   Llamamos al método gamma2D, con criterio 3 %, 2 mm.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, 3, 2)
 
-    #   Generamos los objetos Dose para la distribución a evaluar y de referencia,
-    #   ambos con una resolución de 1 punto por milímetro.
-    >>> D_eval = dp.Dose(tps, 1)
-    >>> D_ref = dp.Dose(ref, 1)
+#   Imprimimos el resultado
+>>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
+>>> plt.imshow(g, vmax = 1.4)
+>>> plt.show()
 
-    #   Llamamos al método gamma2D
-    >>> gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2)
+El índice de aprobación es: 98.9 %
 
-    #   Imprimimos el resultado y mostramos la distribución de índices gamma
-    >>> print(f'El índice de aprobación es: {pass_percent:.1f} %')
-    >>> plt.imshow(gamma, vmax = 1.4)
-    >>> plt.show()
-
-    El índice de aprobación es: 98.9 %
-  ```
+'''
 
 # Documentation
 ```
@@ -92,7 +86,7 @@ Dosepy.dose.Dose(data, resolution)
 
 Parameters:
            data : numpy.ndarray
-                Arreglo de datos que representa una distribución de dosis.
+                Arreglo o matriz de datos que representa una distribución de dosis.
 
            resolution : float
                 Resolución espacial en puntos por milímetro.
@@ -163,12 +157,12 @@ Parameters:
                    (de utilidad por ejemplo cuando se utiliza película radiocrómica).
                 -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
 
-            Retorno
-            ----------
-            ndarray :
+Retorno
+----------
+          ndarray :
                 Array, o matriz bidimensional con la distribución de índices gamma.
 
-            float :
+          float :
                 Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones en donde la
                 dosis es menor al umbral de dosis.
 
