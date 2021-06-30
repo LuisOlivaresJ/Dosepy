@@ -76,7 +76,7 @@ import Dosepy.dose as dp
 
 El índice de aprobación es: 98.9 %
 
-'''
+```
 
 # Documentation
 ```
