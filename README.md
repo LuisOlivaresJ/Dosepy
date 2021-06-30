@@ -200,8 +200,8 @@ Retorno:
 Functions
 ```
 
-def from_csv(file_name, PixelSpacing)
-    """
+from_csv(file_name, PixelSpacing)
+
     Importación de un archivo de dosis en formato CSV (Comma separated values).
     Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
     que sea descartada (inicio de un comentario).
@@ -219,7 +219,7 @@ def from_csv(file_name, PixelSpacing)
     Dosepy.dose.Dose
         Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
 
-    """
+
 
 from_dicom(file_name)
 
