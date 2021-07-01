@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Última modificación: 28 Junio 2021
+Última modificación: 29 Junio 2021
 
 @author:
     Luis Alfonso Olivares Jimenez
@@ -9,6 +9,7 @@
 """
 
 import numpy as np
+import pydicom
 import matplotlib.pyplot as plt
 
 class Dose:
@@ -19,7 +20,7 @@ class Dose:
     Parámetros
     -----------
     array : numpy.ndarray
-        Arreglo (matriz) de datos que representa una distribución de dosis.
+        Arreglo o matriz de datos que representa una distribución de dosis.
 
     resolution : float
         Resolución espacial en puntos por milímetro.
@@ -69,8 +70,10 @@ class Dose:
         local_norm : bool, default: False
             Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
             Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
-            *percentil 99.1 (aproximadamente el máximo) de la distribución a evaluar (self.aray).
-            Nota: Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+            *percentil 99.1 (aproximadamente el máximo) de la distribución a evaluar (self.array).
+            Notas:
+                1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+                2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver mas adelante)
 
         mask_radius : float, default: 5
             Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
@@ -122,28 +125,22 @@ class Dose:
                     radiocrómico : irradiación de cerebro completo con protección a hipocampo y columna con protección a médula"
                     (Tesis de Maestría) Posgrado en Ciencias Físicas, IF-UNAM, México, 2019
 
-        Example
+        Example. Archivo en formato CSV (comma separated values)
         ---------
-        #   Importación de paquetes
-        import numpy as np
+
         import Dosepy.dose as dp
 
-        #   Cargamos los archivos "D_TPS.txt" y "D_FILM.txt", los cuales se encuentran en formato CSV (comma separated values).
-        #   (Los archivos de ejemplo .txt se encuentran dentro del paquete Dosepy, en la carpeta src/data)
-        >>> tps = np.genfromtxt('./D_TPS.txt', delimiter=',')
-        >>> ref = np.genfromtxt('./D_FILM.txt', delimiter=',')
+        #   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv"
+        #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+        >>> D_eval = dp.from_csv("D_TPS.csv", 1)
+        >>> D_ref = dp.from_csv("D_FILM.csv", 1)
 
-        #   Generamos los objetos Dose para la distribución a evaluar y de referencia,
-        #   ambos con una resolución de 1 punto por milímetro.
-        >>> D_eval = dp.Dose(tps, 1)
-        >>> D_ref = dp.Dose(ref, 1)
-
-        #   Llamamos al método gamma2D
-        >>> gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2)
+        #   Llamamos al método gamma2D, con criterio 3 %, 2 mm.
+        >>> g, pass_rate = D_eval.gamma2D(D_ref, 3, 2)
 
         #   Imprimimos el resultado
-        >>> print(f'El índice de aprobación es: {pass_percent:.1f} %')
-        >>> plt.imshow(gamma, vmax = 1.4)
+        >>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
+        >>> plt.imshow(g, vmax = 1.4)
         >>> plt.show()
 
         El índice de aprobación es: 98.9 %
@@ -248,6 +245,66 @@ class Dose:
         gamma_percent = float(less_than_1)/total_points*100
         return gamma, gamma_percent
 
+def from_dicom(file_name):
+    """
+    Importación de un archivo de dosis en formato DICOM
+
+    Parámetros
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis
+
+    Consideraciones
+    ----------------
+        La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+        La resolución espacial debe de ser igual en ambas dimensiones.
+        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+
+    """
+    DS = pydicom.dcmread(file_name)
+    array = DS.pixel_array
+    #image_orientation = DS.ImageOrientationPatient
+    if array.ndim != 2:
+        raise Exception("La distribución de dosis debe de ser en dos dimensiones")
+    dgs = DS.DoseGridScaling
+    D_array = array * dgs
+    resolution = DS.PixelSpacing
+    if resolution[0] != resolution[1]:
+        raise Exception("La resolución espacial debe ser igual en ambas dimensiones.")
+
+    Dose_DICOM = Dose(D_array, 1 / float(resolution[0]))
+    return Dose_DICOM
+
+
+def from_csv(file_name, PixelSpacing):
+    """
+    Importación de un archivo de dosis en formato CSV (Comma separated values).
+    Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
+    que sea descartada (inicio de un comentario).
+
+    Parámetros
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    PixelSpacing : float
+        Distancia entre dos píxeles, en mm
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
+
+    """
+
+    array = np.genfromtxt(file_name, delimiter = ",", comments = "#")
+    Dose_csv = Dose(array, 1 / float(PixelSpacing))
+    return Dose_csv
 
 
 #%%
@@ -255,16 +312,13 @@ def main():
 
     "Bloque de código para realizar pruebas"
 
-    tps = np.genfromtxt('../data/D_TPS.txt', delimiter=',')
-    ref = np.genfromtxt('../data/D_FILM.txt', delimiter=',')
+    D_eval = from_csv("D_TPS.csv", 1)
+    D_ref = from_csv("D_FILM.csv", 1)
 
-    D_eval = Dose(tps, 1)
-    D_ref = Dose(ref, 1)
-
-    gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t=3, dist_t=2)
+    g, pass_percent = D_eval.gamma2D(D_ref, dose_t=3, dist_t=2)
 
     print(f'El índice de aprobación es: {pass_percent:.1f} %')
-    plt.imshow(gamma, vmax = 1.4)
+    plt.imshow(g, vmax = 1.4)
     plt.show()
 
 #%%

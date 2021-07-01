@@ -47,42 +47,64 @@ En *Dosepy* una distribución de dosis es representada como un objeto de la clas
 >>> dose_evaluation = dp.Dose(b, 1)
 ```
 
-La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere
-la distribución de referencia (dose_reference), la diferencia en dosis de tolerancia (dose_t) y la distancia de tolerancia o criterio DTA en mm (dist_t).
+La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
+la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
 
 ```
->>> gamma, g_percent = dose_evaluation.gamma2D(dose_reference, dose_t = 3, dist_t = 3)
+#   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
+>>> g, g_percent = dose_evaluation.gamma2D(dose_reference, 3, 1)
 >>> print(g_percent)
 0.0
 ```
 
-## Data in CSV format, example 2
+## Data in CSV format, using a dose threshold, example 2
+
+Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
+Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
 ```
-#   Importación de paquetes
+import Dosepy.dose as dp
+import matplotlib.pyplot as plt
 
-    >>> import numpy as np
-    >>> import Dosepy.dose as dp
+#   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1 milímetro de espacio entre un pixel y otro.
+#   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+>>> D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
+>>> D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
-    #   Cargamos los archivos "D_TPS.txt" y "D_FILM.txt", los cuales se encuentran en formato CSV (comma separated values).
-    #   (Los archivos de ejemplo .txt se encuentran dentro del paquete Dosepy y deben de copiarse en la carpeta de trabajo)
-    >>> tps = np.genfromtxt('./D_TPS.txt', delimiter=',')
-    >>> ref = np.genfromtxt('./D_FILM.txt', delimiter=',')
+#   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
 
-    #   Generamos los objetos Dose para la distribución a evaluar y de referencia,
-    #   ambos con una resolución de 1 punto por milímetro.
-    >>> D_eval = dp.Dose(tps, 1)
-    >>> D_ref = dp.Dose(ref, 1)
+#   Imprimimos el resultado
+>>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
+>>> plt.imshow(g, vmax = 1.4)
+>>> plt.show()
 
-    #   Llamamos al método gamma2D
-    >>> gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2)
+El índice de aprobación es: 98.9 %
 
-    #   Imprimimos el resultado y mostramos la distribución de índices gamma
-    >>> print(f'El índice de aprobación es: {pass_percent:.1f} %')
-    >>> plt.imshow(gamma, vmax = 1.4)
-    >>> plt.show()
+```
+## Data in DICOM format and absolute mode, example 3
 
-    El índice de aprobación es: 98.9 %
-  ```
+Importación de un archivo de dosis en formato DICOM
+
+*Consideraciones*
+
+* La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+* El espacio entre píxeles debe de ser igual en ambas dimensiones.
+* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado Gamma index.
+
+```
+import Dosepy.dose as dp
+
+#   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un pixel y otro.
+>>> D_eval = dp.from_dicom("RD_file.dcm")
+>>> D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
+
+#   Llamamos al método gamma2D, con criterio de 0.5 Gy para la diferencia en dosis y 3 mm para la diferencia en distancia.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, 0.5, 3, dose_t_Gy = True)
+
+#   Imprimimos el resultado
+>>> print(pass_rate)
+
+```
 
 # Documentation
 ```
@@ -92,7 +114,7 @@ Dosepy.dose.Dose(data, resolution)
 
 Parameters:
            data : numpy.ndarray
-                Arreglo de datos que representa una distribución de dosis.
+                Arreglo o matriz de datos que representa una distribución de dosis.
 
            resolution : float
                 Resolución espacial en puntos por milímetro.
@@ -143,7 +165,9 @@ Parameters:
                 Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
                 Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
                 máximo de la distribución a evaluar.
-                Nota: Los argumentos dose_t_Gy y local_norm no deben ser seleccionados como True de forma simultánea.
+                Nota:
+                    1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+                    2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver más adelante)
 
             mask_radius : float, default: 5
                 Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
@@ -163,15 +187,61 @@ Parameters:
                    (de utilidad por ejemplo cuando se utiliza película radiocrómica).
                 -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
 
-            Retorno
-            ----------
-            ndarray :
+Retorno:
+
+          ndarray :
                 Array, o matriz bidimensional con la distribución de índices gamma.
 
-            float :
+          float :
                 Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones en donde la
                 dosis es menor al umbral de dosis.
 
 
+
+```
+
+Functions
+```
+
+from_csv(file_name, PixelSpacing)
+
+    Importación de un archivo de dosis en formato CSV (Comma separated values).
+    Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
+    que sea descartada (inicio de un comentario).
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    PixelSpacing : float
+        Distancia entre dos píxeles, en mm
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
+
+
+
+from_dicom(file_name)
+
+    Importación de un archivo de dosis en formato DICOM
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis
+
+    Consideraciones
+    ----------------
+        La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+        La resolución espacial debe de ser igual en ambas dimensiones.
+        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
 ```
