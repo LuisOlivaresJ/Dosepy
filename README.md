@@ -57,20 +57,21 @@ la distribución de referencia, la diferencia en dosis de tolerancia y la distan
 0.0
 ```
 
-## Data in CSV format, example 2
+## Data in CSV format, using a dose threshold, example 2
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
 ```
 import Dosepy.dose as dp
+import matplotlib.pyplot as plt
 
 #   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1 milímetro de espacio entre un pixel y otro.
 #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
 >>> D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
 >>> D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
-#   Llamamos al método gamma2D, con criterio 3 %, 2 mm.
->>> g, pass_rate = D_eval.gamma2D(D_ref, 3, 2)
+#   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
 
 #   Imprimimos el resultado
 >>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
@@ -80,7 +81,7 @@ import Dosepy.dose as dp
 El índice de aprobación es: 98.9 %
 
 ```
-## Data in DICOM format, example 3
+## Data in DICOM format and absolute mode, example 3
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -97,8 +98,8 @@ import Dosepy.dose as dp
 >>> D_eval = dp.from_dicom("RD_file.dcm")
 >>> D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
 
-#   Llamamos al método gamma2D, con criterio 2 %, 3 mm.
->>> g, pass_rate = D_eval.gamma2D(D_ref, 2, 3)
+#   Llamamos al método gamma2D, con criterio de 0.5 Gy para la diferencia en dosis y 3 mm para la diferencia en distancia.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, 0.5, 3, dose_t_Gy = True)
 
 #   Imprimimos el resultado
 >>> print(pass_rate)
@@ -164,7 +165,9 @@ Parameters:
                 Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
                 Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
                 máximo de la distribución a evaluar.
-                Nota: Los argumentos dose_t_Gy y local_norm no deben ser seleccionados como True de forma simultánea.
+                Nota:
+                    1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+                    2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver más adelante)
 
             mask_radius : float, default: 5
                 Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
