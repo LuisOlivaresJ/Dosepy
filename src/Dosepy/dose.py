@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Última modificación: 29 Junio 2021
+Última modificación: 15 Julio 2021
 
 @author:
     Luis Alfonso Olivares Jimenez
@@ -20,26 +20,28 @@ class Dose:
     Parámetros
     -----------
     array : numpy.ndarray
-        Arreglo o matriz de datos que representa una distribución de dosis.
+        Arreglo o matriz de datos. Cada valor numérico representa la dosis absorbida en un punto en el espacio.
 
     resolution : float
-        Resolución espacial en puntos por milímetro.
+        Resolución espacial dada como la distancia física (en milímetros) entre dos puntos consecutivos.
 
     '''
 
     def __init__(self, array, resolution):
         ''' Inicialización del objeto Dose. Como primer argumento, array, se espera un objeto ndarray 2D (arreglo matricial de datos).
-            Como segundo argumento, resolution, se espera la resolución espacial en puntos por milímetro.'''
+            Como segundo argumento, resolution, se espera la distancia física (en mm) entre dos puntos consecutivos.'''
 
         self.array = array                  #   Valores numéricos de la distribución de dosis
         self.columns = array.shape[1]       #   Número de columnas en la matriz.
         self.rows = array.shape[0]          #   Número de filas en la matriz.
-        self.resolution = resolution;     #   Resolución espacial en puntos por milímetro [puntos/mm].
+        self.resolution = resolution;       #   Resolución espacial dada como la distancia entre dos puntos consecutivos [mm].
 
     def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=5, max_as_percentile = True):
         ''' Cálculo del índice gamma contra una distribución de referencia.
             Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
             así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
+            Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de 
+            referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
 
         Parámetros
         ----------
@@ -109,19 +111,19 @@ class Dose:
              (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
              Se asume que ambas distribuciones a evaluar representan exactamente las mismas dimensiones físicas, y las posiciones
-             espaciales para cada punto conciden entre ellas.
+             espaciales para cada punto conciden entre ellas, es decir, las imagenes de cada distribución están registradas.
 
-             No se realiza interpolación entre puntos
+             No se realiza interpolación entre puntos.
 
         Referencias
         ------------
-            **Para mayor información sobre los mecanismos de operación, efectividad y exactitud de la herramienta gamma consultar:
+            Para mayor información sobre los mecanismos de operación, efectividad y exactitud de la herramienta gamma consultar:
 
                 [1] M. Miften, A. Olch, et. al. "Tolerance Limits and Methodologies for IMRT Measurement-Based
                     Verification QA: Recommendations of AAPM Task Group No. 218" Medical Physics, vol. 45, nº 4, pp. e53-e83, 2018.
                 [2] D. Low, W. Harms, S. Mutic y J. Purdy, «A technique for the quantitative evaluation of dose distributions,»
                     Medical Physics, vol. 25, nº 5, pp. 656-661, 1998.
-                [3] L. A. Olivares Jimenez, "Distribución de dosis en radioterapia de intensidad modulada usando películas de tinte
+                [3] L. A. Olivares-Jimenez, "Distribución de dosis en radioterapia de intensidad modulada usando películas de tinte
                     radiocrómico : irradiación de cerebro completo con protección a hipocampo y columna con protección a médula"
                     (Tesis de Maestría) Posgrado en Ciencias Físicas, IF-UNAM, México, 2019
 
@@ -156,6 +158,9 @@ class Dose:
         if local_norm and dose_t_Gy:
             raise Exception("No es posible la selección simultánea de dose_t_Gy y local_norm.")
 
+         if D_reference.resolution != self.resolution:
+            raise Exception("No es posible el cálculo con resoluciones diferentes para cada distribución.")
+            
         #%%
 
         D_ref = D_reference.array
@@ -178,7 +183,7 @@ class Dose:
             dose_t = (dose_t/100) * maximum_dose
 
         #   Número de pixeles que se usará para definir una vecindad sobre la que se calculará el índice gamma.
-        neighborhood = round(mask_radius*self.resolution)
+        neighborhood = round(mask_radius*1./self.resolution)
 
         #   Matriz que guardará el resultado del índice gamma.
         gamma = np.zeros( (self.rows, self.columns) )
@@ -203,9 +208,9 @@ class Dose:
                     for n in np.arange(ni, nf):
 
                         # Distancia entre dos posiciones (en milímetros), por fila
-                        dm = m*(1/self.resolution)
+                        dm = m*self.resolution
                         # Distancia entre dos posiciones (en milímetros), por columna
-                        dn = n*(1/self.resolution)
+                        dn = n*self.resolution
                         # Distancia total entre dos puntos
                         distance = np.sqrt(dm**2 + dn**2)
 
@@ -277,7 +282,7 @@ def from_dicom(file_name):
     if resolution[0] != resolution[1]:
         raise Exception("La resolución espacial debe ser igual en ambas dimensiones.")
 
-    Dose_DICOM = Dose(D_array, 1 / float(resolution[0]))
+    Dose_DICOM = Dose(D_array, resolution[0])
     return Dose_DICOM
 
 
@@ -293,7 +298,7 @@ def from_csv(file_name, PixelSpacing):
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos píxeles, en mm
+        Distancia en milímetros entre dos puntos consecutivos.
 
     Return
     --------
@@ -303,7 +308,7 @@ def from_csv(file_name, PixelSpacing):
     """
 
     array = np.genfromtxt(file_name, delimiter = ",", comments = "#")
-    Dose_csv = Dose(array, 1 / float(PixelSpacing))
+    Dose_csv = Dose(array, PixelSpacing)
     return Dose_csv
 
 
