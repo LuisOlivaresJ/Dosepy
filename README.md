@@ -13,7 +13,7 @@ La comparación se realiza mediante el índice gamma 2-dimensional siguiendo las
 
 *Consideraciones*
 
-* Durante el cálculo gamma, se asume que ambas distribuciones a evaluar tienen exactamente las mismas dimensiones físicas, y las posiciones espaciales para cada punto conciden entre ellas.
+* Durante el cálculo gamma, se asume que ambas distribuciones tienen las mismas dimensiones físicas y se encuentran registradas, es decir, la coordenada espacial de un punto en la distribución de referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
 
 * No se realiza interpolación entre puntos.
 
@@ -34,7 +34,7 @@ We have a mailing list located at: alfonso.cucei.udg@gmail.com
 
 ## Getting started, example 1
 
-En *Dosepy* una distribución de dosis es representada como un objeto de la clase **Dose** del paquete Dosepy. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial en puntos por milímetro.
+En *Dosepy* una distribución de dosis es representada como un objeto de la clase **Dose** del paquete Dosepy. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 
 ```
 >>> import numpy as np
@@ -65,7 +65,7 @@ Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cad
 import Dosepy.dose as dp
 import matplotlib.pyplot as plt
 
-#   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1 milímetro de espacio entre un pixel y otro.
+#   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1 milímetro de espacio entre un punto y otro.
 #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
 >>> D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
 >>> D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
@@ -94,7 +94,7 @@ Importación de un archivo de dosis en formato DICOM
 ```
 import Dosepy.dose as dp
 
-#   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un pixel y otro.
+#   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un punto y otro.
 >>> D_eval = dp.from_dicom("RD_file.dcm")
 >>> D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
 
@@ -114,10 +114,10 @@ Dosepy.dose.Dose(data, resolution)
 
 Parameters:
            data : numpy.ndarray
-                Arreglo o matriz de datos que representa una distribución de dosis.
+                Arreglo o matriz de datos. Cada valor numérico representa la dosis absorbida en un punto en el espacio.
 
            resolution : float
-                Resolución espacial en puntos por milímetro.
+                Resolución espacial dada como la distancia física (en milímetros) entre dos puntos consecutivos.
 
 Dose methods
 
@@ -135,6 +135,8 @@ Dose.gamma2D(
 Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
 definido como el porcentaje de valores gamma que son menor o igual a 1.
+Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia 
+es igual a la coordenada del mismo punto en la distribución a evaluar.
 
 Parameters:
             D_reference : Objeto Dose
@@ -215,7 +217,7 @@ from_csv(file_name, PixelSpacing)
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos píxeles, en mm
+        Distancia entre dos puntos consecutivos, en mm
 
     Return
     --------
