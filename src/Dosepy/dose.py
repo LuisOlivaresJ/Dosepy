@@ -158,7 +158,7 @@ class Dose:
         if local_norm and dose_t_Gy:
             raise Exception("No es posible la selección simultánea de dose_t_Gy y local_norm.")
 
-         if D_reference.resolution != self.resolution:
+        if D_reference.resolution != self.resolution:
             raise Exception("No es posible el cálculo con resoluciones diferentes para cada distribución.")
             
         #%%
