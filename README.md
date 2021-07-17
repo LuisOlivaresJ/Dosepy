@@ -11,7 +11,7 @@ La comparación puede realizarse mediante la prueba del índice gamma 2-dimensio
 * La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
 
-*Consideraciones*
+**¡Consideraciones!**
 
 * Durante el cálculo gamma, se asume que ambas distribuciones tienen las mismas dimensiones físicas y se encuentran registradas, es decir, la coordenada espacial de un punto en la distribución de referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
 
