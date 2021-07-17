@@ -261,17 +261,17 @@ from_dicom(file_name)
 ```
 
 # Advertencias
-El correcto funcionamiento del paquete esta siendo constantemente evaluado y actualizado. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 # Historia
-01-05-2019
-  *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
+01-05-2019<br/>
+  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
 
-28-06-2021  Versión 0.0.1
-  *Dosepy* se incorpora al índice de paquetes python [PyPi](https://pypi.org/)
+28-06-2021  Versión 0.0.1<br/>
+  * *Dosepy* se incorpora al índice de paquetes python [PyPi](https://pypi.org/)
 
-01-07-2021  Versión 0.0.3
-  Se agregan las funciones from_csv y from_dicom para la lectura de datos.
+01-07-2021  Versión 0.0.3<br/>
+  * Se agregan las funciones from_csv y from_dicom para la lectura de datos.
 
-16-07-2021  Versión 0.0.4
-  Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para
+16-07-2021  Versión 0.0.4<br/>
+  * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para
