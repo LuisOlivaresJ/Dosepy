@@ -21,12 +21,12 @@ La comparación puede realizarse mediante la prueba del índice gamma 2-dimensio
 
 
 ## Instalación
-**Linux**
-El método más sencillo para instalar Dosepy es escribiendo en una terminal, utilizando [pip](https://pip.pypa.io/en/stable/):
+**Linux**<br/>
+El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 ```
 pip install Dosepy
 ```
-**Windows**
+**Windows**<br/>
 Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
