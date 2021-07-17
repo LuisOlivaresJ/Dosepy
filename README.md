@@ -2,13 +2,13 @@
 
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 
-## Gamma index
-La comparación se realiza mediante el índice gamma 2-dimensional siguiendo algunas recomendaciónes del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
+## Comparación por índice gamma
+La comparación puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
   * En modo relativo, el porcentaje se interpreta con respecto al máximo de la distribución de dosis (global normalization), o con respecto a la dosis local (local normalization), según la selección del usuario.
-* El umbral de dosis es ajustable.
-* La ditribución de referencia puede ser seleccionada por el usuario.
+* El umbral de dosis puede ser ajustado por el usuario.
+* La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
 
 *Consideraciones*
@@ -93,7 +93,7 @@ import matplotlib.pyplot as plt
 El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluta, ejemplo 3
+## Datos en formato DICOM y modo de dosis absoluto, ejemplo 3
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -214,7 +214,7 @@ Retorno:
 
 ```
 
-Functions
+Funciones
 ```
 
 from_csv(file_name, PixelSpacing)
@@ -274,4 +274,4 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
   * Se agregan las funciones from_csv y from_dicom para la lectura de datos.
 
 16-07-2021  Versión 0.0.4<br/>
-  * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para
+  * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para la instalación del paquete *Dosepy*
