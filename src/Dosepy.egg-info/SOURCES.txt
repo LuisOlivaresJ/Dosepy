@@ -9,3 +9,5 @@ src/Dosepy.egg-info/PKG-INFO
 src/Dosepy.egg-info/SOURCES.txt
 src/Dosepy.egg-info/dependency_links.txt
 src/Dosepy.egg-info/top_level.txt
+src/data/D_FILM.csv
+src/data/D_TPS.csv
