@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Dosepy
-Version: 0.0.2
+Version: 0.0.4
 Summary: Análisis de distribuciones de dosis en radioterapia
 Home-page: https://github.com/LuisOlivaresJ/Dosepy
 Author: Luis Alfonso Olivares Jimenez
@@ -26,39 +26,52 @@ License-File: LICENSE
 
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 
-## Gamma index
-La comparación se realiza mediante el índice gamma 2-dimensional siguiendo las recomendaciónes del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
+## Comparación por índice gamma
+La comparación puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
   * En modo relativo, el porcentaje se interpreta con respecto al máximo de la distribución de dosis (global normalization), o con respecto a la dosis local (local normalization), según la selección del usuario.
-* El umbral de dosis es ajustable.
-* La ditribución de referencia puede ser seleccionada por el usuario.
+* El umbral de dosis puede ser ajustado por el usuario.
+* La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
 
-*Consideraciones*
+**¡Consideraciones!**
 
-* Durante el cálculo gamma, se asume que ambas distribuciones a evaluar tienen exactamente las mismas dimensiones físicas, y las posiciones espaciales para cada punto conciden entre ellas.
+* Durante el cálculo gamma, se asume que ambas distribuciones tienen las mismas dimensiones físicas y se encuentran registradas, es decir, la coordenada espacial de un punto en la distribución de referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
 
 * No se realiza interpolación entre puntos.
 
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
 
-## Installation
-
-Using [pip](https://pip.pypa.io/en/stable/):
+## Instalación
+**Linux**<br/>
+El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 ```
 pip install Dosepy
 ```
+**Windows**<br/>
+Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
+Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
-## Support
+### Requisitos
+Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
+```
+pip install numpy, pydicom, matplotlib, tifffile, scipy
+```
 
-If you are having issues, please let us know.<br/>
-We have a mailing list located at: alfonso.cucei.udg@gmail.com
+### Versión Beta
+Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
+Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
+```
+pip install --upgrade Dosepy
+```
+### Ayuda
+Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
+Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-## Getting started, example 1
-
-En *Dosepy* una distribución de dosis es representada como un objeto de la clase **Dose** del paquete Dosepy. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial en puntos por milímetro.
+## Primer ejemplo
+En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 
 ```
 >>> import numpy as np
@@ -67,48 +80,70 @@ En *Dosepy* una distribución de dosis es representada como un objeto de la clas
 >>> a = np.zeros((10,10)) + 100
 >>> b = np.zeros((10,10)) + 96  
 
->>> dose_reference = dp.Dose(a, 1)
->>> dose_evaluation = dp.Dose(b, 1)
+>>> D_reference = dp.Dose(a, 1)
+>>> D_evaluation = dp.Dose(b, 1)
 ```
 
-La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere
-la distribución de referencia (dose_reference), la diferencia en dosis de tolerancia (dose_t) y la distancia de tolerancia o criterio DTA en mm (dist_t).
+La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
+la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
 
 ```
->>> gamma, g_percent = dose_evaluation.gamma2D(dose_reference, dose_t = 3, dist_t = 3)
->>> print(g_percent)
+#   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
+>>> gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
+>>> print(pass_rate)
 0.0
 ```
 
-## Data in CSV format, example 2
+## Datos en formato CSV, usando un umbral de dosis, ejemplo 2
+
+Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
+Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
 ```
-#   Importación de paquetes
+import Dosepy.dose as dp
+import matplotlib.pyplot as plt
 
-    >>> import numpy as np
-    >>> import Dosepy.dose as dp
+#   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1 milímetro de espacio entre un punto y otro.
+#   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+>>> D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
+>>> D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
-    #   Cargamos los archivos "D_TPS.txt" y "D_FILM.txt", los cuales se encuentran en formato CSV (comma separated values).
-    #   (Los archivos de ejemplo .txt se encuentran dentro del paquete Dosepy y deben de copiarse en la carpeta de trabajo)
-    >>> tps = np.genfromtxt('./D_TPS.txt', delimiter=',')
-    >>> ref = np.genfromtxt('./D_FILM.txt', delimiter=',')
+#   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
 
-    #   Generamos los objetos Dose para la distribución a evaluar y de referencia,
-    #   ambos con una resolución de 1 punto por milímetro.
-    >>> D_eval = dp.Dose(tps, 1)
-    >>> D_ref = dp.Dose(ref, 1)
+#   Imprimimos el resultado
+>>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
+>>> plt.imshow(g, vmax = 1.4)
+>>> plt.show()
 
-    #   Llamamos al método gamma2D
-    >>> gamma, pass_percent = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2)
+El índice de aprobación es: 98.9 %
 
-    #   Imprimimos el resultado y mostramos la distribución de índices gamma
-    >>> print(f'El índice de aprobación es: {pass_percent:.1f} %')
-    >>> plt.imshow(gamma, vmax = 1.4)
-    >>> plt.show()
+```
+## Datos en formato DICOM y modo de dosis absoluto, ejemplo 3
 
-    El índice de aprobación es: 98.9 %
-  ```
+Importación de un archivo de dosis en formato DICOM
 
-# Documentation
+*Consideraciones*
+
+* La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones (2D).
+* El espacio entre dos puntos (pixeles) debe de ser igual en ambas dimensiones.
+* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado Gamma index.
+
+```
+import Dosepy.dose as dp
+
+#   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un punto y otro.
+>>> D_eval = dp.from_dicom("RD_file.dcm")
+>>> D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
+
+#   Llamamos al método gamma2D, con criterio de 0.5 Gy para la diferencia en dosis y 3 mm para la diferencia en distancia.
+>>> g, pass_rate = D_eval.gamma2D(D_ref, 0.5, 3, dose_t_Gy = True)
+
+#   Imprimimos el resultado
+>>> print(pass_rate)
+
+```
+
+# Documentación
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -116,10 +151,10 @@ Dosepy.dose.Dose(data, resolution)
 
 Parameters:
            data : numpy.ndarray
-                Arreglo de datos que representa una distribución de dosis.
+                Arreglo o matriz de datos. Cada valor numérico representa la dosis absorbida en un punto en el espacio.
 
            resolution : float
-                Resolución espacial en puntos por milímetro.
+                Resolución espacial dada como la distancia física (en milímetros) entre dos puntos consecutivos.
 
 Dose methods
 
@@ -137,6 +172,8 @@ Dose.gamma2D(
 Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
 definido como el porcentaje de valores gamma que son menor o igual a 1.
+Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
+es igual a la coordenada del mismo punto en la distribución a evaluar.
 
 Parameters:
             D_reference : Objeto Dose
@@ -167,7 +204,9 @@ Parameters:
                 Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
                 Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
                 máximo de la distribución a evaluar.
-                Nota: Los argumentos dose_t_Gy y local_norm no deben ser seleccionados como True de forma simultánea.
+                Nota:
+                    1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+                    2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver más adelante)
 
             mask_radius : float, default: 5
                 Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
@@ -187,17 +226,79 @@ Parameters:
                    (de utilidad por ejemplo cuando se utiliza película radiocrómica).
                 -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
 
-            Retorno
-            ----------
-            ndarray :
+Retorno:
+
+          ndarray :
                 Array, o matriz bidimensional con la distribución de índices gamma.
 
-            float :
+          float :
                 Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones en donde la
                 dosis es menor al umbral de dosis.
 
 
 
 ```
+
+Funciones
+```
+
+from_csv(file_name, PixelSpacing)
+
+    Importación de un archivo de dosis en formato CSV (Comma separated values).
+    Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
+    que sea descartada (inicio de un comentario).
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    PixelSpacing : float
+        Distancia entre dos puntos consecutivos, en mm
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
+
+
+
+from_dicom(file_name)
+
+    Importación de un archivo de dosis en formato DICOM
+
+    Parameters
+    -----------
+    file_name : str
+        Nombre del archivo en formato string
+
+    Return
+    --------
+    Dosepy.dose.Dose
+        Objeto Dose del paquete Dosepy que representa a la distribución de dosis
+
+    Consideraciones
+    ----------------
+        La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+        La resolución espacial debe de ser igual en ambas dimensiones.
+        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+
+```
+
+# Advertencia
+El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+
+# Historia
+01-05-2019<br/>
+  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
+
+28-06-2021  Versión 0.0.1<br/>
+  * *Dosepy* se incorpora al índice de paquetes python [PyPi](https://pypi.org/)
+
+01-07-2021  Versión 0.0.3<br/>
+  * Se agregan las funciones from_csv y from_dicom para la lectura de datos.
+
+16-07-2021  Versión 0.0.4<br/>
+  * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para la instalación del paquete *Dosepy*
 
 
