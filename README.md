@@ -48,15 +48,22 @@ Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 ## Primer ejemplo
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
+
+```
+python
+```
+
+Dentro de python, escribimos el siguiente código:
 
 ```
 >>> import numpy as np
 >>> import Dosepy.dose as dp
 
->>> a = np.zeros((10,10)) + 100
+>>> a = np.zeros((10,10)) + 100   # Matrices de prueba
 >>> b = np.zeros((10,10)) + 96  
 
->>> D_reference = dp.Dose(a, 1)
+>>> D_reference = dp.Dose(a, 1)   # Se crean los objetos de dosis con su resolución espacial
 >>> D_evaluation = dp.Dose(b, 1)
 ```
 

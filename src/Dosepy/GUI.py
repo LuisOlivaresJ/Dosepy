@@ -15,8 +15,8 @@ import sys
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout
 from PyQt5.QtGui import QIcon
 import numpy as np
-from DosepyGUI.Layouts.MostrarLabels_Import import MostrarLabels
-from DosepyGUI.Layouts.Imagen import VentanaRaiz
+from Dosepy.Layouts.MostrarLabels_Import import MostrarLabels
+from Dosepy.Layouts.Imagen import VentanaRaiz
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
