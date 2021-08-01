@@ -84,7 +84,7 @@ python
 
 Dentro de python, escribimos el siguiente código de prueba:
 
-```
+```python
 >>> import numpy as np
 >>> import Dosepy.dose as dp
 
@@ -98,7 +98,7 @@ Dentro de python, escribimos el siguiente código de prueba:
 La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
 la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
 
-```
+```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
 >>> gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
 >>> print(pass_rate)
@@ -109,7 +109,7 @@ la distribución de referencia, la diferencia en dosis de tolerancia y la distan
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
-```
+```python
 import Dosepy.dose as dp
 import matplotlib.pyplot as plt
 
@@ -139,7 +139,7 @@ Importación de un archivo de dosis en formato DICOM
 * El espacio entre dos puntos (pixeles) debe de ser igual en ambas dimensiones.
 * No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado Gamma index.
 
-```
+```python
 import Dosepy.dose as dp
 
 #   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un punto y otro.
@@ -155,7 +155,7 @@ import Dosepy.dose as dp
 ```
 
 # Documentación
-```
+```python
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
   Regresa un objeto Dose que contiene la distribución de dosis y la resolución espacial.
