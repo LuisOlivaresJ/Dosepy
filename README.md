@@ -85,14 +85,14 @@ python
 Dentro de python, escribimos el siguiente código de prueba:
 
 ```python
->>> import numpy as np
->>> import Dosepy.dose as dp
+import numpy as np
+import Dosepy.dose as dp
 
->>> a = np.zeros((10,10)) + 100   # Matrices de prueba
->>> b = np.zeros((10,10)) + 96  
+a = np.zeros((10,10)) + 100   # Matrices de prueba
+b = np.zeros((10,10)) + 96  
 
->>> D_reference = dp.Dose(a, 1)   # Se crean los objetos de dosis con su resolución espacial
->>> D_evaluation = dp.Dose(b, 1)
+D_reference = dp.Dose(a, 1)   # Se crean los objetos de dosis con su resolución espacial
+D_evaluation = dp.Dose(b, 1)
 ```
 
 La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
@@ -100,8 +100,8 @@ la distribución de referencia, la diferencia en dosis de tolerancia y la distan
 
 ```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
->>> gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
->>> print(pass_rate)
+gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
+print(pass_rate)
 0.0
 ```
 
@@ -115,16 +115,16 @@ import matplotlib.pyplot as plt
 
 #   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv", ambos con 1.0 milímetro de espacio entre un punto y otro.
 #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/Dosepy/data/)
->>> D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
->>> D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
+D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
+D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
 #   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
->>> g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
+g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
 
 #   Imprimimos el resultado
->>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
->>> plt.imshow(g, vmax = 1.4)
->>> plt.show()
+print(f'El índice de aprobación es: {pass_rate:.1f} %')
+plt.imshow(g, vmax = 1.4)
+plt.show()
 
 El índice de aprobación es: 98.9 %
 
@@ -143,14 +143,14 @@ Importación de un archivo de dosis en formato DICOM
 import Dosepy.dose as dp
 
 #   Cargamos los archivos "RD_file.dcm" y "D_FILM_2mm.csv", ambos con 2 milímetro de espacio entre un punto y otro.
->>> D_eval = dp.from_dicom("RD_file.dcm")
->>> D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
+D_eval = dp.from_dicom("RD_file.dcm")
+D_ref = dp.from_csv("D_FILM_2mm.csv", PixelSpacing = 2)
 
 #   Llamamos al método gamma2D, con criterio de 0.5 Gy para la diferencia en dosis y 3 mm para la diferencia en distancia.
->>> g, pass_rate = D_eval.gamma2D(D_ref, 0.5, 3, dose_t_Gy = True)
+g, pass_rate = D_eval.gamma2D(D_ref, 0.5, 3, dose_t_Gy = True)
 
 #   Imprimimos el resultado
->>> print(pass_rate)
+print(pass_rate)
 
 ```
 
