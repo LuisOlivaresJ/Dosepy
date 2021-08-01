@@ -29,7 +29,7 @@ También es posible comparar dos distribuciones de dosis mediante perfiles verti
 ## Instalación
 **Linux**<br/>
 El método más sencillo para instalar Dosepy es escribiendo en una terminal:
-```
+```bash
 pip install Dosepy
 ```
 **Windows**<br/>
@@ -38,7 +38,7 @@ Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaco
 
 ### Requisitos
 Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
-```
+```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
 
@@ -50,13 +50,13 @@ Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
 
-```
+```bash
 python
 ```
 
 Para abrir la interfaz gráfica, escribimos:
 
-```
+```python
 import Dosepy.GUI
 ```
 
@@ -78,7 +78,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
 
-```
+```bash
 python
 ```
 
@@ -155,7 +155,7 @@ import Dosepy.dose as dp
 ```
 
 # Documentación
-```python
+```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
   Regresa un objeto Dose que contiene la distribución de dosis y la resolución espacial.
@@ -299,7 +299,7 @@ from_dicom(file_name)
 ### Versión Beta
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
-```
+```bash
 pip install --upgrade Dosepy
 ```
 
