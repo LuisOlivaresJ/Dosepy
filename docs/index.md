@@ -1,10 +1,9 @@
 ---
-title: "Welcome to my blog"
+title: "Dosepy"
 ---
 
-I'm glad you are here. I plan to talk about ...
-
-Para generar una descripción de la páguina?
+*Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
+Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
 ## Welcome to GitHub Pages
 
