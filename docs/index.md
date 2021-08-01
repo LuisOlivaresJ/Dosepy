@@ -2,7 +2,7 @@
 title: "Dosepy"
 ---
 
-![Logo](https://github.com/LuisOlivaresJ/Dosepy/tree/DosepyWeb/images/LOGOTIPO_DOSEPY.png)
+![Logo](https://github.com/LuisOlivaresJ/Dosepy/tree/DosepyWeb/images/portada_DOSEPY.png.png)
 
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
