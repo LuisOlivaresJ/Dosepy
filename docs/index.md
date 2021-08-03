@@ -144,7 +144,7 @@ Importación de un archivo de dosis en formato DICOM
 
 * La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones (2D).
 * El espacio entre dos puntos (pixeles) debe de ser igual en ambas dimensiones.
-* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado Gamma index.
+* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado *Comparación por índice gamma*.
 
 ```python
 import Dosepy.dose as dp
