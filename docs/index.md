@@ -328,4 +328,7 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
   * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para la instalación del paquete *Dosepy*
 
 24-07-2021  Versión 0.0.8<br/>
-  * Se agrega la posibilidad de usar una interfaz gráfica
+  * Se agrega la posibilidad de usar una interfaz gráfica.
+
+03-08-2021  Versión 0.1.0<br/>
+  * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.
