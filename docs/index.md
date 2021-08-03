@@ -29,7 +29,8 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
 **Comparación mediante perfiles**<br/>
-
+![Imagen_perfil_1](/assets/Perfiles_1.png)
+![Imagen_perfil_2](/assets/Perfiles_2.png)
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
 ## Instalación
