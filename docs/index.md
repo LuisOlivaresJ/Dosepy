@@ -11,6 +11,7 @@ Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete.
 ## Métodos de comparación
 
 **Comparación por índice gamma**<br/>
+![Imagen_gamma](/assets/Image_gamma.png)
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
@@ -81,13 +82,13 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 
 ## Segundo ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
 ```bash
 python
 ```
 
-Dentro de python, escribimos el siguiente código de prueba:
+Dentro de Python, escribimos el siguiente código de prueba:
 
 ```python
 import numpy as np
