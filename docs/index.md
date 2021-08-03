@@ -35,16 +35,16 @@ También es posible comparar dos distribuciones de dosis mediante perfiles verti
 
 ## Instalación
 **En Linux**<br/>
-El método más sencillo para instalar Dosepy es escribiendo en una terminal:
+El método más sencillo para instalar *Dosepy* es escribiendo en una terminal:
 ```bash
 pip install Dosepy
 ```
 **En Windows**<br/>
-Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
+Previo a la instalación de *Dosepy*, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).<br/>
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
 **Requisitos**<br/>
-Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
+Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
@@ -55,7 +55,7 @@ Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 ## Primer ejemplo con interfaz gráfica
 
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
