@@ -303,7 +303,7 @@ from_dicom(file_name)
 
 ```
 
-**Versión Beta++<br/>
+**Versión Beta**<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
 ```bash
