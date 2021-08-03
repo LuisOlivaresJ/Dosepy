@@ -8,7 +8,9 @@ title: "Dosepy"
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
-## Comparación por índice gamma
+## Métodos de comparación
+
+**Comparación por índice gamma**<br/>
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
@@ -25,31 +27,31 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
-## Comparación mediante perfiles
+**Comparación mediante perfiles**<br/>
 
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
 ## Instalación
-**Linux**<br/>
+**En Linux**<br/>
 El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 ```bash
 pip install Dosepy
 ```
-**Windows**<br/>
+**En Windows**<br/>
 Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
-### Requisitos
+**Requisitos**<br/>
 Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
 
-### Ayuda
+**Ayuda**<br/>
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-# Primer ejemplo con interfaz gráfica
+## Primer ejemplo con interfaz gráfica
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
 
@@ -157,7 +159,7 @@ print(pass_rate)
 
 ```
 
-# Documentación
+## Documentación
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -299,17 +301,17 @@ from_dicom(file_name)
 
 ```
 
-### Versión Beta
+**Versión Beta++<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
 ```bash
 pip install --upgrade Dosepy
 ```
 
-# Advertencia
+### Advertencia
 El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
-# Historia
+**Historia**<br/>
 01-05-2019<br/>
   * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
 
@@ -324,41 +326,3 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 24-07-2021  Versión 0.0.8<br/>
   * Se agrega la posibilidad de usar una interfaz gráfica
-
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/LuisOlivaresJ/Dosepy/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/LuisOlivaresJ/Dosepy/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
