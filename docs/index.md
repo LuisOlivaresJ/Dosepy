@@ -82,13 +82,13 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 
 ## Segundo ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
 ```bash
 python
 ```
 
-Dentro de python, escribimos el siguiente código de prueba:
+Dentro de Python, escribimos el siguiente código de prueba:
 
 ```python
 import numpy as np
