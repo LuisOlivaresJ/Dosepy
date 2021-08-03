@@ -39,17 +39,17 @@ pip install Dosepy
 Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
-### Requisitos
+**Requisitos**<br/>
 Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
 
-### Ayuda
+**Ayuda**<br/>
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-# Primer ejemplo con interfaz gráfica
+## Primer ejemplo con interfaz gráfica
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
 
@@ -157,7 +157,7 @@ print(pass_rate)
 
 ```
 
-# Documentación
+## Documentación
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -299,17 +299,17 @@ from_dicom(file_name)
 
 ```
 
-### Versión Beta
+**Versión Beta++<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
 ```bash
 pip install --upgrade Dosepy
 ```
 
-# Advertencia
+### Advertencia
 El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
-# Historia
+**Historia**<br/>
 01-05-2019<br/>
   * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
 
