@@ -2,7 +2,7 @@
 title: "Dosepy"
 ---
 
-![Logo_Dosepy](/assets/portada_DOSEPY.png)
+![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
 # Bienvenido
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
@@ -162,6 +162,7 @@ print(pass_rate)
 ```
 
 ## Documentación
+![Logo_Dosepy](/assets/LOGOTIPO_DOSEPY.png)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
