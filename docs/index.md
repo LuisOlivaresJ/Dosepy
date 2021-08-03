@@ -8,7 +8,9 @@ title: "Dosepy"
 *Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
-## Comparación por índice gamma
+## Métodos de comparación
+
+**Comparación por índice gamma**<br/>
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
@@ -25,17 +27,17 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
-## Comparación mediante perfiles
+**Comparación mediante perfiles**<br/>
 
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
 ## Instalación
-**Linux**<br/>
+**En Linux**<br/>
 El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 ```bash
 pip install Dosepy
 ```
-**Windows**<br/>
+**En Windows**<br/>
 Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
@@ -324,41 +326,3 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 24-07-2021  Versión 0.0.8<br/>
   * Se agrega la posibilidad de usar una interfaz gráfica
-
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/LuisOlivaresJ/Dosepy/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/LuisOlivaresJ/Dosepy/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
