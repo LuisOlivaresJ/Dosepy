@@ -2,15 +2,16 @@
 title: "Dosepy"
 ---
 
-![Logo_Dosepy](/assets/portada_DOSEPY.png)
+![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
-## Bienvenido a Dosepy
-*Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
+# Bienvenido
+*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
 ## Métodos de comparación
 
 **Comparación por índice gamma**<br/>
+![Imagen_gamma](/assets/Image_gamma.png)<br/>
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
@@ -28,21 +29,22 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
 **Comparación mediante perfiles**<br/>
-
+![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
+![Imagen_perfil_2](/assets/Perfiles_2.png)<br/>
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
 ## Instalación
 **En Linux**<br/>
-El método más sencillo para instalar Dosepy es escribiendo en una terminal:
+El método más sencillo para instalar *Dosepy* es escribiendo en una terminal:
 ```bash
 pip install Dosepy
 ```
 **En Windows**<br/>
-Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
+Previo a la instalación de *Dosepy*, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).<br/>
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
 **Requisitos**<br/>
-Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
+Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
@@ -53,7 +55,7 @@ Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 ## Primer ejemplo con interfaz gráfica
 
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
@@ -81,13 +83,13 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 
 ## Segundo ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
 ```bash
 python
 ```
 
-Dentro de python, escribimos el siguiente código de prueba:
+Dentro de Python, escribimos el siguiente código de prueba:
 
 ```python
 import numpy as np
@@ -142,7 +144,7 @@ Importación de un archivo de dosis en formato DICOM
 
 * La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones (2D).
 * El espacio entre dos puntos (pixeles) debe de ser igual en ambas dimensiones.
-* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado Gamma index.
+* No se hace uso de las coordenadas dadas en el archivo DICOM. Ver primera consideración en el apartado *Comparación por índice gamma*.
 
 ```python
 import Dosepy.dose as dp
@@ -160,6 +162,7 @@ print(pass_rate)
 ```
 
 ## Documentación
+![Logo_Dosepy](/assets/LOGOTIPO_DOSEPY.png)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -301,7 +304,7 @@ from_dicom(file_name)
 
 ```
 
-**Versión Beta++<br/>
+**Versión Beta**<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
 ```bash
@@ -325,4 +328,7 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
   * Se modifica el formato para el parámetro resolution. Se agregas indicaciones más detalladas para la instalación del paquete *Dosepy*
 
 24-07-2021  Versión 0.0.8<br/>
-  * Se agrega la posibilidad de usar una interfaz gráfica
+  * Se agrega la posibilidad de usar una interfaz gráfica.
+
+03-08-2021  Versión 0.1.0<br/>
+  * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.

@@ -1,7 +1,7 @@
 # *Dosepy*
 
-*Dosepy* es un paquete escrito en python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
+*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
+Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de Python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
 ## Comparación por índice gamma
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
@@ -31,11 +31,11 @@ El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 pip install Dosepy
 ```
 **Windows**<br/>
-Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
+Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
 ### Requisitos
-Dosepy depende de otros paquetes python (también de código abierto). Para su instalación escribir en una terminal:
+Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
@@ -46,7 +46,7 @@ Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 # Primer ejemplo con interfaz gráfica
 
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos **python** para abrir el interprete de python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
@@ -74,13 +74,13 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 
 ## Segundo ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos python:
+Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando python:
 
 ```bash
 python
 ```
 
-Dentro de python, escribimos el siguiente código de prueba:
+Dentro de Python, escribimos el siguiente código de prueba:
 
 ```python
 import numpy as np
@@ -319,3 +319,6 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 24-07-2021  Versión 0.0.8<br/>
   * Se agrega la posibilidad de usar una interfaz gráfica
+
+03-08-2021  Versión 0.1.0<br/>
+  * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy. 
