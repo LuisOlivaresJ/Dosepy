@@ -19,14 +19,13 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * El umbral de dosis puede ser ajustado por el usuario.
 * La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
+* Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
 **¡Consideraciones!**
 
 * Ambas distribuciones deben de tiener las mismas dimensiones físicas, contener el mismo número de elementos (número de filas y columnas iguales) y encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.
 
 * No se realiza interpolación entre puntos.
-
-* Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 
 **Comparación mediante perfiles**<br/>
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
