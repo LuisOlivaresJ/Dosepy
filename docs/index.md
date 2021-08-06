@@ -22,7 +22,7 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 
 **¡Consideraciones!**
 
-* Durante el cálculo gamma, se asume que ambas distribuciones tienen las mismas dimensiones físicas y se encuentran registradas, es decir, la coordenada espacial de un punto en la distribución de referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
+* Ambas distribuciones deben de tiener las mismas dimensiones físicas, contener el mismo número de elementos (número de filas y columnas iguales) y encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.
 
 * No se realiza interpolación entre puntos.
 
