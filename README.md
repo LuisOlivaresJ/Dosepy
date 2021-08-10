@@ -41,6 +41,12 @@ Dosepy depende de otros paquetes Python (también de código abierto). Para su i
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
 ```
+### Versión Beta
+Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
+Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
+```bash
+pip install --upgrade Dosepy
+```
 
 ### Ayuda
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
@@ -294,13 +300,6 @@ from_dicom(file_name)
         La resolución espacial debe de ser igual en ambas dimensiones.
         No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
-```
-
-### Versión Beta
-Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
-Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
-```bash
-pip install --upgrade Dosepy
 ```
 
 # Advertencia
