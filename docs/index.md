@@ -5,10 +5,16 @@ title: "Dosepy"
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
 # Bienvenido
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
+*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
+
 ## Métodos de comparación
+
+**¡Consideraciones!**
+
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas), así como encontrarse registradas. La coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar. En caso contrario, Dosepy dispone de algunas funciones para cumplir con lo anterior.
+
 
 **Comparación por índice gamma**<br/>
 ![Imagen_gamma](/assets/Image_gamma.png)<br/>
@@ -20,11 +26,6 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
-
-**¡Consideraciones!**
-
-* Ambas distribuciones deben de tiener las mismas dimensiones físicas, contener el mismo número de elementos (número de filas y columnas iguales) y encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.
-
 * No se realiza interpolación entre puntos.
 
 **Comparación mediante perfiles**<br/>
@@ -311,7 +312,7 @@ pip install --upgrade Dosepy
 ```
 
 ### Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 **Historia**<br/>
 01-05-2019<br/>
@@ -331,3 +332,6 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 03-08-2021  Versión 0.1.0<br/>
   * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.
+  
+10-08-2021  Versión 0.1.1<br/>
+  * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.   
