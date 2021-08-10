@@ -133,7 +133,7 @@ print(f'El índice de aprobación es: {pass_rate:.1f} %')
 plt.imshow(g, vmax = 1.4)
 plt.show()
 
-El índice de aprobación es: 98.9 %
+#El índice de aprobación es: 98.9 %
 
 ```
 ## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
