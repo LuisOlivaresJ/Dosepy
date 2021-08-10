@@ -11,9 +11,9 @@
 
 #	Código que permite igualar el número de filas y columnas entre dos matrices
 #	de tamaños diferentes.
-#	Para lo anterior, se reduce el número de filas y columnas de una matriz,
-#	promediando elementos que permitan obtener la misma resolución espacial.
-#
+#	Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con
+# 	una mayor dimensión espacial. 
+#	
 
 import numpy as np
 
@@ -23,6 +23,7 @@ def lista_puntos_prom(res_A, res_B, n_puntos_total):
 	el número de puntos que se deben de promediar para igualar las resoluciones.
 
 	Parámetros:
+	-----------
 		res_A: float
 			Resolución espacial dada como la distancia en mm, entre dos puntos.
 
@@ -31,6 +32,11 @@ def lista_puntos_prom(res_A, res_B, n_puntos_total):
 
 		n_pix_total: int
 			Número de puntos del vector con mayor tamaño.
+			
+	Return:
+	-------
+		array: ndarray
+			Matriz de datos con resolución espacial aumentada.
 
 	"""
 	if res_A > res_B:
@@ -63,10 +69,10 @@ def lista_puntos_prom(res_A, res_B, n_puntos_total):
 
 def equalize(array, resol_array, resol_ref):
 	"""
-	Función que permite reducir el número de elementos de una matriz (array) para igualar
-	su resolución a una resolución de referencia mayor.
+	Función que permite reducir el número de filas y columnas de una matriz (array)
+	para igualar su resolución espacial con respecto a resolución de referencia.
 
-	Parámetros:
+	Parameters:
 		array: ndarray
 			Matriz a la que se le requiere reducir el tamaño.
 

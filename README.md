@@ -260,7 +260,7 @@ Retorno:
 Funciones
 ```
 
-from_csv(file_name, PixelSpacing)
+Dosepy.dose.from_csv(file_name, PixelSpacing)
 
     Importación de un archivo de dosis en formato CSV (Comma separated values).
     Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
@@ -281,7 +281,7 @@ from_csv(file_name, PixelSpacing)
 
 
 
-from_dicom(file_name)
+Dosepy.dose.from_dicom(file_name)
 
     Importación de un archivo de dosis en formato DICOM
 
@@ -301,6 +301,30 @@ from_dicom(file_name)
         La resolución espacial debe de ser igual en ambas dimensiones.
         No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
+
+
+Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
+    """
+    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
+    Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
+
+    Parameters:
+    -----------
+    array: ndarray
+        Matriz a la que se le requiere reducir el tamaño.
+
+    resol_array: float
+        Resolución espacial de la matriz.
+
+    resol_ref: float
+        Resolución espacial de referencia.
+
+    Return:
+  	-------
+    array: ndarray
+  			Matriz de datos con resolución espacial aumentada.
+
+    """
 ```
 
 # Advertencia
