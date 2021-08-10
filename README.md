@@ -97,18 +97,19 @@ import Dosepy.dose as dp
 a = np.zeros((10,10)) + 100   # Matrices de prueba
 b = np.zeros((10,10)) + 96  
 
-D_reference = dp.Dose(a, 1)   # Se crean los objetos de dosis con su resolución espacial
-D_evaluation = dp.Dose(b, 1)
+D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
+D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
 ```
 
-La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
-la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
+La comparación gamma entre dos distribuciones de dosis se realiza mediante el método *gamma2D*. Como argumentos se requiere:
+* La distribución de dosis de referencia
+* El porcentaje para la diferencia en dosis de tolerancia
+* La distancia de tolerancia o criterio DTA en mm.
 
 ```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
-gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
+gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
-0.0
 ```
 
 ## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
