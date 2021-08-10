@@ -13,8 +13,9 @@ Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete.
 
 **¡Consideraciones!**
 
-* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas), así como encontrarse registradas. La coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar. En caso contrario, Dosepy dispone de algunas funciones para cumplir con lo anterior.
-
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.
+* En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 **Comparación por índice gamma**<br/>
 ![Imagen_gamma](/assets/Image_gamma.png)<br/>
@@ -332,6 +333,6 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 03-08-2021  Versión 0.1.0<br/>
   * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.
-  
+
 10-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.   

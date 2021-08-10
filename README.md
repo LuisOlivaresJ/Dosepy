@@ -7,7 +7,9 @@ Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro de
 
 **¡Consideraciones!**
 
-* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas), así como encontrarse registradas. La coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar. En caso contrario, Dosepy dispone de algunas funciones para cumplir con lo anterior.
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.
+* En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 ### Comparación por índice gamma
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
