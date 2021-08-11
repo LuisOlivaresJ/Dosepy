@@ -15,6 +15,7 @@ Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete.
 
 * Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
 * Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
+
 En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 **Comparación por índice gamma**<br/>
