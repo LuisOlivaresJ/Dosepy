@@ -17,3 +17,5 @@ src/Dosepy/Layouts/MostrarLabels_Import.py
 src/Dosepy/Layouts/__init__.py
 src/Dosepy/data/D_FILM.csv
 src/Dosepy/data/D_TPS.csv
+src/Dosepy/tools/__init__.py
+src/Dosepy/tools/resol.py

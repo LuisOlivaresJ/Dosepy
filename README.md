@@ -1,9 +1,18 @@
 # *Dosepy*
 
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis usadas en radioterapia.<br/>
+*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de Python (por ejemplo, escribiendo python dentro de una terminal Linux).
 
-## Comparación por índice gamma
+## Métodos de comparación
+
+**¡Consideraciones!**
+
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
+
+En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
+
+### Comparación por índice gamma
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
@@ -11,26 +20,20 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * El umbral de dosis puede ser ajustado por el usuario.
 * La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
-
-**¡Consideraciones!**
-
-* Durante el cálculo gamma, se asume que ambas distribuciones tienen las mismas dimensiones físicas y se encuentran registradas, es decir, la coordenada espacial de un punto en la distribución de referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
-
+* Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
-* Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
-
-## Comparación mediante perfiles
+### Comparación mediante perfiles
 
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
 ## Instalación
-**Linux**<br/>
+**En Linux**<br/>
 El método más sencillo para instalar Dosepy es escribiendo en una terminal:
 ```bash
 pip install Dosepy
 ```
-**Windows**<br/>
+**En Windows**<br/>
 Previo a la instalación de Dosepy, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
@@ -38,6 +41,12 @@ Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaco
 Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
 pip install numpy, pydicom, matplotlib, tifffile, scipy
+```
+### Versión Beta
+Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
+Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
+```bash
+pip install --upgrade Dosepy
 ```
 
 ### Ayuda
@@ -89,18 +98,19 @@ import Dosepy.dose as dp
 a = np.zeros((10,10)) + 100   # Matrices de prueba
 b = np.zeros((10,10)) + 96  
 
-D_reference = dp.Dose(a, 1)   # Se crean los objetos de dosis con su resolución espacial
-D_evaluation = dp.Dose(b, 1)
+D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
+D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
 ```
 
-La comparación entre dos distribuciones se realiza mediante el método *gamma2D*. Como argumentos se requiere:
-la distribución de referencia, la diferencia en dosis de tolerancia y la distancia de tolerancia o criterio DTA en mm.
+La comparación gamma entre dos distribuciones de dosis se realiza mediante el método *gamma2D*. Como argumentos se requiere:
+* La distribución de dosis de referencia
+* El porcentaje para la diferencia en dosis de tolerancia
+* La distancia de tolerancia o criterio DTA en mm.
 
 ```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
-gamma_distribution, pass_rate = D_evaluation.gamma2D(D_reference, 3, 1)
+gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
-0.0
 ```
 
 ## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
@@ -124,7 +134,7 @@ print(f'El índice de aprobación es: {pass_rate:.1f} %')
 plt.imshow(g, vmax = 1.4)
 plt.show()
 
-El índice de aprobación es: 98.9 %
+#El índice de aprobación es: 98.9 %
 
 ```
 ## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
@@ -251,7 +261,7 @@ Retorno:
 Funciones
 ```
 
-from_csv(file_name, PixelSpacing)
+Dosepy.dose.from_csv(file_name, PixelSpacing)
 
     Importación de un archivo de dosis en formato CSV (Comma separated values).
     Dentro del archivo .csv, utilizar el caracter # al inicio de una fila para
@@ -272,7 +282,7 @@ from_csv(file_name, PixelSpacing)
 
 
 
-from_dicom(file_name)
+Dosepy.dose.from_dicom(file_name)
 
     Importación de un archivo de dosis en formato DICOM
 
@@ -292,17 +302,34 @@ from_dicom(file_name)
         La resolución espacial debe de ser igual en ambas dimensiones.
         No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
-```
 
-### Versión Beta
-Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
-Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
-```bash
-pip install --upgrade Dosepy
+
+Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
+    """
+    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
+    Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
+
+    Parameters:
+    -----------
+    array: ndarray
+        Matriz a la que se le requiere reducir el tamaño.
+
+    resol_array: float
+        Resolución espacial de la matriz.
+
+    resol_ref: float
+        Resolución espacial de referencia.
+
+    Return:
+  	-------
+    array: ndarray
+  			Matriz de datos con resolución espacial aumentada.
+
+    """
 ```
 
 # Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 # Historia
 01-05-2019<br/>
@@ -321,4 +348,7 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
   * Se agrega la posibilidad de usar una interfaz gráfica
 
 03-08-2021  Versión 0.1.0<br/>
-  * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy. 
+  * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.
+
+12-08-2021  Versión 0.1.1<br/>
+  * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.
