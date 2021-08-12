@@ -359,5 +359,5 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 03-08-2021  Versión 0.1.0<br/>
   * Se agrega una página web con instrucciones y documentación para el uso del paquete Dosepy.
 
-10-08-2021  Versión 0.1.1<br/>
+12-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.   
