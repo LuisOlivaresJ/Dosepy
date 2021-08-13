@@ -54,20 +54,23 @@ class VentanaPrincipal(QWidget):
 #   Funciones para botones
 
     def mostrar_distribucion(self):
-        self.Imagen.Mpl_Izq.Img(self.DatosEntrada.Refer_npy)
-        self.Imagen.Mpl_Izq.Colores(self.DatosEntrada.Eval_npy)
+        if self.DatosEntrada.Formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
+            self.Imagen.Mpl_Izq.Img(self.DatosEntrada.Refer_npy)
+            self.Imagen.Mpl_Izq.Colores(self.DatosEntrada.Eval_npy)
 
-        self.Imagen.Mpl_Der.Img(self.DatosEntrada.Eval_npy)
-        self.Imagen.Mpl_Der.Colores(self.DatosEntrada.Eval_npy)
+            self.Imagen.Mpl_Der.Img(self.DatosEntrada.Eval_npy)
+            self.Imagen.Mpl_Der.Colores(self.DatosEntrada.Eval_npy)
 
-        self.Imagen.Mpl_perfiles.ax.clear()
-        self.Imagen.Mpl_perfiles.set_data_and_plot(self.DatosEntrada.Refer_npy, self.DatosEntrada.Eval_npy, self.Imagen.Mpl_Izq.circ)
+            self.Imagen.Mpl_perfiles.ax.clear()
+            self.Imagen.Mpl_perfiles.set_data_and_plot(self.DatosEntrada.Refer_npy, self.DatosEntrada.Eval_npy, self.Imagen.Mpl_Izq.circ)
 
-        self.Imagen.Mpl_Izq.fig.canvas.draw()
-        self.Imagen.Mpl_Der.fig.canvas.draw()
+            self.Imagen.Mpl_Izq.fig.canvas.draw()
+            self.Imagen.Mpl_Der.fig.canvas.draw()
 
-        self.Imagen.Mpl_perfiles.fig.canvas.draw()
+            self.Imagen.Mpl_perfiles.fig.canvas.draw()
 
+        else:
+            self.displayMessageBox
 
     def Calculo_Gamma(self):
         D_ref = dp.Dose(self.Imagen.Mpl_Izq.npI, float(self.DatosEntrada.Resolution.text()))
@@ -110,8 +113,15 @@ class VentanaPrincipal(QWidget):
         self.DatosEntrada.Mpl_Img_gamma.fig.canvas.draw()
 
 
-
-
+######################################################################
+#   Ventanas para mensajes
+    def displayMessageBox(self):
+        """
+        Si la variable self.DatosEntrada.Formatos_ok es True, los archivos
+        para las distribuciones de dosis se cargaron correctamente.
+        En caso contrario se emite un mensaje de error.
+        """
+        QMessageBox().critical(self, "Error", "Error al leer los archivos", QMessageBox.Ok, QMessageBox.Ok)
 
 
 
