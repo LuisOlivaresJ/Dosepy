@@ -40,7 +40,7 @@ class Dose:
         ''' Cálculo del índice gamma contra una distribución de referencia.
             Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
             así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
-            Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de 
+            Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de
             referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
 
         Parámetros
@@ -133,7 +133,7 @@ class Dose:
         import Dosepy.dose as dp
 
         #   Cargamos los archivos "D_TPS.csv" y "D_FILM.csv"
-        #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/data)
+        #   (Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/Dosepy/data)
         >>> D_eval = dp.from_csv("D_TPS.csv", 1)
         >>> D_ref = dp.from_csv("D_FILM.csv", 1)
 
@@ -160,7 +160,7 @@ class Dose:
 
         if D_reference.resolution != self.resolution:
             raise Exception("No es posible el cálculo con resoluciones diferentes para cada distribución.")
-            
+
         #%%
 
         D_ref = D_reference.array
