@@ -273,7 +273,7 @@ Dosepy.dose.from_csv(file_name, PixelSpacing)
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos puntos consecutivos, en mm
+        Distancia entre dos puntos consecutivos, en milímetros
 
     Return
     --------
@@ -300,13 +300,13 @@ Dosepy.dose.from_dicom(file_name)
     ----------------
         La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
-        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+        No se utilizan las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
 
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
-    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
+    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial (mm/punto) con respecto a una resolución de referencia.
     Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
 
     Parameters:
@@ -315,10 +315,10 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
         Matriz a la que se le requiere reducir el tamaño.
 
     resol_array: float
-        Resolución espacial de la matriz.
+        Resolución espacial de la matriz, en milímetros por punto.
 
     resol_ref: float
-        Resolución espacial de referencia.
+        Resolución espacial de referencia, en milímetros por punto.
 
     Return:
   	-------
