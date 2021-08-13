@@ -206,6 +206,8 @@ Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición
 de la distribución de dosis, así como el índice de aprobación definido
 como el porcentaje de valores gamma que son menores o iguales a 1.
+
+Consideraciones:
 Se asume el registro de las distribuciones de dosis, es decir,
 que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
@@ -349,7 +351,7 @@ Dosepy.dose.from_dicom(file_name)
         dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
         No se utilizan las coordenadas dadas en el archivo DICOM.
-        Ver segunda consideración en la nota del método gamma2D de la
+        Ver consideraciones en la nota del método gamma2D de la
         clase Dose.
 
 
@@ -389,7 +391,7 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
         La dimensión espacial de la matriz B es de 80 mm.
         (4 puntos * 20 mm/punto = 80 mm)
 
-        Para reducir el tamaño de ma matriz A e igualarla al tamaño de la
+        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
         matriz B, se utiliza la función equalize:
 
             import Dosepy.tools.resol as resol
@@ -404,7 +406,7 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
 ```
 
 ### Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 **Historia**<br/>
 01-05-2019<br/>

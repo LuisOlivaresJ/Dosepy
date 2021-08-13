@@ -191,6 +191,7 @@ Dose.gamma2D(
 Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
 definido como el porcentaje de valores gamma que son menor o igual a 1.
+Consideraciones:
 Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
 
@@ -353,7 +354,7 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
 ```
 
 # Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 # Historia
 01-05-2019<br/>

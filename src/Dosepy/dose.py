@@ -104,7 +104,7 @@ class Dose:
             Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones
             en donde la dosis es menor al umbral de dosis.
 
-        Notas
+        Consideraciones
         ----------
              Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo.
              Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución
