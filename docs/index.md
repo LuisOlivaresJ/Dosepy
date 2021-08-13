@@ -6,7 +6,7 @@ title: "Dosepy"
 
 # Bienvenido
 *Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
+Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org).
 
 
 ## Métodos de comparación
@@ -62,7 +62,7 @@ pip install --upgrade Dosepy
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-## Primer ejemplo con interfaz gráfica
+### Ejemplo con interfaz gráfica
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
@@ -90,7 +90,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Segundo ejemplo utilizando una terminal
+## Ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
@@ -105,7 +105,7 @@ import numpy as np
 import Dosepy.dose as dp
 
 a = np.zeros((10,10)) + 100   # Matrices de prueba
-b = np.zeros((10,10)) + 96  
+b = np.zeros((10,10)) + 96    # Diferencia en dosis de un 4 %
 
 D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
 D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
@@ -122,7 +122,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
+## Datos en formato CSV, usando un umbral de dosis
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -146,7 +146,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
+## Datos en formato DICOM y modo de dosis absoluto
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -179,7 +179,7 @@ Dosepy.dose.Dose(data, resolution)
   Regresa un objeto Dose que contiene la distribución de dosis y la
   resolución espacial.
 
-Parameters:
+  Parameters:
 
      data : numpy.ndarray
          Arreglo o matriz de datos. Cada valor numérico representa la
@@ -385,7 +385,7 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 **Historia**<br/>
 01-05-2019<br/>
-  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
+  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/XL85Q4MGCIBS9NX72MY22SV9KYALL7VBBUFF2A5PCG96BP962B-26621?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
 
 28-06-2021  Versión 0.0.1<br/>
   * *Dosepy* se incorpora al índice de paquetes python [PyPi](https://pypi.org/)
