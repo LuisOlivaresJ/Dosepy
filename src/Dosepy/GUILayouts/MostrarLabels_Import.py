@@ -1,6 +1,6 @@
 import sys
 from matplotlib.backends.backend_qt5agg import FigureCanvas
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout, QMessageBox
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
@@ -172,6 +172,7 @@ class MostrarLabels(QWidget):
             #    self.Resolution.setText(str(dp.from_dicom(file_name_Referencia).resolution))
 
             else:
+                QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
                 print('Formato no valido')
 
     def Leer_archivo_Evaluacion(self):
@@ -185,23 +186,24 @@ class MostrarLabels(QWidget):
                 #self.Resolution.setReadOnly(True)
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
-
-                self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
-                self.Formatos_ok = True
+                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
+                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                else:
+                    self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
+                    self.Formatos_ok = True
 
             elif extension == '.csv':
 
                 self.Eval_npy = np.genfromtxt(file_name_Evaluacion, delimiter = ',')
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
+                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
 
-                self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
-                self.Formatos_ok = True
+                else:
+                    self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
+                    self.Formatos_ok = True
             #print(self.file_name_Evaluacion)
-
-
 
 
 class Qt_Figure_Histograma:

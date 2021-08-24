@@ -90,13 +90,14 @@ def equalize(array, resol_array, resol_ref):
 
     Ejemplo:
     --------
-        Sean A y B dos matrices de tamaño (13 x 13) y (4 x 4), con
-        resolución espacial de 6 mm/punto y 20 mm/punto, respectivamente.
+    
+        Sean A y B dos matrices de tamaño (2362 x 2362) y (256 x 256), con
+        resolución espacial de 0.0847 mm/punto y 0.7812 mm/punto, respectivamente.
 
-        La dimensión espacial de la matriz A es de 78 mm
-        (13 puntos * 6 mm/punto = 78 mm)
-        La dimensión espacial de la matriz B es de 80 mm.
-        (4 puntos * 20 mm/punto = 80 mm)
+        La dimensión espacial de la matriz A es de 200.06 mm
+        (2362 puntos * 0.0847 mm/punto = 200.06 mm)
+        La dimensión espacial de la matriz B es de 199.99 mm.
+        (256 puntos * 0.7812 mm/punto = 199.99 mm)
 
         Para reducir el tamaño de la matriz A e igualarla al tamaño de la
         matriz B, se utiliza la función equalize:
@@ -104,11 +105,11 @@ def equalize(array, resol_array, resol_ref):
             import Dosepy.tools.resol as resol
             import numpy as np
 
-            A = np.zeros( (13, 13) )
+            A = np.zeros( (2362, 2362) )
 
-            C = resol.equalize(A, 6, 20)
+            C = resol.equalize(A, 0.0847, 0.7812)
             C.shape
-            # (4, 4)
+            # (256, 256)
 
 	"""
 

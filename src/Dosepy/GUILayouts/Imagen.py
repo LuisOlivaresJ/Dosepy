@@ -29,7 +29,7 @@ import numpy as np
 
 #---------------------------------------------
 
-class VentanaRaiz(QWidget):
+class Bloque_Inf_Imagenes(QWidget):
     def __init__(self):
         super().__init__()  #   Llamar al constructor de QWidget
         self.iniciarUI()
@@ -436,6 +436,6 @@ class Qt_Figure_Perfiles:
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ventana_raiz = VentanaRaiz()
+    ventana_raiz = Bloque_Inf_Imagenes()
     ventana_raiz.show()
     sys.exit(app.exec_())
