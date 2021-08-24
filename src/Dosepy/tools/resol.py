@@ -12,8 +12,8 @@
 #	Código que permite igualar el número de filas y columnas entre dos matrices
 #	de tamaños diferentes.
 #	Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con
-# 	una mayor dimensión espacial. 
-#	
+# 	una mayor dimensión espacial.
+#
 
 import numpy as np
 
@@ -32,7 +32,7 @@ def lista_puntos_prom(res_A, res_B, n_puntos_total):
 
 		n_pix_total: int
 			Número de puntos del vector con mayor tamaño.
-			
+
 	Return:
 	-------
 		array: ndarray
@@ -70,17 +70,45 @@ def lista_puntos_prom(res_A, res_B, n_puntos_total):
 def equalize(array, resol_array, resol_ref):
 	"""
 	Función que permite reducir el número de filas y columnas de una matriz (array)
-	para igualar su resolución espacial con respecto a resolución de referencia.
+	para igualar su resolución espacial (mm/punto) con respecto a una resolución de referencia.
 
-	Parameters:
+	Parámetros:
+    -----------
 		array: ndarray
 			Matriz a la que se le requiere reducir el tamaño.
 
 		resol_array: float
-			Resolución espacial de la matriz.
+			Resolución espacial de la matriz, en milímetros por punto.
 
 		resol_ref: float
-			Resolución espacial de referencia.
+			Resolución espacial de referencia, en milímetros por punto.
+
+    Retorno:
+    --------
+        array: ndarray
+            Matriz reducida en su número de filas y columnas.
+
+    Ejemplo:
+    --------
+        Sean A y B dos matrices de tamaño (13 x 13) y (4 x 4), con
+        resolución espacial de 6 mm/punto y 20 mm/punto, respectivamente.
+
+        La dimensión espacial de la matriz A es de 78 mm
+        (13 puntos * 6 mm/punto = 78 mm)
+        La dimensión espacial de la matriz B es de 80 mm.
+        (4 puntos * 20 mm/punto = 80 mm)
+
+        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
+        matriz B, se utiliza la función equalize:
+
+            import Dosepy.tools.resol as resol
+            import numpy as np
+
+            A = np.zeros( (13, 13) )
+
+            C = resol.equalize(A, 6, 20)
+            C.shape
+            # (4, 4)
 
 	"""
 

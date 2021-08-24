@@ -6,7 +6,7 @@ title: "Dosepy"
 
 # Bienvenido
 *Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo python dentro de una terminal Linux).
+Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).
 
 
 ## Métodos de comparación
@@ -62,7 +62,7 @@ pip install --upgrade Dosepy
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-## Primer ejemplo con interfaz gráfica
+### Ejemplo con interfaz gráfica
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
@@ -90,7 +90,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Segundo ejemplo utilizando una terminal
+## Ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
@@ -105,7 +105,7 @@ import numpy as np
 import Dosepy.dose as dp
 
 a = np.zeros((10,10)) + 100   # Matrices de prueba
-b = np.zeros((10,10)) + 96  
+b = np.zeros((10,10)) + 96    # Diferencia en dosis de un 4 %
 
 D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
 D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
@@ -122,7 +122,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
+## Datos en formato CSV, usando un umbral de dosis
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -146,7 +146,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
+## Datos en formato DICOM y modo de dosis absoluto
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -176,14 +176,18 @@ print(pass_rate)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
-  Regresa un objeto Dose que contiene la distribución de dosis y la resolución espacial.
+  Regresa un objeto Dose que contiene la distribución de dosis y la
+  resolución espacial.
 
-Parameters:
-           data : numpy.ndarray
-                Arreglo o matriz de datos. Cada valor numérico representa la dosis absorbida en un punto en el espacio.
+  Parameters:
 
-           resolution : float
-                Resolución espacial dada como la distancia física (en milímetros) entre dos puntos consecutivos.
+     data : numpy.ndarray
+         Arreglo o matriz de datos. Cada valor numérico representa la
+         dosis absorbida en un punto en el espacio.
+
+     resolution : float
+         Resolución espacial dada como la distancia física (en milímetros)
+         entre dos puntos consecutivos.
 
 Dose methods
 
@@ -199,76 +203,109 @@ Dose.gamma2D(
   )
 
 Cálculo del índice gamma contra una distribución de referencia.
-Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
-definido como el porcentaje de valores gamma que son menor o igual a 1.
-Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
+Se obtiene una matriz que representa los índices gamma en cada posición
+de la distribución de dosis, así como el índice de aprobación definido
+como el porcentaje de valores gamma que son menores o iguales a 1.
+
+Consideraciones:
+Se asume el registro de las distribuciones de dosis, es decir,
+que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
 
 Parameters:
-            D_reference : Objeto Dose
-                Distribución de dosis de referencia contra la cual se realizará la comparación.
-                El número de filas y columnas debe de ser igual a la distribución a evaluar.
-                Lo anterior implica que las dimesiones espaciales de las distribuciones deben de ser iguales.
+    D_reference : Objeto Dose
+        Distribución de dosis de referencia contra la cual se
+        realizará la comparación.
+        El número de filas y columnas debe de ser igual a la
+        distribución a evaluar.
+        Lo anterior implica que las dimesiones espaciales de
+        las distribuciones deben de ser iguales.
 
-            dose_t : float, default = 3
-                Tolerancia para la diferencia en dosis.
-                Este valor puede interpretarse de 3 formas diferentes, según los parámetros dose_t_Gy y
-                local_norm que se describen más adelante.
+    dose_t : float, default = 3
+        Tolerancia para la diferencia en dosis.
+        Este valor puede interpretarse de 3 formas diferentes, según
+        los parámetros dose_t_Gy y local_norm que se describen más adelante.
 
-            dist_t : float, default = 3
-                Tolerancia para la distancia, en milímetros (criterio DTA).
+    dist_t : float, default = 3
+        Tolerancia para la distancia, en milímetros (criterio DTA).
 
-            dose_tresh : float, default = 10
-                Umbral de dosis, en porcentaje (0 a 100). Todo punto en la distribución de dosis con un valor menor al umbral
-                de dosis, es excluido del análisis.
-                Por default, el porcentaje se interpreta con respecto al percentil 99.1 (aproximadamente el máximo)
-                de la distribución a evaluar. Si el porcentaje se requiere con respecto al máximo, modificar
-                el parámetro max_as_percentile = False (ver más adelante).
+    dose_tresh : float, default = 10
+        Umbral de dosis, en porcentaje (0 a 100). Todo punto en la
+        distribución de dosis con un valor menor al umbral de dosis,
+        es excluido del análisis.
+        Por default, el porcentaje se interpreta con respecto al
+        percentil 99.1 (aproximadamente el máximo) de la distribución
+        a evaluar. Si el porcentaje se requiere con respecto al máximo,
+        modificar el parámetro max_as_percentile = False (ver más adelante).
 
-            dose_t_Gy : bool, default: False
-                Si el argumento es True, entonces "dose_t" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
-                Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
+    dose_t_Gy : bool, default: False
+        Si el argumento es True, entonces "dose_t" (la dosis de tolerancia)
+        se interpreta como un valor fijo y absoluto en Gray [Gy].
+        Si el argumento es False (default), "dose_t" se interpreta como
+        un porcentaje.
 
-            local_norm : bool, default: False
-                Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
-                Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
-                máximo de la distribución a evaluar.
-                Nota:
-                    1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
-                    2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver más adelante)
+    local_norm : bool, default: False
+        Si el argumento es True (local normalization), el porcentaje
+        de dosis de tolerancia "dose_t" se interpreta con respecto a
+        la dosis local.
+        Si el argumento es False (global normalization), el porcentaje
+        de dosis de tolerancia "dose_t" se interpreta con respecto al
+        máximo de la distribución a evaluar.
+          Nota:
+              1.- Los argumentos dose_t_Gy y local_norm NO deben ser
+              seleccionados como True de forma simultánea.
+              2.- Si se desea utilizar directamente el máximo de la
+              distribución, utilizar el parámetro max_as_percentile = False
+              (ver más adelante)
 
-            mask_radius : float, default: 5
-                Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
+    mask_radius : float, default: 5
+        Distancia física en milímetros que se utiliza para acotar el
+        cálculo con posiciones que estén dentro de una vecindad dada
+        por mask_radius.
 
-                Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
-                El uso de esta máscara permite reducir el tiempo de cálculo debido al siguiente proceso:
-                    Por cada punto en la distribución de referencia, el cálculo de la función Gamma se realiza solamente
-                    con aquellos puntos o posiciones de la distribución a evaluar que se encuentren a una distancia relativa
-                    menor o igual a mask_radius, es decir, con los puntos que están dentro de la vecindad dada por mask_radius.
-                    La longitud de uno de los lados de la máscara cuadrada es de 2*mask_radius + 1.
-                Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
-                una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
+        Para lo anterior, se genera un área de busqueda cuadrada o
+        "máscara" aldrededor de cada punto o posición en la distribución
+        de referencia.
+        El uso de esta máscara permite reducir el tiempo de cálculo
+        debido al siguiente proceso:
+            Por cada punto en la distribución de referencia, el cálculo
+            de la función Gamma se realiza solamente con aquellos puntos
+            o posiciones de la distribución a evaluar que se encuentren
+            a una distancia relativa menor o igual a mask_radius, es
+            decir, con los puntos que están dentro de la vecindad dada
+            por mask_radius.
+            La longitud de uno de los lados de la máscara cuadrada es
+            de 2*mask_radius + 1.
+            Por otro lado, si se prefiere comparar con todos los puntos
+            de la distribución a evaluar, es suficiente con ingresar
+            una distancia mayor a las dimensiones de la distribución de
+            dosis (por ejemplo mask_radius = 1000).
 
-            max_as_percentile : bool, default: True
-                -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
-                   distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
-                   (de utilidad por ejemplo cuando se utiliza película radiocrómica).
-                -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
+    max_as_percentile : bool, default: True
+        -> Si el argumento es True, se utiliza el percentil 99.1 como una
+           aproximación del valor máximo de la distribución de dosis. Lo
+           anterior permite excluir artefactos o errores en posiciones
+           puntuales (de utilidad por ejemplo cuando se utiliza película
+               radiocrómica).
+        -> Si el argumento es False, se utiliza directamente el valor
+           máximo de la distribución.
 
 Retorno:
 
-          ndarray :
-                Array, o matriz bidimensional con la distribución de índices gamma.
+    ndarray :
+          Array, o matriz bidimensional con la distribución de índices
+          gamma.
 
-          float :
-                Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones en donde la
-                dosis es menor al umbral de dosis.
+    float :
+          Índice de aprobación. Se calcula como el porcentaje de valores
+          gamma <= 1, sin incluir las posiciones en donde la dosis es
+          menor al umbral de dosis.
 
 
 
 ```
 
-Funciones
+**Funciones**
 ```
 
 Dosepy.dose.from_csv(file_name, PixelSpacing)
@@ -283,12 +320,13 @@ Dosepy.dose.from_csv(file_name, PixelSpacing)
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos puntos consecutivos, en mm
+        Distancia entre dos puntos consecutivos, en milímetros.
 
     Return
     --------
     Dosepy.dose.Dose
-        Objeto Dose del paquete Dosepy que representa a la distribución de dosis.
+        Objeto Dose del paquete Dosepy que representa a la
+        distribución de dosis.
 
 
 
@@ -304,20 +342,27 @@ Dosepy.dose.from_dicom(file_name)
     Return
     --------
     Dosepy.dose.Dose
-        Objeto Dose del paquete Dosepy que representa a la distribución de dosis
+        Objeto Dose del paquete Dosepy que representa a la
+        distribución de dosis
 
     Consideraciones
     ----------------
-        La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
+        La distribución de dosis en el archivo DICOM debe contener solo
+        dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
-        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+        No se utilizan las coordenadas dadas en el archivo DICOM.
+        Ver consideraciones en la nota del método gamma2D de la
+        clase Dose.
 
 
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
-    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
-    Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
+    Función que permite reducir el número de filas y columnas de una matriz
+    (array) para igualar su resolución espacial (mm/punto) con respecto a una
+    resolución de referencia.
+    Para lo anterior, se calcula un promedio de varios puntos y se asigna a
+    un nuevo punto con una mayor dimensión espacial.
 
     Parameters:
     -----------
@@ -325,24 +370,47 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
         Matriz a la que se le requiere reducir el tamaño.
 
     resol_array: float
-        Resolución espacial de la matriz.
+        Resolución espacial de la matriz, en milímetros por punto.
 
     resol_ref: float
-        Resolución espacial de referencia.
+        Resolución espacial de referencia, en milímetros por punto.
 
-    Return:
-  	-------
+    Retorno:
+  	--------
     array: ndarray
-  			Matriz de datos con resolución espacial aumentada.        
+  			Matriz reducida en el número de filas y columnas.        
+
+    Ejemplo:
+    --------
+
+        Sean A y B dos matrices de tamaño (13 x 13) y (4 x 4), con
+        resolución espacial de 6 mm/punto y 20 mm/punto, respectivamente.
+
+        La dimensión espacial de la matriz A es de 78 mm
+        (13 puntos * 6 mm/punto = 78 mm)
+        La dimensión espacial de la matriz B es de 80 mm.
+        (4 puntos * 20 mm/punto = 80 mm)
+
+        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
+        matriz B, se utiliza la función equalize:
+
+            import Dosepy.tools.resol as resol
+            import numpy as np
+
+            A = np.zeros( (13, 13) )
+
+            C = resol.equalize(A, 6, 20)
+            C.shape
+            # (4, 4)
 
 ```
 
 ### Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 **Historia**<br/>
 01-05-2019<br/>
-  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/8V8RPCG2P1P85AN4XJ33LCS6CRT3NEL72J8IQQYUAKMESPGRGS-06398?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
+  * *Dosepy* fue escrito por primera vez como parte de un desarrollo de [tesis](https://tesiunam.dgb.unam.mx/F/XL85Q4MGCIBS9NX72MY22SV9KYALL7VBBUFF2A5PCG96BP962B-26621?func=find-b&local_base=TES01&request=Luis+Alfonso+Olivares+Jimenez&find_code=WRD&adjacent=N&filter_code_2=WYR&filter_request_2=&filter_code_3=WYR&filter_request_3=) a nivel de Maestría en el año 2019, con el objetivo de comparar y evaluar distribuciones de dosis en radioterapia. Para ello se emplearon diferentes herramientas como perfiles, evaluación gamma e histogramas dosis volumen. La medición de las distribuciones de dosis se realizó con película radiocrómica EBT3.
 
 28-06-2021  Versión 0.0.1<br/>
   * *Dosepy* se incorpora al índice de paquetes python [PyPi](https://pypi.org/)

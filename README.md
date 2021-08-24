@@ -191,6 +191,7 @@ Dose.gamma2D(
 Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
 definido como el porcentaje de valores gamma que son menor o igual a 1.
+Consideraciones:
 Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
 
@@ -273,7 +274,7 @@ Dosepy.dose.from_csv(file_name, PixelSpacing)
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos puntos consecutivos, en mm
+        Distancia entre dos puntos consecutivos, en milímetros
 
     Return
     --------
@@ -300,13 +301,13 @@ Dosepy.dose.from_dicom(file_name)
     ----------------
         La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
-        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+        No se utilizan las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
 
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
-    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
+    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial (mm/punto) con respecto a una resolución de referencia.
     Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
 
     Parameters:
@@ -315,21 +316,45 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
         Matriz a la que se le requiere reducir el tamaño.
 
     resol_array: float
-        Resolución espacial de la matriz.
+        Resolución espacial de la matriz, en milímetros por punto.
 
     resol_ref: float
-        Resolución espacial de referencia.
+        Resolución espacial de referencia, en milímetros por punto.
 
     Return:
   	-------
     array: ndarray
-  			Matriz de datos con resolución espacial aumentada.
+  			Matriz reducida en su número de filas y columnas.
+
+    Ejemplo:
+    --------
+
+        Sean A y B dos matrices de tamaño (13 x 13) y (4 x 4), con
+        resolución espacial de 6 mm/punto y 20 mm/punto, respectivamente.
+
+        La dimensión espacial de la matriz A es de 78 mm
+        (13 puntos * 6 mm/punto = 78 mm)
+        La dimensión espacial de la matriz B es de 80 mm.
+        (4 puntos * 20 mm/punto = 80 mm)
+
+        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
+        matriz B, se utiliza la función equalize:
+
+            import Dosepy.tools.resol as resol
+            import numpy as np
+
+            A = np.zeros( (13, 13) )
+
+            C = resol.equalize(A, 6, 20)
+            C.shape
+            # (4, 4)
+
 
     """
 ```
 
 # Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 # Historia
 01-05-2019<br/>
