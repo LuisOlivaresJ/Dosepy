@@ -430,5 +430,5 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 12-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.   
 
-24-08-2021  Versión 0.1.2<br/>
+24-08-2021  Versión 0.1.3<br/>
   * (En desarrollo) Se agrega el menú "Herramientas" dentro del GUI, para la dosimetría con película radiocrómica.
