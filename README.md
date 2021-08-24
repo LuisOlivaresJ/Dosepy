@@ -40,7 +40,7 @@ Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaco
 ### Requisitos
 Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
-pip install numpy, pydicom, matplotlib, tifffile, scipy
+pip install numpy, pydicom, matplotlib, tifffile, scipy, PyQt5
 ```
 ### Versión Beta
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
@@ -329,25 +329,25 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     Ejemplo:
     --------
 
-        Sean A y B dos matrices de tamaño (13 x 13) y (4 x 4), con
-        resolución espacial de 6 mm/punto y 20 mm/punto, respectivamente.
+    Sean A y B dos matrices de tamaño (2362 x 2362) y (256 x 256), con
+    resolución espacial de 0.0847 mm/punto y 0.7812 mm/punto, respectivamente.
 
-        La dimensión espacial de la matriz A es de 78 mm
-        (13 puntos * 6 mm/punto = 78 mm)
-        La dimensión espacial de la matriz B es de 80 mm.
-        (4 puntos * 20 mm/punto = 80 mm)
+    La dimensión espacial de la matriz A es de 200.06 mm
+    (2362 puntos * 0.0847 mm/punto = 200.06 mm)
+    La dimensión espacial de la matriz B es de 199.99 mm.
+    (256 puntos * 0.7812 mm/punto = 199.99 mm)
 
-        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
-        matriz B, se utiliza la función equalize:
+    Para reducir el tamaño de la matriz A e igualarla al tamaño de la
+    matriz B, se utiliza la función equalize:
 
-            import Dosepy.tools.resol as resol
-            import numpy as np
+        import Dosepy.tools.resol as resol
+        import numpy as np
 
-            A = np.zeros( (13, 13) )
+        A = np.zeros( (2362, 2362) )
 
-            C = resol.equalize(A, 6, 20)
-            C.shape
-            # (4, 4)
+        C = resol.equalize(A, 0.0847, 0.7812)
+        C.shape
+        # (256, 256)
 
 
     """
@@ -377,3 +377,6 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 12-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.
+
+24-08-2021  Versión 0.1.3<br/>
+  * (En desarrollo) Se agrega el menú "Herramientas" dentro del GUI, para la dosimetría con película radiocrómica.

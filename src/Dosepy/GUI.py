@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 20 Julio 2021
+Última modificación: 24 Agosto 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -12,18 +12,23 @@
 #   Importaciones
 
 import sys
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel
 from PyQt5.QtGui import QIcon
 import numpy as np
-from Dosepy.Layouts.MostrarLabels_Import import MostrarLabels
-from Dosepy.Layouts.Imagen import VentanaRaiz
+from Dosepy.GUILayouts.MostrarLabels_Import import MostrarLabels
+#from GUILayouts.MostrarLabels_Import import MostrarLabels  # Se importa desde archivo en PC para testear
+from Dosepy.GUILayouts.Imagen import Bloque_Inf_Imagenes
+#from GUILayouts.Imagen import Bloque_Inf_Imagenes   # Se importa desde archivo en PC para testear
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
+
+from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
+#from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #---------------------------------------------
 
 
-class VentanaPrincipal(QWidget):
+class VentanaPrincipal(QMainWindow):
     """
     Ventana principal
     """
@@ -32,14 +37,19 @@ class VentanaPrincipal(QWidget):
         self.setStyleSheet("background-color: whitesmoke;")
         self.setWindowTitle('Dosepy')
         file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
-        #folder_icon = QIcon(file_name_icon)
         self.setWindowIcon(QIcon(file_name_icon))
-        self.iniciarUI()
+
+        self.cuerpoUI()
+        self.menuUI()
+
+        self.film_to_dose_window = None
+
         self.show()
 
-    def iniciarUI(self):
+    def cuerpoUI(self):
 
-        self.Imagen = VentanaRaiz()
+        cuerpo = QWidget()
+        self.Imagen = Bloque_Inf_Imagenes()
         self.DatosEntrada = MostrarLabels()
         self.DatosEntrada.Eval_button.clicked.connect(self.mostrar_distribucion)
         self.DatosEntrada.Calcular_Button.clicked.connect(self.Calculo_Gamma)
@@ -48,26 +58,60 @@ class VentanaPrincipal(QWidget):
         LayoutPrincipal.addWidget(self.DatosEntrada, 0.6)
         LayoutPrincipal.addWidget(self.Imagen, 1)
 
-        self.setLayout(LayoutPrincipal)
+        #self.setLayout(LayoutPrincipal)
+        cuerpo.setLayout(LayoutPrincipal)
+
+        self.setCentralWidget(cuerpo)
+
+    def menuUI(self):
+        """
+        Crear un menú para la aplicación
+        """
+        # Crear acciones para el menú "Herramientas"
+        film_to_dose_action = QAction('Dosimetría con película', self)
+        film_to_dose_action.setShortcut('Ctrl+F')
+        #film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
+
+        # Crear barra del menu
+        barra_menu = self.menuBar()
+        barra_menu.setNativeMenuBar(False)
+
+        # Agregar menú herramientas y su acción a la barra del menú
+        herram_menu = barra_menu.addMenu('Herramientas (¡En desarrollo!)')
+        herram_menu.addAction(film_to_dose_action)
+
+
+######################################################################
+#   Funciones para menu herramientas
+
+    def film_to_dose(self):
+        if self.film_to_dose_window == None:
+            self.film_to_dose_window = Film_to_Dose_Window()
+        self.film_to_dose_window.show()
+        print('ahí va')
+
 
 ######################################################################
 #   Funciones para botones
 
     def mostrar_distribucion(self):
-        self.Imagen.Mpl_Izq.Img(self.DatosEntrada.Refer_npy)
-        self.Imagen.Mpl_Izq.Colores(self.DatosEntrada.Eval_npy)
+        if self.DatosEntrada.Formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
+            self.Imagen.Mpl_Izq.Img(self.DatosEntrada.Refer_npy)
+            self.Imagen.Mpl_Izq.Colores(self.DatosEntrada.Eval_npy)
 
-        self.Imagen.Mpl_Der.Img(self.DatosEntrada.Eval_npy)
-        self.Imagen.Mpl_Der.Colores(self.DatosEntrada.Eval_npy)
+            self.Imagen.Mpl_Der.Img(self.DatosEntrada.Eval_npy)
+            self.Imagen.Mpl_Der.Colores(self.DatosEntrada.Eval_npy)
 
-        self.Imagen.Mpl_perfiles.ax.clear()
-        self.Imagen.Mpl_perfiles.set_data_and_plot(self.DatosEntrada.Refer_npy, self.DatosEntrada.Eval_npy, self.Imagen.Mpl_Izq.circ)
+            self.Imagen.Mpl_perfiles.ax.clear()
+            self.Imagen.Mpl_perfiles.set_data_and_plot(self.DatosEntrada.Refer_npy, self.DatosEntrada.Eval_npy, self.Imagen.Mpl_Izq.circ)
 
-        self.Imagen.Mpl_Izq.fig.canvas.draw()
-        self.Imagen.Mpl_Der.fig.canvas.draw()
+            self.Imagen.Mpl_Izq.fig.canvas.draw()
+            self.Imagen.Mpl_Der.fig.canvas.draw()
 
-        self.Imagen.Mpl_perfiles.fig.canvas.draw()
+            self.Imagen.Mpl_perfiles.fig.canvas.draw()
 
+        else:
+            self.displayMessageBox()
 
     def Calculo_Gamma(self):
         D_ref = dp.Dose(self.Imagen.Mpl_Izq.npI, float(self.DatosEntrada.Resolution.text()))
@@ -110,8 +154,15 @@ class VentanaPrincipal(QWidget):
         self.DatosEntrada.Mpl_Img_gamma.fig.canvas.draw()
 
 
-
-
+######################################################################
+#   Ventanas para mensajes
+    def displayMessageBox(self):
+        """
+        Si la variable self.DatosEntrada.Formatos_ok es True, los archivos
+        para las distribuciones de dosis se cargaron correctamente.
+        En caso contrario se emite un mensaje de error.
+        """
+        QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
 
 

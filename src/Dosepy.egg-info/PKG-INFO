@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Dosepy
-Version: 0.1.1
+Version: 0.1.3
 Summary: Análisis de distribuciones de dosis en radioterapia
 Home-page: https://luisolivaresj.github.io/Dosepy/
 Author: Luis Alfonso Olivares Jimenez
@@ -64,7 +64,7 @@ Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaco
 ### Requisitos
 Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
 ```bash
-pip install numpy, pydicom, matplotlib, tifffile, scipy
+pip install numpy, pydicom, matplotlib, tifffile, scipy, PyQt5
 ```
 ### Versión Beta
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
@@ -215,6 +215,7 @@ Dose.gamma2D(
 Cálculo del índice gamma contra una distribución de referencia.
 Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis, así como el índice de aprobación
 definido como el porcentaje de valores gamma que son menor o igual a 1.
+Consideraciones:
 Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
 
@@ -297,7 +298,7 @@ Dosepy.dose.from_csv(file_name, PixelSpacing)
         Nombre del archivo en formato string
 
     PixelSpacing : float
-        Distancia entre dos puntos consecutivos, en mm
+        Distancia entre dos puntos consecutivos, en milímetros
 
     Return
     --------
@@ -324,13 +325,13 @@ Dosepy.dose.from_dicom(file_name)
     ----------------
         La distribución de dosis en el archivo DICOM debe contener solo dos dimensiones.
         La resolución espacial debe de ser igual en ambas dimensiones.
-        No se hace uso de las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
+        No se utilizan las coordenadas dadas en el archivo DICOM. Ver segunda consideración en la nota del método gamma2D de la clase Dose.
 
 
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
-    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial con respecto a una resolución de referencia.
+    Función que permite reducir el número de filas y columnas de una matriz (array) para igualar su resolución espacial (mm/punto) con respecto a una resolución de referencia.
     Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con una mayor dimensión espacial.
 
     Parameters:
@@ -339,21 +340,45 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
         Matriz a la que se le requiere reducir el tamaño.
 
     resol_array: float
-        Resolución espacial de la matriz.
+        Resolución espacial de la matriz, en milímetros por punto.
 
     resol_ref: float
-        Resolución espacial de referencia.
+        Resolución espacial de referencia, en milímetros por punto.
 
     Return:
   	-------
     array: ndarray
-  			Matriz de datos con resolución espacial aumentada.
+  			Matriz reducida en su número de filas y columnas.
+
+    Ejemplo:
+    --------
+
+    Sean A y B dos matrices de tamaño (2362 x 2362) y (256 x 256), con
+    resolución espacial de 0.0847 mm/punto y 0.7812 mm/punto, respectivamente.
+
+    La dimensión espacial de la matriz A es de 200.06 mm
+    (2362 puntos * 0.0847 mm/punto = 200.06 mm)
+    La dimensión espacial de la matriz B es de 199.99 mm.
+    (256 puntos * 0.7812 mm/punto = 199.99 mm)
+
+    Para reducir el tamaño de la matriz A e igualarla al tamaño de la
+    matriz B, se utiliza la función equalize:
+
+        import Dosepy.tools.resol as resol
+        import numpy as np
+
+        A = np.zeros( (2362, 2362) )
+
+        C = resol.equalize(A, 0.0847, 0.7812)
+        C.shape
+        # (256, 256)
+
 
     """
 ```
 
 # Advertencia
-El correcto funcionamiento del paquete esta siendo evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
 # Historia
 01-05-2019<br/>
@@ -376,5 +401,8 @@ El correcto funcionamiento del paquete esta siendo evaluado y actualizado consta
 
 12-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.
+
+24-08-2021  Versión 0.1.3<br/>
+  * (En desarrollo) Se agrega el menú "Herramientas" dentro del GUI, para la dosimetría con película radiocrómica.
 
 
