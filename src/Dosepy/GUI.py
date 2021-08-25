@@ -70,14 +70,14 @@ class VentanaPrincipal(QMainWindow):
         # Crear acciones para el menú "Herramientas"
         film_to_dose_action = QAction('Dosimetría con película', self)
         film_to_dose_action.setShortcut('Ctrl+F')
-        #film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
+        film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
 
         # Crear barra del menu
         barra_menu = self.menuBar()
         barra_menu.setNativeMenuBar(False)
 
         # Agregar menú herramientas y su acción a la barra del menú
-        herram_menu = barra_menu.addMenu('Herramientas (¡En desarrollo!)')
+        herram_menu = barra_menu.addMenu('Herramientas')
         herram_menu.addAction(film_to_dose_action)
 
 
