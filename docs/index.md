@@ -172,7 +172,7 @@ print(pass_rate)
 ```
 
 ## Documentación
-![Logo_Dosepy](/assets/LOGOTIPO_DOSEPY.png)
+
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
