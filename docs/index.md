@@ -432,3 +432,5 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 24-08-2021  Versión 0.1.3<br/>
   * (En desarrollo) Se agrega el menú "Herramientas" dentro del GUI, para la dosimetría con película radiocrómica.
+
+[Dosimetría con película](/dosimetria_pelicula/index.md)
