@@ -341,6 +341,7 @@ class Qt_Figure_Imagen:
         self.mplI.set_norm(norm)
         self.mplI.set_cmap(color_map)
         self.cbar = self.fig.colorbar(self.mplI, cax = self.ax2, orientation = 'vertical', shrink = 0.6, format = '%.1f')
+        self.ax2.set_ylabel('Dosis [Gy]')
 
 
 

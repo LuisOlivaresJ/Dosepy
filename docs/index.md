@@ -188,7 +188,7 @@ en la Figura 1, utilizando los siguientes parámetros:
 * Bits: 	16 por canal
 * Formato: 	TIFF
 
-![Cal_Peliculas](/assets/calibracion_t.png)
+![Cal_Peliculas](/assets/calibracion_t.png)<br/>
 Figura 1. Arreglo para la digitalización de las películas.
 
 Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier otro programa), recortar la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles).
@@ -201,8 +201,24 @@ La calibración de la película se realiza ingresando a Dosepy dos imágenes del
    4. Automáticamente se mostrará una nueva ventana. Seleccione la imagen tiff de las películas después de su irradiación.
    5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
 
-![Curva_Calibracion](/assets/img_calib.png)
+![Curva_Calibracion](/assets/img_calib.png)<br/>
 Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
+
+**Aplicar calibración a una imagen**
+
+La curva de calibración previamente generada puede ser aplicada a un imagen en formato_tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
+
+1. Dar clic en el botón Dist.
+2. Seleccionar la imagen tif de la película antes de su irradiación
+3. En la ventana emergente, seleccionar la imagen tif de la película después de la irradiación.
+
+![disutribucion](/assets/distribucion.png)<br/>
+
+El número de filas y columnas de la distribución obtenida (distribución A) puede ser modificado con el objetivo de igualar al tamaño de otra distribución (B) de menor tamaño. Para ello se utiliza la resolución espacial de la distribución B.
+
+1. En la opción Ref., ingresar la resolución espacial en mm/punto de la distribución B.
+2. Dar clic en el botón *Reducir*
+3. Automáticamente, se mostrará la distribución de dosis con un menor número de filas y columnas.
 
 ## Documentación
 
