@@ -171,6 +171,38 @@ print(pass_rate)
 
 ```
 
+## Dosimetría con película
+
+*Calibración*
+
+Para obtener la curva de calibración se utilizan 10 películas de
+4 cm x 5 cm, 9 de ellas irradiadas con dosis de 0.50, 1.00, 2.00,
+4.00, 6.00, 8.00, 10.00, 12.0 y 14.00 Gy.
+
+La digitalización de las películas antes y después de su irradiación,
+deberá ser de tal modo que en la imagen se obtenga el acomodo mostrado
+en la Figura 1, utilizando los siguientes parámetros:
+
+Resolución espacial: 	300 puntos por pulgada
+Composición: 	RGB
+Bits: 	16 por canal
+Formato: 	TIFF
+
+![Cal_Peli](/assets/calibracion.png)
+
+Con ayuda del software ImageJ (o cualquier otro programa), recortar
+la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles).
+
+La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
+
+   1. Abrir el software Dosepy
+   2. En la pestaña Herramientas, haga clic en la opción “Dosimetría con película”.
+   3. Dar clin en el botón Calib., seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
+   4. Automáticamente se mostrará una nueva ventana para cargar la imagen tiff de las películas después de su irradiación.
+   5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
+
+En la gráfica se mostrará la curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff. Adicionalmente, a la parte derecha de la gráfica se mostrarán los parámetros del ajuste polinomial.
+
 ## Documentación
 
 ```
