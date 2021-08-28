@@ -62,7 +62,9 @@ pip install --upgrade Dosepy
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-### Ejemplo con interfaz gráfica
+### Ejemplos
+
+**Ejemplo con interfaz gráfica**
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
@@ -78,19 +80,22 @@ import Dosepy.GUI
 
 Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
 
-### Importación de archivo en formato csv
+**Importación de archivo en formato csv**
+
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
 * El archivo deberá contener sólo los valores de dosis.
 * Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-### Importación de archivo en formato dcm
+**Importación de archivo en formato dcm**
+
 La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
 * Deberá contener sólo un plano de dosis.
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Ejemplo utilizando una terminal
+**Ejemplo utilizando una terminal**
+
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
@@ -122,7 +127,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis
+**Datos en formato CSV, usando un umbral de dosis**
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -146,7 +151,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto
+**Datos en formato DICOM y modo de dosis absoluto**
 
 Importación de un archivo de dosis en formato DICOM
 
