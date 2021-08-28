@@ -188,19 +188,21 @@ en la Figura 1, utilizando los siguientes parámetros:
 * Bits: 	16 por canal
 * Formato: 	TIFF
 
-![Cal_Peli](/assets/calibracion_t.png)
+![Cal_Peliculas](/assets/calibracion_t.png)
+Figura 1. Arreglo para la digitalización de las películas.
 
 Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier otro programa), recortar la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles).
 
 La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
 
-   1. Abrir el software Dosepy
+   1. Abrir el software Dosepy.GUI
    2. En la pestaña Herramientas, haga clic en la opción “Dosimetría con película”.
-   3. Dar clic en el botón Calib., seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
-   4. Automáticamente se mostrará una nueva ventana para cargar la imagen tiff de las películas después de su irradiación.
+   3. Al dar clic en el botón Calib., seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
+   4. Automáticamente se mostrará una nueva ventana. Seleccione la imagen tiff de las películas después de su irradiación.
    5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
 
-En la gráfica se mostrará la curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff. Adicionalmente se mostrarán los parámetros del ajuste polinomial.
+![Curva_Calibracion](/assets/img_calib.png)
+Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
 
 ## Documentación
 
