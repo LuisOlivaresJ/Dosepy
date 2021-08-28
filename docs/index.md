@@ -211,7 +211,7 @@ Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial 
 
 **Aplicar calibración a una imagen**
 
-La curva de calibración previamente generada puede ser aplicada a un imagen en formato_tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
+La curva de calibración previamente generada puede ser aplicada a un imagen en formato tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
 
 1. Dar clic en el botón Dist.
 2. Seleccionar la imagen tif de la película antes de su irradiación
@@ -361,6 +361,7 @@ Retorno:
 
 **Funciones**
 
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
 
 ```
 
@@ -462,6 +463,7 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
             # (256, 256)
 
 ```
+[film_to_dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/film_to_dose.py)
 
 ### Advertencia
 El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
