@@ -226,7 +226,7 @@ El número de filas y columnas de la distribución obtenida (distribución A) pu
 3. Automáticamente, se mostrará la distribución de dosis con un menor número de filas y columnas.
 
 ## Documentación del código
-
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -361,6 +361,7 @@ Retorno:
 
 **Funciones**
 
+
 ```
 
 Dosepy.dose.from_csv(file_name, PixelSpacing)
@@ -410,7 +411,7 @@ Dosepy.dose.from_dicom(file_name)
         clase Dose.
 
 ```
-
+[resol.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/resol.py)
 ```
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
