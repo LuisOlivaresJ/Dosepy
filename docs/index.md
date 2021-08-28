@@ -201,8 +201,8 @@ Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier 
 La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
 
    1. Abrir el software Dosepy.GUI
-   2. En la pestaña Herramientas, haga clic en la opción “Dosimetría con película”.
-   3. Al dar clic en el botón Calib., seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
+   2. En la pestaña *Herramientas*, haga clic en la opción *Dosimetría con película*.
+   3. Al dar clic en el botón *Calib.*, seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
    4. Automáticamente se mostrará una nueva ventana. Seleccione la imagen tiff de las películas después de su irradiación.
    5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
 
@@ -225,7 +225,7 @@ El número de filas y columnas de la distribución obtenida (distribución A) pu
 2. Dar clic en el botón *Reducir*
 3. Automáticamente, se mostrará la distribución de dosis con un menor número de filas y columnas.
 
-## Documentación
+## Documentación del código
 
 ```
 Dosepy.dose.Dose(data, resolution)
@@ -360,6 +360,7 @@ Retorno:
 ```
 
 **Funciones**
+
 ```
 
 Dosepy.dose.from_csv(file_name, PixelSpacing)
@@ -408,7 +409,9 @@ Dosepy.dose.from_dicom(file_name)
         Ver consideraciones en la nota del método gamma2D de la
         clase Dose.
 
+```
 
+```
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
