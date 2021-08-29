@@ -469,12 +469,16 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
 ```
 Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
 
-    Función que permite generar una curva de calibración para transformar densidad óptica a dosis usando película radiocrómica.
-    La calibración se genera a partir de dos imágenes de 10 películas antes y después de su exposición a diferentes dosis.
+    Función que permite generar una curva de calibración para transformar
+    densidad óptica a dosis usando película radiocrómica.
+    La calibración se genera a partir de dos imágenes de 10 películas
+    antes y después de su exposición a diferentes dosis.
 
-    Ambas imágenes deben de tener un tamaño de (1300, 2835, 3) en modo RGB.
+    Ambas imágenes deben de tener un tamaño de (1300, 2835, 3)
+    en modo RGB.
 
-    El centro de cada película deberá encontrarse en las siguientes posiciones (x,y) -> (fila, columna)
+    El centro de cada película deberá encontrarse en las siguientes
+    posiciones (x,y) -> (fila, columna)
 
     1.- ( 200, 300)      2.- ( 200, 1000)
     3.- ( 800, 300)      4.- ( 800, 1000)
@@ -485,12 +489,15 @@ Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
     Parámetros
     -----------
     img_pre : numpy.ndarray
-        Arreglo matricial de datos 3-dimensional que representan a una imagen en modo RGB.
+        Arreglo matricial de datos 3-dimensional que representan
+        a una imagen en modo RGB.
         La imagen debe de contener las 10 películas no irradiadas.
 
     img_post : numpy.ndarray
-        Arreglo matricial de datos 3-dimensional que representan a una imagen en modo RGB.
-        La imagen debe de contener las 10 películas irradiadas con los siguientes valores de dosis:
+        Arreglo matricial de datos 3-dimensional que representan a
+        una imagen en modo RGB.
+        La imagen debe de contener las 10 películas irradiadas con
+        los siguientes valores de dosis:
 
         1.-  0.00 Gy
         2.-  0.50 Gy
@@ -507,12 +514,16 @@ Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
     Retorno
     --------
     popt : ndarray
-        Coeficientes (a0, a1, a2 y a3) correspondientes a un polinómio de tercer grado (a0 + a1*x + a2*x^2 + a3*x^3).
+        Coeficientes (a0, a1, a2 y a3) correspondientes a un polinómio
+        de tercer grado (a0 + a1*x + a2*x^2 + a3*x^3).
 
     Dens_optica_vec : ndarray
-        Densidad óptica de cada una de las 10 películas. Calculada como DO = - np.log10( I_post / (I_pre + 1)),
-        en donde I_pre e I_post corresponden a la intensidad de pixel promedio en una ROI cuadrada de 70 pixeles de lado,
-        para una película antes y después de su irradiación, respectivamente.
+        Densidad óptica de cada una de las 10 películas. Calculada como
+        DO = - np.log10( I_post / (I_pre + 1)),
+        en donde I_pre e I_post corresponden a la intensidad de pixel
+        promedio en una ROI cuadrada de 70 pixeles de lado,
+        para una película antes y después de su irradiación,
+        respectivamente.
 
     Dosis_impartida : numpy.ndarray
         Valores de dosis impartida a cada película.
