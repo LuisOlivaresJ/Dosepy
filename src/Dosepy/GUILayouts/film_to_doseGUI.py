@@ -2,7 +2,7 @@
 
 """
 
-Última modificación: 24 Agosto 2021
+Última modificación: 28 Agosto 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -14,8 +14,6 @@
 #   Importaciones
 from Dosepy.tools.film_to_dose import calibracion, cubico
 from Dosepy.tools.resol import equalize
-#from film_to_dose import calibracion, cubico # ELIMINAR al subir a PyPi y descomentar la línea anterior. Cambiar /GUILabels/film_to_dose.py
-#from GUILayouts.film_to_dose import calibracion, cubico # ELIMINAR al subir a PyPi y descomentar la línea anterior. Cambiar /GUILabels/film_to_dose.py
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox, QLineEdit, QFormLayout
 from PyQt5.QtGui import QIcon, QPixmap
