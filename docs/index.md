@@ -196,7 +196,7 @@ en la Figura 1, utilizando los siguientes parámetros:
 ![Cal_Peliculas](/assets/calibracion_t.png)<br/>
 Figura 1. Arreglo para la digitalización de las películas.
 
-Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier otro programa), recortar la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles). Las siguientes dos ligas permiten descargar dos imágenes tiff de muestra.
+Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier otro programa), recortar la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles). Las siguientes ligas permiten descargar imágenes de muestra.
 
 [Calib_Pre.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Pre.tif)<br/>
 [Calib_Post.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Post.tif)<br/>
