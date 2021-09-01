@@ -300,8 +300,11 @@ class Qt_Figure_CurvaCalibracion:
         #   Axes para la imagen
         self.ax = self.fig.add_subplot(1, 1, 1)
         self.ax.set_title('Curva de calibración', fontsize = 12)
+        #self.ax.set_title('Curva de calibración', fontsize = 14)
         self.ax.set_ylabel('Dosis [Gy]')
+        #self.ax.set_ylabel('Dose [Gy]')
         self.ax.set_xlabel('Densidad óptica')
+        #self.ax.set_xlabel('Optical density')
         self.ax.grid(alpha = 0.3)
 
 class Qt_Figure_Imagen:
