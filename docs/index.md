@@ -216,8 +216,8 @@ Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial 
 
 La curva de calibración previamente generada puede ser aplicada a un imagen en formato tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
 
-[Imagen_ejemplo_PRE.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Pre.tif)
-[Imagen_ejemplo_POST.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Post.tif)
+[Imagen_ejemplo_PRE.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Pre.tif)<br/>
+[Imagen_ejemplo_POST.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Post.tif)<br/>
 
 1. Dar clic en el botón Dist.
 2. Seleccionar la imagen tif de la película antes de su irradiación
