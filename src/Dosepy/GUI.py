@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 24 Agosto 2021
+Última modificación: 01 Septiembre 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -88,8 +88,6 @@ class VentanaPrincipal(QMainWindow):
         if self.film_to_dose_window == None:
             self.film_to_dose_window = Film_to_Dose_Window()
         self.film_to_dose_window.show()
-        print('ahí va')
-
 
 ######################################################################
 #   Funciones para botones
