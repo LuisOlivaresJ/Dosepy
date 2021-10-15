@@ -246,10 +246,10 @@ Parameters:
         un porcentaje.
 
     local_norm : bool, default: False
-        Si el argumento es True (local normalization), el porcentaje
+        Si el argumento es True (normalización local), el porcentaje
         de dosis de tolerancia "dose_t" se interpreta con respecto a
-        la dosis local.
-        Si el argumento es False (global normalization), el porcentaje
+        la dosis local en cada punto de la distribución de referencia.
+        Si el argumento es False (normalización global), el porcentaje
         de dosis de tolerancia "dose_t" se interpreta con respecto al
         máximo de la distribución a evaluar.
           Nota:
