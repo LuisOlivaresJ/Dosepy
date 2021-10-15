@@ -2,7 +2,7 @@
 
 """
 
-Última modificación: 24 Agosto 2021
+Última modificación: 28 Agosto 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -13,10 +13,9 @@
 #---------------------------------------------
 #   Importaciones
 from Dosepy.tools.film_to_dose import calibracion, cubico
-#from film_to_dose import calibracion, cubico # ELIMINAR al subir a PyPi y descomentar la línea anterior. Cambiar /GUILabels/film_to_dose.py
-#from GUILayouts.film_to_dose import calibracion, cubico # ELIMINAR al subir a PyPi y descomentar la línea anterior. Cambiar /GUILabels/film_to_dose.py
+from Dosepy.tools.resol import equalize
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox, QLineEdit, QFormLayout
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -65,10 +64,6 @@ class Film_to_Dose_Window(QWidget):
         #self.button_leer_tiff_post.clicked.connect(self.leer_tiff_post)
         #self.button_leer_tiff_post.setIcon(folder_icon)
 
-        self.button_ajustar_curva = QPushButton('Ajustar')
-        self.button_ajustar_curva.clicked.connect(self.ajustar_curva)
-        self.button_ajustar_curva.setEnabled(False)
-
         self.label_a0 = QLabel()
         self.label_a1 = QLabel()
         self.label_a2 = QLabel()
@@ -76,8 +71,6 @@ class Film_to_Dose_Window(QWidget):
 
         layout_padre_botones.addSpacing(50)
         layout_padre_botones.addWidget(self.button_leer_tiff_pre)
-        #layout_padre_botones.addWidget(self.button_leer_tiff_post)
-        layout_padre_botones.addWidget(self.button_ajustar_curva)
         layout_padre_botones.addWidget(self.label_a0)
         layout_padre_botones.addWidget(self.label_a1)
         layout_padre_botones.addWidget(self.label_a2)
@@ -117,6 +110,15 @@ class Film_to_Dose_Window(QWidget):
         self.button_guardar.setEnabled(False)
         self.button_guardar.clicked.connect(self.guardar_distribucion)
 
+        self.button_reducir = QPushButton('Reducir')
+        self.button_reducir.setEnabled(False)
+        self.button_reducir.clicked.connect(self.reducir_tamano)
+
+        self.QLineEdit_resol = QLineEdit()
+        self.QLineEdit_resol.setFixedWidth(45)
+        Qform_layout_resol = QFormLayout()
+        Qform_layout_resol.addRow('Ref.', self.QLineEdit_resol)
+        #self.QLineEdit_resol.setText("1.0")
 
         #label_fondo = QLabel(self)
         #label_fondo.setStyleSheet("background-color: lightgreen")
@@ -128,6 +130,8 @@ class Film_to_Dose_Window(QWidget):
         layout_padre_botones_2inf.addWidget(self.button_guardar)
         layout_padre_botones_2inf.addWidget(self.check_button_tif)
         layout_padre_botones_2inf.addWidget(self.check_button_csv)
+        layout_padre_botones_2inf.addWidget(self.button_reducir)
+        layout_padre_botones_2inf.addLayout(Qform_layout_resol)
         layout_padre_botones_2inf.setAlignment(Qt.AlignTop)
 
         layout_abuelo_2inf.addWidget(self.Qt_Mpl_distribucion.Qt_fig)
@@ -182,27 +186,23 @@ class Film_to_Dose_Window(QWidget):
 
                     print(file_name_post)
                     self.button_leer_tiff_pre.setStyleSheet("background-color: rgb(88,200,138)")
-                    self.button_ajustar_curva.setEnabled(True)
+                    self.coef_calib, Dens_optica, Dosis_imaprtida = calibracion(self.imagen_calib_pre, self.imagen_calib_post)
+                    x = np.linspace(0, Dens_optica[9])
+                    y = cubico(x, self.coef_calib[0], self.coef_calib[1], self.coef_calib[2], self.coef_calib[3])
+                    self.Qt_Mpl_curva_calib.ax.plot(x,y)
+                    self.Qt_Mpl_curva_calib.ax.plot(Dens_optica, Dosis_imaprtida, 'g*', label = 'Datos')
+                    #self.Qt_Mpl_curva_calib.ax.text(0.3*np.amax(x), 0.05*np.amax(y), r'$D = {:.3f} + {:.3f}x + {:.3f}x^2 + {:.3f}x^3$'.format( coef_calib[0], coef_calib[1], coef_calib[2], coef_calib[3] ))
+                    self.Qt_Mpl_curva_calib.ax.text(0.45*np.amax(x), 0.05*np.amax(y), r'$D = a_0 + a_1x + a_2x^2 + a_3x^3$')
+                    self.Qt_Mpl_curva_calib.fig.canvas.draw()
+                    self.label_a0.setText("a0: {:.4f}".format(self.coef_calib[0]))
+                    self.label_a1.setText("a1: {:.4f}".format(self.coef_calib[1]))
+                    self.label_a2.setText("a2: {:.4f}".format(self.coef_calib[2]))
+                    self.label_a3.setText("a3: {:.4f}".format(self.coef_calib[3]))
+                    self.button_distr_pre.setEnabled(True)
 
             else:
                 QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
                 print('Formato no válido')
-
-    def ajustar_curva(self):
-        self.coef_calib, Dens_optica, Dosis_imaprtida = calibracion(self.imagen_calib_pre, self.imagen_calib_post)
-        x = np.linspace(0, Dens_optica[9])
-        y = cubico(x, self.coef_calib[0], self.coef_calib[1], self.coef_calib[2], self.coef_calib[3])
-        self.Qt_Mpl_curva_calib.ax.plot(x,y)
-        self.Qt_Mpl_curva_calib.ax.plot(Dens_optica, Dosis_imaprtida, 'g*', label = 'Datos')
-        #self.Qt_Mpl_curva_calib.ax.text(0.3*np.amax(x), 0.05*np.amax(y), r'$D = {:.3f} + {:.3f}x + {:.3f}x^2 + {:.3f}x^3$'.format( coef_calib[0], coef_calib[1], coef_calib[2], coef_calib[3] ))
-        self.Qt_Mpl_curva_calib.ax.text(0.45*np.amax(x), 0.05*np.amax(y), r'$D = a_0 + a_1x + a_2x^2 + a_3x^3$')
-        self.Qt_Mpl_curva_calib.fig.canvas.draw()
-        self.label_a0.setText("a0: {:.4f}".format(self.coef_calib[0]))
-        self.label_a1.setText("a1: {:.4f}".format(self.coef_calib[1]))
-        self.label_a2.setText("a2: {:.4f}".format(self.coef_calib[2]))
-        self.label_a3.setText("a3: {:.4f}".format(self.coef_calib[3]))
-        self.button_distr_pre.setEnabled(True)
-        #self.button_distr_post.setEnabled(True)
 
 
     def leer_tiff_pre_distr(self):
@@ -214,7 +214,10 @@ class Film_to_Dose_Window(QWidget):
             if extension == '.tif':
 
                 self.imagen_distr_pre = tiff.imread( file_name_pre )
-                print(file_name_pre)
+                imagen_tiff = tiff.TiffFile(file_name_pre)
+                resolucion = imagen_tiff.pages[0].tags['XResolution'].value[0] / imagen_tiff.pages[0].tags['XResolution'].value[1]
+                self.image_distr_resolucion_mm_punto = 25.4 / resolucion
+                #print(file_name_pre)
                 #self.button_distr_pre.setStyleSheet("background-color: rgb(88,200,138)")
 
                 self.leer_tiff_post_distr()
@@ -255,6 +258,7 @@ class Film_to_Dose_Window(QWidget):
                     self.Qt_Mpl_distribucion.fig.canvas.draw()
 
                     self.button_guardar.setEnabled(True)
+                    self.button_reducir.setEnabled(True)
 
             else:
                 QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
@@ -276,7 +280,12 @@ class Film_to_Dose_Window(QWidget):
             np.savetxt(file_name_csv + '.csv', self.Dosis_FILM, fmt = '%.3f', delimiter = ',')
             print('Guardar csv')
 
+    def reducir_tamano(self):
 
+        self.Dosis_FILM = equalize(self.Dosis_FILM, self.image_distr_resolucion_mm_punto, float(self.QLineEdit_resol.text()))
+        self.Qt_Mpl_distribucion.Img(self.Dosis_FILM)
+        self.Qt_Mpl_distribucion.Colores(self.Dosis_FILM)
+        self.Qt_Mpl_distribucion.fig.canvas.draw()
 
 class Qt_Figure_CurvaCalibracion:
     """
@@ -291,8 +300,11 @@ class Qt_Figure_CurvaCalibracion:
         #   Axes para la imagen
         self.ax = self.fig.add_subplot(1, 1, 1)
         self.ax.set_title('Curva de calibración', fontsize = 12)
+        #self.ax.set_title('Curva de calibración', fontsize = 14)
         self.ax.set_ylabel('Dosis [Gy]')
+        #self.ax.set_ylabel('Dose [Gy]')
         self.ax.set_xlabel('Densidad óptica')
+        #self.ax.set_xlabel('Optical density')
         self.ax.grid(alpha = 0.3)
 
 class Qt_Figure_Imagen:
@@ -330,6 +342,7 @@ class Qt_Figure_Imagen:
         self.mplI.set_norm(norm)
         self.mplI.set_cmap(color_map)
         self.cbar = self.fig.colorbar(self.mplI, cax = self.ax2, orientation = 'vertical', shrink = 0.6, format = '%.1f')
+        self.ax2.set_ylabel('Dosis [Gy]')
 
 
 

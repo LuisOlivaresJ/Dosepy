@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 24 Agosto 2021
+Última modificación: 01 Septiembre 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -70,14 +70,14 @@ class VentanaPrincipal(QMainWindow):
         # Crear acciones para el menú "Herramientas"
         film_to_dose_action = QAction('Dosimetría con película', self)
         film_to_dose_action.setShortcut('Ctrl+F')
-        #film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
+        film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
 
         # Crear barra del menu
         barra_menu = self.menuBar()
         barra_menu.setNativeMenuBar(False)
 
         # Agregar menú herramientas y su acción a la barra del menú
-        herram_menu = barra_menu.addMenu('Herramientas (¡En desarrollo!)')
+        herram_menu = barra_menu.addMenu('Herramientas')
         herram_menu.addAction(film_to_dose_action)
 
 
@@ -88,8 +88,6 @@ class VentanaPrincipal(QMainWindow):
         if self.film_to_dose_window == None:
             self.film_to_dose_window = Film_to_Dose_Window()
         self.film_to_dose_window.show()
-        print('ahí va')
-
 
 ######################################################################
 #   Funciones para botones

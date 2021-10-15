@@ -1,0 +1,6 @@
+body { font: normal 1em Verdana; width: 70%; margin: 1em auto; }
+h1 { font: italic 3em Georgia; color: rgb(23, 109, 109);
+margin: 2em 0 2em; }
+img { margin: 0 20px 0 0; }
+h1 img { margin-bottom: -20px; }
+small { color: #666666; }
