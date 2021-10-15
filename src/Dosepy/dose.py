@@ -56,7 +56,7 @@ class Dose:
             local_norm que se describen más adelante.
 
         dist_t : float, default = 3
-            Tolerancia para la distancia, en milímetros (**criterio DTA).
+            Tolerancia para la distancia, en milímetros (criterio DTA [1]).
 
         dose_tresh : float, default = 10
             Umbral de dosis, en porcentaje (0 a 100). Todo punto en la distribución de dosis con un valor menor al umbral
@@ -70,8 +70,9 @@ class Dose:
             Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
 
         local_norm : bool, default: False
-            Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
-            Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
+            Si el argumento es True (normalización local), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local
+            en cada punto de la distribución de referencia.
+            Si el argumento es False (normalización global), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
             *percentil 99.1 (aproximadamente el máximo) de la distribución a evaluar (self.array).
             Notas:
                 1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
@@ -182,7 +183,7 @@ class Dose:
         else:
             dose_t = (dose_t/100) * maximum_dose
 
-        #   Número de pixeles que se usará para definir una vecindad sobre la que se calculará el índice gamma.
+        #   Número de pixeles que se usarán para definir una vecindad sobre la que se calculará el índice gamma.
         neighborhood = round(mask_radius*1./self.resolution)
 
         #   Matriz que guardará el resultado del índice gamma.
@@ -219,7 +220,10 @@ class Dose:
 
 
                         if local_norm:
+                            # La dosis de tolerancia se actualiza al porcentaje con respecto al valor
+                            # de dosis local en la distribución de referencia.
                             dose_t_local = dose_t * D_ref[i,j] / 100
+
                             Gamma.append(
                                 np.sqrt(
                                     (distance**2) / (dist_t**2)
@@ -235,7 +239,8 @@ class Dose:
 
                 gamma[i,j] = min(Gamma)
 
-                # Si la dosis es menor al umbral de dosis, entonces esa posición no se toma en cuenta en el porcentaje de aprobación.
+                # Para la posición en cuestión, si la dosis es menor al umbral de dosis,
+                # entonces dicho punto no se toma en cuenta en el porcentaje de aprobación.
                 if D_eval[i,j] < Dose_threshold:
                     gamma[i,j] = np.nan
 
