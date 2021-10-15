@@ -63,7 +63,9 @@ pip install --upgrade Dosepy
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
-### Ejemplo con interfaz gráfica
+### Ejemplos
+
+**Ejemplo con interfaz gráfica**
 
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
@@ -79,19 +81,22 @@ import Dosepy.GUI
 
 Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
 
-### Importación de archivo en formato csv
+**Importación de archivo en formato csv**
+
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
 * El archivo deberá contener sólo los valores de dosis.
 * Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-### Importación de archivo en formato dcm
+**Importación de archivo en formato dcm**
+
 La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
 * Deberá contener sólo un plano de dosis.
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Ejemplo utilizando una terminal
+**Ejemplo utilizando una terminal**
+
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando *python*:
 
@@ -123,7 +128,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis
+**Datos en formato CSV, usando un umbral de dosis**
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -147,7 +152,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto
+**Datos en formato DICOM y modo de dosis absoluto**
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -172,8 +177,63 @@ print(pass_rate)
 
 ```
 
-## Documentación
-![Logo_Dosepy](/assets/LOGOTIPO_DOSEPY.png)
+## Dosimetría con película
+
+**Calibración**
+
+Para obtener la curva de calibración se utilizan 10 películas de
+4 cm x 5 cm, 9 de ellas irradiadas con dosis de 0.50, 1.00, 2.00,
+4.00, 6.00, 8.00, 10.00, 12.0 y 14.00 Gy.
+
+La digitalización de las películas antes y después de su irradiación,
+deberá ser de tal modo que en la imagen se obtenga el acomodo mostrado
+en la Figura 1, utilizando los siguientes parámetros:
+
+* Resolución espacial: 	300 puntos por pulgada
+* Composición: 	RGB
+* Bits: 	16 por canal
+* Formato: 	TIFF
+
+![Cal_Peliculas](/assets/calibracion_t.png)<br/>
+Figura 1. Arreglo para la digitalización de las películas.
+
+Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier otro programa), recortar la imagen hasta obtener un tamaño de 11 cm por 24 cm (1,300 por 2835 pixeles). Las siguientes ligas permiten descargar imágenes de muestra.
+
+[Calib_Pre.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Pre.tif)<br/>
+[Calib_Post.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Post.tif)<br/>
+
+La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
+
+   1. Abrir el software Dosepy.GUI
+   2. En la pestaña *Herramientas*, haga clic en la opción *Dosimetría con película*.
+   3. Al dar clic en el botón *Calib.*, seleccione la imagen en formato tiff correspondiente al arreglo de las 10 películas sin irradiar.
+   4. Automáticamente se mostrará una nueva ventana. Seleccione la imagen tiff de las películas después de su irradiación.
+   5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
+
+![Curva_Calibracion](/assets/img_calib.png)<br/>
+Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
+
+**Aplicar calibración a una imagen**
+
+La curva de calibración previamente generada puede ser aplicada a un imagen en formato tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
+
+[Imagen_ejemplo_PRE.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Pre.tif)<br/>
+[Imagen_ejemplo_POST.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Post.tif)<br/>
+
+1. Dar clic en el botón Dist.
+2. Seleccionar la imagen tif de la película antes de su irradiación
+3. En la ventana emergente, seleccionar la imagen tif de la película después de la irradiación.
+
+![disutribucion](/assets/distribucion.png)<br/>
+
+El número de filas y columnas de la distribución obtenida (distribución A) puede ser modificado con el objetivo de igualar al tamaño de otra distribución (B) de menor tamaño. Para ello se utiliza la resolución espacial de la distribución B.
+
+1. En la opción Ref., ingresar la resolución espacial en mm/punto de la distribución B.
+2. Dar clic en el botón *Reducir*
+3. Automáticamente, se mostrará la distribución de dosis con un menor número de filas y columnas.
+
+## Documentación del código
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -307,6 +367,9 @@ Retorno:
 ```
 
 **Funciones**
+
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
+
 ```
 
 Dosepy.dose.from_csv(file_name, PixelSpacing)
@@ -355,7 +418,9 @@ Dosepy.dose.from_dicom(file_name)
         Ver consideraciones en la nota del método gamma2D de la
         clase Dose.
 
-
+```
+[resol.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/resol.py)
+```
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
     """
@@ -406,6 +471,73 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
 
 ```
 
+[film_to_dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/film_to_dose.py)
+
+```
+Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
+
+    Función que permite generar una curva de calibración para transformar
+    densidad óptica a dosis usando película radiocrómica.
+    La calibración se genera a partir de dos imágenes de 10 películas
+    antes y después de su exposición a diferentes dosis.
+
+    Ambas imágenes deben de tener un tamaño de (1300, 2835, 3)
+    en modo RGB.
+
+    El centro de cada película deberá encontrarse en las siguientes
+    posiciones (x,y) -> (fila, columna)
+
+    1.- ( 200, 300)      2.- ( 200, 1000)
+    3.- ( 800, 300)      4.- ( 800, 1000)
+    5.- (1400, 300)      6.- (1400, 1000)
+    7.- (2000, 300)      8.- (2000, 1000)
+    9.- (2600, 300)     10.- (2600, 1000)
+
+    Parámetros
+    -----------
+    img_pre : numpy.ndarray
+        Arreglo matricial de datos 3-dimensional que representan
+        a una imagen en modo RGB.
+        La imagen debe de contener las 10 películas no irradiadas.
+
+    img_post : numpy.ndarray
+        Arreglo matricial de datos 3-dimensional que representan a
+        una imagen en modo RGB.
+        La imagen debe de contener las 10 películas irradiadas con
+        los siguientes valores de dosis:
+
+        1.-  0.00 Gy
+        2.-  0.50 Gy
+        3.-  1.00 Gy
+        4.-  2.00 Gy
+        5.-  4.00 Gy
+        6.-  6.00 Gy
+        7.-  8.00 Gy
+        8.-  10.00 Gy
+        9.-  12.00 Gy
+        10.- 14.00 Gy
+
+
+    Retorno
+    --------
+    popt : ndarray
+        Coeficientes (a0, a1, a2 y a3) correspondientes a un polinómio
+        de tercer grado (a0 + a1*x + a2*x^2 + a3*x^3).
+
+    Dens_optica_vec : ndarray
+        Densidad óptica de cada una de las 10 películas. Calculada como
+        DO = - np.log10( I_post / (I_pre + 1)),
+        en donde I_pre e I_post corresponden a la intensidad de pixel
+        promedio en una ROI cuadrada de 70 pixeles de lado,
+        para una película antes y después de su irradiación,
+        respectivamente.
+
+    Dosis_impartida : numpy.ndarray
+        Valores de dosis impartida a cada película.
+
+```
+
+
 ### Advertencia
 El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
 
@@ -431,5 +563,5 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 12-08-2021  Versión 0.1.1<br/>
   * Se agrega la carpeta tools junto con la función *equalize* del modulo resol, para modificar la resolución espacial de una distribución e igualarla a una de referencia.   
 
-24-08-2021  Versión 0.1.3<br/>
-  * (En desarrollo) Se agrega el menú "Herramientas" dentro del GUI, para la dosimetría con película radiocrómica.
+01-09-2021  Versión 0.2.1<br/>
+  * Se agrega el menú "Herramientas" dentro de la interfaz gráfica para la dosimetría con película radiocrómica.
