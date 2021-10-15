@@ -8,12 +8,13 @@ title: "Dosepy"
 *Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).
 
+Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 ## Métodos de comparación
 
 **¡Consideraciones!**
 
-* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Ambas distribuciones deben de tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
 * Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
 
 En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
@@ -22,8 +23,8 @@ En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo ant
 ![Imagen_gamma](/assets/Image_gamma.png)<br/>
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
-* El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o relativo.
-  * En modo relativo, el porcentaje se interpreta con respecto al máximo de la distribución de dosis (global normalization), o con respecto a la dosis local (local normalization), según la selección del usuario.
+* El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o en modo relativo (en %).
+  * En modo relativo, el porcentaje puede interpretarse con respecto al máximo de la distribución de dosis a evaluar (normalización global), o con respecto a la dosis local en la distribución de referencia (normalización local); según la selección del usuario.
 * El umbral de dosis puede ser ajustado por el usuario.
 * La distribución de referencia puede ser seleccionada por el usuario.
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
@@ -305,10 +306,10 @@ Parameters:
         un porcentaje.
 
     local_norm : bool, default: False
-        Si el argumento es True (local normalization), el porcentaje
+        Si el argumento es True (normalización local), el porcentaje
         de dosis de tolerancia "dose_t" se interpreta con respecto a
-        la dosis local.
-        Si el argumento es False (global normalization), el porcentaje
+        la dosis local en cada punto de la distribución de referencia.
+        Si el argumento es False (normalización global), el porcentaje
         de dosis de tolerancia "dose_t" se interpreta con respecto al
         máximo de la distribución a evaluar.
           Nota:
