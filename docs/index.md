@@ -233,7 +233,7 @@ El número de filas y columnas de la distribución obtenida (distribución A) pu
 3. Automáticamente, se mostrará la distribución de dosis con un menor número de filas y columnas.
 
 ## Documentación del código
-[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/577475706a0b9701a5f16601fc06eb6699828f98/src/Dosepy/dose.py)
 ```
 Dosepy.dose.Dose(data, resolution)
   Clase para la representación de una distribución de dosis absorbida.
@@ -368,7 +368,7 @@ Retorno:
 
 **Funciones**
 
-[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/dose.py)
+[dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/577475706a0b9701a5f16601fc06eb6699828f98/src/Dosepy/dose.py)
 
 ```
 
@@ -419,7 +419,7 @@ Dosepy.dose.from_dicom(file_name)
         clase Dose.
 
 ```
-[resol.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/resol.py)
+[resol.py](https://github.com/LuisOlivaresJ/Dosepy/blob/577475706a0b9701a5f16601fc06eb6699828f98/src/Dosepy/tools/resol.py)
 ```
 
 Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
@@ -471,7 +471,7 @@ Dosepy.tools.resol.equalize(array, resol_array, resol_ref)
 
 ```
 
-[film_to_dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/2ffb694187298b05c91b5489926897f17981c01c/src/Dosepy/tools/film_to_dose.py)
+[film_to_dose.py](https://github.com/LuisOlivaresJ/Dosepy/blob/577475706a0b9701a5f16601fc06eb6699828f98/src/Dosepy/tools/film_to_dose.py)
 
 ```
 Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
