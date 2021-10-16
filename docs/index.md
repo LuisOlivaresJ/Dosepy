@@ -5,7 +5,7 @@ title: "Dosepy"
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
 # Bienvenido
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
+*Dosepy* es un paquete de código abierto escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
