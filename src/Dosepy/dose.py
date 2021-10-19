@@ -59,7 +59,7 @@ class Dose:
             Tolerancia para la distancia, en milímetros (criterio DTA [1]).
 
         dose_tresh : float, default = 10
-            Umbral de dosis, en porcentaje (0 a 100). Todo punto en la distribución de dosis con un valor menor al umbral
+            Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima. Todo punto en la distribución de dosis con un valor menor al umbral
             de dosis, es excluido del análisis.
             Por default, el porcentaje se interpreta con respecto al percentil 99.1 (aproximadamente el máximo)
             de la distribución a evaluar. Si el porcentaje se requiere con respecto al máximo, modificar
