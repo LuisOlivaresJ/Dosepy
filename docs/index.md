@@ -565,3 +565,6 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 01-09-2021  Versión 0.2.1<br/>
   * Se agrega el menú "Herramientas" dentro de la interfaz gráfica para la dosimetría con película radiocrómica.
+
+30-10-2021 Versión 0.2.2<br/>
+  * Se agrega el menú "Ayuda" para mostrar la versión y un link para la Documentación

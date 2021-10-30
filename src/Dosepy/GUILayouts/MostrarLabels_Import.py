@@ -66,6 +66,7 @@ class MostrarLabels(QWidget):
         # Crear LineEdit para parámetros gamma
 
         self.Indice_gamma_porcentaje_Label = QLabel('Porcentaje de aprobación: ')
+        self.Indice_gamma_porcentaje_Label.setStyleSheet("font-size: 16px")
         self.Indice_gamma_promedio_Label = QLabel('Índice gamma promedio: ')
         #self.Indice_gamma_maximo_Label = QLabel('Máximo: ')
         #self.Indice_gamma_mediana_Label = QLabel('Mediana: ')

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 01 Septiembre 2021
+Última modificación: 30 Octubre 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
     Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
 
+    Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 """
 #---------------------------------------------
 #   Importaciones
@@ -25,6 +26,10 @@ import pkg_resources
 
 from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
+from Dosepy.GUILayouts.about_window import About_Window
+#from GUILayouts.about_window import About_Window
+
+
 #---------------------------------------------
 
 
@@ -35,6 +40,7 @@ class VentanaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("background-color: whitesmoke;")
+        #self.setStyleSheet("background-color: #1d1040;")
         self.setWindowTitle('Dosepy')
         file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
         self.setWindowIcon(QIcon(file_name_icon))
@@ -43,6 +49,7 @@ class VentanaPrincipal(QMainWindow):
         self.menuUI()
 
         self.film_to_dose_window = None
+        self.about_window = None
 
         self.show()
 
@@ -72,6 +79,9 @@ class VentanaPrincipal(QMainWindow):
         film_to_dose_action.setShortcut('Ctrl+F')
         film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
 
+        about_action = QAction('Acerca de', self)
+        about_action.triggered.connect(self.about)
+
         # Crear barra del menu
         barra_menu = self.menuBar()
         barra_menu.setNativeMenuBar(False)
@@ -79,6 +89,8 @@ class VentanaPrincipal(QMainWindow):
         # Agregar menú herramientas y su acción a la barra del menú
         herram_menu = barra_menu.addMenu('Herramientas')
         herram_menu.addAction(film_to_dose_action)
+        about_manu = barra_menu.addMenu('Ayuda')
+        about_manu.addAction(about_action)
 
 
 ######################################################################
@@ -88,6 +100,11 @@ class VentanaPrincipal(QMainWindow):
         if self.film_to_dose_window == None:
             self.film_to_dose_window = Film_to_Dose_Window()
         self.film_to_dose_window.show()
+
+    def about(self):
+        if self.about_window == None:
+            self.about_window = About_Window()
+        self.about_window.show()
 
 ######################################################################
 #   Funciones para botones

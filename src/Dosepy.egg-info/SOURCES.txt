@@ -13,6 +13,7 @@ src/Dosepy.egg-info/top_level.txt
 src/Dosepy/GUILayouts/Imagen.py
 src/Dosepy/GUILayouts/MostrarLabels_Import.py
 src/Dosepy/GUILayouts/__init__.py
+src/Dosepy/GUILayouts/about_window.py
 src/Dosepy/GUILayouts/film_to_doseGUI.py
 src/Dosepy/Icon/Icon.png
 src/Dosepy/Icon/Logo_Dosepy.png

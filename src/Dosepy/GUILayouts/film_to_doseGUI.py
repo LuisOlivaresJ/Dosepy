@@ -2,11 +2,13 @@
 
 """
 
-Última modificación: 28 Agosto 2021
+Última modificación: 29 Octubre 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
     Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
+
+    Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 """
 
