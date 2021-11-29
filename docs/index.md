@@ -537,9 +537,32 @@ Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
 
 ```
 
+**Presentación en eventos científicos**
+
+* (2021) 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica, "Desarrollo y validación de un software de código abierto para la comparación de distribuciones de dosis usadas en radioterapia" [(Video disponible)](https://youtu.be/HM4qkYGzNFc)
 
 ### Advertencia
 El correcto funcionamiento del paquete se está evaluado y actualizado constantemente. Sin embargo, no se tiene garantía de que el código del paquete esté libre de errores o bugs. El usuario es el único responsable por utilizar *Dosepy*.
+
+### Licencia
+
+Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
+03-2021-093012460400-01
+
+CONDICIONES
+
+Cualquier persona puede utilzar y/o modificar una copia de este software y los archivos asociados
+para ser utilizados de forma individual o personal.
+
+Las obras derivadas, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
+paráfrasis, compilaciones, colecciones y transformaciones del software Dosepy, podrán ser explotadas
+cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra primigenia,
+previo consentimiento del titular del derecho moral, en los casos previstos en la Fracción III
+del Artículo 21 de la Ley Federal del Derecho de Autor.
+
+GARANTÍA
+
+El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es responsabilidad del usuario.
 
 **Historia**<br/>
 01-05-2019<br/>
@@ -568,3 +591,6 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 30-10-2021 Versión 0.2.2<br/>
   * Se agrega el menú "Ayuda" para mostrar la versión y un link para la Documentación
+
+29-10-2021 Versión 0.2.3<br/>
+  * Se modifica la LICENCIA por derechos de autor. Se agrega video de presentación en congreso.
