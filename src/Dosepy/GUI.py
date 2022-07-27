@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 30 Octubre 2021
+Última modificación: 26 Julio 2022
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
-    Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
+    Físico Médico, La Paz, Baja California Sur, México.
 
     Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 """
@@ -13,8 +13,8 @@
 #   Importaciones
 
 import sys
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
+from PyQt5.QtGui import QIcon, QFont
 import numpy as np
 from Dosepy.GUILayouts.MostrarLabels_Import import MostrarLabels
 #from GUILayouts.MostrarLabels_Import import MostrarLabels  # Se importa desde archivo en PC para testear
@@ -179,16 +179,37 @@ class VentanaPrincipal(QMainWindow):
         """
         QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
+class Ventana_Secundaria(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        #self.setWindowIcon(QIcon('Icon/Icon.png'))  #   Obtenido desde carpeta para pruebas en PC
+        self.iniciarUI()
+
+    def iniciarUI(self):
+        self.setStyleSheet("background-color: whitesmoke;")
+        self.setGeometry(100, 100, 400, 200)
+        self.setWindowTitle('Dosepy')
+        file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')    #   Obtenido desde paquete Dosepy
+        self.setWindowIcon(QIcon(file_name_icon))
+
+        self.name_entry = QLineEdit(self)
+        self.name_entry.setFont(QFont('Arial', 15))
+        self.name_entry.setEchoMode(QLineEdit.Password)
+        self.name_entry.returnPressed.connect(self.cerrar_UI)
+        #self.name_entry = QLineEdit(self, background: rgb(0, 255, 255);)
+        self.name_entry.move(100, 50)
+        self.name_entry.resize(200, 60) # Change size of entry field
+        self.show()
+
+    def cerrar_UI(self):
+        if self.name_entry.text() == 'Snupy':
+            #self.close()
+            self.window = VentanaPrincipal()
 
 
-
-
-#if __name__ == '__main__':
-#    app = QApplication(sys.argv)
-#    window = VentanaPrincipal()
-
-#    sys.exit(app.exec_())
 
 app = QApplication(sys.argv)
-window = VentanaPrincipal()
+windowA = Ventana_Secundaria()
+
 sys.exit(app.exec_())

@@ -368,7 +368,8 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 CONDICIONES
 
 Cualquier persona puede utilzar y/o modificar una copia de este software y los archivos asociados
-para ser utilizados de forma individual o personal.
+para ser utilizados de forma individual o personal con fines académicos. Para ello, se requiere contactar al
+autor para solicitar una clave de acceso.
 
 Las obras derivadas, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software Dosepy, podrán ser explotadas
@@ -410,3 +411,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 29-10-2021 Versión 0.2.3<br/>
   * Se modifica la LICENCIA por derechos de autor. Se agrega video de presentación en congreso.
+
+27-07-2022 Versión 1.0.0<br/>
+  * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.

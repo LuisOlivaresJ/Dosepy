@@ -4,3 +4,4 @@ include src/Dosepy/Icon/folder.png
 include src/Dosepy/Icon/Icon.png
 include src/Dosepy/Icon/Logo_Dosepy.png
 include src/Dosepy/Icon/save.png
+include src/Dosepy/data/validation.pdf
