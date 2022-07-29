@@ -15,6 +15,8 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtCore import Qt
+
 import numpy as np
 from Dosepy.GUILayouts.MostrarLabels_Import import MostrarLabels
 #from GUILayouts.MostrarLabels_Import import MostrarLabels  # Se importa desde archivo en PC para testear
@@ -179,35 +181,72 @@ class VentanaPrincipal(QMainWindow):
         """
         QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
-class Ventana_Secundaria(QWidget):
+class Ventana_Secundaria(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        #self.setWindowIcon(QIcon('Icon/Icon.png'))  #   Obtenido desde carpeta para pruebas en PC
+        self.about_window_sec = None
+
         self.iniciarUI()
+        self.menu_ayuda()
+        #self.setCentralWidget(cuerpo_sec)
 
     def iniciarUI(self):
+        
+        cuerpo = QWidget()
+        layout_principal = QVBoxLayout()
+        cuerpo.setLayout(layout_principal)
+        self.setCentralWidget(cuerpo)
+
         self.setStyleSheet("background-color: whitesmoke;")
-        self.setGeometry(100, 100, 400, 200)
         self.setWindowTitle('Dosepy')
         file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')    #   Obtenido desde paquete Dosepy
         self.setWindowIcon(QIcon(file_name_icon))
 
+        label_usuario = QLabel(self)
+        label_usuario.setText('Ingrese una clave:')
+        label_usuario.move(80, 20)
+        layout_principal.addWidget(label_usuario)
+        label_usuario.setFont(QFont('Arial', 14))
+
         self.name_entry = QLineEdit(self)
-        self.name_entry.setFont(QFont('Arial', 15))
+        self.name_entry.setFont(QFont('Arial', 18))
         self.name_entry.setEchoMode(QLineEdit.Password)
+        self.name_entry.setAlignment(Qt.AlignCenter)
+        
         self.name_entry.returnPressed.connect(self.cerrar_UI)
-        #self.name_entry = QLineEdit(self, background: rgb(0, 255, 255);)
-        self.name_entry.move(100, 50)
-        self.name_entry.resize(200, 60) # Change size of entry field
+        self.name_entry.move(100, 70)
+        layout_principal.addWidget(self.name_entry)
+        layout_principal.setSpacing(10)
         self.show()
 
     def cerrar_UI(self):
-        if self.name_entry.text() == 'Snupy':
+        if self.name_entry.text() == 'Snoopy':
             #self.close()
             self.window = VentanaPrincipal()
 
+    def menu_ayuda(self):
+        """
+        Crear un menú de ayuda
+        """
+        # Crear acciones para el menú "Herramientas"
 
+        about_action_secundaria = QAction('Acerca de', self)
+        about_action_secundaria.triggered.connect(self.about)
+
+        # Crear barra del menu
+        barra_menu_sec = self.menuBar()
+        barra_menu_sec.setNativeMenuBar(False)
+
+        # Agregar menú herramientas y su acción a la barra del menú
+
+        about_manu_sec = barra_menu_sec.addMenu('Ayuda')
+        about_manu_sec.addAction(about_action_secundaria)
+
+    def about(self):
+        if self.about_window_sec == None:
+            self.about_window = About_Window()
+        self.about_window.show()
 
 app = QApplication(sys.argv)
 windowA = Ventana_Secundaria()
