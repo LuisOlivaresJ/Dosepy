@@ -5,7 +5,7 @@ title: "Dosepy"
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
 # Bienvenido
-*Dosepy* es un paquete de código abierto escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
+*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
 Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
@@ -30,6 +30,10 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Se permite definir un radio de búsqueda como proceso de optimización para el cálculo.
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
+
+**Proceso de validación**<br/>
+![Resumen](/assets/validation.pdf)<br/>
+La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
 
 **Comparación mediante perfiles**<br/>
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
@@ -552,7 +556,8 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 CONDICIONES
 
 Cualquier persona puede utilzar y/o modificar una copia de este software y los archivos asociados
-para ser utilizados de forma individual o personal.
+para ser utilizados de forma individual o personal para uso académico. Para ello, se requiere contactar al
+autor para solicitar una clave de acceso.
 
 Las obras derivadas, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software Dosepy, podrán ser explotadas
@@ -594,3 +599,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 29-10-2021 Versión 0.2.3<br/>
   * Se modifica la LICENCIA por derechos de autor. Se agrega video de presentación en congreso.
+
+  27-07-2022 Versión 0.3.0<br/>
+    * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.

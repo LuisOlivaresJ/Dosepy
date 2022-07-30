@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 30 Octubre 2021
+Última modificación: 26 Julio 2022
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
-    Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
+    Físico Médico, La Paz, Baja California Sur, México.
 
     Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 """
@@ -13,8 +13,10 @@
 #   Importaciones
 
 import sys
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtCore import Qt
+
 import numpy as np
 from Dosepy.GUILayouts.MostrarLabels_Import import MostrarLabels
 #from GUILayouts.MostrarLabels_Import import MostrarLabels  # Se importa desde archivo en PC para testear
@@ -179,16 +181,74 @@ class VentanaPrincipal(QMainWindow):
         """
         QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
+class Ventana_Secundaria(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
+        self.about_window_sec = None
 
+        self.iniciarUI()
+        self.menu_ayuda()
+        #self.setCentralWidget(cuerpo_sec)
 
+    def iniciarUI(self):
+        
+        cuerpo = QWidget()
+        layout_principal = QVBoxLayout()
+        cuerpo.setLayout(layout_principal)
+        self.setCentralWidget(cuerpo)
 
-#if __name__ == '__main__':
-#    app = QApplication(sys.argv)
-#    window = VentanaPrincipal()
+        self.setStyleSheet("background-color: whitesmoke;")
+        self.setWindowTitle('Dosepy')
+        file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')    #   Obtenido desde paquete Dosepy
+        self.setWindowIcon(QIcon(file_name_icon))
 
-#    sys.exit(app.exec_())
+        label_usuario = QLabel(self)
+        label_usuario.setText('Ingrese clave de acceso:')
+        label_usuario.move(80, 20)
+        layout_principal.addWidget(label_usuario)
+        label_usuario.setFont(QFont('Arial', 14))
+
+        self.name_entry = QLineEdit(self)
+        self.name_entry.setFont(QFont('Arial', 18))
+        self.name_entry.setEchoMode(QLineEdit.Password)
+        self.name_entry.setAlignment(Qt.AlignCenter)
+        
+        self.name_entry.returnPressed.connect(self.cerrar_UI)
+        self.name_entry.move(100, 70)
+        layout_principal.addWidget(self.name_entry)
+        layout_principal.setSpacing(10)
+        self.show()
+
+    def cerrar_UI(self):
+        if self.name_entry.text() == 'Snoopy':
+            #self.close()
+            self.window = VentanaPrincipal()
+
+    def menu_ayuda(self):
+        """
+        Crear un menú de ayuda
+        """
+        # Crear acciones para el menú "Herramientas"
+
+        about_action_secundaria = QAction('Acerca de', self)
+        about_action_secundaria.triggered.connect(self.about)
+
+        # Crear barra del menu
+        barra_menu_sec = self.menuBar()
+        barra_menu_sec.setNativeMenuBar(False)
+
+        # Agregar menú herramientas y su acción a la barra del menú
+
+        about_manu_sec = barra_menu_sec.addMenu('Ayuda')
+        about_manu_sec.addAction(about_action_secundaria)
+
+    def about(self):
+        if self.about_window_sec == None:
+            self.about_window = About_Window()
+        self.about_window.show()
 
 app = QApplication(sys.argv)
-window = VentanaPrincipal()
+windowA = Ventana_Secundaria()
+
 sys.exit(app.exec_())
