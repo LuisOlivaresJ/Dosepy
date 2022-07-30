@@ -31,6 +31,10 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
+**Proceso de validación**<br/>
+![Resumen](/assets/validation.pdf)<br/>
+La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
+
 **Comparación mediante perfiles**<br/>
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
 ![Imagen_perfil_2](/assets/Perfiles_2.png)<br/>
