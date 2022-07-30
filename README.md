@@ -25,6 +25,7 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 
 **Proceso de validación**<br/>
 
+[Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
 La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
 
 ### Comparación mediante perfiles
