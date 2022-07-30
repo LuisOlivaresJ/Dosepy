@@ -204,7 +204,7 @@ class Ventana_Secundaria(QMainWindow):
         self.setWindowIcon(QIcon(file_name_icon))
 
         label_usuario = QLabel(self)
-        label_usuario.setText('Ingrese una clave:')
+        label_usuario.setText('Ingrese clave de acceso:')
         label_usuario.move(80, 20)
         layout_principal.addWidget(label_usuario)
         label_usuario.setFont(QFont('Arial', 14))
