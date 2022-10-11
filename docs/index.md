@@ -555,12 +555,11 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 CONDICIONES
 
-Cualquier persona puede utilzar y/o modificar una copia de este software y los archivos asociados
-para ser utilizados de forma individual o personal para uso académico. Para ello, se requiere contactar al
-autor para solicitar una clave de acceso.
+Cualquier persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
+requiere de una licencia de uso particular.
 
-Las obras derivadas, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
-paráfrasis, compilaciones, colecciones y transformaciones del software Dosepy, podrán ser explotadas
+El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
+paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas
 cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra primigenia,
 previo consentimiento del titular del derecho moral, en los casos previstos en la Fracción III
 del Artículo 21 de la Ley Federal del Derecho de Autor.
