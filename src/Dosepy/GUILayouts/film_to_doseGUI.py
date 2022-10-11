@@ -112,19 +112,22 @@ class Film_to_Dose_Window(QWidget):
         self.button_guardar.setEnabled(False)
         self.button_guardar.clicked.connect(self.guardar_distribucion)
 
+        #self.QLabel_Reducir_resolucion = QLabel("Herramienta para igualar la resolución.")
+
         self.button_reducir = QPushButton('Reducir')
         self.button_reducir.setEnabled(False)
         self.button_reducir.clicked.connect(self.reducir_tamano)
 
         self.QLineEdit_resol = QLineEdit()
-        self.QLineEdit_resol.setFixedWidth(45)
+        self.QLineEdit_resol.setFixedWidth(50)
         Qform_layout_resol = QFormLayout()
-        Qform_layout_resol.addRow('Ref.', self.QLineEdit_resol)
-        #self.QLineEdit_resol.setText("1.0")
-
-        #label_fondo = QLabel(self)
-        #label_fondo.setStyleSheet("background-color: lightgreen")
-        #label_fondo.setStyleSheet("background-color: darkblue")
+        Qform_layout_resol.addRow('Ref. [mm/punto].', self.QLineEdit_resol)
+        # setting background color to the line edit widget
+        self.QLineEdit_resol.setStyleSheet("QLineEdit"
+            "{"
+            "background : #FF8C00;"
+            "}")
+        self.QLineEdit_resol.textChanged.connect(self.revisar_si_es_flotante)
 
         layout_padre_botones_2inf.addSpacing(40)
         layout_padre_botones_2inf.addWidget(self.button_distr_pre)
@@ -132,8 +135,11 @@ class Film_to_Dose_Window(QWidget):
         layout_padre_botones_2inf.addWidget(self.button_guardar)
         layout_padre_botones_2inf.addWidget(self.check_button_tif)
         layout_padre_botones_2inf.addWidget(self.check_button_csv)
-        layout_padre_botones_2inf.addWidget(self.button_reducir)
+
+        layout_padre_botones_2inf.addSpacing(40)
+        #layout_padre_botones_2inf.addWidget(self.QLabel_Reducir_resolucion)
         layout_padre_botones_2inf.addLayout(Qform_layout_resol)
+        layout_padre_botones_2inf.addWidget(self.button_reducir)
         layout_padre_botones_2inf.setAlignment(Qt.AlignTop)
 
         layout_abuelo_2inf.addWidget(self.Qt_Mpl_distribucion.Qt_fig)
@@ -260,7 +266,7 @@ class Film_to_Dose_Window(QWidget):
                     self.Qt_Mpl_distribucion.fig.canvas.draw()
 
                     self.button_guardar.setEnabled(True)
-                    self.button_reducir.setEnabled(True)
+                    #self.button_reducir.setEnabled(True)   #TODO Se debe de activar hasta que en self.QLineEdit_resol se obtenga un valor flotante
 
             else:
                 QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
@@ -288,6 +294,23 @@ class Film_to_Dose_Window(QWidget):
         self.Qt_Mpl_distribucion.Img(self.Dosis_FILM)
         self.Qt_Mpl_distribucion.Colores(self.Dosis_FILM)
         self.Qt_Mpl_distribucion.fig.canvas.draw()
+
+    def revisar_si_es_flotante(self):
+
+        data = self.QLineEdit_resol.text()
+        try:
+            float(data)
+            self.QLineEdit_resol.setStyleSheet("QLineEdit"
+                "{"
+                "background : #90EE90;"
+                "}")
+            self.button_reducir.setEnabled(True)
+        except ValueError:
+            self.QLineEdit_resol.setStyleSheet("QLineEdit"
+                "{"
+                "background : #FF8C00;"
+                "}")
+            self.button_reducir.setEnabled(False)
 
 class Qt_Figure_CurvaCalibracion:
     """
