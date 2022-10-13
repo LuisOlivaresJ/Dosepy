@@ -372,8 +372,8 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 CONDICIONES
 
-Cualquier persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
-requiere de una licencia de uso particular.
+Toda persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
+requiere de una licencia para su uso particular.
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas

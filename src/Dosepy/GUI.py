@@ -30,8 +30,8 @@ from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 from Dosepy.GUILayouts.about_window import About_Window
 #from GUILayouts.about_window import About_Window
-
-
+#from Dosepy.GUILayouts.licencia_window import Licencia_Window
+from GUILayouts.licencia_window import Licencia_Window
 #---------------------------------------------
 
 
@@ -52,6 +52,7 @@ class VentanaPrincipal(QMainWindow):
 
         self.film_to_dose_window = None
         self.about_window = None
+        self.licencia_window_sec = None
 
         self.show()
 
@@ -81,8 +82,10 @@ class VentanaPrincipal(QMainWindow):
         film_to_dose_action.setShortcut('Ctrl+F')
         film_to_dose_action.triggered.connect(self.film_to_dose)   #   Descomentar para desarrollo
 
-        about_action = QAction('Acerca de', self)
-        about_action.triggered.connect(self.about)
+        about_action = QAction('Acerca de...', self)
+        about_action.triggered.connect(self.about_ventana)
+        licencia_action = QAction('Licencia', self)
+        licencia_action.triggered.connect(self.licencia_ventana)
 
         # Crear barra del menu
         barra_menu = self.menuBar()
@@ -91,8 +94,11 @@ class VentanaPrincipal(QMainWindow):
         # Agregar menú herramientas y su acción a la barra del menú
         herram_menu = barra_menu.addMenu('Herramientas')
         herram_menu.addAction(film_to_dose_action)
-        about_manu = barra_menu.addMenu('Ayuda')
-        about_manu.addAction(about_action)
+        about_menu = barra_menu.addMenu('Ayuda')
+        about_menu.addAction(about_action)
+        about_menu.addAction(licencia_action)
+        #licencia_action
+        #about_manu.AddAction(licencia_action)
 
 
 ######################################################################
@@ -103,10 +109,15 @@ class VentanaPrincipal(QMainWindow):
             self.film_to_dose_window = Film_to_Dose_Window()
         self.film_to_dose_window.show()
 
-    def about(self):
+    def about_ventana(self):
         if self.about_window == None:
             self.about_window = About_Window()
         self.about_window.show()
+
+    def licencia_ventana(self):
+        if self.licencia_window_sec == None:
+            self.licencia_window_sec = Licencia_Window()
+        self.licencia_window_sec.show()
 
 ######################################################################
 #   Funciones para botones
@@ -186,13 +197,14 @@ class Ventana_Secundaria(QMainWindow):
         super().__init__()
 
         self.about_window_sec = None
+        self.licencia_window_sec = None
 
         self.iniciarUI()
         self.menu_ayuda()
         #self.setCentralWidget(cuerpo_sec)
 
     def iniciarUI(self):
-        
+
         cuerpo = QWidget()
         layout_principal = QVBoxLayout()
         cuerpo.setLayout(layout_principal)
@@ -213,7 +225,7 @@ class Ventana_Secundaria(QMainWindow):
         self.name_entry.setFont(QFont('Arial', 18))
         self.name_entry.setEchoMode(QLineEdit.Password)
         self.name_entry.setAlignment(Qt.AlignCenter)
-        
+
         self.name_entry.returnPressed.connect(self.cerrar_UI)
         self.name_entry.move(100, 70)
         layout_principal.addWidget(self.name_entry)
@@ -232,7 +244,10 @@ class Ventana_Secundaria(QMainWindow):
         # Crear acciones para el menú "Herramientas"
 
         about_action_secundaria = QAction('Acerca de', self)
-        about_action_secundaria.triggered.connect(self.about)
+        about_action_secundaria.triggered.connect(self.about_ventana)
+
+        licencia_action_secundaria = QAction('Licencia', self)
+        licencia_action_secundaria.triggered.connect(self.licencia_ventana)
 
         # Crear barra del menu
         barra_menu_sec = self.menuBar()
@@ -240,13 +255,20 @@ class Ventana_Secundaria(QMainWindow):
 
         # Agregar menú herramientas y su acción a la barra del menú
 
-        about_manu_sec = barra_menu_sec.addMenu('Ayuda')
-        about_manu_sec.addAction(about_action_secundaria)
+        ayuda_menu_sec = barra_menu_sec.addMenu('Ayuda')
+        ayuda_menu_sec.addAction(about_action_secundaria)
+        ayuda_menu_sec.addAction(licencia_action_secundaria)
 
-    def about(self):
+
+    def about_ventana(self):
         if self.about_window_sec == None:
             self.about_window = About_Window()
         self.about_window.show()
+
+    def licencia_ventana(self):
+        if self.licencia_window_sec == None:
+            self.licencia_window_sec = Licencia_Window()
+        self.licencia_window_sec.show()
 
 app = QApplication(sys.argv)
 windowA = Ventana_Secundaria()
