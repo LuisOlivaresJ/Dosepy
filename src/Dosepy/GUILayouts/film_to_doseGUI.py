@@ -279,13 +279,13 @@ class Film_to_Dose_Window(QWidget):
         if self.check_button_tif.isChecked() == True:
             file_name_tif, _ = QFileDialog.getSaveFileName(self, "Guardar distribución de dosis", "", "*.tif")
             D_tiff = np.uint16(self.Dosis_FILM*100)
-            tiff.imwrite(file_name_tif + '.tif', D_tiff)
+            tiff.imwrite(file_name_tif, D_tiff)
             print('Guardar tiff')
 
         if self.check_button_csv.isChecked() == True:
 
             file_name_csv, _ = QFileDialog.getSaveFileName(self, "Guardar distribución de dosis", "", "*.csv")
-            np.savetxt(file_name_csv + '.csv', self.Dosis_FILM, fmt = '%.3f', delimiter = ',')
+            np.savetxt(file_name_csv, self.Dosis_FILM, fmt = '%.3f', delimiter = ',')
             print('Guardar csv')
 
     def reducir_tamano(self):

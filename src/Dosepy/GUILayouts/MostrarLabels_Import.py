@@ -34,7 +34,7 @@ class MostrarLabels(QWidget):
         self.Refer_button = QPushButton()
         self.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
         self.Refer_button.setIcon(folder_icon)
-        Refer_label = QLabel('D. de referencia')
+        Refer_label = QLabel('D. de referencia-----')
 
 
         self.Eval_button = QPushButton()
@@ -187,8 +187,15 @@ class MostrarLabels(QWidget):
                 #self.Resolution.setReadOnly(True)
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
-                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
+                    
                 else:
                     self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
                     self.Formatos_ok = True
@@ -198,8 +205,14 @@ class MostrarLabels(QWidget):
                 self.Eval_npy = np.genfromtxt(file_name_Evaluacion, delimiter = ',')
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
-                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
 
                 else:
                     self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
-Última modificación: 26 Julio 2022
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -50,6 +48,7 @@ class VentanaPrincipal(QMainWindow):
         self.cuerpoUI()
         self.menuUI()
 
+        #Ventanas secundarias
         self.film_to_dose_window = None
         self.about_window = None
         self.licencia_window_sec = None
