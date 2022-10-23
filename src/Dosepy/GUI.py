@@ -84,6 +84,7 @@ class VentanaPrincipal(QMainWindow):
 
         about_action = QAction('Acerca de...', self)
         about_action.triggered.connect(self.about_ventana)
+        
         licencia_action = QAction('Licencia', self)
         licencia_action.triggered.connect(self.licencia_ventana)
 

@@ -1,7 +1,1 @@
-include src/Dosepy/data/D_FILM.csv
-include src/Dosepy/data/D_TPS.csv
-include src/Dosepy/Icon/folder.png
-include src/Dosepy/Icon/Icon.png
 include src/Dosepy/Icon/Logo_Dosepy.png
-include src/Dosepy/Icon/save.png
-include src/Dosepy/data/validation.pdf

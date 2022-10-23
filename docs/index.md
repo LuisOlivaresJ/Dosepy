@@ -50,12 +50,6 @@ pip install Dosepy
 Previo a la instalación de *Dosepy*, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).<br/>
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
-**Requisitos**<br/>
-Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
-```bash
-pip install numpy, pydicom, matplotlib, tifffile, scipy, PyQt5
-```
-
 **Versión Beta**<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
@@ -550,17 +544,19 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 ### Licencia
 
+PROPRIETARY LICENSE
+
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 03-2021-093012460400-01
 
 CONDICIONES
 
 Toda persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
-requiere de una licencia para su uso particular.
+requiere de una licencia para su uso particular, también conocida como "Acuerdo de licencia de usuario final" (EULA por sus siglas en inglés).
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas
-cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra primigenia,
+cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra DOSEPY,
 previo consentimiento del titular del derecho moral, en los casos previstos en la Fracción III
 del Artículo 21 de la Ley Federal del Derecho de Autor.
 
