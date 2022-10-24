@@ -34,7 +34,7 @@ class MostrarLabels(QWidget):
         self.Refer_button = QPushButton()
         self.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
         self.Refer_button.setIcon(folder_icon)
-        Refer_label = QLabel('D. de referencia-----')
+        Refer_label = QLabel('D. de referencia')
 
 
         self.Eval_button = QPushButton()
@@ -195,7 +195,7 @@ class MostrarLabels(QWidget):
                     A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
                     QMessageBox.Ok, QMessageBox.Ok
                     )
-                    
+
                 else:
                     self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
                     self.Formatos_ok = True

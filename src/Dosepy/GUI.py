@@ -28,8 +28,8 @@ from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 from Dosepy.GUILayouts.about_window import About_Window
 #from GUILayouts.about_window import About_Window
-#from Dosepy.GUILayouts.licencia_window import Licencia_Window
-from GUILayouts.licencia_window import Licencia_Window
+from Dosepy.GUILayouts.licencia_window import Licencia_Window
+#from GUILayouts.licencia_window import Licencia_Window
 #---------------------------------------------
 
 
@@ -83,7 +83,7 @@ class VentanaPrincipal(QMainWindow):
 
         about_action = QAction('Acerca de...', self)
         about_action.triggered.connect(self.about_ventana)
-        
+
         licencia_action = QAction('Licencia', self)
         licencia_action.triggered.connect(self.licencia_ventana)
 
