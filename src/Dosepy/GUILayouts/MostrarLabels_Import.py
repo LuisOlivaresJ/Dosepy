@@ -6,7 +6,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
-from .Imagen import Qt_Figure_Imagen
+from Dosepy.GUILayouts.Imagen import Qt_Figure_Imagen
+#from .Imagen import Qt_Figure_Imagen
 import pkg_resources
 import os
 import Dosepy.dose as dp

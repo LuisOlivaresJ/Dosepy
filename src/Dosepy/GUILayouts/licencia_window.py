@@ -56,7 +56,7 @@ class Licencia_Window(QWidget):
         layout_padre_V.addWidget(label_logo)
 
         label_version = QLabel(self)
-        label_version.setText('Licencia')
+        label_version.setText('PROPRIETARY LICENSE')
         label_version.setAlignment(Qt.AlignCenter)
         label_version.setStyleSheet(
             "margin-top: 10px;" +
@@ -80,11 +80,11 @@ Luis Alfonso Olivares Jiménez es el autor y titular del derecho moral de la obr
 CONDICIONES
 
 Toda persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
-requiere de una licencia para su uso particular.
+requiere de una licencia para su uso particular, conocida como "Acuerdo de licencia de usuario final" (EULA, por sus siglas en inglés).
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas
-cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra primigenia,
+cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra DOSEPY,
 previo consentimiento del titular del derecho moral, en los casos previstos en la Fracción III
 del Artículo 21 de la Ley Federal del Derecho de Autor.
 
@@ -93,7 +93,7 @@ GARANTÍA
 El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es responsabilidad del usuario.
 
 
-        ''')
+''')
         label_info_licencia.setReadOnly(True)
         #label_info_licencia.setAlignment(Qt.AlignCenter)
         label_info_licencia.setStyleSheet(
@@ -105,7 +105,7 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
         link_label = QLabel(self)
         link_label.setText(
-            "<a href=\"https://luisolivaresj.github.io/Dosepy//\">Documentación</a>"
+            "<a href=\"https://luisolivaresj.github.io/Dosepy//\">Home page</a>"
         )
         link_label.setTextFormat(Qt.RichText)
         #link_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
