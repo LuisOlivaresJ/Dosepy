@@ -128,6 +128,7 @@ class Film_to_Dose_Window(QWidget):
             "background : #FF8C00;"
             "}")
         self.QLineEdit_resol.textChanged.connect(self.revisar_si_es_flotante)
+        self.QLineEdit_resol.setEnabled(False)
 
         layout_padre_botones_2inf.addSpacing(40)
         layout_padre_botones_2inf.addWidget(self.button_distr_pre)
@@ -266,8 +267,8 @@ class Film_to_Dose_Window(QWidget):
                     self.Qt_Mpl_distribucion.fig.canvas.draw()
 
                     self.button_guardar.setEnabled(True)
-                    #self.button_reducir.setEnabled(True)   #TODO Se debe de activar hasta que en self.QLineEdit_resol se obtenga un valor flotante
-
+                    self.QLineEdit_resol.setEnabled(True)
+                    
             else:
                 QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
                 print('Formato no válido')

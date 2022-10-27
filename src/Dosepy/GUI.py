@@ -64,8 +64,8 @@ class VentanaPrincipal(QMainWindow):
         self.DatosEntrada.Calcular_Button.clicked.connect(self.Calculo_Gamma)
 
         LayoutPrincipal = QVBoxLayout()
-        LayoutPrincipal.addWidget(self.DatosEntrada, 0.6)
-        LayoutPrincipal.addWidget(self.Imagen, 1)
+        LayoutPrincipal.addWidget(self.DatosEntrada)
+        LayoutPrincipal.addWidget(self.Imagen)
 
         #self.setLayout(LayoutPrincipal)
         cuerpo.setLayout(LayoutPrincipal)
