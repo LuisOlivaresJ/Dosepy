@@ -1,6 +1,46 @@
 [build-system]
 requires = [
-    "setuptools>=42",
+    "setuptools>=61.0",
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "Dosepy"
+version = "0.3.1"
+authors = [
+  { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
+]
+description = "Análisis de distribuciones de dosis en radioterapia"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENCE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Natural Language :: Spanish",
+]
+keywords = ["Radiotherapy", "Dose distribution", "gamma index", "python"]
+dependencies = [
+  "numpy >= 1.23.4",
+  "pydicom >= 2.3.0",
+  "matplotlib >= 3.6.1",
+  "tifffile >= 2022.10.10",
+  "scipy >= 1.9.3",
+  "PyQt5 >= 5.15.7",
+]
+[project.urls]
+homepage = "https://luisolivaresj.github.io/Dosepy/"
+repository = "https://pypi.org/project/Dosepy/"
+Bug-Tracker = "https://github.com/LuisOlivaresJ/Dosepy"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dp_dep = ["*.csv", "*.png"]

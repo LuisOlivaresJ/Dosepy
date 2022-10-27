@@ -50,12 +50,6 @@ pip install Dosepy
 Previo a la instalación de *Dosepy*, es necesario contar con un administrador de paquetes. Para quienes no estén familiarizados con los paquetes Python, se recomienda utilizar la plataforma [ANACONDA](https://www.anaconda.com/products/individual).<br/>
 Una vez que se ha instalado ANACONDA, abrir el inicio de Windows y buscar *Anaconda Prompt*. Dentro de la terminal (ventana con fondo negro), seguir la indicación descrita para Linux (párrafo anterior).
 
-**Requisitos**<br/>
-Dosepy depende de otros paquetes Python (también de código abierto). Para su instalación escribir en una terminal:
-```bash
-pip install numpy, pydicom, matplotlib, tifffile, scipy, PyQt5
-```
-
 **Versión Beta**<br/>
 Dosepy se encuentra en una versión beta, especificada por el formato 0.X.X. Lo anterior implica que en la práctica, un código que utiliza el paquete Dosepy en una versión, pudiera no ser ejecutado en una versión posterior.  La versión estable será publicada con el formato 1.X.X.<br/>
 Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/en/stable/):
@@ -550,17 +544,19 @@ El correcto funcionamiento del paquete se está evaluado y actualizado constante
 
 ### Licencia
 
+PROPRIETARY LICENSE
+
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 03-2021-093012460400-01
 
 CONDICIONES
 
-Cualquier persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
-requiere de una licencia de uso particular.
+Toda persona tiene acceso al código solamente con fines académicos o de enseñanza. Cualquier otro uso del código DOSEPY
+requiere de una licencia para su uso particular, conocida como "Acuerdo de licencia de usuario final" (EULA, por sus siglas en inglés).
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas
-cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra primigenia,
+cuando hayan sido autorizadas por el titular del derecho patrimonial sobre la obra DOSEPY,
 previo consentimiento del titular del derecho moral, en los casos previstos en la Fracción III
 del Artículo 21 de la Ley Federal del Derecho de Autor.
 
@@ -599,5 +595,9 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 29-10-2021 Versión 0.2.3<br/>
   * Se modifica la LICENCIA por derechos de autor. Se agrega video de presentación en congreso.
 
-  27-07-2022 Versión 0.3.0<br/>
-    * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.
+27-07-2022 Versión 0.3.1<br/>
+  * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.
+
+24-10-2022 Versión 0.3.1<br/>
+  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy,
+  matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
