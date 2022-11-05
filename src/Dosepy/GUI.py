@@ -44,6 +44,7 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('Dosepy')
         file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
         self.setWindowIcon(QIcon(file_name_icon))
+        self.setGeometry(50, 100, 1300, 800)
 
         self.cuerpoUI()
         self.menuUI()

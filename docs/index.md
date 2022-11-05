@@ -601,3 +601,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 24-10-2022 Versión 0.3.1<br/>
   * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy,
   matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
+
+04-11-2022 Versión 0.3.2<br/>
+* Se inhabilita como primera opción el botón para abrir la distribución de dosis a evaluar. Se inhabilita el botón para calcular la distribución gamma si los parámetros ingresados por el usuario no son valores numéricos. Lo anterior para evitar un error de ejecución. 

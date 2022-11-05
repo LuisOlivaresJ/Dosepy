@@ -278,7 +278,7 @@ class Qt_Figure_Imagen:
 
     def __init__(self):
         #self.fig = Figure(figsize=(4,3), tight_layout = True, facecolor = 'whitesmoke')
-        self.fig = Figure(figsize=(4,3), facecolor = 'whitesmoke')
+        self.fig = Figure(figsize=(3.8,3), facecolor = 'whitesmoke')
         self.Qt_fig = FigureCanvas(self.fig)
         #print(self.Qt_fig.supports_blit)
 
