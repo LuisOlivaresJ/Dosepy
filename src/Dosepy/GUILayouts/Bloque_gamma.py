@@ -6,13 +6,14 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
-from .Imagen import Qt_Figure_Imagen
+#from Dosepy.GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
+from .Bloque_Imagenes import Qt_Figure_Imagen
 import pkg_resources
 import os
 import Dosepy.dose as dp
 
 
-class MostrarLabels(QWidget):
+class Bloque_gamma(QWidget):
     """
     Permite mostrar los archivos a cargar, parámetros gamma y resultados.
     """
@@ -38,6 +39,7 @@ class MostrarLabels(QWidget):
 
 
         self.Eval_button = QPushButton()
+        self.Eval_button.setEnabled(False)
         self.Eval_button.clicked.connect(self.Leer_archivo_Evaluacion)
         self.Eval_button.setIcon(folder_icon)
         Eval_label = QLabel('D. a evaluar')
@@ -46,22 +48,44 @@ class MostrarLabels(QWidget):
 
         #Resolution_Label = QLabel('Resolución [mm]')
         self.Resolution = QLineEdit()
-        self.Resolution.setFixedWidth(35)
+        self.Resolution.setFixedWidth(40)
         self.Resolution.setText("1.0")
+        self.Resolution.textChanged.connect(self.revisar_si_es_flotante)
+        self.Resolution.setStyleSheet("QLineEdit"
+            "{"
+            "background : #90EE90;"
+            "}")
 
         # Crear LineEdit para parámetros gamma
         self.Toler_dosis = QLineEdit()
-        self.Toler_dosis.setFixedWidth(30)
+        self.Toler_dosis.setFixedWidth(40)
         self.Toler_dosis.setText("3.0")
         self.Toler_dosis.setAlignment(Qt.AlignRight)
+        self.Toler_dosis.textChanged.connect(self.revisar_si_es_flotante)
+        self.Toler_dosis.setStyleSheet("QLineEdit"
+            "{"
+            "background : #90EE90;"
+            "}")
+
         self.Toler_dist = QLineEdit()
-        self.Toler_dist.setFixedWidth(30)
+        self.Toler_dist.setFixedWidth(40)
         self.Toler_dist.setText("3.0")
         self.Toler_dist.setAlignment(Qt.AlignRight)
+        self.Toler_dist.textChanged.connect(self.revisar_si_es_flotante)
+        self.Toler_dist.setStyleSheet("QLineEdit"
+            "{"
+            "background : #90EE90;"
+            "}")
+        
         self.Umbral_dosis = QLineEdit()
-        self.Umbral_dosis.setFixedWidth(30)
+        self.Umbral_dosis.setFixedWidth(40)
         self.Umbral_dosis.setText("10")
         self.Umbral_dosis.setAlignment(Qt.AlignRight)
+        self.Umbral_dosis.textChanged.connect(self.revisar_si_es_flotante)
+        self.Umbral_dosis.setStyleSheet("QLineEdit"
+            "{"
+            "background : #90EE90;"
+            "}")
 
         # Crear LineEdit para parámetros gamma
 
@@ -125,12 +149,11 @@ class MostrarLabels(QWidget):
 
         Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
         Padre_Info_V_Layout.addStretch()
-        Padre_Info_V_Layout.addWidget(self.Indice_gamma_porcentaje_Label)
-        Padre_Info_V_Layout.addWidget(self.Indice_gamma_promedio_Label)
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_maximo_Label)
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_mediana_Label)
         Padre_Info_V_Layout.addWidget(self.Calcular_Button)
-
+        Padre_Info_V_Layout.addWidget(self.Indice_gamma_porcentaje_Label)
+        Padre_Info_V_Layout.addWidget(self.Indice_gamma_promedio_Label)
 
         Padre_Hist_V_Layout = QVBoxLayout()
         Padre_Hist_V_Layout.addWidget(self.Mpl_Histograma.Qt_fig)
@@ -167,6 +190,8 @@ class MostrarLabels(QWidget):
                 self.Refer_npy = np.genfromtxt(file_name_Referencia, delimiter = ',')
                 self.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
 
+                self.Eval_button.setEnabled(True)
+
             #elif extension == '.dcm':
             #    self.Refer_npy = dp.from_dicom('file_name_Referencia').array
             #    self.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
@@ -187,8 +212,15 @@ class MostrarLabels(QWidget):
                 #self.Resolution.setReadOnly(True)
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
-                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
+
                 else:
                     self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
                     self.Formatos_ok = True
@@ -198,13 +230,40 @@ class MostrarLabels(QWidget):
                 self.Eval_npy = np.genfromtxt(file_name_Evaluacion, delimiter = ',')
 
                 if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(self, "Error", "No es posible el cálculo con matrices de diferente tamaño.", QMessageBox.Ok, QMessageBox.Ok)
-                    #raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
 
                 else:
                     self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
                     self.Formatos_ok = True
             #print(self.file_name_Evaluacion)
+
+    ##############################################################################
+    #   Funciones para evaluar si los datos de entrada son válidos (números)
+    def revisar_si_es_flotante(self):
+
+        sender = self.sender()  #Se espera que el objeto sender sea un QLineEdit
+                                #dado que se utiliza el método text()
+        data = sender.text()
+        try:
+            float(data)
+            sender.setStyleSheet("QLineEdit"
+                "{"
+                "background : #90EE90;"
+                "}")
+            self.Calcular_Button.setEnabled(True)
+        except ValueError:
+            sender.setStyleSheet("QLineEdit"
+                "{"
+                "background : #FF8C00;"
+                "}")
+            self.Calcular_Button.setEnabled(False)
 
 
 class Qt_Figure_Histograma:
@@ -229,6 +288,6 @@ class Qt_Figure_Histograma:
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MostrarLabels()
+    window = Bloque_gamma()
     window.show()
     sys.exit(app.exec_())
