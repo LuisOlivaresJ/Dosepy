@@ -214,9 +214,6 @@ class Bloque_Imagenes(QWidget):
 
             self.Mpl_Izq.fig.canvas.draw()
             self.Mpl_Der.fig.canvas.draw()
-            #print(event.xdata)
-            #print(event.ydata)
-
 
 
  #%%
@@ -287,7 +284,6 @@ class Qt_Figure_Imagen:
         self.fig = Figure(figsize=(3.8,3), facecolor = 'whitesmoke')
         self.Qt_fig = FigureCanvas(self.fig)
 
-        #   Axes para la imagen
         self.ax1 = self.fig.add_axes([0.08, 0.08, 0.75, 0.85])
         self.ax2 = self.fig.add_axes([0.85, 0.15, 0.04, 0.72])
 
@@ -375,7 +371,6 @@ class Qt_Figure_Imagen:
 
         self.hline.set_ydata( int(self.circ.center[1]) )
         self.vline.set_xdata( int(self.circ.center[0]) )
-        self.ax1.add_patch(self.circ)
 
     def Cross_Hair_on(self):
         '''
@@ -440,5 +435,6 @@ class Qt_Figure_Perfiles:
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ventana_raiz = Bloque_Imagenes()
+    ventana_raiz.setGeometry(100, 150, 1200, 300)
     ventana_raiz.show()
     sys.exit(app.exec_())
