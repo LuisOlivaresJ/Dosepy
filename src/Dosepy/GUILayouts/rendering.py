@@ -2,12 +2,11 @@
 from matplotlib.backends.qt_compat import QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 import sys
-import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
-from matplotlib import patches
 import matplotlib.colors as colors
 import numpy as np
+import pkg_resources
 
 
 class BlittedCursorCrossHair:
@@ -20,11 +19,12 @@ class BlittedCursorCrossHair:
 		self.horizontal_line = ax.axhline(color = 'cornflowerblue', lw = 1.5, ls = '--', alpha = 0.8)
 		self.vertical_line = ax.axvline(color = 'orange', lw = 1.5, ls = '--', alpha = 0.8)
 		# text location in axes coordinates
-		self.text = ax.text(0.72, 0.9, '', transform=ax.transAxes)
+		self.text = ax.text(0.65, 0.9, '', transform=ax.transAxes)
 		self._creating_background = False
 		ax.figure.canvas.mpl_connect('draw_event', self.on_draw)
 
 	def on_draw(self, event):
+		#De utilidad si hay un cambio en el tamaño de la ventana
 		self.create_new_background()
 		print(event)
 
@@ -47,7 +47,8 @@ class BlittedCursorCrossHair:
 		self._creating_background = False
 
 	def on_mouse_move(self, event):
-		#if event is None or event.inaxes != self.Mpl_Izq.ax1:
+		#if event.inaxes != self.ax:
+		#	return
 		if self.background is None:
 			self.create_new_background()
 		if not event.inaxes:
@@ -56,14 +57,16 @@ class BlittedCursorCrossHair:
 				self.ax.figure.canvas.restore_region(self.background)
 				self.ax.figure.canvas.blit(self.ax.bbox)
 		else:
+			if event.inaxes != self.ax:	#Descartar evento fuera de Axes que contiene la imagen
+				return
 			self.set_cross_hair_visible(True)
 			# update the line positions
 			x, y = event.xdata, event.ydata
 
 			self.horizontal_line.set_ydata(y)
 			self.vertical_line.set_xdata(x)
-			self.text.set_text('x=%1.2f, y=%1.2f' % (x, y))
-
+			self.text.set_text('x=%1.0f, y=%1.0f' % (x, y))
+			
 			self.ax.figure.canvas.restore_region(self.background)
 			self.ax.draw_artist(self.horizontal_line)
 			self.ax.draw_artist(self.vertical_line)
@@ -77,7 +80,7 @@ class Bloque_Imagenes(QWidget):
 		self.setStyleSheet("background-color: #1d1040;")
 		self.setWindowTitle('Acerca de')
 
-		file_name_FILM = "../data/D_FILM.csv"
+		file_name_FILM = pkg_resources.resource_filename('Dosepy', 'data/D_FILM.csv')
 		self.array_refer = np.genfromtxt(file_name_FILM, delimiter = ',')
         
 		self.main_label = QVBoxLayout()
@@ -91,29 +94,7 @@ class Bloque_Imagenes(QWidget):
 		self.blitted_cross_hair = BlittedCursorCrossHair(self.Mpl_Izq.ax1)
 		self.id_on_press_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('motion_notify_event', self.blitted_cross_hair.on_mouse_move)
 		self.main_label.addWidget(self.Mpl_Izq.Qt_fig)
-		self.setLayout(self.main_label)
-
-"""
-#------------------Funciones----------------------------
-	def on_move_img_ref(self, event):
-		print(event)
-
-		if event is None or event.inaxes != self.Mpl_Izq.ax1:
-			return
-
-		dx = event.xdata
-		dy = event.ydata
-
-		self.Mpl_Izq.circ.center = dx, dy
-		self.Mpl_Izq.hline.set_ydata( int(dy) )
-		self.Mpl_Izq.vline.set_xdata( int(dx) )
-
-		#self.Mpl_Izq.hline.figure.canvas.draw()		
-		#self.Mpl_Izq.vline.figure.canvas.draw()
-		#self.Mpl_Izq.circ.figure.canvas.draw()
-
-		self.Mpl_Izq.Qt_fig.figure.canvas.draw()
-"""		
+		self.setLayout(self.main_label)	
             
 class Qt_Figure_Imagen:
 	"""
@@ -124,10 +105,7 @@ class Qt_Figure_Imagen:
 		self.fig = Figure(figsize=(3.8,3), facecolor = 'whitesmoke')
 		self.Qt_fig = FigureCanvas(self.fig)
 		
-		#   Axes para la imagen
-		#tuple (left, bottom, width, height)
 		#The dimensions (left, bottom, width, height) of the new Axes. All quantities are in fractions of figure width and height.
-
 		self.ax1 = self.fig.add_axes([0.08, 0.08, 0.75, 0.85])
 		self.ax2 = self.fig.add_axes([0.85, 0.15, 0.04, 0.72])
 		
@@ -135,13 +113,9 @@ class Qt_Figure_Imagen:
 		'''
 		Definir la imagen a partir de un array que se proporciona como argumento.
 		'''
-
 		self.npI = np_I
 		self.mplI = self.ax1.imshow(self.npI)
 		print(self.mplI)
-		#print(type(self.mplI))
-		#print(dir(self.mplI))
-		#print(id(self.mplI))
 
 	def Colores(self, npI_color_ref):
 		'''
@@ -154,8 +128,6 @@ class Qt_Figure_Imagen:
 		self.mplI.set_norm(norm)
 		self.mplI.set_cmap(color_map)
 		self.cbar = self.fig.colorbar(self.mplI, cax = self.ax2, orientation = 'vertical', shrink = 0.6, format = '%.1f')
-
-
 
 
 if __name__ == '__main__':
