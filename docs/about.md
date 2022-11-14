@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Acerca de"
-permalink: https://luisolivaresj.github.io/Dosepy/about/
+permalink: /about/
 ---
 
-Paguina de prueba
+Paguina de prueba, archivo about
