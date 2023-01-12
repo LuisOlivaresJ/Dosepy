@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.3.2"
+version = "0.3.3"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
-description = "Análisis de distribuciones de dosis en radioterapia"
+description = "Dose distributions analysis in radiotherapy"
 readme = "README.md"
 requires-python = ">=3.7"
 license = {file = "LICENCE"}

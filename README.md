@@ -1,16 +1,12 @@
 # *Dosepy*
 
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de Python (por ejemplo, escribiendo python dentro de una terminal Linux).
+*Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
+
+El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
+
+Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia, conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés) y contratos que garanticen el cumplimiento de la legislación de cada país. Para mayor información referente a la adquisición de una licencia contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
 
 ## Métodos de comparación
-
-**¡Consideraciones!**
-
-* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
-* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
-
-En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 ### Comparación por índice gamma
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
@@ -32,6 +28,13 @@ La validación del algoritmo para la prueba del índice gamma se realizó median
 
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
 
+**¡Consideraciones!**
+
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
+
+En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
+
 ## Instalación
 **En Linux**<br/>
 El método más sencillo para instalar Dosepy es escribiendo en una terminal:
@@ -48,10 +51,6 @@ Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/
 ```bash
 pip install --upgrade Dosepy
 ```
-
-### Ayuda
-Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
-Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 # Primer ejemplo con interfaz gráfica
 
