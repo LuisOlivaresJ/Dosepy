@@ -24,10 +24,6 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 [Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
 La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
 
-### Comparación mediante perfiles
-
-También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
-
 **¡Consideraciones!**
 
 * Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
@@ -52,22 +48,6 @@ Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/
 pip install --upgrade Dosepy
 ```
 
-# Primer ejemplo con interfaz gráfica
-
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
-
-```bash
-python
-```
-
-Para abrir la interfaz gráfica, escribimos:
-
-```python
-import Dosepy.GUI
-```
-
-Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
-
 ### Importación de archivo en formato csv
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
 * El archivo deberá contener sólo los valores de dosis.
@@ -80,7 +60,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Segundo ejemplo utilizando una terminal
+## Primer ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando python:
 
@@ -112,7 +92,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
+## Datos en formato CSV, usando un umbral de dosis, ejemplo 2
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -136,7 +116,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
+## Datos en formato DICOM y modo de dosis absoluto, ejemplo 3
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -416,7 +396,7 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
   * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.
 
 24-10-2022 Versión 0.3.1<br/>
-  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy,mmatplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
+  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy, matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
 
 04-11-2022 Versión 0.3.2<br/>
 * Se inhabilita como primera opción el botón para abrir la distribución de dosis a evaluar. Se inhabilita el botón para calcular la distribución gamma si los parámetros ingresados por el usuario no son valores numéricos. Lo anterior para evitar un error de ejecución. 

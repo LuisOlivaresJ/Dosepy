@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Última modificación: 28 Agosto 2021
+Última modificación: 12 Enero 2023
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -87,7 +87,7 @@ def calibracion(img_pre, img_post):
         for j in np.arange(2):
             Pix_mean_pre[i,j] = np.mean( film_pre_prom[ i*600 + (200 - 35): i*600 + (200 + 35), j*700 +  (300 - 35): j*700 + ( 300 + 35)] )
             Pix_mean_post[i,j] = np.mean( film_post_prom[ i*600 + (200 - 35): i*600 +  (200 + 35), j*700 + (300 - 35): j*700 + ( 300 + 35)] )
-            Dens_optica[i,j] = -np.log10(Pix_mean_post[i,j] / (Pix_mean_pre[i,j] + 1)) #La suma de uno se utiliza para evitar la división por cero
+            Dens_optica[i,j] = -np.log10(Pix_mean_post[i,j] / Pix_mean_pre[i,j])
 
     Dens_optica_vec = np.matrix.flatten(Dens_optica)
     popt, pcov = curve_fit(cubico, Dens_optica_vec, Dosis_impartida)
