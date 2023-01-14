@@ -70,8 +70,8 @@ class Bloque_Imagenes(QWidget):
 
         self.Mpl_Der.circ.set_visible(False)
 
-        self.Mpl_Izq.Cross_Hair_off()
-        self.Mpl_Der.Cross_Hair_off()
+        #self.Mpl_Izq.Cross_Hair_off()
+        #self.Mpl_Der.Cross_Hair_off()
 
         self.id_on_press_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('button_press_event', self.on_press_img_ref)            # Controlar si hay eventos y acciones
         self.id_on_release_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('button_release_event', self.on_release_img_ref)
@@ -86,13 +86,13 @@ class Bloque_Imagenes(QWidget):
         self.boton_roi = QPushButton('ROI')
         #self.boton_roi.resize(150,50)
         self.boton_roi.setCheckable(True)
-        self.boton_roi.setChecked(True)
+        self.boton_roi.setChecked(False)
         self.boton_roi.clicked.connect(self.clic_ROI)
 
-        corte_icon = QIcon("/Icon/cut_icon.png")
+        #corte_icon = QIcon("../Icon/cut_icon.png")
         #corte_name_folder = pkg_resources.resource_filename('Dosepy', 'Icon/cut_icon.png')
-        self.boton_recortar_Izq = QPushButton()
-        self.boton_recortar_Izq.setIcon(corte_icon)
+        self.boton_recortar_Izq = QPushButton('Corte')
+        #self.boton_recortar_Izq.setIcon(corte_icon)
         self.boton_recortar_Izq.setEnabled(False)
         self.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
 

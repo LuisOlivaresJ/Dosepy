@@ -17,18 +17,18 @@ from PyQt5.QtCore import Qt
 
 import numpy as np
 #from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
-from Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
+from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
 #from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
-from Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
+from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
 
-from film_to_doseGUI import Film_to_Dose_Window
+from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
-from about_window import About_Window
+from GUILayouts.about_window import About_Window
 #from GUILayouts.about_window import About_Window
-from licencia_window import Licencia_Window
+from GUILayouts.licencia_window import Licencia_Window
 #from GUILayouts.licencia_window import Licencia_Window
 #---------------------------------------------
 

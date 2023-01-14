@@ -92,6 +92,7 @@ GARANTÍA
 
 El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es responsabilidad del usuario.
 
+Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
 
 ''')
         label_info_licencia.setReadOnly(True)

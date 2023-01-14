@@ -4,7 +4,9 @@
 
 El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
 
-Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia, conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés) y contratos que garanticen el cumplimiento de la legislación de cada país. Para mayor información referente a la adquisición de una licencia contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
+Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés) y contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+
+Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
 
 ## Métodos de comparación
 
@@ -48,6 +50,19 @@ Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/
 pip install --upgrade Dosepy
 ```
 
+### Ejemplo con interfaz gráfica
+
+Para utilizar *Dosepy* con una interfaz gráfica , abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
+
+```bash
+python
+```
+Posteriormente, escribimos:
+
+```python
+import Dosepy.GUI
+```
+
 ### Importación de archivo en formato csv
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
 * El archivo deberá contener sólo los valores de dosis.
@@ -88,7 +103,7 @@ La comparación gamma entre dos distribuciones de dosis se realiza mediante el m
 
 ```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
-gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
+gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 1)
 print(pass_rate)
 ```
 
@@ -106,7 +121,7 @@ D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
 D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
 #   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
-g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
+g, pass_rate = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2, dose_tresh = 10)
 
 #   Imprimimos el resultado
 print(f'El índice de aprobación es: {pass_rate:.1f} %')
