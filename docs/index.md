@@ -1,5 +1,5 @@
 ---
-title: "Dosepy beta"
+title: "Dosepy"
 ---
 
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)

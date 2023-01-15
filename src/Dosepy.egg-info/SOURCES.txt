@@ -10,12 +10,15 @@ src/Dosepy.egg-info/SOURCES.txt
 src/Dosepy.egg-info/dependency_links.txt
 src/Dosepy.egg-info/requires.txt
 src/Dosepy.egg-info/top_level.txt
-src/Dosepy/GUILayouts/Imagen.py
-src/Dosepy/GUILayouts/MostrarLabels_Import.py
+src/Dosepy/GUILayouts/Bloque_Imagenes.py
+src/Dosepy/GUILayouts/Bloque_gamma.py
 src/Dosepy/GUILayouts/__init__.py
 src/Dosepy/GUILayouts/about_window.py
+src/Dosepy/GUILayouts/cross_hair_cursor.py
+src/Dosepy/GUILayouts/cursor.py
 src/Dosepy/GUILayouts/film_to_doseGUI.py
 src/Dosepy/GUILayouts/licencia_window.py
+src/Dosepy/GUILayouts/to_do_rendering.py
 src/Dosepy/Icon/Icon.png
 src/Dosepy/Icon/Logo_Dosepy.png
 src/Dosepy/Icon/folder.png

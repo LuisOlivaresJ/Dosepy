@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """
-
-Última modificación: 29 Octubre 2021
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)

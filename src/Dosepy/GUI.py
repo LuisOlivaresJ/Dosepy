@@ -16,10 +16,10 @@ from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt
 
 import numpy as np
-#from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
-from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
-#from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
-from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
+from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
+#from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
+from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
+#from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
