@@ -24,11 +24,11 @@ import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
 
-from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
+from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 #from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
-from GUILayouts.about_window import About_Window
+from Dosepy.GUILayouts.about_window import About_Window
 #from GUILayouts.about_window import About_Window
-from GUILayouts.licencia_window import Licencia_Window
+from Dosepy.GUILayouts.licencia_window import Licencia_Window
 #from GUILayouts.licencia_window import Licencia_Window
 #---------------------------------------------
 
