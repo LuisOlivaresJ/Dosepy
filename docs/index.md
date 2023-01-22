@@ -102,7 +102,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 
 **Uso de Jupyter-notebook**
 
-Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). En esta [liga](Notebook) se cuenta con una guía para ello.
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). En ésta [liga](Notebook.md) se cuenta con una guía para ello.
 
 **Ejemplo utilizando una terminal**
 
