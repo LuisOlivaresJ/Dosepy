@@ -1,7 +1,5 @@
 ---
-layout: page
-title: "Acerca de"
-permalink: /about/
+title: "Uso de Jupyter-Notebook"
 ---
 
 ## Introducción
