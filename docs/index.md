@@ -69,10 +69,10 @@ Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 ### Ejemplos
-
+ 
 **Ejemplo con interfaz gráfica**
 
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
+La forma más simple de utilizar *Dosepy* es a través de una interfaz gráfica de usuario (GUI). Para ello, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
@@ -99,6 +99,9 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * Deberá contener sólo un plano de dosis.
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
+
+**Uso de Jupyter-notebook**
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno Jupyter. En esta [liga](/Notebook) se cuenta con una guía para ello.
 
 **Ejemplo utilizando una terminal**
 
