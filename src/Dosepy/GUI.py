@@ -16,10 +16,10 @@ from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt
 
 import numpy as np
-from Dosepy.GUILayouts.MostrarLabels_Import import MostrarLabels
-#from GUILayouts.MostrarLabels_Import import MostrarLabels  # Se importa desde archivo en PC para testear
-from Dosepy.GUILayouts.Imagen import Bloque_Inf_Imagenes
-#from GUILayouts.Imagen import Bloque_Inf_Imagenes   # Se importa desde archivo en PC para testear
+from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
+#from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
+from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
+#from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
@@ -44,7 +44,7 @@ class VentanaPrincipal(QMainWindow):
         self.setWindowTitle('Dosepy')
         file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
         self.setWindowIcon(QIcon(file_name_icon))
-        self.setGeometry(50, 100, 1300, 800)
+        self.setGeometry(150, 100, 1300, 800)
 
         self.cuerpoUI()
         self.menuUI()
@@ -59,14 +59,14 @@ class VentanaPrincipal(QMainWindow):
     def cuerpoUI(self):
 
         cuerpo = QWidget()
-        self.Imagen = Bloque_Inf_Imagenes()
-        self.DatosEntrada = MostrarLabels()
-        self.DatosEntrada.Eval_button.clicked.connect(self.mostrar_distribucion)
-        self.DatosEntrada.Calcular_Button.clicked.connect(self.Calculo_Gamma)
+        self.Bloque_Imagen = Bloque_Imagenes()
+        self.Bloque_Gamma = Bloque_gamma()
+        self.Bloque_Gamma.Eval_button.clicked.connect(self.mostrar_distribucion)
+        self.Bloque_Gamma.Calcular_Button.clicked.connect(self.Calculo_Gamma)
 
         LayoutPrincipal = QVBoxLayout()
-        LayoutPrincipal.addWidget(self.DatosEntrada)
-        LayoutPrincipal.addWidget(self.Imagen)
+        LayoutPrincipal.addWidget(self.Bloque_Gamma)
+        LayoutPrincipal.addWidget(self.Bloque_Imagen)
 
         #self.setLayout(LayoutPrincipal)
         cuerpo.setLayout(LayoutPrincipal)
@@ -124,41 +124,41 @@ class VentanaPrincipal(QMainWindow):
 #   Funciones para botones
 
     def mostrar_distribucion(self):
-        if self.DatosEntrada.Formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
-            self.Imagen.Mpl_Izq.Img(self.DatosEntrada.Refer_npy)
-            self.Imagen.Mpl_Izq.Colores(self.DatosEntrada.Eval_npy)
+        if self.Bloque_Gamma.Formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
+            self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Gamma.Refer_npy)
+            self.Bloque_Imagen.Mpl_Izq.Colores(self.Bloque_Gamma.Eval_npy)
 
-            self.Imagen.Mpl_Der.Img(self.DatosEntrada.Eval_npy)
-            self.Imagen.Mpl_Der.Colores(self.DatosEntrada.Eval_npy)
+            self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Gamma.Eval_npy)
+            self.Bloque_Imagen.Mpl_Der.Colores(self.Bloque_Gamma.Eval_npy)
 
-            self.Imagen.Mpl_perfiles.ax.clear()
-            self.Imagen.Mpl_perfiles.set_data_and_plot(self.DatosEntrada.Refer_npy, self.DatosEntrada.Eval_npy, self.Imagen.Mpl_Izq.circ)
+            self.Bloque_Imagen.Mpl_perfiles.ax.clear()
+            self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(self.Bloque_Gamma.Refer_npy, self.Bloque_Gamma.Eval_npy, self.Bloque_Imagen.Mpl_Izq.circ)
 
-            self.Imagen.Mpl_Izq.fig.canvas.draw()
-            self.Imagen.Mpl_Der.fig.canvas.draw()
+            self.Bloque_Imagen.Mpl_Izq.fig.canvas.draw()
+            self.Bloque_Imagen.Mpl_Der.fig.canvas.draw()
 
-            self.Imagen.Mpl_perfiles.fig.canvas.draw()
+            self.Bloque_Imagen.Mpl_perfiles.fig.canvas.draw()
 
         else:
             self.displayMessageBox()
 
     def Calculo_Gamma(self):
-        D_ref = dp.Dose(self.Imagen.Mpl_Izq.npI, float(self.DatosEntrada.Resolution.text()))
-        D_eval = dp.Dose(self.Imagen.Mpl_Der.npI, float(self.DatosEntrada.Resolution.text()))
-        g, p = D_eval.gamma2D(D_ref, float(self.DatosEntrada.Toler_dosis.text()), float(self.DatosEntrada.Toler_dist.text()), float(self.DatosEntrada.Umbral_dosis.text()))
+        D_ref = dp.Dose(self.Bloque_Imagen.Mpl_Izq.npI, float(self.Bloque_Gamma.Resolution.text()))
+        D_eval = dp.Dose(self.Bloque_Imagen.Mpl_Der.npI, float(self.Bloque_Gamma.Resolution.text()))
+        g, p = D_eval.gamma2D(D_ref, float(self.Bloque_Gamma.Toler_dosis.text()), float(self.Bloque_Gamma.Toler_dist.text()), float(self.Bloque_Gamma.Umbral_dosis.text()))
 
-        self.DatosEntrada.Mpl_Histograma.Mostrar_Histograma(g)
-        self.DatosEntrada.Indice_gamma_porcentaje_Label.setText('Porcentaje de aprobación: ' + str(  round(p, 1)  ) + '%' )
-        self.DatosEntrada.Indice_gamma_promedio_Label.setText('Índice gamma promedio: ' + str(  round(np.mean(g[~np.isnan(g)]), 1)  ))
-        #self.DatosEntrada.Indice_gamma_maximo_Label.setText('Máximo: ' + str(  round(np.max(g[~np.isnan(g)]), 1)  ))
-        #self.DatosEntrada.Indice_gamma_mediana_Label.setText('Mediana: ' + str(  round(np.median(g[~np.isnan(g)]), 1)  ))
+        self.Bloque_Gamma.Mpl_Histograma.Mostrar_Histograma(g)
+        self.Bloque_Gamma.Indice_gamma_porcentaje_Label.setText('Porcentaje de aprobación: ' + str(  round(p, 1)  ) + '%' )
+        self.Bloque_Gamma.Indice_gamma_promedio_Label.setText('Índice gamma promedio: ' + str(  round(np.mean(g[~np.isnan(g)]), 1)  ))
+        #self.Bloque_Gamma.Indice_gamma_maximo_Label.setText('Máximo: ' + str(  round(np.max(g[~np.isnan(g)]), 1)  ))
+        #self.Bloque_Gamma.Indice_gamma_mediana_Label.setText('Mediana: ' + str(  round(np.median(g[~np.isnan(g)]), 1)  ))
 
-        self.DatosEntrada.Mpl_Img_gamma.ax1.clear()
-        self.DatosEntrada.Mpl_Img_gamma.ax2.clear()
-        self.DatosEntrada.Mpl_Img_gamma.Img(g)
-        self.DatosEntrada.Mpl_Img_gamma.ax2.get_yaxis().set_visible(True)
-        self.DatosEntrada.Mpl_Img_gamma.ax1.set_title('Distribución gamma', fontsize = 11)
-        self.DatosEntrada.Mpl_Img_gamma.Colores(g[~np.isnan(g)])
+        self.Bloque_Gamma.Mpl_Img_gamma.ax1.clear()
+        self.Bloque_Gamma.Mpl_Img_gamma.ax2.clear()
+        self.Bloque_Gamma.Mpl_Img_gamma.Img(g)
+        self.Bloque_Gamma.Mpl_Img_gamma.ax2.get_yaxis().set_visible(True)
+        self.Bloque_Gamma.Mpl_Img_gamma.ax1.set_title('Distribución gamma', fontsize = 11)
+        self.Bloque_Gamma.Mpl_Img_gamma.Colores(g[~np.isnan(g)])
 
         viridis = mpl.cm.get_cmap('viridis',256)
         hot = mpl.cm.get_cmap('hot',256)
@@ -171,23 +171,23 @@ class VentanaPrincipal(QMainWindow):
         new_hot = new_hot[20:26, :]
         new_color_gamma = np.vstack((new_viridis, new_hot))
         new_cmp_gamma = mpl.colors.ListedColormap(new_color_gamma)
-        self.DatosEntrada.Mpl_Img_gamma.mplI.set_norm(norm_gamma)
-        self.DatosEntrada.Mpl_Img_gamma.mplI.set_cmap(new_cmp_gamma)
+        self.Bloque_Gamma.Mpl_Img_gamma.mplI.set_norm(norm_gamma)
+        self.Bloque_Gamma.Mpl_Img_gamma.mplI.set_cmap(new_cmp_gamma)
 
-       # I_g = self.DatosEntrada.Mpl_Img_gamma.ax1.pcolormesh(g, cmap = new_cmp_gamma, norm = norm_gamma)
-        #cbar_gamma = self.DatosEntrada.Mpl_Img_gamma.colorbar(I_g, orientation='vertical', shrink = 0.6, cax = self.DatosEntrada.Mpl_Img_gamma.axe2)
+       # I_g = self.Bloque_Gamma.Mpl_Img_gamma.ax1.pcolormesh(g, cmap = new_cmp_gamma, norm = norm_gamma)
+        #cbar_gamma = self.Bloque_Gamma.Mpl_Img_gamma.colorbar(I_g, orientation='vertical', shrink = 0.6, cax = self.Bloque_Gamma.Mpl_Img_gamma.axe2)
         #cbar_gamma.ax.set_ylabel('Índice gamma', rotation=90, fontsize= 11)
 
-        #self.DatosEntrada.Mpl_Img_gamma.Mostrar_Imagen(g)
-        self.DatosEntrada.Mpl_Histograma.fig.canvas.draw()
-        self.DatosEntrada.Mpl_Img_gamma.fig.canvas.draw()
+        #self.Bloque_Gamma.Mpl_Img_gamma.Mostrar_Imagen(g)
+        self.Bloque_Gamma.Mpl_Histograma.fig.canvas.draw()
+        self.Bloque_Gamma.Mpl_Img_gamma.fig.canvas.draw()
 
 
 ######################################################################
 #   Ventanas para mensajes
     def displayMessageBox(self):
         """
-        Si la variable self.DatosEntrada.Formatos_ok es True, los archivos
+        Si la variable self.Bloque_Gamma.Formatos_ok es True, los archivos
         para las distribuciones de dosis se cargaron correctamente.
         En caso contrario se emite un mensaje de error.
         """

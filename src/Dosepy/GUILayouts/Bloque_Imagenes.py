@@ -14,10 +14,11 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHB
 import sys
 import pkg_resources
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvas
-import scipy.misc
+#from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import numpy as np
+from PyQt5.QtGui import QIcon
 
 
 
@@ -29,7 +30,7 @@ import numpy as np
 
 #---------------------------------------------
 
-class Bloque_Inf_Imagenes(QWidget):
+class Bloque_Imagenes(QWidget):
     def __init__(self):
         super().__init__()  #   Llamar al constructor de QWidget
         self.iniciarUI()
@@ -46,11 +47,11 @@ class Bloque_Inf_Imagenes(QWidget):
         file_name_FILM = pkg_resources.resource_filename('Dosepy', 'data/D_FILM.csv')
         file_name_TPS = pkg_resources.resource_filename('Dosepy', 'data/D_TPS.csv')
 
-        self.I_Izq = np.genfromtxt(file_name_FILM, delimiter = ',')
-        self.I_Der = np.genfromtxt(file_name_TPS, delimiter = ',')
+        array_refer = np.genfromtxt(file_name_FILM, delimiter = ',')
+        array_eval = np.genfromtxt(file_name_TPS, delimiter = ',')
 
-        #self.I_Izq = np.genfromtxt('./data/D_FILM.csv', delimiter = ',')
-        #self.I_Der = np.genfromtxt('./data/D_TPS.csv', delimiter = ',')
+        #array_refer = np.genfromtxt('./data/D_FILM.csv', delimiter = ',')
+        #array_eval = np.genfromtxt('./data/D_TPS.csv', delimiter = ',')
 
         self.Mpl_Izq = Qt_Figure_Imagen()
         self.Mpl_Der = Qt_Figure_Imagen()
@@ -58,8 +59,8 @@ class Bloque_Inf_Imagenes(QWidget):
         self.Mpl_Izq.ax1.set_title('Referencia', fontsize = 10, loc = 'left')
         self.Mpl_Der.ax1.set_title('A evaluar', fontsize = 10, loc = 'left')
 
-        self.Mpl_Izq.Img(self.I_Izq)
-        self.Mpl_Der.Img(self.I_Der)
+        self.Mpl_Izq.Img(array_refer)
+        self.Mpl_Der.Img(array_eval)
 
         self.Mpl_Izq.Colores(self.Mpl_Der.npI)
         self.Mpl_Der.Colores(self.Mpl_Der.npI)
@@ -69,8 +70,8 @@ class Bloque_Inf_Imagenes(QWidget):
 
         self.Mpl_Der.circ.set_visible(False)
 
-        self.Mpl_Izq.Cross_Hair_off()
-        self.Mpl_Der.Cross_Hair_off()
+        #self.Mpl_Izq.Cross_Hair_off()
+        #self.Mpl_Der.Cross_Hair_off()
 
         self.id_on_press_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('button_press_event', self.on_press_img_ref)            # Controlar si hay eventos y acciones
         self.id_on_release_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('button_release_event', self.on_release_img_ref)
@@ -82,24 +83,25 @@ class Bloque_Inf_Imagenes(QWidget):
         self.Mpl_perfiles.set_data_and_plot(self.Mpl_Izq.npI, self.Mpl_Der.npI, self.Mpl_Izq.circ)
 
         #   Widgets para los botones
-
         self.boton_roi = QPushButton('ROI')
-        self.boton_roi.resize(150,50)
+        #self.boton_roi.resize(150,50)
         self.boton_roi.setCheckable(True)
-        self.boton_roi.setChecked(True)
+        self.boton_roi.setChecked(False)
         self.boton_roi.clicked.connect(self.clic_ROI)
 
-        self.boton_recortar_Izq = QPushButton('Recortar')
+        #corte_icon = QIcon("../Icon/cut_icon.png")
+        #corte_name_folder = pkg_resources.resource_filename('Dosepy', 'Icon/cut_icon.png')
+        self.boton_recortar_Izq = QPushButton('Corte')
+        #self.boton_recortar_Izq.setIcon(corte_icon)
         self.boton_recortar_Izq.setEnabled(False)
         self.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
-
 
         #self.boton_exportar_Izq = QPushButton('Exportar')
         self.boton_exportar_Der = QPushButton('')
         #self.boton_exportar_perfiles = QPushButton('Exportar')
 
         #   Contenedores
-
+        """
         layout_hijo_Izq = QHBoxLayout()
         layout_hijo_Izq.addWidget(self.boton_roi)
         layout_hijo_Izq.addWidget(self.boton_recortar_Izq)
@@ -113,20 +115,25 @@ class Bloque_Inf_Imagenes(QWidget):
         layout_hijo_perfiles = QHBoxLayout()
         #layout_hijo_perfiles.addWidget(self.boton_exportar_perfiles)
         layout_hijo_perfiles.addStretch()
+        """
+        layout_padre_botones = QVBoxLayout()
+        layout_padre_botones.addWidget(self.boton_roi)
+        layout_padre_botones.addWidget(self.boton_recortar_Izq)
 
         layout_padre_Izq = QVBoxLayout()
-        layout_padre_Izq.addLayout(layout_hijo_Izq)
+        #layout_padre_Izq.addLayout(layout_hijo_Izq)
         layout_padre_Izq.addWidget(self.Mpl_Izq.Qt_fig)
 
         layout_padre_Der = QVBoxLayout()
-        layout_padre_Der.addLayout(layout_hijo_Der)
+        #layout_padre_Der.addLayout(layout_hijo_Der)
         layout_padre_Der.addWidget(self.Mpl_Der.Qt_fig)
 
         layout_padre_perfiles = QVBoxLayout()
-        layout_padre_perfiles.addLayout(layout_hijo_perfiles)
+        #layout_padre_perfiles.addLayout(layout_hijo_perfiles)
         layout_padre_perfiles.addWidget(self.Mpl_perfiles.Qt_fig)
 
         layout_abuelo = QHBoxLayout()
+        layout_abuelo.addLayout(layout_padre_botones)
         layout_abuelo.addLayout(layout_padre_Izq)
         layout_abuelo.addLayout(layout_padre_Der)
         layout_abuelo.addLayout(layout_padre_perfiles)
@@ -207,9 +214,6 @@ class Bloque_Inf_Imagenes(QWidget):
 
             self.Mpl_Izq.fig.canvas.draw()
             self.Mpl_Der.fig.canvas.draw()
-            #print(event.xdata)
-            #print(event.ydata)
-
 
 
  #%%
@@ -277,14 +281,9 @@ class Qt_Figure_Imagen:
     """
 
     def __init__(self):
-        #self.fig = Figure(figsize=(4,3), tight_layout = True, facecolor = 'whitesmoke')
-        self.fig = Figure(figsize=(4,3), facecolor = 'whitesmoke')
+        self.fig = Figure(figsize=(3.8,3), facecolor = 'whitesmoke')
         self.Qt_fig = FigureCanvas(self.fig)
-        #print(self.Qt_fig.supports_blit)
 
-        #   Axes para la imagen
-        #self.ax1 = self.fig.add_subplot(1, 8, (1,7))
-        #self.ax2 = self.fig.add_subplot(1, 8, 8)
         self.ax1 = self.fig.add_axes([0.08, 0.08, 0.75, 0.85])
         self.ax2 = self.fig.add_axes([0.85, 0.15, 0.04, 0.72])
 
@@ -372,7 +371,6 @@ class Qt_Figure_Imagen:
 
         self.hline.set_ydata( int(self.circ.center[1]) )
         self.vline.set_xdata( int(self.circ.center[0]) )
-        self.ax1.add_patch(self.circ)
 
     def Cross_Hair_on(self):
         '''
@@ -436,6 +434,7 @@ class Qt_Figure_Perfiles:
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ventana_raiz = Bloque_Inf_Imagenes()
+    ventana_raiz = Bloque_Imagenes()
+    ventana_raiz.setGeometry(100, 150, 1200, 300)
     ventana_raiz.show()
     sys.exit(app.exec_())

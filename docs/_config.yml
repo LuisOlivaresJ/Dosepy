@@ -10,6 +10,10 @@ github_username:  LuisOlivaresJ # DO NOT include the @ character, or else the bu
 
 show_excerpts: true # set to false to remove excerpts on the homepage
 
-theme: jekyll-theme-leap-day
+#theme: jekyll-theme-leap-day
+#plugins:
+#  - jekyll-archives
+
+remote_theme: pages-themes/leap-day
 plugins:
-  - jekyll-archives
+- jekyll-remote-theme # add this line to the plugins list if you already have one

@@ -1,16 +1,14 @@
 # *Dosepy*
 
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica que viene incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de Python (por ejemplo, escribiendo python dentro de una terminal Linux).
+*Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
+
+El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
+
+Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés) y contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+
+Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
 
 ## Métodos de comparación
-
-**¡Consideraciones!**
-
-* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
-* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
-
-En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 ### Comparación por índice gamma
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
@@ -28,9 +26,12 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 [Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
 La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
 
-### Comparación mediante perfiles
+**¡Consideraciones!**
 
-También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
+* Ambas distribuciones deben tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
+
+En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 ## Instalación
 **En Linux**<br/>
@@ -49,25 +50,18 @@ Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/
 pip install --upgrade Dosepy
 ```
 
-### Ayuda
-Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
-Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
+### Ejemplo con interfaz gráfica
 
-# Primer ejemplo con interfaz gráfica
-
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
+Para utilizar *Dosepy* con una interfaz gráfica , abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
 ```
-
-Para abrir la interfaz gráfica, escribimos:
+Posteriormente, escribimos:
 
 ```python
 import Dosepy.GUI
 ```
-
-Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
 
 ### Importación de archivo en formato csv
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
@@ -81,7 +75,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Segundo ejemplo utilizando una terminal
+## Primer ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando python:
 
@@ -109,11 +103,11 @@ La comparación gamma entre dos distribuciones de dosis se realiza mediante el m
 
 ```python
 #   Llamamos al método gamma2D, con criterio 3 %, 1 mm.
-gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, 3, 1)
+gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis, ejemplo 3
+## Datos en formato CSV, usando un umbral de dosis, ejemplo 2
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -127,7 +121,7 @@ D_eval = dp.from_csv("D_TPS.csv", PixelSpacing = 1)
 D_ref = dp.from_csv("D_FILM.csv", PixelSpacing = 1)
 
 #   Llamamos al método gamma2D, con criterio 3 %, 2 mm, descartando puntos con dosis por debajo del 10 %.
-g, pass_rate = D_eval.gamma2D(D_ref, dose_t= 3, dist_t = 2, dose_tresh = 10)
+g, pass_rate = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 2, dose_tresh = 10)
 
 #   Imprimimos el resultado
 print(f'El índice de aprobación es: {pass_rate:.1f} %')
@@ -137,7 +131,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto, ejemplo 4
+## Datos en formato DICOM y modo de dosis absoluto, ejemplo 3
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -417,7 +411,10 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
   * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.
 
 24-10-2022 Versión 0.3.1<br/>
-  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy,mmatplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
+  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy, matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
 
 04-11-2022 Versión 0.3.2<br/>
 * Se inhabilita como primera opción el botón para abrir la distribución de dosis a evaluar. Se inhabilita el botón para calcular la distribución gamma si los parámetros ingresados por el usuario no son valores numéricos. Lo anterior para evitar un error de ejecución. 
+
+14-01-2023 Versión 0.3.3-5<br/>
+* Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.

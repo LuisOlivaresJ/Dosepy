@@ -5,19 +5,19 @@ title: "Dosepy"
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
 # Bienvenido
-*Dosepy* es un paquete escrito en Python para la comparación de distribuciones de dosis 2-dimensional usadas en radioterapia.<br/>
-Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, se requiere un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).
+*Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
+
+El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
+
+Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, es posible utilizar un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).<br/>
+
+> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+
+Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. <br/> 
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 ## Métodos de comparación
-
-**¡Consideraciones!**
-
-* Ambas distribuciones deben de tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
-* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
-
-En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 **Comparación por índice gamma**<br/>
 ![Imagen_gamma](/assets/Image_gamma.png)<br/>
@@ -31,7 +31,7 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
-**Proceso de validación**<br/>
+**Proceso de una primera validación del algoritmo gamma**<br/>
 [Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
 La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
 
@@ -39,6 +39,13 @@ La validación del algoritmo para la prueba del índice gamma se realizó median
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
 ![Imagen_perfil_2](/assets/Perfiles_2.png)<br/>
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.
+
+## ¡Consideraciones!
+
+* Ambas distribuciones deben de tener las mismas dimensiones físicas y resolución espacial (mismo número de filas y columnas).
+* Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
+
+En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
 
 ## Instalación
 **En Linux**<br/>
@@ -62,10 +69,10 @@ Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos
 Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
 
 ### Ejemplos
-
+ 
 **Ejemplo con interfaz gráfica**
 
-Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
+La forma más simple de utilizar *Dosepy* es a través de una interfaz gráfica de usuario (GUI). Para ello, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
 ```bash
 python
@@ -92,6 +99,10 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * Deberá contener sólo un plano de dosis.
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
+
+![Jupyter](https://jupyter.org/assets/homepage/main-logo.svg) **Uso de un Notebook**
+
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [**Aquí**](Notebook.md) puedes consultar una guía para ello.
 
 **Ejemplo utilizando una terminal**
 
@@ -599,8 +610,10 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
   * Se agrega un resumen del trabajo de validación del software. Se requiere de un password para utilizar el software.
 
 24-10-2022 Versión 0.3.1<br/>
-  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy,
-  matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
+  * Se actualiza la licencia. Se facilita la instalación al agregarse automáticamente las dependencias como numpy, matplotlib, etc. Se agrega información del tamaño de las distribuciones de dosis cuando se comparan matrices con diferentes dimensiones. Al guardar una distribución de dosis, se resuelve el error de generarse el nombre del archivo con doble formato (por ejemplo file.csv.csv). Se mejora el ingreso del parámetro "Ref." para ejecutar cambio de resolución solo cuando el valor ingresado por el usuario es un número flotante.
 
 04-11-2022 Versión 0.3.2<br/>
 * Se inhabilita como primera opción el botón para abrir la distribución de dosis a evaluar. Se inhabilita el botón para calcular la distribución gamma si los parámetros ingresados por el usuario no son valores numéricos. Lo anterior para evitar un error de ejecución. 
+
+14-01-2023 Versión 0.3.3-5<br/>
+* Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
