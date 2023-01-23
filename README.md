@@ -417,4 +417,4 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 * Se inhabilita como primera opción el botón para abrir la distribución de dosis a evaluar. Se inhabilita el botón para calcular la distribución gamma si los parámetros ingresados por el usuario no son valores numéricos. Lo anterior para evitar un error de ejecución. 
 
 14-01-2023 Versión 0.3.3-5<br/>
-* Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. 
+* Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
