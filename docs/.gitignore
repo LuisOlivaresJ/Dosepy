@@ -3,3 +3,4 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+src/Dosepy/GUILayouts/__pycache__
