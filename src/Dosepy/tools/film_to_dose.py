@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
-Última modificación: 12 Enero 2023
 @author:
     Luis Alfonso Olivares Jimenez
     Maestro en Ciencias (Física Médica)
@@ -96,7 +94,7 @@ def calibracion(img_pre, img_post):
 def a_dosis(Pre, Post, popt):
     film_pre_prom = np.mean(Pre, axis = 2)  # Promedio de los tres canales de color
     film_post_prom = np.mean(Post, axis = 2)
-    film_DO = -np.log10(film_post_prom / (film_pre_prom + 1))   #La suma de uno se utiliza para evitar la división por cero
+    film_DO = -np.log10(film_post_prom / film_pre_prom )
     Dosis_FILM_full = cubico(film_DO, popt[0], popt[1], popt[2], popt[3])
 
     return Dosis_FILM_full
@@ -104,7 +102,7 @@ def a_dosis(Pre, Post, popt):
 def main():
     Img_pre = tif.imread('C_Pre.tif')
     Img_post = tif.imread('C_Post.tif')
-    popt, Dens_optica, Dosis_imaprtida = calibracion(Img_pre,Img_post)
+    popt, Dens_optica, Dosis_imaprtida = calibracion(Img_pre, Img_post)
     x = np.linspace(0, 0.35)
     y = cubico(x, popt[0], popt[1], popt[2], popt[3])
     plt.plot(Dens_optica, Dosis_imaprtida,'o')

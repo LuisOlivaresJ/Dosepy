@@ -2,6 +2,8 @@
 title: "Uso de Jupyter-Notebook"
 ---
 
+## (Página en desarrollo...)
+
 ## Introducción
 
 El paquete de código *Dosepy* puede ser ejecutado por un intérprete de Python, o desde un entorno de desarrollo integrado (conocido como IDE) como por ejemplo [Spyder](https://www.spyder-ide.org/) o [Jupyter](https://jupyter.org/).

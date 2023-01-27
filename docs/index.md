@@ -211,7 +211,7 @@ Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier 
 [Calib_Pre.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Pre.tif)<br/>
 [Calib_Post.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Post.tif)<br/>
 
-La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
+La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las películas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
 
    1. Abrir el software Dosepy.GUI
    2. En la pestaña *Herramientas*, haga clic en la opción *Dosimetría con película*.
@@ -222,15 +222,15 @@ La calibración de la película se realiza ingresando a Dosepy dos imágenes del
 ![Curva_Calibracion](/assets/img_calib.png)<br/>
 Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
 
-**Aplicar calibración a una imagen**
+**Aplicar la calibración a una imagen**
 
-La curva de calibración previamente generada puede ser aplicada a un imagen en formato tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
+La curva de calibración previamente generada puede ser aplicada a una imagen en formato tiff. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
 
 [Imagen_ejemplo_PRE.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Pre.tif)<br/>
 [Imagen_ejemplo_POST.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Post.tif)<br/>
 
 1. Dar clic en el botón Dist.
-2. Seleccionar la imagen tif de la película antes de su irradiación
+2. Seleccionar la imagen tiff de la película antes de su irradiación
 3. En la ventana emergente, seleccionar la imagen tif de la película después de la irradiación.
 
 ![disutribucion](/assets/distribucion.png)<br/>
@@ -535,9 +535,10 @@ Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
 
     Dens_optica_vec : ndarray
         Densidad óptica de cada una de las 10 películas. Calculada como
-        DO = - np.log10( I_post / (I_pre + 1)),
-        en donde I_pre e I_post corresponden a la intensidad de pixel
-        promedio en una ROI cuadrada de 70 pixeles de lado,
+        DO = - np.log10( I_post / I_pre ),
+        en donde I_pre e I_post corresponden al promedio en los tres canales 
+        de color de la intensidad de pixel
+        en una ROI cuadrada de 70 pixeles de lado,
         para una película antes y después de su irradiación,
         respectivamente.
 
