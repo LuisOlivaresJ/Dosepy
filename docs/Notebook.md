@@ -38,3 +38,4 @@ Jupyter notebook
 
 Lo anterior abrirá el explorador de internet que tengamos por defecto y nos mostrará los archivos de nuestra computadora. Abrir el archivo **Dosepy_Notebook.ipynb**.
 
+![Jupyter_file](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Jupyter_file_explorer.png)
