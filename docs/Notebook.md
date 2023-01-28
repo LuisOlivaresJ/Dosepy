@@ -20,6 +20,11 @@ Completada la instalación de miniconda, abrimos **Anaconda Powershell Promp** e
 #Instalación mediante pip
 pip install Dosepy, Jupyter
 ```
+
+Descargar el archivo [Dosepy_ejemplos.zip](https://github.com/LuisOlivaresJ/Dosepy-Jupyter-example/blob/e145e35068f23ab9d46e2253e92724e26d628615/assets/Dosepy_ejemplos.zip), con el botón *Download*
+
+ Descomprimirlo y pegarlo en la carpeta *Documentos*. 
+
 ## Ejecutar Jupyter
 
 Para ejecutar Jupyter escribimos el siguiente comando dentro **Anaconda Powershell Promp**:
@@ -29,4 +34,5 @@ Para ejecutar Jupyter escribimos el siguiente comando dentro **Anaconda Powershe
 Jupyter notebook
 ```
 
-Lo anterior abrirá el explorador de internet que tengamos por defecto y nos mostrará los archivos de nuestra computadora. 
+Lo anterior abrirá el explorador de internet que tengamos por defecto y nos mostrará los archivos de nuestra computadora. Abrir el archivo **Dosepy_Notebook.ipynb**.
+
