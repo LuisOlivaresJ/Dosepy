@@ -23,7 +23,9 @@ pip install Dosepy, Jupyter
 
 Descargar el archivo [Dosepy_ejemplos.zip](https://github.com/LuisOlivaresJ/Dosepy-Jupyter-example/blob/e145e35068f23ab9d46e2253e92724e26d628615/assets/Dosepy_ejemplos.zip), con el botón *Download*
 
- Descomprimirlo y pegarlo en la carpeta *Documentos*. 
+![Boton_descarga](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Download_example_button.PNG)
+
+ Descomprimir el archivo y pegarlo en la carpeta *Documentos*. 
 
 ## Ejecutar Jupyter
 
