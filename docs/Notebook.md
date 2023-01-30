@@ -6,8 +6,6 @@ title: "Uso de Jupyter-Notebook"
 
 ## Introducción
 
-El paquete de código *Dosepy* puede ser ejecutado por un intérprete de Python, o desde un entorno de desarrollo integrado (conocido como IDE) como por ejemplo [Spyder](https://www.spyder-ide.org/) o [Jupyter](https://jupyter.org/).
-
 En esta guía se utilizará Dosepy a través del entorno [JupyterLab](https://jupyter.org/), el cual contiene herramientas de gran utilidad para generar tutoriales de fácil ejecución y visualización por parte del usuario.
 
 ## Instalación en Windows

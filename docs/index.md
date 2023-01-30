@@ -86,23 +86,21 @@ import Dosepy.GUI
 
 Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
 
-**Importación de archivo en formato csv**
-
-La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
-* El archivo deberá contener sólo los valores de dosis.
-* Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
-* La unidad para la dosis deberá ser el Gray (Gy).
-
-**Importación de archivo en formato dcm**
-
-La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
-* Deberá contener sólo un plano de dosis.
-* La resolución espacial debe ser igual en cada dimensión.
-* La unidad para la dosis deberá ser el Gray (Gy).
-
 ![Jupyter](https://jupyter.org/assets/homepage/main-logo.svg) **Uso de un Notebook**
 
-Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [**Aquí**](Notebook.md) puedes consultar una guía para ello.
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [*Aquí*](Notebook.md) puedes consultar una guía para ello.
+>
+>**Importación de archivo en formato csv**
+>La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
+>* El archivo deberá contener sólo los valores de dosis.
+>* Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
+>* La unidad para la dosis deberá ser el Gray (Gy).
+
+>**Importación de archivo en formato dcm**
+>La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
+>* Deberá contener sólo un plano de dosis.
+>* La resolución espacial debe ser igual en cada dimensión.
+>* La unidad para la dosis deberá ser el Gray (Gy).
 
 **Ejemplo utilizando una terminal**
 
