@@ -1,0 +1,8 @@
+dist
+docs/_site
+docs/.ipynb_checkpoints
+docs/.sass-cache
+docs/.jekyll-cache
+docs/.jekyll-metadata
+docs/vendor
+src/Dosepy/GUILayouts/__pycache__

@@ -1,7 +1,0 @@
-_site
-.ipynb_checkpoints
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
-src/Dosepy/GUILayouts/__pycache__
