@@ -117,8 +117,8 @@ Dentro de Python, escribimos el siguiente código de prueba:
 import numpy as np
 import Dosepy.dose as dp
 
-a = np.zeros((10,10)) + 100   # Matrices de prueba
-b = np.zeros((10,10)) + 96    # Diferencia en dosis de un 4 %
+a = np.zeros((10,10)) + 96   # Matrices de prueba
+b = np.zeros((10,10)) + 100    # Diferencia en dosis de un 4 %
 
 D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
 D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
@@ -267,7 +267,7 @@ Dose.gamma2D(
   dose_t_Gy = False,
   local_norm = False,
   mask_radius = 5,
-  max_as_percentile = True
+  max_as_percentile = False
   )
 
 Cálculo del índice gamma contra una distribución de referencia.
@@ -349,7 +349,7 @@ Parameters:
             una distancia mayor a las dimensiones de la distribución de
             dosis (por ejemplo mask_radius = 1000).
 
-    max_as_percentile : bool, default: True
+    max_as_percentile : bool, default: False
         -> Si el argumento es True, se utiliza el percentil 99.1 como una
            aproximación del valor máximo de la distribución de dosis. Lo
            anterior permite excluir artefactos o errores en posiciones
@@ -618,4 +618,4 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 * Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
 
 30-01-2023 Versión 0.3.6<br/>
-* Se modifica algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película.
+* Se actualiza algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar.

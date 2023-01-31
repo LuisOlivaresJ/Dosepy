@@ -19,21 +19,21 @@ Completada la instalación de miniconda, abrimos **Anaconda Powershell Promp** e
 pip install Dosepy, Jupyter
 ```
 
-Descargar el archivo [Dosepy_ejemplos.zip](https://github.com/LuisOlivaresJ/Dosepy-Jupyter-example/blob/e145e35068f23ab9d46e2253e92724e26d628615/assets/Dosepy_ejemplos.zip), con el botón *Download*
+Posteriormente descargar los archivos que se usarán para los ejemplos. Visistar la [página en GitHub](https://github.com/LuisOlivaresJ/Dosepy/tree/V_0_3_6), dar click en el botón *Code* y descargar el paquete mediante la opción *Download ZIP*.
 
 ![Boton_descarga](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Download_example_button.PNG)
 
- Descomprimir el archivo y pegarlo en la carpeta *Documentos*. 
+ Descomprimir el archivo, abrir el directorio docs y copiar la carpeta Jupyter en *Documentos*. Una vez copiada la carpeta Jupyter, se puede eliminar el archivo recién descargado.
 
 ## Ejecutar Jupyter
 
-Para ejecutar Jupyter escribimos el siguiente comando dentro **Anaconda Powershell Promp**:
+Para ejecutar Jupyter escribimos el siguiente comando dentro de **Anaconda Powershell Promp**:
 
 ```bash
 #Ejecución de Jupyter
 Jupyter notebook
 ```
 
-Lo anterior abrirá el explorador de internet que tengamos por defecto y nos mostrará los archivos de nuestra computadora. Abrir el archivo **Dosepy_Notebook.ipynb**.
+Lo anterior abrirá el explorador de internet que tengamos por defecto y nos mostrará los archivos de nuestra computadora. Abrir el archivo **Dosepy_Notebook.ipynb**, que se encuentra dentro de la carpeta Jupyter.
 
 ![Jupyter_file](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Jupyter_file_explorer.png)
