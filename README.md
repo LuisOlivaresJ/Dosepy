@@ -427,5 +427,5 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 14-01-2023 Versión 0.3.3-5<br/>
 * Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
 
-30-01-2023 Versión 0.3.6<br/>
-* Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar.
+09-02-2023 Versión 0.3.6<br/>
+* Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.
