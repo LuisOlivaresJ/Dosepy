@@ -9,11 +9,11 @@ title: "Dosepy"
 
 El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
 
-Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, es posible utilizar un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).<br/>
+Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, es posible utilizar un intérprete de Python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).<br/>
 
-> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país. Para mayor información referente al marco normativo de dispositivos médicos en México dar click [aquí](LEGALIDAD_MX.md).<br/> 
 
-Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. <br/> 
+Para mayor información contactar al correo electrónico dosepy@gmail.com. <br/> 
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
@@ -66,7 +66,7 @@ pip install --upgrade Dosepy
 
 **Ayuda**<br/>
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
-Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
+Escribe a la dirección de correo electrónico: dosepy@gmail.com
 
 ### Ejemplos
  

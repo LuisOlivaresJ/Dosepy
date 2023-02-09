@@ -6,7 +6,7 @@ El formato de los archivos que contengan la distribución de dosis puede ser DIC
 
 > **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país.<br/>  
 
-Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
+Para mayor información contactar al correo electrónico dosepy@gmail.com. 
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 

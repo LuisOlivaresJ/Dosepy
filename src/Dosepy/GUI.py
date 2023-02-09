@@ -195,6 +195,7 @@ class VentanaPrincipal(QMainWindow):
         QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
 class Ventana_Secundaria(QMainWindow):
+    'Clase para mantenimiento de Dosepy'
     def __init__(self):
         super().__init__()
 
@@ -277,6 +278,7 @@ class Ventana_Secundaria(QMainWindow):
         self.licencia_window_sec.show()
 
 app = QApplication(sys.argv)
-windowA = Ventana_Secundaria()
+#windowA = Ventana_Secundaria() 
+windowA = VentanaPrincipal('P')
 
 sys.exit(app.exec_())

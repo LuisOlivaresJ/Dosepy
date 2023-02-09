@@ -10,7 +10,7 @@ En esta guía se utilizará Dosepy a través del entorno [JupyterLab](https://ju
 
 ## Instalación en Windows
 
-Antes de poder utilizar Dosepy o Jupyter, es necesario contar con un administrador de paquetes Python. Aquí se utilizará [miniconda](https://docs.conda.io/en/latest/miniconda.html).
+Antes de poder utilizar Dosepy o Jupyter, es necesario contar con un administrador de paquetes Python. Aquí se utilizará [miniconda](https://docs.conda.io/en/latest/miniconda.html) (o Anaconda si ya se cuenta con ello).
 
 Completada la instalación de miniconda, abrimos **Anaconda Powershell Promp** el cual podemos encontrar en el icono de inicio de Windows. Dentro de la terminal (ventana de comandos con fondo obscuro) procedemos con la instalación de Dosepy y Jupyter escribiendo el siguiente comando:
 
@@ -23,7 +23,7 @@ Posteriormente descargar los archivos que se usarán para los ejemplos. Visistar
 
 ![Boton_descarga](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Download_example_button.PNG)
 
- Descomprimir el archivo, abrir el directorio docs y copiar la carpeta Jupyter en *Documentos*. Una vez copiada la carpeta Jupyter, se puede eliminar el archivo recién descargado.
+ Descomprimir el archivo, abrir el directorio docs y copiar la carpeta Jupyter en *Documentos*. Una vez que se ha copiado la carpeta *Jupyter*, se puede eliminar el archivo recién descargado.
 
 ## Ejecutar Jupyter
 
