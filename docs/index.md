@@ -9,11 +9,11 @@ title: "Dosepy"
 
 El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
 
-Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, es posible utilizar un intérprete de python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).<br/>
+Para su uso, se puede emplear una interfaz gráfica incluida dentro del paquete. Sin embargo, para tener acceso a todas las funcionalidades de Dosepy, es posible utilizar un intérprete de Python (por ejemplo, escribiendo Python dentro de una terminal Linux, o utilizando el entorno [Spyder](https://www.spyder-ide.org)).<br/>
 
-> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país. Para mayor información referente al marco normativo de dispositivos médicos en México dar click [aquí](LEGALIDAD_MX.md).<br/> 
 
-Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. <br/> 
+Para mayor información contactar al correo electrónico dosepy@gmail.com. <br/> 
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
@@ -66,7 +66,7 @@ pip install --upgrade Dosepy
 
 **Ayuda**<br/>
 Si tienes algún problema o duda respecto al uso del paquete Dosepy, permítenos saberlo.<br/>
-Escribe a la dirección de correo electrónico: alfonso.cucei.udg@gmail.com
+Escribe a la dirección de correo electrónico: dosepy@gmail.com
 
 ### Ejemplos
  
@@ -86,23 +86,21 @@ import Dosepy.GUI
 
 Dosepy.GUI viene pre-cargado con dos distribuciones de dosis con el objetivo de que el usuario pueda interactuar con las herramientas que se ofrecen para la comparación.<br/>
 
-**Importación de archivo en formato csv**
-
-La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
-* El archivo deberá contener sólo los valores de dosis.
-* Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
-* La unidad para la dosis deberá ser el Gray (Gy).
-
-**Importación de archivo en formato dcm**
-
-La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
-* Deberá contener sólo un plano de dosis.
-* La resolución espacial debe ser igual en cada dimensión.
-* La unidad para la dosis deberá ser el Gray (Gy).
-
 ![Jupyter](https://jupyter.org/assets/homepage/main-logo.svg) **Uso de un Notebook**
 
-Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [**Aquí**](Notebook.md) puedes consultar una guía para ello.
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [*Aquí*](Notebook.md) puedes consultar una guía para ello.
+>
+>**Importación de archivo en formato csv**
+>La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
+>* El archivo deberá contener sólo los valores de dosis.
+>* Toda información adicional deberá estar precedida con el carácter "#". Ello indicará que todos los caracteres que se encuentren en la misma linea después de "#" debe de ser ignorados por Dosepy.
+>* La unidad para la dosis deberá ser el Gray (Gy).
+
+>**Importación de archivo en formato dcm**
+>La distribución a evaluar puede importarse en un archivo con formato .csv o en formato .dcm (archivo DICOM). Si el formato es DICOM:
+>* Deberá contener sólo un plano de dosis.
+>* La resolución espacial debe ser igual en cada dimensión.
+>* La unidad para la dosis deberá ser el Gray (Gy).
 
 **Ejemplo utilizando una terminal**
 
@@ -119,8 +117,8 @@ Dentro de Python, escribimos el siguiente código de prueba:
 import numpy as np
 import Dosepy.dose as dp
 
-a = np.zeros((10,10)) + 100   # Matrices de prueba
-b = np.zeros((10,10)) + 96    # Diferencia en dosis de un 4 %
+a = np.zeros((10,10)) + 96   # Matrices de prueba
+b = np.zeros((10,10)) + 100    # Diferencia en dosis de un 4 %
 
 D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
 D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
@@ -211,7 +209,7 @@ Con ayuda del software [ImageJ](https://imagej.net/software/fiji/) (o cualquier 
 [Calib_Pre.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Pre.tif)<br/>
 [Calib_Post.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/60aa1ccaa4155f19db3b063f8e782b47ffde6828/docs/film_dosimetry/Calib_Post.tif)<br/>
 
-La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las plículas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
+La calibración de la película se realiza ingresando a Dosepy dos imágenes del mismo tamaño, correspondientes a las películas antes y después de su irraciación. Para ello, seguir los siguientes pasos:
 
    1. Abrir el software Dosepy.GUI
    2. En la pestaña *Herramientas*, haga clic en la opción *Dosimetría con película*.
@@ -222,15 +220,15 @@ La calibración de la película se realiza ingresando a Dosepy dos imágenes del
 ![Curva_Calibracion](/assets/img_calib.png)<br/>
 Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
 
-**Aplicar calibración a una imagen**
+**Aplicar la calibración a una imagen**
 
-La curva de calibración previamente generada puede ser aplicada a un imagen en formato tif. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
+La curva de calibración previamente generada puede ser aplicada a una imagen en formato tiff. (Los parámetros para la digitalización deben ser los mismos que los usados para la calibración). Para ello se requieren cargar la imagen de la película antes de la irradiación y una segunda imagen del mismo tamaño después de la irradiación.
 
 [Imagen_ejemplo_PRE.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Pre.tif)<br/>
 [Imagen_ejemplo_POST.tif](https://github.com/LuisOlivaresJ/Dosepy/blob/b6510eac7b65285b39d9b5c7fa6a24487f991db6/docs/film_dosimetry/QA_Post.tif)<br/>
 
 1. Dar clic en el botón Dist.
-2. Seleccionar la imagen tif de la película antes de su irradiación
+2. Seleccionar la imagen tiff de la película antes de su irradiación
 3. En la ventana emergente, seleccionar la imagen tif de la película después de la irradiación.
 
 ![disutribucion](/assets/distribucion.png)<br/>
@@ -269,7 +267,7 @@ Dose.gamma2D(
   dose_t_Gy = False,
   local_norm = False,
   mask_radius = 5,
-  max_as_percentile = True
+  max_as_percentile = False
   )
 
 Cálculo del índice gamma contra una distribución de referencia.
@@ -351,7 +349,7 @@ Parameters:
             una distancia mayor a las dimensiones de la distribución de
             dosis (por ejemplo mask_radius = 1000).
 
-    max_as_percentile : bool, default: True
+    max_as_percentile : bool, default: False
         -> Si el argumento es True, se utiliza el percentil 99.1 como una
            aproximación del valor máximo de la distribución de dosis. Lo
            anterior permite excluir artefactos o errores en posiciones
@@ -535,9 +533,10 @@ Dosepy.tools.film_to_dose.calibracion(img_pre, img_post)
 
     Dens_optica_vec : ndarray
         Densidad óptica de cada una de las 10 películas. Calculada como
-        DO = - np.log10( I_post / (I_pre + 1)),
-        en donde I_pre e I_post corresponden a la intensidad de pixel
-        promedio en una ROI cuadrada de 70 pixeles de lado,
+        DO = - np.log10( I_post / I_pre ),
+        en donde I_pre e I_post corresponden al promedio en los tres canales 
+        de color de la intensidad de pixel
+        en una ROI cuadrada de 70 pixeles de lado,
         para una película antes y después de su irradiación,
         respectivamente.
 
@@ -617,3 +616,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 14-01-2023 Versión 0.3.3-5<br/>
 * Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
+
+09-02-2023 Versión 0.3.6<br/>
+* Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.

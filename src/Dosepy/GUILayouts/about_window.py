@@ -52,7 +52,7 @@ class About_Window(QWidget):
         layout_padre_V.addWidget(label_logo)
 
         label_version = QLabel(self)
-        label_version.setText('Versión 0.3.5')
+        label_version.setText('Versión 0.3.6')
         label_version.setAlignment(Qt.AlignCenter)
         label_version.setStyleSheet(
             "margin-top: 10px;" +

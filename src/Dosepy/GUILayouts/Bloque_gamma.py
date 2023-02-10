@@ -17,8 +17,9 @@ class Bloque_gamma(QWidget):
     """
     Permite mostrar los archivos a cargar, parámetros gamma y resultados.
     """
-    def __init__(self):
+    def __init__(self, Us):
         super().__init__()
+        self.Us = Us
         self.iniciarUI()
 
     def iniciarUI(self):
@@ -132,13 +133,14 @@ class Bloque_gamma(QWidget):
         Resolution_Form = QFormLayout()
         Resolution_Form.addRow('Distancia entre puntos [mm]', self.Resolution)
 
-        #   Crear FormLayout
-        Parametros_gamma_Layout = QFormLayout()
-        #Parametros_gamma_Layout.setLabelAlignment(Qt.AlignLeft)
-        Parametros_gamma_Layout.setFormAlignment(Qt.AlignRight)
-        Parametros_gamma_Layout.addRow('Toler. en dosis [%]', self.Toler_dosis)
-        Parametros_gamma_Layout.addRow('Toler. en distancia [mm]', self.Toler_dist)
-        Parametros_gamma_Layout.addRow('Umbral de dosis [%]', self.Umbral_dosis)
+        if self.Us == 'P':
+            #   Crear FormLayout
+            Parametros_gamma_Layout = QFormLayout()
+            #Parametros_gamma_Layout.setLabelAlignment(Qt.AlignLeft)
+            Parametros_gamma_Layout.setFormAlignment(Qt.AlignRight)
+            Parametros_gamma_Layout.addRow('Toler. en dosis [%]', self.Toler_dosis)
+            Parametros_gamma_Layout.addRow('Toler. en distancia [mm]', self.Toler_dist)
+            Parametros_gamma_Layout.addRow('Umbral de dosis [%]', self.Umbral_dosis)
 
         #   Crear vertical Layout
 
@@ -147,8 +149,9 @@ class Bloque_gamma(QWidget):
         Padre_Info_V_Layout.addLayout(archivos_Post_h_box)
         Padre_Info_V_Layout.addLayout(Resolution_Form)
 
-        Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
-        Padre_Info_V_Layout.addStretch()
+        if self.Us == 'P':
+            Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
+            Padre_Info_V_Layout.addStretch()
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_maximo_Label)
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_mediana_Label)
         Padre_Info_V_Layout.addWidget(self.Calcular_Button)
@@ -288,6 +291,6 @@ class Qt_Figure_Histograma:
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = Bloque_gamma()
+    window = Bloque_gamma('P')
     window.show()
     sys.exit(app.exec_())

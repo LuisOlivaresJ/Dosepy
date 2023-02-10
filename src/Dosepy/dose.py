@@ -36,7 +36,7 @@ class Dose:
         self.rows = array.shape[0]          #   Número de filas en la matriz.
         self.resolution = resolution;       #   Resolución espacial dada como la distancia entre dos puntos consecutivos [mm].
 
-    def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=5, max_as_percentile = True):
+    def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=5, max_as_percentile = False):
         ''' Cálculo del índice gamma contra una distribución de referencia.
             Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
             así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
@@ -90,7 +90,7 @@ class Dose:
             Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
             una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
 
-        max_as_percentile : bool, default: True
+        max_as_percentile : bool, default: False
             -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
                distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
                (de utilidad por ejemplo cuando se utiliza película radiocrómica).

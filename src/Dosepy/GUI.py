@@ -37,8 +37,9 @@ class VentanaPrincipal(QMainWindow):
     """
     Ventana principal
     """
-    def __init__(self):
+    def __init__(self, Us):
         super().__init__()
+        self.Us = Us
         self.setStyleSheet("background-color: whitesmoke;")
         #self.setStyleSheet("background-color: #1d1040;")
         self.setWindowTitle('Dosepy')
@@ -60,7 +61,7 @@ class VentanaPrincipal(QMainWindow):
 
         cuerpo = QWidget()
         self.Bloque_Imagen = Bloque_Imagenes()
-        self.Bloque_Gamma = Bloque_gamma()
+        self.Bloque_Gamma = Bloque_gamma(self.Us)
         self.Bloque_Gamma.Eval_button.clicked.connect(self.mostrar_distribucion)
         self.Bloque_Gamma.Calcular_Button.clicked.connect(self.Calculo_Gamma)
 
@@ -194,6 +195,7 @@ class VentanaPrincipal(QMainWindow):
         QMessageBox().critical(self, "Error", "Error con la lectura de archivos.", QMessageBox.Ok, QMessageBox.Ok)
 
 class Ventana_Secundaria(QMainWindow):
+    'Clase para mantenimiento de Dosepy'
     def __init__(self):
         super().__init__()
 
@@ -234,9 +236,13 @@ class Ventana_Secundaria(QMainWindow):
         self.show()
 
     def cerrar_UI(self):
-        if self.name_entry.text() == 'Snoopy':
+        if self.name_entry.text() == 'self':
             #self.close()
-            self.window = VentanaPrincipal()
+            self.Us = 'P'
+            self.window = VentanaPrincipal(self.Us)
+        else:
+            self.Us = 'O'
+            self.window = VentanaPrincipal(self.Us)
 
     def menu_ayuda(self):
         """
@@ -272,6 +278,7 @@ class Ventana_Secundaria(QMainWindow):
         self.licencia_window_sec.show()
 
 app = QApplication(sys.argv)
-windowA = Ventana_Secundaria()
+#windowA = Ventana_Secundaria() 
+windowA = VentanaPrincipal('P')
 
 sys.exit(app.exec_())

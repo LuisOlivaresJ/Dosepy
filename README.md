@@ -4,9 +4,11 @@
 
 El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
 
-Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés) y contratos que garanticen el cumplimiento de la legislación de cada país.<br/> 
+> **Condiciones de uso.** Toda persona tiene acceso a la lectura y uso del código con fines académicos o de enseñanza. Sin embargo, para el uso clínico del programa se requiere contar con una licencia (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento de la legislación de cada país.<br/>  
 
-Para mayor información contactar al correo electrónico alfonso.cucei.udg@gmail.com. 
+Para mayor información contactar al correo electrónico dosepy@gmail.com. 
+
+Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 ## Métodos de comparación
 
@@ -21,7 +23,7 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
-**Proceso de validación**<br/>
+**Proceso de una primera validación del algoritmo gamma**<br/>
 
 [Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
 La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
@@ -50,7 +52,9 @@ Para mantener actualizado el paquete Dosepy, utilizar [pip](https://pip.pypa.io/
 pip install --upgrade Dosepy
 ```
 
-### Ejemplo con interfaz gráfica
+### Ejemplos
+ 
+**Ejemplo con interfaz gráfica**
 
 Para utilizar *Dosepy* con una interfaz gráfica , abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando **python**:
 
@@ -62,6 +66,10 @@ Posteriormente, escribimos:
 ```python
 import Dosepy.GUI
 ```
+
+**Uso de un Notebook**
+
+Para aprender a utilizar todas las herramientas de *Dosepy* se recomienda el uso de un Notebook del entorno [Jupyter](https://jupyter.org/). [*Aquí*](Notebook.md) puedes consultar una guía para ello.
 
 ### Importación de archivo en formato csv
 La importación de la distribución de referencia puede realizarse sólo si el archivos se encuentra en formato .csv (valores separados por comas). Adicionalmente:
@@ -75,7 +83,7 @@ La distribución a evaluar puede importarse en un archivo con formato .csv o en 
 * La resolución espacial debe ser igual en cada dimensión.
 * La unidad para la dosis deberá ser el Gray (Gy).
 
-## Primer ejemplo utilizando una terminal
+## Ejemplo utilizando una terminal
 En *Dosepy*, una distribución de dosis es representada como un objeto de la [clase](https://docs.python.org/es/3/tutorial/classes.html) **Dose** del paquete *Dosepy*. Para crear el objeto son necesarios dos argumentos: las dosis de la distribución en formato [ndarray](https://numpy.org/doc/stable/reference/index.html#module-numpy) y la resolución espacial dada por la distancia (en milímetros) entre dos puntos consecutivos.
 Para utilizar *Dosepy*, abrimos una terminal (o Anaconda Prompt en el caso de Windows) y escribimos el comando python:
 
@@ -89,8 +97,8 @@ Dentro de Python, escribimos el siguiente código de prueba:
 import numpy as np
 import Dosepy.dose as dp
 
-a = np.zeros((10,10)) + 100   # Matrices de prueba
-b = np.zeros((10,10)) + 96  
+a = np.zeros((10,10)) + 96   # Matrices de prueba
+b = np.zeros((10,10)) + 100  
 
 D_ref = dp.Dose(a, 1)   # Se crea la distribución de referencia
 D_eval = dp.Dose(b, 1)  # Se crea la distribución a evaluar
@@ -107,7 +115,7 @@ gamma_distribution, pass_rate = D_eval.gamma2D(D_ref, dose_t = 3, dist_t = 1)
 print(pass_rate)
 ```
 
-## Datos en formato CSV, usando un umbral de dosis, ejemplo 2
+## Datos en formato CSV, usando un umbral de dosis
 
 Es posible cargar archivos de datos en fromato CSV (comma separate values) mediante la función *from_csv* del paquete Dosepy.
 Para descartar filas dentro del archivo, utilizar el caracter # al inicio de cada fila (inicio de un comentario).
@@ -131,7 +139,7 @@ plt.show()
 #El índice de aprobación es: 98.9 %
 
 ```
-## Datos en formato DICOM y modo de dosis absoluto, ejemplo 3
+## Datos en formato DICOM y modo de dosis absoluto
 
 Importación de un archivo de dosis en formato DICOM
 
@@ -179,7 +187,7 @@ Dose.gamma2D(
   dose_t_Gy = False,
   local_norm = False,
   mask_radius = 5,
-  max_as_percentile = True
+  max_as_percentile = False
   )
 
 Cálculo del índice gamma contra una distribución de referencia.
@@ -234,7 +242,7 @@ Parameters:
                 Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
                 una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
 
-            max_as_percentile : bool, default: True
+            max_as_percentile : bool, default: False
                 -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
                    distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
                    (de utilidad por ejemplo cuando se utiliza película radiocrómica).
@@ -418,3 +426,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 14-01-2023 Versión 0.3.3-5<br/>
 * Se modifican los nombres de los archivos y las clases para facilitar el mantenimiento del paquete. Se agrega guía de uso con Jupyter-Notebook.
+
+09-02-2023 Versión 0.3.6<br/>
+* Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.
