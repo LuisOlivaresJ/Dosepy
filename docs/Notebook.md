@@ -19,9 +19,9 @@ Completada la instalación de miniconda, abrimos **Anaconda Powershell Promp** e
 pip install Dosepy, Jupyter
 ```
 
-Posteriormente descargar los archivos que se usarán para los ejemplos. Visistar la [página en GitHub](https://github.com/LuisOlivaresJ/Dosepy/tree/V_0_3_6), dar click en el botón *Code* y descargar el paquete mediante la opción *Download ZIP*.
+Posteriormente descargar los archivos que se usarán para los ejemplos. Visistar la [página en GitHub](https://github.com/LuisOlivaresJ/Dosepy), dar click en el botón *Code* y descargar el paquete mediante la opción *Download ZIP*.
 
-![Boton_descarga](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/V_0_3_6/docs/assets/Download_example_button.PNG)
+![Boton_descarga](https://github.com/LuisOlivaresJ/Dosepy/blob/main/docs/assets/Descargar_zip.png)
 
  Descomprimir el archivo, abrir el directorio docs y copiar la carpeta Jupyter en *Documentos*. Una vez que se ha copiado la carpeta *Jupyter*, se puede eliminar el archivo recién descargado.
 
