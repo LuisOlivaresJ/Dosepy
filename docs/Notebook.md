@@ -2,7 +2,7 @@
 title: "Uso de Jupyter-Notebook"
 ---
 
-## (Página en desarrollo...)
+![Portada](https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/web/docs/assets/Hoja_notebook.PNG)
 
 ## Introducción
 
