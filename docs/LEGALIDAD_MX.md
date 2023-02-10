@@ -16,3 +16,5 @@ En la **NORMA Oficial Mexicana NOM-241-SSA1-2021, Buenas prácticas de fabricaci
 > 3.109 **Software como dispositivo médico**, al utilizado con uno o más propósitos médicos, que tiene como característica principal que no requiere formar parte del hardware del dispositivo médico para cumplir con el propósito médico previsto; es capaz de funcionar en plataformas computacionales generales y puede utilizarse solo y/o en combinación con otros productos (ej., como módulo, otros dispositivos médicos, etcétera). Las aplicaciones móviles que cumplen con esta definición son consideradas software como dispositivo médico. El software que hace funcionar al dispositivo médico físico queda excluido de esta definición.
 
 > 3.115 **Validación de software como dispositivo médico**, a la evidencia documental generada a través de la recopilación y evaluación de la capacidad de un software para generar con exactitud, integridad y precisión las funciones previstas a partir de los datos de entrada.
+
+### 
