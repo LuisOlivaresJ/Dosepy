@@ -36,7 +36,7 @@ class Dose:
         self.rows = array.shape[0]          #   Número de filas en la matriz.
         self.resolution = resolution;       #   Resolución espacial dada como la distancia entre dos puntos consecutivos [mm].
 
-    def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=5, max_as_percentile = False):
+    def gamma2D(self, D_reference, dose_t=3, dist_t=3, dose_tresh=10, dose_t_Gy=False, local_norm=False, mask_radius=10, max_as_percentile = True):
         ''' Cálculo del índice gamma contra una distribución de referencia.
             Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
             así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
@@ -52,19 +52,18 @@ class Dose:
 
         dose_t : float, default = 3
             Tolerancia para la diferencia en dosis.
-            Este valor puede interpretarse de 3 formas diferentes, según los parámetros dose_t_Gy y
-            local_norm que se describen más adelante.
+            Este valor puede interpretarse de 3 formas diferentes según los parámetros dose_t_Gy,
+            local_norm y max_as_percentil, los cuales se describen más adelante.
 
         dist_t : float, default = 3
             Tolerancia para la distancia, en milímetros (criterio DTA [1]).
 
         dose_tresh : float, default = 10
-            Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima. Todo punto en la distribución de dosis con un valor menor al umbral
+            Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima de la 
+            distribución de referencia (o al percentil 99 si max_as_percentile = TRUE). 
+            Todo punto en la distribución de dosis con un valor menor al umbral
             de dosis, es excluido del análisis.
-            Por default, el porcentaje se interpreta con respecto al percentil 99.1 (aproximadamente el máximo)
-            de la distribución a evaluar. Si el porcentaje se requiere con respecto al máximo, modificar
-            el parámetro max_as_percentile = False (ver más adelante).
-
+            
         dose_t_Gy : bool, default: False
             Si el argumento es True, entonces "dose_t" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
             Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
@@ -73,12 +72,12 @@ class Dose:
             Si el argumento es True (normalización local), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local
             en cada punto de la distribución de referencia.
             Si el argumento es False (normalización global), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
-            *percentil 99.1 (aproximadamente el máximo) de la distribución a evaluar (self.array).
+            máximo de la distribución a evaluar (o al percentil 99.1 si max_as_percentile = TRUE).
             Notas:
                 1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
                 2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver mas adelante)
 
-        mask_radius : float, default: 5
+        mask_radius : float, default: 10
             Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
 
             Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
@@ -90,11 +89,11 @@ class Dose:
             Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
             una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
 
-        max_as_percentile : bool, default: False
-            -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
+        max_as_percentile : bool, default: True
+            -> Si el argumento es True, se utiliza el percentil 99 como una aproximación del valor máximo de la
                distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
-               (de utilidad por ejemplo cuando se utiliza película radiocrómica).
-            -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
+               (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
+            -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución a evaluar.
 
         Retorno
         ----------
@@ -107,9 +106,9 @@ class Dose:
 
         Consideraciones
         ----------
-             Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo.
+             Es posible utilizar el percentil 99 de la distribución de dosis como una aproximación del valor máximo.
              Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución
-             (de utilidad por ejemplo cuando se utiliza película radiocrómica).
+             (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
 
              Se asume que ambas distribuciones a evaluar representan exactamente las mismas dimensiones físicas, y las posiciones
              espaciales para cada punto conciden entre ellas, es decir, las imagenes de cada distribución están registradas.
@@ -168,7 +167,7 @@ class Dose:
         D_eval = self.array
 
         if max_as_percentile:
-            maximum_dose = np.percentile(D_eval, 99.1)
+            maximum_dose = np.percentile(D_eval, 99)
         else:
             maximum_dose = np.amax(D_eval)
 
