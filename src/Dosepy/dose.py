@@ -170,9 +170,10 @@ class Dose:
             maximum_dose = np.percentile(D_eval, 99)
         else:
             maximum_dose = np.amax(D_eval)
-
+        print(f'Dosis máxima: {maximum_dose:.1f}')
         #  Umbral de dosis
         Dose_threshold = (dose_tresh/100)*maximum_dose
+        print(f'Umbral de dosis: {Dose_threshold:.1f}')
 
         #   Dosis de tolerancia absoluta o relativa
         if dose_t_Gy:

@@ -31,10 +31,6 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
-**Proceso de una primera validación del algoritmo gamma**<br/>
-[Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
-La validación del algoritmo para la prueba del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
-
 **Comparación mediante perfiles**<br/>
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
 ![Imagen_perfil_2](/assets/Perfiles_2.png)<br/>
@@ -46,6 +42,17 @@ También es posible comparar dos distribuciones de dosis mediante perfiles verti
 * Las distribuciones deben de  encontrarse registradas, es decir, la coordenada espacial de un punto en la distribución de referencia debe ser igual a la coordenada del mismo punto en la distribución a evaluar.<br/>
 
 En caso contrario, *Dosepy* dispone de algunas funciones para cumplir con lo anterior.
+
+## Validación
+
+**Algoritmo gamma**<br/>
+[Resumen](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
+La validación para el algoritmo del índice gamma se realizó mediante la comparación de resultados contra los softwares DoseLab 4.11 y VeriSoft 7.1.0.199. Dicho trabajo se presentó en el 7mo Congreso de la Federación Mexicana de Organizaiones de Física Médica en el año 2021 [(Video)](https://youtu.be/HM4qkYGzNFc).
+
+**Dosimetría con película**<br/>
+Con el uso de película radiocrómica EBT 3, se realizó la medición de los factores de dispersión total (también conocidos como Output factors) para un haz de 6 MV sin filtro de aplanado de un acelerador lineal Clinac-iX. Siguiendo el código de práctica TRS 483 del OIEA-AAPM, los resultados se compararon con las mediciones de dos cámaras de ionización.
+![Image_factores_campo](/assets/Factores_de_campo_6FFF.PNG)
+[El trabajo](https://smf.mx/programas/congreso-nacional-de-fisica/memorias-cnf/) se presentó en el LXIII Congreso Nacional de Física en el año 2020.
 
 ## Instalación
 **En Linux**<br/>
@@ -603,4 +610,4 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 * Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.
 
 11-03-2023 Versión 0.3.7<br/>
-* Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma.
+* Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. Se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.
