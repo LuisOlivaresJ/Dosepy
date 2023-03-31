@@ -72,10 +72,10 @@ class Dose:
             Si el argumento es True (normalización local), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local
             en cada punto de la distribución de referencia.
             Si el argumento es False (normalización global), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
-            máximo de la distribución a evaluar (o al percentil 99.1 si max_as_percentile = TRUE).
+            máximo de la distribución a evaluar.
             Notas:
                 1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
-                2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver mas adelante)
+                2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver explicación mas adelante).
 
         mask_radius : float, default: 10
             Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
