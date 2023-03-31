@@ -51,7 +51,7 @@ La validación para el algoritmo del índice gamma se realizó mediante la compa
 
 **Dosimetría con película**<br/>
 Con el uso de película radiocrómica EBT 3, se realizó la medición de los factores de dispersión total (también conocidos como Output factors) para un haz de 6 MV sin filtro de aplanado de un acelerador lineal Clinac-iX. Siguiendo el código de práctica TRS 483 del OIEA-AAPM, los resultados se compararon con las mediciones de dos cámaras de ionización.
-![Image_factores_campo](/assets/Factores_de_campo_6FFF.PNG)
+![Image_factores_campo](/assets/Factores_de_campo_6FFF.png)
 [El trabajo](https://smf.mx/programas/congreso-nacional-de-fisica/memorias-cnf/) se presentó en el LXIII Congreso Nacional de Física en el año 2020.
 
 ## Instalación
