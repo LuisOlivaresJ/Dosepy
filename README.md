@@ -186,8 +186,8 @@ Dose.gamma2D(
   dose_tresh = 10,
   dose_t_Gy = False,
   local_norm = False,
-  mask_radius = 5,
-  max_as_percentile = False
+  mask_radius = 10,
+  max_as_percentile = True
   )
 
 Cálculo del índice gamma contra una distribución de referencia.
@@ -197,65 +197,76 @@ Consideraciones:
 Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de referencia
 es igual a la coordenada del mismo punto en la distribución a evaluar.
 
-Parameters:
-            D_reference : Objeto Dose
-                Distribución de dosis de referencia contra la cual se realizará la comparación.
-                El número de filas y columnas debe de ser igual a la distribución a evaluar.
-                Lo anterior implica que las dimesiones espaciales de las distribuciones deben de ser iguales.
+Parámetros
+----------
+D_reference : Objeto Dose
+    Distribución de dosis de referencia contra la cual se realizará la comparación.
+    El número de filas y columnas debe de ser igual a la distribución a evaluar (self.array).
+    Lo anterior implica que las dimesiones espaciales de las distribuciones deben de ser iguales.
 
-            dose_t : float, default = 3
-                Tolerancia para la diferencia en dosis.
-                Este valor puede interpretarse de 3 formas diferentes, según los parámetros dose_t_Gy y
-                local_norm que se describen más adelante.
+dose_t : float, default = 3
+    Tolerancia para la diferencia en dosis.
+    Este valor puede interpretarse de 3 formas diferentes según los parámetros dose_t_Gy,
+    local_norm y max_as_percentil, los cuales se describen más adelante.
 
-            dist_t : float, default = 3
-                Tolerancia para la distancia, en milímetros (criterio DTA).
+dist_t : float, default = 3
+    Tolerancia para la distancia, en milímetros (criterio DTA [1]).
 
-            dose_tresh : float, default = 10
-                Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima. Todo punto en la distribución de dosis con un valor menor al umbral
-                de dosis, es excluido del análisis.
-                Por default, el porcentaje se interpreta con respecto al percentil 99.1 (aproximadamente el máximo)
-                de la distribución a evaluar. Si el porcentaje se requiere con respecto al máximo, modificar
-                el parámetro max_as_percentile = False (ver más adelante).
+dose_tresh : float, default = 10
+    Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima de la 
+    distribución de referencia (o al percentil 99 si max_as_percentile = TRUE). 
+    Todo punto en la distribución de dosis con un valor menor al umbral
+    de dosis, es excluido del análisis.
+    
+dose_t_Gy : bool, default: False
+    Si el argumento es True, entonces "dose_t" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
+    Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
 
-            dose_t_Gy : bool, default: False
-                Si el argumento es True, entonces "dose_t" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
-                Si el argumento es False (default), "dose_t" se interpreta como un porcentaje.
+local_norm : bool, default: False
+    Si el argumento es True (normalización local), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local
+    en cada punto de la distribución de referencia.
+    Si el argumento es False (normalización global), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al máximo de la distribución a evaluar.
+    Notas:
+        1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
+        2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver explicación mas adelante).
 
-            local_norm : bool, default: False
-                Si el argumento es True (local normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto a la dosis local.
-                Si el argumento es False (global normalization), el porcentaje de dosis de tolerancia "dose_t" se interpreta con respecto al
-                máximo de la distribución a evaluar.
-                Nota:
-                    1.- Los argumentos dose_t_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
-                    2.- Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver más adelante)
+mask_radius : float, default: 10
+    Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
 
-            mask_radius : float, default: 5
-                Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
+    Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
+    El uso de esta máscara permite reducir el tiempo de cálculo debido al siguiente proceso:
+        Por cada punto en la distribución de referencia, el cálculo de la función Gamma se realiza solamente
+        con aquellos puntos o posiciones de la distribución a evaluar que se encuentren a una distancia relativa
+        menor o igual a mask_radius, es decir, con los puntos que están dentro de la vecindad dada por mask_radius.
+        La longitud de uno de los lados de la máscara cuadrada es de 2*mask_radius + 1.
+    Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
+    una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
 
-                Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
-                El uso de esta máscara permite reducir el tiempo de cálculo debido al siguiente proceso:
-                    Por cada punto en la distribución de referencia, el cálculo de la función Gamma se realiza solamente
-                    con aquellos puntos o posiciones de la distribución a evaluar que se encuentren a una distancia relativa
-                    menor o igual a mask_radius, es decir, con los puntos que están dentro de la vecindad dada por mask_radius.
-                    La longitud de uno de los lados de la máscara cuadrada es de 2*mask_radius + 1.
-                Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
-                una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
+max_as_percentile : bool, default: True
+    -> Si el argumento es True, se utiliza el percentil 99 como una aproximación del valor máximo de la
+        distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
+        (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
+    -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución a evaluar.
 
-            max_as_percentile : bool, default: False
-                -> Si el argumento es True, se utiliza el percentil 99.1 como una aproximación del valor máximo de la
-                   distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
-                   (de utilidad por ejemplo cuando se utiliza película radiocrómica).
-                -> Si el argumento es False, se utiliza directamente el valor máximo de la distribución.
+Retorno
+----------
+ndarray :
+    Array, o matriz bidimensional con la distribución de índices gamma.
 
-Retorno:
+float :
+    Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones
+    en donde la dosis es menor al umbral de dosis.
 
-          ndarray :
-                Array, o matriz bidimensional con la distribución de índices gamma.
+Consideraciones
+----------
+      Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo.
+      Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución
+      (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
 
-          float :
-                Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones en donde la
-                dosis es menor al umbral de dosis.
+      Se asume que ambas distribuciones a evaluar representan exactamente las mismas dimensiones físicas, y las posiciones
+      espaciales para cada punto conciden entre ellas, es decir, las imagenes de cada distribución están registradas.
+
+      No se realiza interpolación entre puntos.
 
 
 
@@ -429,3 +440,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 09-02-2023 Versión 0.3.6<br/>
 * Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.
+
+11-03-2023 Versión 0.3.7<br/>
+* Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. En la [página principal](https://luisolivaresj.github.io/Dosepy/) de Dosepy, se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.

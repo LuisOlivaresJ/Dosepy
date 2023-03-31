@@ -191,8 +191,7 @@ class Bloque_Imagenes(QWidget):
             y_i = min(event.ydata, self.pressevent.ydata)
             self.Mpl_Izq.Rectangle.set_bounds(x_i, y_i, dx, dy)
             self.boton_recortar_Izq.setEnabled(True)
-
-            print(self.Mpl_Izq.Rectangle.properties())
+            #print(self.Mpl_Izq.Rectangle.properties())
             self.Mpl_Izq.fig.canvas.draw()
 
 
