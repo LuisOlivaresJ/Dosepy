@@ -443,4 +443,4 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 * Se modifica el algoritmo de dosimetría con película. Se agrega Notebook para dosimetría con película. En la evaluación gamma, se habilita la opción para definir la dosis máxima como el percentil 99.1 de la distribución de dosis a evaluar. Se agrega información referente al uso no clínico del software Dosepy.
 
 11-03-2023 Versión 0.3.7<br/>
-* Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. Se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.
+* Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. En la [página principal](https://luisolivaresj.github.io/Dosepy/) de Dosepy, se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.
