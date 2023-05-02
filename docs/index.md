@@ -19,8 +19,10 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 ## Métodos de comparación
 
-**Comparación por índice gamma**<br/>
-![Imagen_gamma](/assets/Image_gamma.png)<br/>
+### Comparación por índice
+
+![Imagen_gamma](/assets/Image_gamma.png)
+
 La comparación de dos distribuciones puede realizarse mediante la prueba del índice gamma 2-dimensional de acuerdo a la definición dada por [Low D. A.](https://doi.org/10.1118/1.598248) así como algunas recomendaciones del [TG-218]( https://doi.org/10.1002/mp.12810) de la AAPM:
 
 * El criterio de aceptación para la diferencia en dosis puede ser seleccionado en modo absoluto (en Gy) o en modo relativo (en %).
@@ -31,7 +33,7 @@ La comparación de dos distribuciones puede realizarse mediante la prueba del í
 * Es posible utilizar el percentil 99.1 de la distribución de dosis como una aproximación del valor máximo. Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución (de utilidad por ejemplo cuando se utiliza película radiocrómica).
 * No se realiza interpolación entre puntos.
 
-**Comparación mediante perfiles**<br/>
+### Comparación mediante perfiles
 ![Imagen_perfil_1](/assets/Perfiles_1.png)<br/>
 ![Imagen_perfil_2](/assets/Perfiles_2.png)<br/>
 También es posible comparar dos distribuciones de dosis mediante perfiles verticales y horizontales. La posición de cada perfil debe seleccionarse con ayuda de la interfaz gráfica.

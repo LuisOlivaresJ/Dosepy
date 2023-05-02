@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Markdown Files" href="markdown.html" />
+    <link rel="next" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -156,7 +156,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
 </ul>
@@ -352,6 +352,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-comparison">Dose comparison</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gamma-index">Gamma index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-profiles">Dose profiles</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
@@ -369,12 +374,51 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-dosepy">
 <h1>Welcome to Dosepy<a class="headerlink" href="#welcome-to-dosepy" title="Permalink to this heading">#</a></h1>
 <p><img alt="Portada_Dosepy" src="_images/portada_DOSEPY.png" /></p>
-<p><strong>Dosepy</strong> is a python library for 2D/1D gamma analysis and film dosimetry used in radiotherapy.</p>
+<p>Dosepy is a python library for easy 2D/1D gamma analysis and film dosimetry used in radiotherapy.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Dose distribution can be in DICOM (.dmc) or CVS format. For digital film a TIFF format is required.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>In order to generate easy-to-use software for users who use radiochromic film, the dose distributions must meet the following characteristics:</p>
+<ul class="simple">
+<li><p>The dose distributions to be compared must have the same physical dimensions and spatial resolution (same number of rows and columns). <strong>TODO</strong> Agregar referencia a función <em>reducir</em></p></li>
+<li><p>The distributions must be registered, that is, the coordinate of a point in the reference distribution must be equal to the coordinate of the same point in the distribution to be evaluated.</p></li>
+<li><p>Gray (Gy) and millimeters (mm) are the units used for absorbed dose and physical distance, respectively.</p></li>
+</ul>
+</div>
+<section id="dose-comparison">
+<h2>Dose comparison<a class="headerlink" href="#dose-comparison" title="Permalink to this heading">#</a></h2>
+<section id="gamma-index">
+<h3>Gamma index<a class="headerlink" href="#gamma-index" title="Permalink to this heading">#</a></h3>
+<p><img alt="Imagen_gamma" src="_images/Image_gamma.png" /></p>
+<p>Dose distributions comparison can be performed using the 2-dimensional gamma index test according to Low’s definition <span id="id1">[]</span>, as well as some AAPM TG-218 <span id="id2">[]</span> recommendations:</p>
+<ul class="simple">
+<li><p>The acceptance criteria for dose difference can be selected in absolute mode (in Gy) or in relative mode (in %).</p>
+<ul>
+<li><p>In relative mode, the percentage could be interpreted with respect to the maximum dose (global normalization), or with respect to the local dose (local normalization); according to user selection.</p></li>
+</ul>
+</li>
+<li><p>Dose threshold can be adjusted by the user.</p></li>
+<li><p>The reference distribution can be selected by the user.</p></li>
+<li><p>It is allowed to define a search radius as an optimization process for the calculation.</p></li>
+<li><p>By default, percentile 99 from dose distribution is used as maximum dose. This makes it possible to avoid the possible inclusion of artifacts or user labels in specific positions of the distribution (useful with radiochromic film).</p></li>
+<li><p>Interpolation is not yet supported.</p></li>
+</ul>
+</section>
+<section id="dose-profiles">
+<h3>Dose profiles<a class="headerlink" href="#dose-profiles" title="Permalink to this heading">#</a></h3>
+<p><img alt="Imagen_perfil_1" src="_images/Perfiles_1.png" /></p>
+<p><img alt="Imagen_perfil_2" src="_images/Perfiles_2.png" /></p>
+<p>It is also possible to compare two dose distributions using vertical and horizontal profiles. The position of each profile must be selected with the help of a graphical user interface.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>For the use of a software as a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-key-definitions">medical device</a>, it is required to demonstrate its safety and efficacy through a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-possible-framework-risk-categorization-and-corresponding-considerations">risk categorization structure</a>, a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-application-quality-management-system">quality management system</a> and a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-clinical-evaluation">clinical evaluation</a>; as described in the International Forum of Medical Device Regulators working group guidelines (IMDRF).</p>
+<p>To use a software as a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-key-definitions">medical device</a>, it is required to demonstrate its safety and efficacy through a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-possible-framework-risk-categorization-and-corresponding-considerations">risk categorization structure</a>, a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-application-quality-management-system">quality management system</a> and a <a class="reference external" href="https://www.imdrf.org/documents/software-medical-device-samd-clinical-evaluation">clinical evaluation</a>; as described in the International Forum of Medical Device Regulators working group guidelines (IMDRF).</p>
 <p>Dosepy is currently <strong>under development</strong> to meet quality standards. To achieve this in Mexico the regulatory mechanism is through NOM-241-SSA1-2021, in addition to the IMDRF guidelines.</p>
 </div>
+</section>
+</section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>To install the software, do:</p>
@@ -408,7 +452,7 @@ document.write(`
 
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
 </ul>
@@ -448,11 +492,11 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="right-next"
-       href="markdown.html"
+       href="installation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Markdown Files</p>
+        <p class="prev-next-title">Installation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -474,6 +518,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-comparison">Dose comparison</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gamma-index">Gamma index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-profiles">Dose profiles</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
