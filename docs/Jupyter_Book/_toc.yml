@@ -7,3 +7,4 @@ chapters:
 - file: installation
 - file: notebooks
 - file: markdown-notebooks
+- file: bibliography

@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>Welcome to Dosepy &#8212; Dosepy Jupyter Book</title>
   
@@ -44,7 +44,6 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
@@ -66,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:language" content="None"/>
   </head>
   
   
@@ -159,6 +158,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -372,7 +372,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-dosepy">
-<h1>Welcome to Dosepy<a class="headerlink" href="#welcome-to-dosepy" title="Permalink to this heading">#</a></h1>
+<h1>Welcome to Dosepy<a class="headerlink" href="#welcome-to-dosepy" title="Permalink to this headline">#</a></h1>
 <p><img alt="Portada_Dosepy" src="_images/portada_DOSEPY.png" /></p>
 <p>Dosepy is a python library for easy 2D/1D gamma analysis and film dosimetry used in radiotherapy.</p>
 <div class="admonition note">
@@ -389,11 +389,11 @@ document.write(`
 </ul>
 </div>
 <section id="dose-comparison">
-<h2>Dose comparison<a class="headerlink" href="#dose-comparison" title="Permalink to this heading">#</a></h2>
+<h2>Dose comparison<a class="headerlink" href="#dose-comparison" title="Permalink to this headline">#</a></h2>
 <section id="gamma-index">
-<h3>Gamma index<a class="headerlink" href="#gamma-index" title="Permalink to this heading">#</a></h3>
+<h3>Gamma index<a class="headerlink" href="#gamma-index" title="Permalink to this headline">#</a></h3>
 <p><img alt="Imagen_gamma" src="_images/Image_gamma.png" /></p>
-<p>Dose distributions comparison can be performed using the 2-dimensional gamma index test according to Low’s definition <span id="id1">[]</span>, as well as some AAPM TG-218 <span id="id2">[]</span> recommendations:</p>
+<p>Dose distributions comparison can be performed using the 2-dimensional gamma index test according to Low’s definition <span id="id1">[<a class="reference internal" href="bibliography.html#id7" title="Daniel A. Low. A technique for the quantitative evaluation of dose distributions. Medical physics, 1998. doi:https://doi.org/10.1118/1.598248.">Low98</a>]</span>, as well as some AAPM TG-218 <span id="id2">[<a class="reference internal" href="bibliography.html#id8" title="Miften. Tolerance limits and methodologies for imrt measurement based verification qa: recommendations of aapm task group no. 218. Medical physics, 2018. doi:https://doi.org/10.1002/mp.12810.">Mif18</a>]</span> recommendations:</p>
 <ul class="simple">
 <li><p>The acceptance criteria for dose difference can be selected in absolute mode (in Gy) or in relative mode (in %).</p>
 <ul>
@@ -408,7 +408,7 @@ document.write(`
 </ul>
 </section>
 <section id="dose-profiles">
-<h3>Dose profiles<a class="headerlink" href="#dose-profiles" title="Permalink to this heading">#</a></h3>
+<h3>Dose profiles<a class="headerlink" href="#dose-profiles" title="Permalink to this headline">#</a></h3>
 <p><img alt="Imagen_perfil_1" src="_images/Perfiles_1.png" /></p>
 <p><img alt="Imagen_perfil_2" src="_images/Perfiles_2.png" /></p>
 <p>It is also possible to compare two dose distributions using vertical and horizontal profiles. The position of each profile must be selected with the help of a graphical user interface.</p>
@@ -420,14 +420,14 @@ document.write(`
 </section>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
 <p>To install the software, do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="hll">(.venv) $ pip install Dosepy
 </span></pre></div>
 </div>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">#</a></h2>
 <p>The easiest way to use Dosepy is through a graphical user interface (GUI). Open a python interpreter and import Dosepy.GUI as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">Dosepy.GUI</span>
 </pre></div>
@@ -436,7 +436,7 @@ document.write(`
 <p>You can use the <a class="reference internal" href="#Dosepy.dose.Dose" title="Dosepy.dose.Dose"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dosepy.dose.Dose</span></code></a> like this:</p>
 </section>
 <section id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h2>
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Dosepy.dose.Dose">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.dose.</span></span><span class="sig-name descname"><span class="pre">Dose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Dosepy.dose.Dose" title="Permalink to this definition">#</a></dt>
@@ -455,6 +455,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 </div>
 </section>
