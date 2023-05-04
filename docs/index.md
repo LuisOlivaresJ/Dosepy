@@ -227,7 +227,9 @@ La calibración de la película se realiza ingresando a Dosepy dos imágenes del
    5. Se mostrará el ajuste y los correspondientes coeficientes de la curva.
 
 ![Curva_Calibracion](/assets/img_calib.png)<br/>
-Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de grado 3. En color verde los 10 datos obtenidos de las imágenes tiff.
+Figura 2. Curva de calibración. La línea azul representa un ajuste polinomial de tercer grado. En color verde los 10 datos obtenidos de las imágenes tiff.
+
+> **_NOTE:_**  Aún no se tiene soporte para corregir por la falta de uniformidad asociada al escáner utilizado para la lectura de las películas [Bart D. Lynch](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.2370505).
 
 **Aplicar la calibración a una imagen**
 
