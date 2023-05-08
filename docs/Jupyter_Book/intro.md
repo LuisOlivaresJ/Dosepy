@@ -2,18 +2,21 @@
 
 ![Portada_Dosepy](../assets/portada_DOSEPY.png)
 
-Dosepy is a python library for easy 2D/1D gamma analysis and film dosimetry used in radiotherapy. 
+Dosepy is a python library to easly perform 2D/1D gamma analysis and film dosimetry used in radiotherapy. 
+
+Dosepy will take two images (in TIFF format) for calibration and two image with the dose distribution to be analyzed. After that, a DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
+
+Dose distribution can be in DICOM (.dmc) or CVS format.
 
 ```{note}
-Dose distribution can be in DICOM (.dmc) or CVS format. For digital film a TIFF format is required.
+In order to generate easy-to-use software for users who use radiochromic film, the dose distributions to be analysed must meet the following characteristics:
+* Film dose distributions must have the same physical dimensions and spatial resolution (equal number of rows and columns) with respect to the dose distribution to be compared. You can use {py:func}`Dosepy.tools.resol.match_resolution` function to manage array size changes.
+* The distributions must be registered, that is, the coordinate of a point in the reference distribution must be equal to the coordinate of the same point in the distribution to be evaluated. To achieve this, [ImageJ](https://imagej.nih.gov/ij/download.html) is an excellent tool for cropping the region to be analyzed.
+* Gray (Gy) and millimeters (mm) are the units used for absorbed dose and physical distance, respectively.
+* The dicom file must contain only a 2D dose distribution.
+
 ```
 
-```{caution}
-In order to generate easy-to-use software for users who use radiochromic film, the dose distributions must meet the following characteristics:
-* The dose distributions to be compared must have the same physical dimensions and spatial resolution (same number of rows and columns). **TODO** Agregar referencia a función *reducir*
-* The distributions must be registered, that is, the coordinate of a point in the reference distribution must be equal to the coordinate of the same point in the distribution to be evaluated.
-* Gray (Gy) and millimeters (mm) are the units used for absorbed dose and physical distance, respectively.
-```
 
 ## Dose comparison
 ### Gamma index
@@ -22,7 +25,7 @@ In order to generate easy-to-use software for users who use radiochromic film, t
 
  Dose distributions comparison can be performed using the 2-dimensional gamma index test according to Low's definition {cite}`Daniel_Low_gamma_1998`, as well as some AAPM TG-218 {cite}`Miften_TG218_2018` recommendations:
 
-* The acceptance criteria for dose difference can be selected in absolute mode (in Gy) or in relative mode (in %).
+* The acceptance criteria for dose difference can be selected in absolute mode (in Gy) or relative mode (in %).
   * In relative mode, the percentage could be interpreted with respect to the maximum dose (global normalization), or with respect to the local dose (local normalization); according to user selection.
 * Dose threshold can be adjusted by the user.
 * The reference distribution can be selected by the user.
@@ -36,7 +39,7 @@ In order to generate easy-to-use software for users who use radiochromic film, t
 
 ![Imagen_perfil_2](../assets/Perfiles_2.png)
 
-It is also possible to compare two dose distributions using vertical and horizontal profiles. The position of each profile must be selected with the help of a graphical user interface.
+It is also possible to compare two dose distributions using vertical and horizontal profiles. The origin of each profile must be selected with the help of a graphical user interface.
 
 ```{warning}
 To use a software as a [medical device](https://www.imdrf.org/documents/software-medical-device-samd-key-definitions), it is required to demonstrate its safety and efficacy through a [risk categorization structure](https://www.imdrf.org/documents/software-medical-device-possible-framework-risk-categorization-and-corresponding-considerations), a [quality management system](https://www.imdrf.org/documents/software-medical-device-samd-application-quality-management-system) and a [clinical evaluation](https://www.imdrf.org/documents/software-medical-device-samd-clinical-evaluation); as described in the International Forum of Medical Device Regulators working group guidelines (IMDRF).
@@ -44,34 +47,17 @@ To use a software as a [medical device](https://www.imdrf.org/documents/software
 Dosepy is currently **under development** to meet quality standards. To achieve this in Mexico the regulatory mechanism is through NOM-241-SSA1-2021, in addition to the IMDRF guidelines.
 ```
 
-## Installation
+## Algorithm validation
 
-To install the software, do:
+**Gamma index**
 
-```{code-block}
----
-emphasize-lines: 1
----
-(.venv) $ pip install Dosepy
-```
+[Abstract](https://github.com/LuisOlivaresJ/Dosepy/blob/2bf579e6c33c347ef8f0cdd6f4ee7534798f0d13/docs/assets/validation.pdf)<br/>
+The validation for the gamma index algorithm was carried out by comparing the results against the DoseLab 4.11 and VeriSoft 7.1.0.199 software. That work was presented at the 7th Congress of the Mexican Federation of Medical Physics Organizations in 2021. [(Video)](https://youtu.be/HM4qkYGzNFc).
 
-## Usage
+**Film dosimetry**
 
-The easiest way to use Dosepy is through a graphical user interface (GUI). Open a python interpreter and import Dosepy.GUI as follows:
-
-```python
-import Dosepy.GUI
-```
-
-Dosepy comes pre-loaded with two examples of dose distributions, with the aim that the user can interact with the available tools.
-
-You can use the {py:class}`Dosepy.dose.Dose` like this:
-
-## API
-
-```{eval-rst}
-.. autoclass:: Dosepy.dose.Dose
-```
+Using EBT 3 radiochromic film, total dispersion factors (also known as Output factors) were measured for a 6 FFFF beam from a Clinac-iX linear accelerator. Following the IAEA-AAPM TRS 483 code of practice, the results were compared with measurements from two ionization chambers. [The results](https://smf.mx/programas/congreso-nacional-de-fisica/memorias-cnf/) were presented at the LXIII National Physics Congress (2020).
+![Image_factores_campo](../assets/Factores_de_campo_6FFF.png)
 
 
 ```{tableofcontents}

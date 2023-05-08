@@ -2,9 +2,8 @@
 """
 @author:
     Luis Alfonso Olivares Jimenez
-    Maestro en Ciencias (Física Médica)
-    Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
 
+    Script for film dosimetry.
 """
 
 import numpy as np
