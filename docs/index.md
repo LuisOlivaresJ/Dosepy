@@ -615,3 +615,6 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 
 11-03-2023 Versión 0.3.7<br/>
 * Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. Se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.
+
+11-05-2023 Versión 0.3.8<br/>
+* Spanish to english transition. Firsts steps in Read The Docs Documentation.

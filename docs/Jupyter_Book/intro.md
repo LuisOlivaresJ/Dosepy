@@ -6,7 +6,7 @@ Dosepy is a python library to easly perform 2D/1D gamma analysis and film dosime
 
 Dosepy will take two images (in TIFF format) for calibration and two image with the dose distribution to be analyzed. After that, a DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
 
-Dose distribution can be in DICOM (.dmc) or CVS format.
+Dose distribution can be in DICOM (.dmc) or text-csv (comma separated values) format.
 
 ```{note}
 In order to generate easy-to-use software for users who use radiochromic film, the dose distributions to be analysed must meet the following characteristics:

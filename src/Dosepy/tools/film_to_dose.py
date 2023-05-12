@@ -99,8 +99,8 @@ def a_dosis(Pre, Post, popt):
     return Dosis_FILM_full
 
 def main():
-    Img_pre = tif.imread('C_Pre.tif')
-    Img_post = tif.imread('C_Post.tif')
+    Img_pre = tif.imread('Calibracion_Pre.tif')
+    Img_post = tif.imread('Calibracion_Post.tif')
     popt, Dens_optica, Dosis_imaprtida = calibracion(Img_pre, Img_post)
     x = np.linspace(0, 0.35)
     y = cubico(x, popt[0], popt[1], popt[2], popt[3])
