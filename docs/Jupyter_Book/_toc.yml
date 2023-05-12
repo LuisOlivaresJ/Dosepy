@@ -6,6 +6,8 @@ root: intro
 chapters:
 - file: installation
 - file: usage
-- file: notebooks
+- file: JB_Pelicula_Notebook
+- file: JB_Dosepy_NoteBook
+- file: JB_DICOM_Notebook
 - file: bibliography
 - file: api

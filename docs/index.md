@@ -19,7 +19,7 @@ Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
 ## Métodos de comparación
 
-### Comparación por índice
+### Comparación por índice gamma
 
 ![Imagen_gamma](/assets/Image_gamma.png)
 
