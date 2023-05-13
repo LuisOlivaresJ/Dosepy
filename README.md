@@ -1,5 +1,7 @@
 # *Dosepy*
 
+[ReadTheDocs Documentation](https://dosepy.readthedocs.io/en/latest/intro.html)
+
 *Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
 
 El formato de los archivos que contengan la distribución de dosis puede ser DICOM (.dmc) o CVS. Para la película se requiere un formato TIFF.<br/>
