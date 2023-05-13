@@ -4,7 +4,7 @@
 
 Dosepy is a python library to easly perform 2D/1D gamma analysis and film dosimetry used in radiotherapy. 
 
-Dosepy will take two images (in TIFF format) for calibration and two image with the dose distribution to be analyzed. After that, a DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
+Dosepy will take two images (in TIFF format) for calibration and two image for dose distribution analysis. After that, a DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
 
 Dose distribution can be in DICOM (.dmc) or text-csv (comma separated values) format.
 

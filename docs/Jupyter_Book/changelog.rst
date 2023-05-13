@@ -3,10 +3,10 @@
 Changelog
 =========
 
-v 0.3.8 (MAY-2023)
+V 0.3.8 (MAY-2023)
 -------------------
 
-* Spanish to english transition. Firsts steps in Read The Docs Documentation.
+* Firsts steps for spanish to english documentation using Read The Docs Documentation.
 
 V 0.3.7 (MARCH-2023)
 --------------------
