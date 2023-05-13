@@ -1,156 +1,147 @@
 # -*- coding: utf-8 -*-
 """
-
-Última modificación: 09 Agosto 2021
 @author:
     Luis Alfonso Olivares Jimenez
-    Maestro en Ciencias (Física Médica)
-    Físico Médico en Radioterapia, La Paz, Baja California Sur, México.
 
+	Script to match the number of rows and columns between two arrays, based on physical resolution.
 """
-
-#	Código que permite igualar el número de filas y columnas entre dos matrices
-#	de tamaños diferentes.
-#	Para lo anterior, se calcula un promedio de varios puntos y se asigna a un nuevo punto con
-# 	una mayor dimensión espacial.
-#
 
 import numpy as np
 
-def lista_puntos_prom(res_A, res_B, n_puntos_total):
+def _points_to_average(res_A, res_B, points):
 	"""
-	Función que permite generar una lista, en donde cada elemento representa
-	el número de puntos que se deben de promediar para igualar las resoluciones.
+	Function that allows to generate a list, where each element represents 
+	the number of sub-points that must be averaged to equalize the given resolutions.
 
-	Parámetros:
-	-----------
-		res_A: float
-			Resolución espacial dada como la distancia en mm, entre dos puntos.
+	Parameters
+	----------
+		res_A : float
+			Spatial resolution given as the distance, in mm, between two points.
 
-		res_B: float
-			Resolución espacial dada como la distancia en mm, entre dos puntos.
+		res_B : float
+			Spatial resolution given as the distance, in mm, between two points.
 
-		n_pix_total: int
-			Número de puntos del vector con mayor tamaño.
+		points: int
+			Number of points.
 
-	Return:
-	-------
-		array: ndarray
-			Matriz de datos con resolución espacial aumentada.
+	Return
+	------
+		out : ndarray
+			List with the numbers to be averaged for array size reduction.
 
 	"""
 	if res_A > res_B:
-		res_mayor = res_A
-		res_menor = res_B
+		highest_resolution = res_A
+		lowest_resolution = res_B
 
 	else:
-		res_mayor = res_B
-		res_menor = res_A
+		highest_resolution = res_B
+		lowest_resolution = res_A
 
-	N_puntos_restantes = n_puntos_total
-	n_puntos_prom = int( res_mayor // res_menor)	# Valor entero de la división
-	residuo = res_mayor % res_menor
-	n_puntos_prom_lista = []
-	residuo_acumulado = residuo
+	remaining_points = points
+	points_to_average = int( highest_resolution // lowest_resolution)	# Valor entero de la división
+	residue = highest_resolution % lowest_resolution
+	points_to_average_lista = []
+	accumulated_residue = residue
 
-	while N_puntos_restantes >= n_puntos_prom:
-		if residuo_acumulado > res_menor/2:
-			n_puntos_prom_lista.append(n_puntos_prom + 1)
-			N_puntos_restantes -= (n_puntos_prom + 1)
-			residuo_acumulado = residuo_acumulado - ( (n_puntos_prom + 1)*res_menor - res_mayor )
+	while remaining_points >= points_to_average:
+		if accumulated_residue > lowest_resolution/2:
+			points_to_average_lista.append(points_to_average + 1)
+			remaining_points -= (points_to_average + 1)
+			accumulated_residue = accumulated_residue - ( (points_to_average + 1)*lowest_resolution - highest_resolution )
 		else:
-			n_puntos_prom_lista.append(n_puntos_prom)
-			N_puntos_restantes -= n_puntos_prom
-			residuo_acumulado += residuo
+			points_to_average_lista.append(points_to_average)
+			remaining_points -= points_to_average
+			accumulated_residue += residue
 
-	if N_puntos_restantes > 0:
-		n_puntos_prom_lista.append(N_puntos_restantes)
-	return n_puntos_prom_lista
+	if remaining_points > 0:
+		points_to_average_lista.append(remaining_points)
 
-def equalize(array, resol_array, resol_ref):
+	return points_to_average_lista
+
+def match_resolution(array, array_resolution, target_resolution):
 	"""
-	Función que permite reducir el número de filas y columnas de una matriz (array)
-	para igualar su resolución espacial (mm/punto) con respecto a una resolución de referencia.
+	Reduces the arrya size so that its new spatial resolution equals a given one. 
+	The algorithm averages a number of points given by target_resolution // array_resolution.
 
-	Parámetros:
-    -----------
-		array: ndarray
-			Matriz a la que se le requiere reducir el tamaño.
+	Parameters
+	----------
 
-		resol_array: float
-			Resolución espacial de la matriz, en milímetros por punto.
+	array : ndarray
+		The array that is required to reduce its size.
 
-		resol_ref: float
-			Resolución espacial de referencia, en milímetros por punto.
+	array_resolution : float
+		Spatial resolution of the array, in millimeters per point.
 
-    Retorno:
-    --------
-        array: ndarray
-            Matriz reducida en su número de filas y columnas.
+	target_resolution : float
+		Reference spatial resolution, in millimeters per point.
+		
+	Returns
+	-------
 
-    Ejemplo:
-    --------
-    
-        Sean A y B dos matrices de tamaño (2362 x 2362) y (256 x 256), con
-        resolución espacial de 0.0847 mm/punto y 0.7812 mm/punto, respectivamente.
+	ndarray
+		Reduced size array
 
-        La dimensión espacial de la matriz A es de 200.06 mm
-        (2362 puntos * 0.0847 mm/punto = 200.06 mm)
-        La dimensión espacial de la matriz B es de 199.99 mm.
-        (256 puntos * 0.7812 mm/punto = 199.99 mm)
+	Examples
+	--------
+	**Example 1**
 
-        Para reducir el tamaño de la matriz A e igualarla al tamaño de la
-        matriz B, se utiliza la función equalize:
+	Let A be an array of (100, 100) with a 0.1 mm/point spatial resolution, and B another 
+	array of (10, 10) with a 1 mm/point resolution. To perform an ponit-by-point comparison, we need a
+	new (10, 10) representative array of A:
 
-            import Dosepy.tools.resol as resol
-            import numpy as np
+		import numpy as np
 
-            A = np.zeros( (2362, 2362) )
+		A = np.random.rand(100, 100)	# With an asossiated spatial resolution of 0.1 mm/point.
 
-            C = resol.equalize(A, 0.0847, 0.7812)
-            C.shape
-            # (256, 256)
+		new_A = resol.match_resolution(A, 0.1, 1)
+	
+
+	**Example 2**
+
+	Let A and B be two arrays of size (2362 x 2362) and (256 x 256), with spatial resolution of 0.08467 mm/point and 0.78125 mm/point, respectively.
+
+	The physical dimension of array A is 200.06 mm
+	(2362 points * 0.08467 mm/point = 200.06 mm)
+	The spatial dimension of matrix B is 199.99 mm.
+	(256 points * 0.78125 mm/point = 199.99 mm)
+
+	To reduce the size of matrix A to be equal to the size of
+	matrix B, the match_resolution function is used:
+
+		import Dosepy.tools.resol as resol
+		import numpy as np
+
+		A = np.zeros( (2362, 2362) )
+
+		C = resol.match_resolution(A, 0.08467, 0.78125)
+		C.shape
+		(256, 256)
 
 	"""
 
-	lista_pix_colum = lista_puntos_prom(resol_array, resol_ref, array.shape[1])
-	lista_pix_filas = lista_puntos_prom(resol_array, resol_ref, array.shape[0])
-	array_nuevo_prom = np.zeros( (len(lista_pix_filas), len(lista_pix_colum) ) )
+	list_points_column = _points_to_average(array_resolution, target_resolution, array.shape[1])
+	list_points_row = _points_to_average(array_resolution, target_resolution, array.shape[0])
+	new_reduced_array = np.zeros( (len(list_points_row), len(list_points_column) ) )
 	f = 0		#Contador para número de fila
-	for i in np.arange( len(lista_pix_filas) ):
+	for i in np.arange( len(list_points_row) ):
 		c = 0	#Contador para número de columna
-		for j in np.arange( len(lista_pix_colum) ):
-			DUMMY = array[ f : f+ lista_pix_filas[i], c : c + lista_pix_colum[j] ]
-			array_nuevo_prom[i,j] = np.mean(DUMMY)
-			c = c + lista_pix_colum[j]
-		f = f + lista_pix_filas[i]
-	return array_nuevo_prom
+		for j in np.arange( len(list_points_column) ):
+			DUMMY = array[ f : f + list_points_row[i], c : c + list_points_column[j] ]
+			new_reduced_array[i,j] = np.mean(DUMMY)
+			c = c + list_points_column[j]
+		f = f + list_points_row[i]
+	return new_reduced_array
 
 
 
-def main():         # Función para realizar pruebas
-	a = lista_puntos_prom(6, 20, 13)
+def main():         # For testing
+	a = _points_to_average(6, 20, 13)
 	print(a)
 
-	import tifffile as tiff
-	import matplotlib.pyplot as plt
-
-	file_name = "Test_resolucion.tif"
-	film = tiff.imread(file_name)
-	film_prom = np.mean(film, axis = 2)
-
-	tif_info = tiff.TiffFile(file_name)
-	with tif_info as tif:
-		tag = tif.pages[0].tags['XResolution']
-	resol = int( tag.value[0] / tag.value[1] )
-
-	res_ref = 200 / 256		# Resolución de referencia
-	res_film = 25.4 / resol	# Resolución de la película en milímetros por punto
-
-	Dosis_peli_prom = equalize( film_prom, res_film, res_ref )
-
-	plt.imshow(Dosis_peli_prom)
-	plt.show()
+	A = np.zeros( (2362, 2362) )
+	C = match_resolution(A, 0.08467, 0.78125)
+	print(C.shape)	# Expected (256, 256)
 
 if __name__ == "__main__":
 	main()
