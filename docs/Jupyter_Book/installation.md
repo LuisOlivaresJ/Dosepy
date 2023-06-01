@@ -3,7 +3,7 @@
 ## Linux
 The easiest method of installation is by typing in a terminal:
 ```{code-block}
-pip install relative_dose_1d
+pip install Dosepy
 ```
 ## Windows
 
