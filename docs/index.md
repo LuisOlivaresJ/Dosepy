@@ -4,6 +4,10 @@ title: "Dosepy"
 
 ![Portada_Dosepy](/assets/portada_DOSEPY.png)
 
+>**[_Nueva página web_](https://dosepy.readthedocs.io/en/latest/intro.html)**
+>
+>La nueva página aprovecha las funcionalidades de [ReadTheDocs](https://readthedocs.org/), las cuales, permiten generar una mejor estructura en la documentación, facilidad de mantenimiento y la incorporación de una API. Es por ello que esta página web quedará en desuso. 
+
 # Bienvenido
 *Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
 
