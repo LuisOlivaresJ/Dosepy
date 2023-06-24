@@ -35,7 +35,7 @@ dependencies = [
   "PyQt5 >= 5.15.7",
 ]
 [project.urls]
-homepage = "https://luisolivaresj.github.io/Dosepy/"
+homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
 repository = "https://pypi.org/project/Dosepy/"
 Bug-Tracker = "https://github.com/LuisOlivaresJ/Dosepy"
 
