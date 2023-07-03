@@ -93,6 +93,8 @@ class Bloque_Imagenes(QWidget):
         #self.boton_recortar_Izq.setIcon(corte_icon)
         self.boton_recortar_Izq.setEnabled(False)
 
+        self.compare_button = QPushButton("Compare")
+
         #self.boton_exportar_Izq = QPushButton('Exportar')
         self.boton_exportar_Der = QPushButton('')
         #self.boton_exportar_perfiles = QPushButton('Exportar')
@@ -116,6 +118,7 @@ class Bloque_Imagenes(QWidget):
         layout_padre_botones = QVBoxLayout()
         layout_padre_botones.addWidget(self.boton_roi)
         layout_padre_botones.addWidget(self.boton_recortar_Izq)
+        layout_padre_botones.addWidget(self.compare_button)
 
         layout_padre_Izq = QVBoxLayout()
         #layout_padre_Izq.addLayout(layout_hijo_Izq)
@@ -370,15 +373,15 @@ class Qt_Figure_Perfiles:
 
 
     def set_data_and_plot(self, D_ref, D_eval, circ):
-        perfil_horizontal_ref = D_ref[int(circ.center[1]), :]
-        perfil_horizontal_eval = D_eval[int(circ.center[1]), :]
-        perfil_vertical_ref = D_ref[:, int(circ.center[0])]
-        perfil_vertical_eval = D_eval[:, int(circ.center[0])]
+        self.perfil_horizontal_ref = D_ref[int(circ.center[1]), :]
+        self.perfil_horizontal_eval = D_eval[int(circ.center[1]), :]
+        self.perfil_vertical_ref = D_ref[:, int(circ.center[0])]
+        self.perfil_vertical_eval = D_eval[:, int(circ.center[0])]
         self.ax.clear()
-        self.ax.plot(perfil_horizontal_ref, color = 'cornflowerblue')
-        self.ax.plot(perfil_horizontal_eval, color = 'cornflowerblue', ls = '--')
-        self.ax.plot(perfil_vertical_ref, color = 'orange')
-        self.ax.plot(perfil_vertical_eval, color = 'orange', ls = '--')
+        self.ax.plot(self.perfil_horizontal_ref, color = 'cornflowerblue')
+        self.ax.plot(self.perfil_horizontal_eval, color = 'cornflowerblue', ls = '--')
+        self.ax.plot(self.perfil_vertical_ref, color = 'orange')
+        self.ax.plot(self.perfil_vertical_eval, color = 'orange', ls = '--')
         self.ax.set_ylabel('Dosis [Gy]')
         self.ax.set_xlabel('Píxel')
         self.ax.grid(alpha = 0.3)

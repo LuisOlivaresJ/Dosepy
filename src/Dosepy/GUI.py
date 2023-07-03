@@ -173,13 +173,13 @@ class VentanaPrincipal(QMainWindow):
                 #self.Resolution.setText(str(dp.from_dicom(file_name_Evaluacion).resolution))
                 #self.Resolution.setReadOnly(True)
 
-                if self.Bloque_Imagen.D_eval.array.shape != self.Bloque_Imagen.D_ref.array.shape:
+                if self.Bloque_Imagen.D_ref.array.shape != self.Bloque_Imagen.D_eval.array.shape:
                     QMessageBox().critical(
                     self,
                     "Error",
                     """No es posible el análisis con matrices de diferente tamaño.\n
                     Referencia: {}\n
-                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.D_eval.array.shape),
                     QMessageBox.Ok, QMessageBox.Ok
                     )
 
@@ -202,7 +202,7 @@ class VentanaPrincipal(QMainWindow):
                     "Error",
                     """No es posible el análisis con matrices de diferente tamaño.\n
                     Referencia: {}\n
-                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.array.D_eval.shape),
+                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.D_eval.array.shape),
                     QMessageBox.Ok, QMessageBox.Ok
                     )
 
@@ -300,6 +300,10 @@ class VentanaPrincipal(QMainWindow):
         self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
         self.Bloque_Imagen.boton_roi.setChecked(False)
 
+    def Compare_profiles(self):
+
+        D_p_ref = self.Mpl_perfiles.self.perfil_horizontal_ref
+        D_p_eval = self.Mpl_perfiles.self.perfil_horizontal_eval
 
 ######################################################################
 #   Ventanas para mensajes
