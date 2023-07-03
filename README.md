@@ -449,7 +449,8 @@ El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es 
 * Se resuelve [error](https://github.com/LuisOlivaresJ/Dosepy/issues/32) de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. En la [página principal](https://luisolivaresj.github.io/Dosepy/) de Dosepy, se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.
 
 04-2023 Versión 0.4.0<br/>
-* Al trabajar con interfaz gráfica, los objetos de la clase *Dose* se crean justo después de cargar el archivo que contiene la distribucion de dosis y no hasta que se realiza el cálculo del índice gamma. Lo anterior permite identificar los objetos de dicha clase de forma clara dentro del código. 
-* Al abrir un archivo en formato csv, se debe especificar la resolución espacial inmediatamente después de cargar el archivo.
-* Se agrega el paquete [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) para calcular la diferencia e índice gamma 1-dimensional de los perfiles. 
-* Al mostrar la distribución de dosis y los perfiles, las etiquetas (labels) de la gráfica muestran la dimensión espacial en milímetros y no en puntos.
+* On the GUI, dose objects are created after loading. 
+* When a csv file is open, a new window shows to ask for resolution.
+* Quality control tests for new versions or post installation acceptance.
+* TODO Se agrega el paquete [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) para calcular la diferencia e índice gamma 1-dimensional de los perfiles. 
+* TODO Al mostrar la distribución de dosis y los perfiles, las etiquetas (labels) de la gráfica muestran la dimensión espacial en milímetros y no en puntos.
