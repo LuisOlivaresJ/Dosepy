@@ -302,8 +302,11 @@ class VentanaPrincipal(QMainWindow):
 
     def Compare_profiles(self):
 
-        D_p_ref = self.Mpl_perfiles.self.perfil_horizontal_ref
-        D_p_eval = self.Mpl_perfiles.self.perfil_horizontal_eval
+        resolution = self.Bloque_Imagen.D_ref.resolution
+        profile_position_range = (0, self.Mpl_perfiles.self.perfil_horizontal_ref.shape[0]*resolution)
+        position = 0
+        D_profile_ref = self.Mpl_perfiles.self.perfil_horizontal_ref
+        D_profile_eval = self.Mpl_perfiles.self.perfil_horizontal_eval
 
 ######################################################################
 #   Ventanas para mensajes
