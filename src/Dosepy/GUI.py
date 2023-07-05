@@ -16,6 +16,8 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMe
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog, QInputDialog
+from relative_dose_1d.tools import build_from_array_and_step, gamma_1D
+#from relative_dose_1d.GUI import Q_Graphic_Block
 
 
 import numpy as np
@@ -68,6 +70,7 @@ class VentanaPrincipal(QMainWindow):
         cuerpo = QWidget()
         self.Bloque_Imagen = Bloque_Imagenes()
         self.Bloque_Imagen.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
+        self.Bloque_Imagen.compare_button.clicked.connect(self.Compare_profiles)
         self.Bloque_Gamma = Bloque_gamma(self.Us)
 
         self.Bloque_Gamma.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
@@ -303,10 +306,27 @@ class VentanaPrincipal(QMainWindow):
     def Compare_profiles(self):
 
         resolution = self.Bloque_Imagen.D_ref.resolution
-        profile_position_range = (0, self.Mpl_perfiles.self.perfil_horizontal_ref.shape[0]*resolution)
-        position = 0
-        D_profile_ref = self.Mpl_perfiles.self.perfil_horizontal_ref
-        D_profile_eval = self.Mpl_perfiles.self.perfil_horizontal_eval
+
+        D_profile_ref = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_ref,
+            resolution
+            )
+        D_profile_eval = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_eval,
+            resolution
+            )
+        
+        gamma, gamma_percent = gamma_1D(
+            D_profile_ref, 
+            D_profile_eval,
+            dose_t = 3, dist_t = 2, dose_tresh = 10, interpol = 1)
+        #print(gamma)
+        print(gamma_percent)
+
+        # TO_DO 
+        # gamma_1D requieres data to be normalized
+        # new fuction inside relative_dose_1d to whow a plot 
+        # plot_gamma_profiles() 
 
 ######################################################################
 #   Ventanas para mensajes
