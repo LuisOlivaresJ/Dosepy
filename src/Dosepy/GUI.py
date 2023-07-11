@@ -346,4 +346,4 @@ app = QApplication(sys.argv)
 #windowA = Ventana_Secundaria() 
 windowA = VentanaPrincipal('P')
 
-sys.exit(app.exec_())
+sys.exit(app.exec())

@@ -3,5 +3,5 @@ pydicom>=2.3.0
 matplotlib>=3.6.1
 tifffile>=2022.10.10
 scipy>=1.9.3
-PyQt5>=5.15.7
+PyQt6>=6.5.1
 relative_dose_1d>=0.1.4

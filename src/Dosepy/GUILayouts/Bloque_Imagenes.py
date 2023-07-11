@@ -95,6 +95,8 @@ class Bloque_Imagenes(QWidget):
         self.boton_recortar_Izq.setEnabled(False)
         self.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
 
+        self.compare_button = QPushButton("Compare")
+
         #self.boton_exportar_Izq = QPushButton('Exportar')
         self.boton_exportar_Der = QPushButton('')
         #self.boton_exportar_perfiles = QPushButton('Exportar')
@@ -118,6 +120,8 @@ class Bloque_Imagenes(QWidget):
         layout_padre_botones = QVBoxLayout()
         layout_padre_botones.addWidget(self.boton_roi)
         layout_padre_botones.addWidget(self.boton_recortar_Izq)
+        layout_padre_botones.addWidget(self.compare_button)
+        layout_padre_botones.addStretch()
 
         layout_padre_Izq = QVBoxLayout()
         #layout_padre_Izq.addLayout(layout_hijo_Izq)
