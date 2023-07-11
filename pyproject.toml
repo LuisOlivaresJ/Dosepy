@@ -33,6 +33,7 @@ dependencies = [
   "tifffile >= 2022.10.10",
   "scipy >= 1.9.3",
   "PyQt5 >= 5.15.7",
+  "relative_dose_1d >= 0.1.4"
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
