@@ -11,14 +11,15 @@
 #   Importaciones
 
 import sys
+import os
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QLabel, QLineEdit
 from PyQt6.QtGui import QIcon, QFont,  QAction
 from PyQt6.QtCore import Qt
 
 from PyQt6.QtWidgets import QFileDialog, QInputDialog
-from relative_dose_1d.tools import build_from_array_and_step, gamma_1D
-#from relative_dose_1d.GUI import Q_Graphic_Block
+from relative_dose_1d.tools import build_from_array_and_step
+from relative_dose_1d.GUI_tool import plot
 
 
 import numpy as np
@@ -319,17 +320,7 @@ class VentanaPrincipal(QMainWindow):
             resolution
             )
         
-        gamma, gamma_percent = gamma_1D(
-            D_profile_ref, 
-            D_profile_eval,
-            dose_t = 3, dist_t = 2, dose_tresh = 10, interpol = 1)
-        #print(gamma)
-        print(gamma_percent)
-
-        # TO_DO 
-        # gamma_1D requieres data to be normalized
-        # new fuction inside relative_dose_1d to whow a plot 
-        # plot_gamma_profiles() 
+        plot(D_profile_ref, D_profile_eval)
 
 
     def Cortar_Imagen(self):
@@ -358,31 +349,6 @@ class VentanaPrincipal(QMainWindow):
         self.Bloque_Imagen.Mpl_Izq.ROI_Rect_off()
         self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
         self.Bloque_Imagen.boton_roi.setChecked(False)
-
-    def Compare_profiles(self):
-
-        resolution = self.Bloque_Imagen.D_ref.resolution
-
-        D_profile_ref = build_from_array_and_step(
-            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_ref,
-            resolution
-            )
-        D_profile_eval = build_from_array_and_step(
-            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_eval,
-            resolution
-            )
-        
-        gamma, gamma_percent = gamma_1D(
-            D_profile_ref, 
-            D_profile_eval,
-            dose_t = 3, dist_t = 2, dose_tresh = 10, interpol = 1)
-        #print(gamma)
-        print(gamma_percent)
-
-        # TO_DO 
-        # gamma_1D requieres data to be normalized
-        # new fuction inside relative_dose_1d to whow a plot 
-        # plot_gamma_profiles() 
 
 
 ######################################################################
