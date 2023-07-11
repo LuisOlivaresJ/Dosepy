@@ -1,3 +1,4 @@
+docs/Jupyter_Book/_build
 docs/_site
 docs/.ipynb_checkpoints
 docs/.sass-cache
