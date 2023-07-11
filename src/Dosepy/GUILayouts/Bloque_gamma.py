@@ -1,15 +1,12 @@
 import sys
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout, QMessageBox
-from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
-from Dosepy.GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
-#from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
+from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
 import pkg_resources
-import os
 import Dosepy.dose as dp
 
 
@@ -34,28 +31,16 @@ class Bloque_gamma(QWidget):
         folder_icon = QIcon(file_name_folder)
 
         self.Refer_button = QPushButton()
-        self.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
         self.Refer_button.setIcon(folder_icon)
         Refer_label = QLabel('D. de referencia')
 
 
         self.Eval_button = QPushButton()
         self.Eval_button.setEnabled(False)
-        self.Eval_button.clicked.connect(self.Leer_archivo_Evaluacion)
         self.Eval_button.setIcon(folder_icon)
         Eval_label = QLabel('D. a evaluar')
 
-        self.Formatos_ok = False
-
-        #Resolution_Label = QLabel('Resolución [mm]')
-        self.Resolution = QLineEdit()
-        self.Resolution.setFixedWidth(40)
-        self.Resolution.setText("1.0")
-        self.Resolution.textChanged.connect(self.revisar_si_es_flotante)
-        self.Resolution.setStyleSheet("QLineEdit"
-            "{"
-            "background : #90EE90;"
-            "}")
+        #self.Formatos_ok = False
 
         # Crear LineEdit para parámetros gamma
         self.Toler_dosis = QLineEdit()
@@ -130,9 +115,6 @@ class Bloque_gamma(QWidget):
         archivos_Post_h_box.addWidget(Eval_label)
         archivos_Post_h_box.addWidget(self.Eval_button)
 
-        Resolution_Form = QFormLayout()
-        Resolution_Form.addRow('Distancia entre puntos [mm]', self.Resolution)
-
         if self.Us == 'P':
             #   Crear FormLayout
             Parametros_gamma_Layout = QFormLayout()
@@ -147,7 +129,6 @@ class Bloque_gamma(QWidget):
         Padre_Info_V_Layout = QVBoxLayout()
         Padre_Info_V_Layout.addLayout(archivos_Pre_h_box)
         Padre_Info_V_Layout.addLayout(archivos_Post_h_box)
-        Padre_Info_V_Layout.addLayout(Resolution_Form)
 
         if self.Us == 'P':
             Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
@@ -177,75 +158,6 @@ class Bloque_gamma(QWidget):
 
         self.setLayout(Abuelo_H_Layout)
 
-
-
-
-    ##############################################################################
-    #   Funciones para botones que leen un archivo
-
-    def Leer_archivo_Referencia(self):
-        file_name_Referencia, _ = QFileDialog.getOpenFileName()
-        _ , extension = os.path.splitext(file_name_Referencia)
-
-        if file_name_Referencia:    #   Se obtuvo algún archivo?
-            if extension == '.csv':
-
-                self.Refer_npy = np.genfromtxt(file_name_Referencia, delimiter = ',')
-                self.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
-
-                self.Eval_button.setEnabled(True)
-
-            #elif extension == '.dcm':
-            #    self.Refer_npy = dp.from_dicom('file_name_Referencia').array
-            #    self.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
-            #    self.Resolution.setText(str(dp.from_dicom(file_name_Referencia).resolution))
-
-            else:
-                QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
-                print('Formato no valido')
-
-    def Leer_archivo_Evaluacion(self):
-        file_name_Evaluacion, _ = QFileDialog.getOpenFileName()
-        _ , extension = os.path.splitext(file_name_Evaluacion)
-
-        if file_name_Evaluacion:
-            if extension == '.dcm':
-                self.Eval_npy = dp.from_dicom(file_name_Evaluacion).array
-                self.Resolution.setText(str(dp.from_dicom(file_name_Evaluacion).resolution))
-                #self.Resolution.setReadOnly(True)
-
-                if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(
-                    self,
-                    "Error",
-                    """No es posible el análisis con matrices de diferente tamaño.\n
-                    Referencia: {}\n
-                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
-                    QMessageBox.Ok, QMessageBox.Ok
-                    )
-
-                else:
-                    self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
-                    self.Formatos_ok = True
-
-            elif extension == '.csv':
-
-                self.Eval_npy = np.genfromtxt(file_name_Evaluacion, delimiter = ',')
-
-                if self.Eval_npy.shape != self.Refer_npy.shape:
-                    QMessageBox().critical(
-                    self,
-                    "Error",
-                    """No es posible el análisis con matrices de diferente tamaño.\n
-                    Referencia: {}\n
-                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
-                    QMessageBox.Ok, QMessageBox.Ok
-                    )
-
-                else:
-                    self.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
-                    self.Formatos_ok = True
-            #print(self.file_name_Evaluacion)
 
     ##############################################################################
     #   Funciones para evaluar si los datos de entrada son válidos (números)

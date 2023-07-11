@@ -11,15 +11,18 @@
 #   Importaciones
 
 import sys
+import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFileDialog, QInputDialog
+
 
 import numpy as np
-from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
-#from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
-from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
-#from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
+#from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
+from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
+#from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
+from GUILayouts.Bloque_Imagenes import Bloque_Imagenes   # Se importa desde archivo en PC para testear
 import Dosepy.dose as dp
 import matplotlib as mpl
 import pkg_resources
@@ -55,13 +58,20 @@ class VentanaPrincipal(QMainWindow):
         self.about_window = None
         self.licencia_window_sec = None
 
+        #   Validez de formatos
+        self.formatos_ok = False
+
         self.show()
 
     def cuerpoUI(self):
 
         cuerpo = QWidget()
         self.Bloque_Imagen = Bloque_Imagenes()
+        self.Bloque_Imagen.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
         self.Bloque_Gamma = Bloque_gamma(self.Us)
+
+        self.Bloque_Gamma.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
+        self.Bloque_Gamma.Eval_button.clicked.connect(self.Leer_archivo_Evaluacion)
         self.Bloque_Gamma.Eval_button.clicked.connect(self.mostrar_distribucion)
         self.Bloque_Gamma.Calcular_Button.clicked.connect(self.Calculo_Gamma)
 
@@ -69,7 +79,6 @@ class VentanaPrincipal(QMainWindow):
         LayoutPrincipal.addWidget(self.Bloque_Gamma)
         LayoutPrincipal.addWidget(self.Bloque_Imagen)
 
-        #self.setLayout(LayoutPrincipal)
         cuerpo.setLayout(LayoutPrincipal)
 
         self.setCentralWidget(cuerpo)
@@ -124,16 +133,94 @@ class VentanaPrincipal(QMainWindow):
 ######################################################################
 #   Funciones para botones
 
-    def mostrar_distribucion(self):
-        if self.Bloque_Gamma.Formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
-            self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Gamma.Refer_npy)
-            self.Bloque_Imagen.Mpl_Izq.Colores(self.Bloque_Gamma.Eval_npy)
+    ##############################################################################
+    #   Funciones para botones que leen un archivo
 
-            self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Gamma.Eval_npy)
-            self.Bloque_Imagen.Mpl_Der.Colores(self.Bloque_Gamma.Eval_npy)
+    def Leer_archivo_Referencia(self):
+        file_name_Referencia, _ = QFileDialog.getOpenFileName()
+        _ , extension = os.path.splitext(file_name_Referencia)
+
+        if file_name_Referencia:    #   Se obtuvo algún archivo?
+            if extension == '.csv':
+
+                resolution, ok_resol = QInputDialog.getDouble(
+                    self, 
+                    "Resolución", 
+                    "Resolución [mm/punto]",
+                    decimals = 5)
+                Refer_npy = np.genfromtxt(file_name_Referencia, delimiter = ',')
+                self.Bloque_Imagen.D_ref = dp.Dose(Refer_npy, resolution)
+                self.Bloque_Gamma.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
+
+                self.Bloque_Gamma.Eval_button.setEnabled(True)
+
+            #elif extension == '.dcm':
+            #    self.Refer_npy = dp.from_dicom('file_name_Referencia').array
+            #    self.Refer_button.setStyleSheet("background-color: rgb(88,200,138)")
+            #    self.Resolution.setText(str(dp.from_dicom(file_name_Referencia).resolution))
+
+            else:
+                QMessageBox().critical(self, "Error", "Formato no válido.", QMessageBox.Ok, QMessageBox.Ok)
+                print('Formato no valido')
+
+    def Leer_archivo_Evaluacion(self):
+        file_name_Evaluacion, _ = QFileDialog.getOpenFileName()
+        _ , extension = os.path.splitext(file_name_Evaluacion)
+
+        if file_name_Evaluacion:
+            if extension == '.dcm':
+                self.Bloque_Imagen.D_eval = dp.from_dicom(file_name_Evaluacion)
+                #self.Resolution.setText(str(dp.from_dicom(file_name_Evaluacion).resolution))
+                #self.Resolution.setReadOnly(True)
+
+                if self.Bloque_Imagen.D_eval.array.shape != self.Bloque_Imagen.D_ref.array.shape:
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
+
+                else:
+                    self.Bloque_Gamma.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
+                    self.formatos_ok = True
+
+            elif extension == '.csv':
+
+                resolution, ok_resol = QInputDialog.getDouble(self, 
+                                                              "Resolución", 
+                                                              "Resolución [mm/punto]",
+                                                              decimals = 5)      
+                Eval_npy = np.genfromtxt(file_name_Evaluacion, delimiter = ',')
+                self.Bloque_Imagen.D_eval = dp.Dose(Eval_npy, resolution)
+
+                if self.Bloque_Imagen.D_eval.array.shape != self.Bloque_Imagen.D_ref.array.shape:
+                    QMessageBox().critical(
+                    self,
+                    "Error",
+                    """No es posible el análisis con matrices de diferente tamaño.\n
+                    Referencia: {}\n
+                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.array.D_eval.shape),
+                    QMessageBox.Ok, QMessageBox.Ok
+                    )
+
+                else:
+                    self.Bloque_Gamma.Eval_button.setStyleSheet("background-color: rgb(88,200,138)")
+                    self.formatos_ok = True
+            #print(self.file_name_Evaluacion)
+
+    def mostrar_distribucion(self):
+        if self.formatos_ok == True:   # ¿Los archivos cumplen con las especificaciones?
+            self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Imagen.D_ref)
+            self.Bloque_Imagen.Mpl_Izq.Colores(self.Bloque_Imagen.D_eval.array)
+
+            self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Imagen.D_eval)
+            self.Bloque_Imagen.Mpl_Der.Colores(self.Bloque_Imagen.D_eval.array)
 
             self.Bloque_Imagen.Mpl_perfiles.ax.clear()
-            self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(self.Bloque_Gamma.Refer_npy, self.Bloque_Gamma.Eval_npy, self.Bloque_Imagen.Mpl_Izq.circ)
+            self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(self.Bloque_Imagen.D_ref.array, self.Bloque_Imagen.D_eval.array, self.Bloque_Imagen.Mpl_Izq.circ)
 
             self.Bloque_Imagen.Mpl_Izq.fig.canvas.draw()
             self.Bloque_Imagen.Mpl_Der.fig.canvas.draw()
@@ -144,8 +231,10 @@ class VentanaPrincipal(QMainWindow):
             self.displayMessageBox()
 
     def Calculo_Gamma(self):
-        D_ref = dp.Dose(self.Bloque_Imagen.Mpl_Izq.npI, float(self.Bloque_Gamma.Resolution.text()))
-        D_eval = dp.Dose(self.Bloque_Imagen.Mpl_Der.npI, float(self.Bloque_Gamma.Resolution.text()))
+        #D_ref = dp.Dose(self.Bloque_Imagen.Mpl_Izq.npI, float(self.Bloque_Gamma.Resolution.text()))
+        D_ref = self.Bloque_Imagen.D_ref
+        #D_eval = dp.Dose(self.Bloque_Imagen.Mpl_Der.npI, float(self.Bloque_Gamma.Resolution.text()))
+        D_eval = self.Bloque_Imagen.D_eval
         g, p = D_eval.gamma2D(D_ref, float(self.Bloque_Gamma.Toler_dosis.text()), float(self.Bloque_Gamma.Toler_dist.text()), float(self.Bloque_Gamma.Umbral_dosis.text()))
 
         self.Bloque_Gamma.Mpl_Histograma.Mostrar_Histograma(g)
@@ -156,7 +245,8 @@ class VentanaPrincipal(QMainWindow):
 
         self.Bloque_Gamma.Mpl_Img_gamma.ax1.clear()
         self.Bloque_Gamma.Mpl_Img_gamma.ax2.clear()
-        self.Bloque_Gamma.Mpl_Img_gamma.Img(g)
+        _Dg = dp.Dose(g, float(self.Bloque_Imagen.D_ref.resolution))
+        self.Bloque_Gamma.Mpl_Img_gamma.Img(_Dg)
         self.Bloque_Gamma.Mpl_Img_gamma.ax2.get_yaxis().set_visible(True)
         self.Bloque_Gamma.Mpl_Img_gamma.ax1.set_title('Distribución gamma', fontsize = 11)
         self.Bloque_Gamma.Mpl_Img_gamma.Colores(g[~np.isnan(g)])
@@ -183,12 +273,39 @@ class VentanaPrincipal(QMainWindow):
         self.Bloque_Gamma.Mpl_Histograma.fig.canvas.draw()
         self.Bloque_Gamma.Mpl_Img_gamma.fig.canvas.draw()
 
+    def Cortar_Imagen(self):
+
+        xi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_x())
+        width = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_width())
+        yi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_y())
+        height = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_height())
+
+        npI_Izq = self.Bloque_Imagen.Mpl_Izq.npI[  yi : yi + height , xi : xi + width ]
+        npI_Der = self.Bloque_Imagen.Mpl_Der.npI[  yi : yi + height , xi : xi + width ]
+        self.Bloque_Imagen.D_ref = dp.Dose(npI_Izq, self.Bloque_Imagen.D_ref.resolution)
+        self.Bloque_Imagen.D_eval = dp.Dose(npI_Der, self.Bloque_Imagen.D_eval.resolution)
+
+        self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Imagen.D_ref)
+        self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Imagen.D_eval)
+
+        self.Bloque_Imagen.Mpl_Izq.Colores(npI_Der)
+        self.Bloque_Imagen.Mpl_Der.Colores(npI_Der)
+
+        self.Bloque_Imagen.Mpl_Izq.Cross_Hair_on()
+        self.Bloque_Imagen.Mpl_Der.Cross_Hair_on()
+
+        self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(npI_Izq, npI_Der, self.Bloque_Imagen.Mpl_Izq.circ)
+
+        self.Bloque_Imagen.Mpl_Izq.ROI_Rect_off()
+        self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
+        self.Bloque_Imagen.boton_roi.setChecked(False)
+
 
 ######################################################################
 #   Ventanas para mensajes
     def displayMessageBox(self):
         """
-        Si la variable self.Bloque_Gamma.Formatos_ok es True, los archivos
+        Si la variable self.formatos_ok es True, los archivos
         para las distribuciones de dosis se cargaron correctamente.
         En caso contrario se emite un mensaje de error.
         """

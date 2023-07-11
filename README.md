@@ -12,6 +12,10 @@ Para mayor información contactar al correo electrónico dosepy@gmail.com.
 
 Derechos Reservados (c) Luis Alfonso Olivares Jimenez 2021
 
+## Documentación
+
+Para la instalación, correr ejemplos de prueba y aprender sobre el programa Dosepy, [visita la Documentación](https://dosepy.readthedocs.io/en/latest/intro.html) en Read The Docs.
+
 ## Métodos de comparación
 
 ### Comparación por índice gamma
@@ -396,3 +400,10 @@ del Artículo 21 de la Ley Federal del Derecho de Autor.
 GARANTÍA
 
 El software Dosepy se ofrece sin ninguna garantía de cualquier tipo. Su uso es responsabilidad del usuario.
+
+04-2023 Versión 0.4.0<br/>
+* On the GUI, dose objects are created after loading. 
+* When a csv file is open, a new window shows to ask for resolution.
+* Quality control tests for new versions or post installation acceptance.
+* TODO Se agrega el paquete [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) para calcular la diferencia e índice gamma 1-dimensional de los perfiles. 
+* TODO Al mostrar la distribución de dosis y los perfiles, las etiquetas (labels) de la gráfica muestran la dimensión espacial en milímetros y no en puntos.

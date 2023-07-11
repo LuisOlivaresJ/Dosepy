@@ -52,7 +52,7 @@ class About_Window(QWidget):
         layout_padre_V.addWidget(label_logo)
 
         label_version = QLabel(self)
-        label_version.setText('Versión 0.3.7')
+        label_version.setText('Versión 0.4.0')
         label_version.setAlignment(Qt.AlignCenter)
         label_version.setStyleSheet(
             "margin-top: 10px;" +
@@ -73,7 +73,7 @@ class About_Window(QWidget):
 
         link_label = QLabel(self)
         link_label.setText(
-            "<a href=\"https://luisolivaresj.github.io/Dosepy//\">Documentación</a>"
+            "<a href=\"https://dosepy.readthedocs.io/en/latest/intro.html\">Documentación</a>"
         )
         link_label.setTextFormat(Qt.RichText)
         #link_label.setTextInteractionFlags(Qt.TextBrowserInteraction)

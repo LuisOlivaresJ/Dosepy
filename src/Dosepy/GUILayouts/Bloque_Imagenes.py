@@ -18,7 +18,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import numpy as np
-from PyQt5.QtGui import QIcon
+#from PyQt5.QtGui import QIcon
+import Dosepy.dose as dp
 
 
 
@@ -47,11 +48,8 @@ class Bloque_Imagenes(QWidget):
         file_name_FILM = pkg_resources.resource_filename('Dosepy', 'data/D_FILM.csv')
         file_name_TPS = pkg_resources.resource_filename('Dosepy', 'data/D_TPS.csv')
 
-        array_refer = np.genfromtxt(file_name_FILM, delimiter = ',')
-        array_eval = np.genfromtxt(file_name_TPS, delimiter = ',')
-
-        #array_refer = np.genfromtxt('./data/D_FILM.csv', delimiter = ',')
-        #array_eval = np.genfromtxt('./data/D_TPS.csv', delimiter = ',')
+        self.D_ref = dp.from_csv(file_name_FILM, 1)
+        self.D_eval = dp.from_csv(file_name_TPS, 1)
 
         self.Mpl_Izq = Qt_Figure_Imagen()
         self.Mpl_Der = Qt_Figure_Imagen()
@@ -59,11 +57,11 @@ class Bloque_Imagenes(QWidget):
         self.Mpl_Izq.ax1.set_title('Referencia', fontsize = 10, loc = 'left')
         self.Mpl_Der.ax1.set_title('A evaluar', fontsize = 10, loc = 'left')
 
-        self.Mpl_Izq.Img(array_refer)
-        self.Mpl_Der.Img(array_eval)
+        self.Mpl_Izq.Img(self.D_ref)
+        self.Mpl_Der.Img(self.D_eval)
 
-        self.Mpl_Izq.Colores(self.Mpl_Der.npI)
-        self.Mpl_Der.Colores(self.Mpl_Der.npI)
+        self.Mpl_Izq.Colores(self.D_ref.array)
+        self.Mpl_Der.Colores(self.D_eval.array)
 
         self.Mpl_Izq.hline.set_linestyle('-')
         self.Mpl_Izq.vline.set_linestyle('-')
@@ -94,7 +92,6 @@ class Bloque_Imagenes(QWidget):
         self.boton_recortar_Izq = QPushButton('Corte')
         #self.boton_recortar_Izq.setIcon(corte_icon)
         self.boton_recortar_Izq.setEnabled(False)
-        self.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
 
         #self.boton_exportar_Izq = QPushButton('Exportar')
         self.boton_exportar_Der = QPushButton('')
@@ -235,44 +232,6 @@ class Bloque_Imagenes(QWidget):
             self.boton_recortar_Izq.setEnabled(False)
 
 
-
-#%%
-
-    def Cortar_Imagen(self):
-
-        xi = int(self.Mpl_Izq.Rectangle.get_x())
-        width = int(self.Mpl_Izq.Rectangle.get_width())
-        yi = int(self.Mpl_Izq.Rectangle.get_y())
-        height = int(self.Mpl_Izq.Rectangle.get_height())
-
-        print(xi)
-        print(yi)
-        print(width)
-        print(height)
-
-        npI_Izq = self.Mpl_Izq.npI[  yi : yi + height , xi : xi + width ]
-        npI_Der = self.Mpl_Der.npI[  yi : yi + height , xi : xi + width ]
-
-        self.Mpl_Izq.Img(npI_Izq)
-        self.Mpl_Der.Img(npI_Der)
-
-        self.Mpl_Izq.Colores(npI_Der)
-        self.Mpl_Der.Colores(npI_Der)
-
-        self.Mpl_Izq.Cross_Hair_on()
-        self.Mpl_Der.Cross_Hair_on()
-
-        self.Mpl_perfiles.set_data_and_plot(npI_Izq, npI_Der, self.Mpl_Izq.circ)
-
-        self.Mpl_Izq.ROI_Rect_off()
-        self.boton_recortar_Izq.setEnabled(False)
-        self.boton_roi.setChecked(False)
-
-
-
-
-
-
 #%%
 class Qt_Figure_Imagen:
     """
@@ -309,12 +268,12 @@ class Qt_Figure_Imagen:
 
 
 
-    def Img(self, np_I):
+    def Img(self, D):
         '''
-        Definir la imagen a partir de un array que se proporciona como argumento.
+        Definir la imagen a partir de un objeto de la clase Dosepy.Dose.
         '''
 
-        self.npI = np_I
+        self.npI = D.array
         self.mplI = self.ax1.imshow(self.npI)
 
         self.x0 = int(self.npI.shape[1]/2)
