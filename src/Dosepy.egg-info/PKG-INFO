@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: Dosepy
-Version: 0.3.8
+Version: 0.3.9
 Summary: Gamma analysis and film dosimetry for dose distributions in radiotherapy
 Author-email: Luis Alfonso Olivares Jimenez <alfonso.cucei.udg@gmail.com>
-Project-URL: homepage, https://luisolivaresj.github.io/Dosepy/
+Project-URL: homepage, https://dosepy.readthedocs.io/en/latest/intro.html
 Project-URL: repository, https://pypi.org/project/Dosepy/
 Project-URL: Bug-Tracker, https://github.com/LuisOlivaresJ/Dosepy
 Keywords: Radiotherapy,Dose distribution,gamma index,python
@@ -20,6 +20,8 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 
 # *Dosepy*
+
+[ReadTheDocs Documentation](https://dosepy.readthedocs.io/en/latest/intro.html)
 
 *Dosepy* es un paquete de código escrito en Python para la comparación mediante índice gamma de dos distribuciones de dosis, 2-dimensional. Adicionalmente, se cuenta con una herramienta para realizar dosimetría con película radiocrómica.<br/>
 

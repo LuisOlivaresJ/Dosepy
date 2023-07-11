@@ -11,11 +11,11 @@
 #   Importaciones
 
 import sys
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
-from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QLabel, QLineEdit
+from PyQt6.QtGui import QIcon, QFont,  QAction
+from PyQt6.QtCore import Qt
 
-from PyQt5.QtWidgets import QFileDialog, QInputDialog
+from PyQt6.QtWidgets import QFileDialog, QInputDialog
 from relative_dose_1d.tools import build_from_array_and_step, gamma_1D
 #from relative_dose_1d.GUI import Q_Graphic_Block
 
@@ -292,7 +292,7 @@ class Ventana_Secundaria(QMainWindow):
         self.name_entry = QLineEdit(self)
         self.name_entry.setFont(QFont('Arial', 18))
         self.name_entry.setEchoMode(QLineEdit.Password)
-        self.name_entry.setAlignment(Qt.AlignCenter)
+        self.name_entry.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         self.name_entry.returnPressed.connect(self.cerrar_UI)
         self.name_entry.move(100, 70)

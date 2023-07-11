@@ -14,13 +14,14 @@
 #   Importaciones
 from Dosepy.tools.film_to_dose import calibracion, cubico
 from Dosepy.tools.resol import match_resolution
+#from ..tools.resol import match_resolution
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox, QLineEdit, QFormLayout
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox, QLineEdit, QFormLayout
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtCore import Qt
 
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import tifffile as tiff
 import numpy as np
@@ -76,7 +77,7 @@ class Film_to_Dose_Window(QWidget):
         layout_padre_botones.addWidget(self.label_a2)
         layout_padre_botones.addWidget(self.label_a3)
         layout_padre_botones.addSpacing(70)
-        layout_padre_botones.setAlignment(Qt.AlignTop)
+        layout_padre_botones.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         #   Widget para los perfiles
         self.Qt_Mpl_curva_calib = Qt_Figure_CurvaCalibracion()
@@ -88,7 +89,7 @@ class Film_to_Dose_Window(QWidget):
         #file_name_image_logo = 'Logo_Dosepy.png'
         pixmap_logo = QPixmap(file_name_image_logo)
         self.label_logo = QLabel(self)
-        self.label_logo.setAlignment(Qt.AlignCenter)
+        self.label_logo.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.label_logo.setPixmap(pixmap_logo)
         self.Qt_Mpl_distribucion = Qt_Figure_Imagen()
 
@@ -139,7 +140,7 @@ class Film_to_Dose_Window(QWidget):
         #layout_padre_botones_2inf.addWidget(self.QLabel_Reducir_resolucion)
         layout_padre_botones_2inf.addLayout(Qform_layout_resol)
         layout_padre_botones_2inf.addWidget(self.button_reducir)
-        layout_padre_botones_2inf.setAlignment(Qt.AlignTop)
+        layout_padre_botones_2inf.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         layout_abuelo_2inf.addWidget(self.Qt_Mpl_distribucion.Qt_fig)
         layout_abuelo_2inf.addLayout(layout_padre_botones_2inf)
@@ -375,4 +376,4 @@ if __name__ == '__main__':
     window = Film_to_Dose_Window()
     window.show()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

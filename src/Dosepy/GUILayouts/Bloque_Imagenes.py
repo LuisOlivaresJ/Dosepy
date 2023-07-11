@@ -10,11 +10,10 @@
 #---------------------------------------------
 
 from matplotlib import patches
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 import sys
 import pkg_resources
 from matplotlib.figure import Figure
-#from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import numpy as np
@@ -436,4 +435,4 @@ if __name__ == '__main__':
     ventana_raiz = Bloque_Imagenes()
     ventana_raiz.setGeometry(100, 150, 1200, 300)
     ventana_raiz.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
