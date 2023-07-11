@@ -21,7 +21,6 @@ from relative_dose_1d.tools import build_from_array_and_step, gamma_1D
 #from relative_dose_1d.GUI import Q_Graphic_Block
 
 
-
 import numpy as np
 #from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
 from GUILayouts.Bloque_gamma import Bloque_gamma  # Se importa desde archivo en PC para testear
@@ -74,7 +73,6 @@ class VentanaPrincipal(QMainWindow):
 
         self.Bloque_Imagen.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
         self.Bloque_Imagen.compare_button.clicked.connect(self.Compare_profiles)
-
 
         self.Bloque_Gamma = Bloque_gamma(self.Us)
 
@@ -181,13 +179,13 @@ class VentanaPrincipal(QMainWindow):
                 #self.Resolution.setText(str(dp.from_dicom(file_name_Evaluacion).resolution))
                 #self.Resolution.setReadOnly(True)
 
-                if self.Bloque_Imagen.D_eval.array.shape != self.Bloque_Imagen.D_ref.array.shape:
+                if self.Bloque_Imagen.D_ref.array.shape != self.Bloque_Imagen.D_eval.array.shape:
                     QMessageBox().critical(
                     self,
                     "Error",
                     """No es posible el análisis con matrices de diferente tamaño.\n
                     Referencia: {}\n
-                    A evaluar: {}""".format(self.Refer_npy.shape, self.Eval_npy.shape),
+                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.D_eval.array.shape),
                     QMessageBox.Ok, QMessageBox.Ok
                     )
 
@@ -210,7 +208,7 @@ class VentanaPrincipal(QMainWindow):
                     "Error",
                     """No es posible el análisis con matrices de diferente tamaño.\n
                     Referencia: {}\n
-                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.array.D_eval.shape),
+                    A evaluar: {}""".format(self.Bloque_Imagen.D_ref.array.shape, self.Bloque_Imagen.D_eval.array.shape),
                     QMessageBox.Ok, QMessageBox.Ok
                     )
 
@@ -308,6 +306,30 @@ class VentanaPrincipal(QMainWindow):
         self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
         self.Bloque_Imagen.boton_roi.setChecked(False)
 
+    def Compare_profiles(self):
+
+        resolution = self.Bloque_Imagen.D_ref.resolution
+
+        D_profile_ref = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_ref,
+            resolution
+            )
+        D_profile_eval = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_eval,
+            resolution
+            )
+        
+        gamma, gamma_percent = gamma_1D(
+            D_profile_ref, 
+            D_profile_eval,
+            dose_t = 3, dist_t = 2, dose_tresh = 10, interpol = 1)
+        #print(gamma)
+        print(gamma_percent)
+
+        # TO_DO 
+        # gamma_1D requieres data to be normalized
+        # new fuction inside relative_dose_1d to whow a plot 
+        # plot_gamma_profiles() 
 
 
     def Cortar_Imagen(self):
