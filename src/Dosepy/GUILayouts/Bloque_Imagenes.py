@@ -10,11 +10,10 @@
 #---------------------------------------------
 
 from matplotlib import patches
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 import sys
 import pkg_resources
 from matplotlib.figure import Figure
-#from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import numpy as np
@@ -119,6 +118,8 @@ class Bloque_Imagenes(QWidget):
         layout_padre_botones.addWidget(self.boton_roi)
         layout_padre_botones.addWidget(self.boton_recortar_Izq)
         layout_padre_botones.addWidget(self.compare_button)
+
+        layout_padre_botones.addStretch()
 
         layout_padre_Izq = QVBoxLayout()
         #layout_padre_Izq.addLayout(layout_hijo_Izq)
@@ -398,4 +399,4 @@ if __name__ == '__main__':
     ventana_raiz = Bloque_Imagenes()
     ventana_raiz.setGeometry(100, 150, 1200, 300)
     ventana_raiz.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

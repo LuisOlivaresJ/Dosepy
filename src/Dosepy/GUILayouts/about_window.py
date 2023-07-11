@@ -13,9 +13,9 @@
 import sys
 import pkg_resources
 
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication
-from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 
 
 class About_Window(QWidget):
@@ -39,7 +39,7 @@ class About_Window(QWidget):
         logo = QPixmap(file_name_logo)
         #logo.scaled(0.5, 0.5) #Qt.KeepAspectRatio)
         label_logo = QLabel(self)
-        label_logo.setAlignment(Qt.AlignCenter)
+        label_logo.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         label_logo.setPixmap(logo)
         label_logo.setStyleSheet(
             "border-radius: 15px;" +
@@ -52,8 +52,10 @@ class About_Window(QWidget):
         layout_padre_V.addWidget(label_logo)
 
         label_version = QLabel(self)
+
         label_version.setText('Versión 0.4.0')
-        label_version.setAlignment(Qt.AlignCenter)
+        label_version.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
         label_version.setStyleSheet(
             "margin-top: 10px;" +
             "font-size: 22px;" +
@@ -63,7 +65,7 @@ class About_Window(QWidget):
 
         label_derechos = QLabel(self)
         label_derechos.setText('Derechos Reservados (c) \n Luis Alfonso Olivares Jiménez 2021')
-        label_derechos.setAlignment(Qt.AlignCenter)
+        label_derechos.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         label_derechos.setStyleSheet(
             "margin-top: 5px;" +
             "font-size: 17px;" +
@@ -75,10 +77,10 @@ class About_Window(QWidget):
         link_label.setText(
             "<a href=\"https://dosepy.readthedocs.io/en/latest/intro.html\">Documentación</a>"
         )
-        link_label.setTextFormat(Qt.RichText)
+        #link_label.setTextFormat(Qt.RichText)
         #link_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
         link_label.setOpenExternalLinks(True)
-        link_label.setAlignment(Qt.AlignCenter)
+        link_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         link_label.setStyleSheet(
             "font-size: 17px;" +
             "margin-bottom: 15px;" +
@@ -97,7 +99,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = About_Window()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 
