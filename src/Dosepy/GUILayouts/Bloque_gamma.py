@@ -1,8 +1,9 @@
 import sys
-from matplotlib.backends.backend_qt5agg import FigureCanvas
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout, QMessageBox
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout, QMessageBox
+from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
 from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
@@ -46,7 +47,7 @@ class Bloque_gamma(QWidget):
         self.Toler_dosis = QLineEdit()
         self.Toler_dosis.setFixedWidth(40)
         self.Toler_dosis.setText("3.0")
-        self.Toler_dosis.setAlignment(Qt.AlignRight)
+        self.Toler_dosis.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.Toler_dosis.textChanged.connect(self.revisar_si_es_flotante)
         self.Toler_dosis.setStyleSheet("QLineEdit"
             "{"
@@ -56,7 +57,7 @@ class Bloque_gamma(QWidget):
         self.Toler_dist = QLineEdit()
         self.Toler_dist.setFixedWidth(40)
         self.Toler_dist.setText("3.0")
-        self.Toler_dist.setAlignment(Qt.AlignRight)
+        self.Toler_dist.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.Toler_dist.textChanged.connect(self.revisar_si_es_flotante)
         self.Toler_dist.setStyleSheet("QLineEdit"
             "{"
@@ -66,7 +67,7 @@ class Bloque_gamma(QWidget):
         self.Umbral_dosis = QLineEdit()
         self.Umbral_dosis.setFixedWidth(40)
         self.Umbral_dosis.setText("10")
-        self.Umbral_dosis.setAlignment(Qt.AlignRight)
+        self.Umbral_dosis.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.Umbral_dosis.textChanged.connect(self.revisar_si_es_flotante)
         self.Umbral_dosis.setStyleSheet("QLineEdit"
             "{"
@@ -119,7 +120,7 @@ class Bloque_gamma(QWidget):
             #   Crear FormLayout
             Parametros_gamma_Layout = QFormLayout()
             #Parametros_gamma_Layout.setLabelAlignment(Qt.AlignLeft)
-            Parametros_gamma_Layout.setFormAlignment(Qt.AlignRight)
+            Parametros_gamma_Layout.setFormAlignment(Qt.AlignmentFlag.AlignRight)
             Parametros_gamma_Layout.addRow('Toler. en dosis [%]', self.Toler_dosis)
             Parametros_gamma_Layout.addRow('Toler. en distancia [mm]', self.Toler_dist)
             Parametros_gamma_Layout.addRow('Umbral de dosis [%]', self.Umbral_dosis)
@@ -205,4 +206,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Bloque_gamma('P')
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

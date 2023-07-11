@@ -11,11 +11,15 @@
 #   Importaciones
 
 import sys
-import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QAction, QLabel, QLineEdit
-from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFileDialog, QInputDialog
+
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QLabel, QLineEdit
+from PyQt6.QtGui import QIcon, QFont,  QAction
+from PyQt6.QtCore import Qt
+
+from PyQt6.QtWidgets import QFileDialog, QInputDialog
+from relative_dose_1d.tools import build_from_array_and_step, gamma_1D
+#from relative_dose_1d.GUI import Q_Graphic_Block
+
 
 
 import numpy as np
@@ -67,7 +71,11 @@ class VentanaPrincipal(QMainWindow):
 
         cuerpo = QWidget()
         self.Bloque_Imagen = Bloque_Imagenes()
+
         self.Bloque_Imagen.boton_recortar_Izq.clicked.connect(self.Cortar_Imagen)
+        self.Bloque_Imagen.compare_button.clicked.connect(self.Compare_profiles)
+
+
         self.Bloque_Gamma = Bloque_gamma(self.Us)
 
         self.Bloque_Gamma.Refer_button.clicked.connect(self.Leer_archivo_Referencia)
@@ -301,6 +309,60 @@ class VentanaPrincipal(QMainWindow):
         self.Bloque_Imagen.boton_roi.setChecked(False)
 
 
+
+    def Cortar_Imagen(self):
+
+        xi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_x())
+        width = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_width())
+        yi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_y())
+        height = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_height())
+
+        npI_Izq = self.Bloque_Imagen.Mpl_Izq.npI[  yi : yi + height , xi : xi + width ]
+        npI_Der = self.Bloque_Imagen.Mpl_Der.npI[  yi : yi + height , xi : xi + width ]
+        self.Bloque_Imagen.D_ref = dp.Dose(npI_Izq, self.Bloque_Imagen.D_ref.resolution)
+        self.Bloque_Imagen.D_eval = dp.Dose(npI_Der, self.Bloque_Imagen.D_eval.resolution)
+
+        self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Imagen.D_ref)
+        self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Imagen.D_eval)
+
+        self.Bloque_Imagen.Mpl_Izq.Colores(npI_Der)
+        self.Bloque_Imagen.Mpl_Der.Colores(npI_Der)
+
+        self.Bloque_Imagen.Mpl_Izq.Cross_Hair_on()
+        self.Bloque_Imagen.Mpl_Der.Cross_Hair_on()
+
+        self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(npI_Izq, npI_Der, self.Bloque_Imagen.Mpl_Izq.circ)
+
+        self.Bloque_Imagen.Mpl_Izq.ROI_Rect_off()
+        self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
+        self.Bloque_Imagen.boton_roi.setChecked(False)
+
+    def Compare_profiles(self):
+
+        resolution = self.Bloque_Imagen.D_ref.resolution
+
+        D_profile_ref = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_ref,
+            resolution
+            )
+        D_profile_eval = build_from_array_and_step(
+            self.Bloque_Imagen.Mpl_perfiles.perfil_horizontal_eval,
+            resolution
+            )
+        
+        gamma, gamma_percent = gamma_1D(
+            D_profile_ref, 
+            D_profile_eval,
+            dose_t = 3, dist_t = 2, dose_tresh = 10, interpol = 1)
+        #print(gamma)
+        print(gamma_percent)
+
+        # TO_DO 
+        # gamma_1D requieres data to be normalized
+        # new fuction inside relative_dose_1d to whow a plot 
+        # plot_gamma_profiles() 
+
+
 ######################################################################
 #   Ventanas para mensajes
     def displayMessageBox(self):
@@ -344,7 +406,7 @@ class Ventana_Secundaria(QMainWindow):
         self.name_entry = QLineEdit(self)
         self.name_entry.setFont(QFont('Arial', 18))
         self.name_entry.setEchoMode(QLineEdit.Password)
-        self.name_entry.setAlignment(Qt.AlignCenter)
+        self.name_entry.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         self.name_entry.returnPressed.connect(self.cerrar_UI)
         self.name_entry.move(100, 70)
@@ -398,4 +460,4 @@ app = QApplication(sys.argv)
 #windowA = Ventana_Secundaria() 
 windowA = VentanaPrincipal('P')
 
-sys.exit(app.exec_())
+sys.exit(app.exec())
