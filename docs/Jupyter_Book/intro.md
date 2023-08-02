@@ -59,6 +59,8 @@ The validation for the gamma index algorithm was carried out by comparing the re
 Using EBT 3 radiochromic film, total dispersion factors (also known as Output factors) were measured for a 6 FFFF beam from a Clinac-iX linear accelerator. Following the IAEA-AAPM TRS 483 code of practice, the results were compared with measurements from two ionization chambers. [The results](https://smf.mx/programas/congreso-nacional-de-fisica/memorias-cnf/) were presented at the LXIII National Physics Congress (2020).
 ![Image_factores_campo](../assets/Factores_de_campo_6FFF.png)
 
+## Discussion
+Have questions? Ask them on the Dosepy [discussion forum](https://groups.google.com/g/dosepy).
 
 ```{tableofcontents}
 ```

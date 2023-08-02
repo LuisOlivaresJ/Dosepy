@@ -3,6 +3,16 @@
 Changelog
 =========
 
+V 0.4.0 (AUG-20223)
+-------------------
+
+* On the GUI, dose objects are created after loading. 
+* When a csv file is open, a new window shows to ask for resolution.
+* Quality control tests for new versions or post installation acceptance.
+* New tool for horizontal profile analysis, based on [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) package. 
+.. image:: ../assets/Relative_dose_1d_incorporation.PNG
+   :scale: 50 %
+
 V 0.3.8 (MAY-2023)
 -------------------
 

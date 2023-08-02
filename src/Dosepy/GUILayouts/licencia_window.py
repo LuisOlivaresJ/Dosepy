@@ -15,9 +15,9 @@
 import sys
 import pkg_resources
 
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication, QPlainTextEdit
-from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication, QPlainTextEdit
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 
 
 class Licencia_Window(QWidget):
@@ -43,7 +43,7 @@ class Licencia_Window(QWidget):
         logo = QPixmap(file_name_logo)
         #logo.scaled(0.5, 0.5) #Qt.KeepAspectRatio)
         label_logo = QLabel(self)
-        label_logo.setAlignment(Qt.AlignCenter)
+        label_logo.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         label_logo.setPixmap(logo)
         label_logo.setStyleSheet(
             "border-radius: 15px;" +
@@ -57,7 +57,7 @@ class Licencia_Window(QWidget):
 
         label_version = QLabel(self)
         label_version.setText('PROPRIETARY LICENSE')
-        label_version.setAlignment(Qt.AlignCenter)
+        label_version.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         label_version.setStyleSheet(
             "margin-top: 10px;" +
             "font-size: 22px;" +
@@ -83,7 +83,7 @@ Toda persona tiene acceso a la lectura y uso del código con fines académicos o
 Sin embargo, para el uso clínico del programa se requiere contar con una licencia 
 (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” 
 (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento 
-de la legislación de cada país.
+de la legislación de cada país. 
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas
@@ -99,7 +99,7 @@ Para mayor información contactar al correo electrónico dosepy@gmail.com.
 
 ''')
         label_info_licencia.setReadOnly(True)
-        #label_info_licencia.setAlignment(Qt.AlignCenter)
+        #label_info_licencia.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         label_info_licencia.setStyleSheet(
             "margin-top: 5px;" +
             "font-size: 17px;" +
@@ -109,12 +109,12 @@ Para mayor información contactar al correo electrónico dosepy@gmail.com.
 
         link_label = QLabel(self)
         link_label.setText(
-            "<a href=\"https://luisolivaresj.github.io/Dosepy//\">Home page</a>"
+            "<a href=\"https://dosepy.readthedocs.io/en/latest/intro.html\">Home page</a>"
         )
-        link_label.setTextFormat(Qt.RichText)
+        #link_label.setTextFormat(Qt.RichText)
         #link_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
         link_label.setOpenExternalLinks(True)
-        #link_label.setAlignment(Qt.AlignCenter)
+        #link_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         link_label.setStyleSheet(
             "font-size: 17px;" +
             "margin-bottom: 15px;" +
@@ -133,4 +133,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Licencia_Window()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
