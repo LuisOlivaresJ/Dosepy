@@ -4,12 +4,12 @@ If you are going to work with python packages (for example Dosepy), it is a best
 
 
 ```python
-conda create -n dosepy python=3.10
-conda activate dosepy 
+conda create -n myenv python=3.10
+conda activate myenv 
 pip install dosepy
 ```
 
-1.- The first line is used to create an environment named "dosepy", with a specific version of Python: 3.10
+1.- The first line is used to create an environment named "myenv", with a specific version of Python: 3.10
 2.- The second line activates the created environment
 3.- The last one to install dosepy
 
