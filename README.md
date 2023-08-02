@@ -181,5 +181,5 @@ Have questions? Ask them on the Dosepy [discussion forum](https://groups.google.
 * On the GUI, dose objects are created after loading. 
 * When a csv file is open, a new window shows to ask for resolution.
 * Quality control tests for new versions or post installation acceptance.
-* TODO Se agrega el paquete [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) para calcular la diferencia e índice gamma 1-dimensional de los perfiles. 
-* TODO Al mostrar la distribución de dosis y los perfiles, las etiquetas (labels) de la gráfica muestran la dimensión espacial en milímetros y no en puntos.
+* New tool for horizontal profile analysis, based on [relative_dose_1d](https://github.com/LuisOlivaresJ/relative_dose_1d) package. 
+

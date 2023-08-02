@@ -83,7 +83,7 @@ Toda persona tiene acceso a la lectura y uso del código con fines académicos o
 Sin embargo, para el uso clínico del programa se requiere contar con una licencia 
 (disponible próximamente), conocida como “Acuerdo de licencia de usuario final” 
 (EULA, por sus siglas en inglés), así como contratos que garanticen el cumplimiento 
-de la legislación de cada país.
+de la legislación de cada país. 
 
 El código o software derivado, tales como arreglos, compendios, ampliaciones, traducciones, adaptaciones,
 paráfrasis, compilaciones, colecciones y transformaciones del software DOSEPY, podrán ser explotadas

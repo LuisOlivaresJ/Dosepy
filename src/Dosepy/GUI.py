@@ -320,7 +320,11 @@ class VentanaPrincipal(QMainWindow):
             resolution
             )
         
-        plot(D_profile_ref, D_profile_eval)
+        self.profile_plot = plot(D_profile_ref, D_profile_eval)
+        self.profile_plot.setWindowTitle("Horizontal profile")
+        self.profile_plot.open_file_button.setEnabled(False)
+        self.profile_plot.clear_button.setEnabled(False)
+        self.profile_plot.show()
 
 
     def Cortar_Imagen(self):

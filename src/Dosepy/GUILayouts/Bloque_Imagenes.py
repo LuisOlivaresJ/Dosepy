@@ -92,7 +92,7 @@ class Bloque_Imagenes(QWidget):
         #self.boton_recortar_Izq.setIcon(corte_icon)
         self.boton_recortar_Izq.setEnabled(False)
 
-        self.compare_button = QPushButton("Compare")
+        self.compare_button = QPushButton("H. Profile")
 
         #self.boton_exportar_Izq = QPushButton('Exportar')
         self.boton_exportar_Der = QPushButton('')
