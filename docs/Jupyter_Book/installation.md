@@ -13,4 +13,22 @@ pip install dosepy
 2. The second line activates the created environment
 3. The last one to install dosepy
 
-For more about information about environments, [see this guide](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#)
+For more information about environments, [see this guide](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#)
+
+## Open Dosepy
+
+To open Dosepy first start a python interpreter, for example running the python command:
+
+```python
+python
+```
+
+Once you see the symbol >>>, run the next command:
+
+```python
+>>> import Dosepy.GUI
+```
+
+The main window should be displayed
+
+![Portada_Dosepy](../assets/main_window.PNG)
