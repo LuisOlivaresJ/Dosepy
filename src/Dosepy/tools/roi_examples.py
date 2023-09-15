@@ -15,20 +15,14 @@ import matplotlib.patches as mpatches
 demo_path = Path(__file__).parent.parent / "data" / "demo_calib.tif"
 
 print("==================Pillow====================")
-img  = load(demo_path)
-print(img.array.shape)
-print(img.array.dtype)
-print(img.info)
+#img  = load(demo_path)
+#print(img.array.shape)
+#print(img.array.dtype)
+#print(img.info)
 
 print("==================TIFF====================")
-# Get information about the image stack in the TIFF file without reading any image data:
-tif = TiffFile(demo_path)
-tImage = imread(demo_path)
-page = tif.pages[0]
-print(page.shape)
-print(page.dtype)
-print(page.tags['XResolution'].value[0])
-
+tImage = load(demo_path)
+#print(tImage.dpmm)
 
 fig, axes = plt.subplots(ncols=4, figsize=(8, 2.5))
 ax = axes.ravel()
@@ -37,7 +31,7 @@ ax[1] = plt.subplot(1, 4, 2)
 ax[2] = plt.subplot(1, 4, 3)
 ax[3] = plt.subplot(1, 4, 4)
 
-grayscale = rgb2gray(tImage)
+grayscale = rgb2gray(tImage.array)
 thresh = threshold_otsu(grayscale)
 
 # Apply threshold and close small holes with binary closing.
@@ -64,10 +58,10 @@ ax[2].axis('off')
 
 #plt.show()
 
-ax[3].imshow(tImage/(2**16))
+ax[3].imshow(tImage.array/(2**16))
 
 #regions = regionprops(label_image, tImage, offset = (50,50))
-regions = regionprops(label_image, tImage)
+regions = regionprops(label_image, tImage.array)
 for region in regions:
     # take regions with large enough areas
     if region.area >= 100:

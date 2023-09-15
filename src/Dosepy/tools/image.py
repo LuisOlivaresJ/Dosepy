@@ -1,14 +1,15 @@
 """This module holds classes for image loading and manipulation.
 The content is heavily based from pylinac (https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html),
-with some modification to focus on tff files for film dosimetry.
+with some modification to focus on tff files used for film dosimetry.
 """
 
 from pathlib import Path
 import numpy as np
 import os.path as osp
-from PIL import Image as pImage
-from PIL.TiffTags import TAGS
+#from PIL import Image as pImage
+#from PIL.TiffTags import TAGS
 from typing import Any, Union
+from tifffile import TiffFile
 
 MM_PER_INCH = 25.4
 
@@ -58,9 +59,9 @@ def _is_array(obj: Any) -> bool:
     return isinstance(obj, np.ndarray)
 
 def _is_image_file(path: str | Path) -> bool:
-    """Whether the file is a readable image file via Pillow."""
+    """Whether the file is a readable image file via tifffile."""
     try:
-        pImage.open(path)
+        TiffFile(path)
         return True
     except:
         return False
@@ -124,48 +125,40 @@ class TiffImage(BaseImage):
         dpi : int, float
             The dots-per-inch of the image, defined at isocenter.
 
-            .. note:: If a DPI tag is found in the image, that value will override the parameter, otherwise this one
+            .. note:: If a X and Y Resolution tag is found in the image, that value will override the parameter, otherwise this one
                 will be used.
         sid : int, float
             The Source-to-Image distance in mm.
-        dtype : numpy.dtype
-            The data type to cast the array as. If None, will use the datatype stored in the file.
         """
         super().__init__(path)
-        pil_image = pImage.open(path)
-        # convert from multichannel if need be
-        #if len(pil_image.getbands()) > 1:
-        #    pil_image = pil_image.convert(
-        #        "I"
-        #    )  # int32; uint16 preferred but not reliable using PIL
-        self.info = pil_image.info
-        try:  # tiff tags
-            self.tags = {TAGS[key]: pil_image.tag_v2[key] for key in pil_image.tag_v2}
-        except AttributeError:
-            pass
-        self.array = np.array(pil_image, dtype=dtype)
+        with TiffFile(path) as tif:
+            self.array = tif.asarray()
+            try:
+                self.tags = {tag.name: tag.value for tag in tif.pages[0].tags}
+
+                if self.tags['XResolution'][0] != self.tags['YResolution'][0]:
+                    raise Exception(
+                        """
+                        XResolution should be equal to YResolution. The value of x and y was: 
+                        {}""".format(self.tags['XResolution'][0], self.tags['YResolution'][0])
+                        )
+                else:
+                    dpi = self.tags['XResolution'][0]
+                
+            except AttributeError:
+                pass
+
         self._dpi = dpi
         self.sid = sid
 
     @property
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
-        dpi = None
-        for key in ("dpi", "resolution"):
-            dpi = self.info.get(key)
-            if dpi is not None:
-                dpi = float(dpi[0])
-                if dpi < 3 and not self._dpi:
-                    raise ValueError(
-                        f"The DPI setting is abnormal or nonsensical. Got resolution of {dpi}. Pass in the dpi manually."
-                    )
-                if dpi < 3:
-                    dpi = None
-                break
-        if dpi is None:
-            dpi = self._dpi
-        if self.sid is not None and dpi is not None:
+
+        if self.sid is not None:
             dpi *= self.sid / 1000
+        else:
+            dpi = self._dpi
         return dpi
 
     @property
