@@ -1,7 +1,9 @@
 from pathlib import Path
-from image import load
+from image import load, CalibImage
+from fit_functions import polymonial_g3
 import matplotlib.pyplot as plt
 from tifffile import TiffFile, imread
+import numpy as np
 
 from skimage.filters import threshold_otsu
 from skimage.color import rgb2gray
@@ -10,6 +12,7 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 
 import matplotlib.patches as mpatches
+
 
 
 demo_path = Path(__file__).parent.parent / "data" / "demo_calib.tif"
@@ -52,13 +55,13 @@ ax[0].imshow(grayscale)
 ax[1].hist(grayscale.ravel(), bins = 20)
 ax[1].axvline(thresh, color='r')
 
-ax[2].imshow(binary, cmap=plt.cm.gray)
-ax[2].set_title('Binary')
-ax[2].axis('off')
+#ax[2].imshow(binary, cmap=plt.cm.gray)
+#ax[2].set_title('Binary')
+#ax[2].axis('off')
 
 #plt.show()
 
-ax[3].imshow(tImage.array/(2**16))
+ax[2].imshow(tImage.array/(2**16))
 
 #regions = regionprops(label_image, tImage, offset = (50,50))
 regions = regionprops(label_image, tImage.array)
@@ -69,11 +72,18 @@ for region in regions:
         minr, minc, maxr, maxc = region.bbox
         rect = mpatches.Rectangle((minc, minr), maxc - minc, maxr - minr,
                                   fill=False, edgecolor='red', linewidth=2)
-        ax[3].add_patch(rect)
+        ax[2].add_patch(rect)
         print(region.intensity_mean[0])
 
-ax[3].set_axis_off()
+ax[2].set_axis_off()
 plt.tight_layout()
+
+cal_image = CalibImage(demo_path)
+cal_curve, pcov, int, doses = cal_image.get_calibration_curve([0, 0.5, 1, 2, 4, 6, 8, 10], f = "P3")
+
+x = np.linspace(int[0], int[-1], 100)
+y = polymonial_g3(x, cal_curve[0], cal_curve[1], cal_curve[2], cal_curve[3])
+ax[3].plot(x, y)
+
 plt.show()
 
-print(len(regions))
