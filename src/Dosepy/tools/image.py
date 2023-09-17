@@ -16,7 +16,7 @@ from skimage.morphology import closing, square, erosion
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 
-from fit_functions import polymonial_g3
+from calibration import polymonial_g3, Calibration
 
 MM_PER_INCH = 25.4
 
@@ -230,6 +230,7 @@ class ArrayImage(BaseImage):
 
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
+
     def __init__(self, path: str | Path):
         """
         Parameters
@@ -242,12 +243,19 @@ class CalibImage(TiffImage):
 
     def region_properties(self, film_detect = True, crop = 8):
         """Measure properties of films used for calibration.
+
         Parameters
         ----------
         film_detect : str
             Define if automatic film position detection is performed. True: The films are detected automatically. Flase: Manual user selection. 
         crop : int = 8
             Removes milimeters on all edges of the image in-place.
+
+        Returns
+        -------
+        ::class:`~skimage.measure.regionprops`
+            Measure properties of labeled image regions. For more information see 
+            https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.regionprops
         """
         gray_scale = rgb2gray(self.array)
         thresh = threshold_otsu(gray_scale)
@@ -261,38 +269,32 @@ class CalibImage(TiffImage):
         lb = label(cleared)
         pixels_to_remove_border = int(self.dpmm * crop)
         label_image = erosion(lb, square(pixels_to_remove_border))
-        #regions = regionprops(label_image, self.array)
+        #regions = regionprops(label_image, np.mean(self.array, axis = 2))
         regions = regionprops(label_image, gray_scale)
-
+        
         return regions
 
-    def get_calibration_curve(self, doses: list, f = "P3"):
-        """Computes calibration curve. Use non-linear least squares to fit a function, f, to data. For more information see scipy.optimize.curve_fit.
+    def get_calibration(self, doses: list, func = "P3"):
+        """Computes calibration curve. Use non-linear least squares to fit a function, func, to data. 
+        For more information see scipy.optimize.curve_fit.
+
         Parameter
         ---------
         doses : list
             The doses values that were used to expose films for calibration.
-        f : string
+        func : string
             P3: Polynomial function of degree 3.
 
         Returns
         -------
-        popt : array
-            Optimal values for the parameters so that the sum of the squared residuals of f(xdata, *popt) - ydata is minimized.
-        pcov : 2-D array
-            The estimated approximate covariance of popt. The diagonals provide the variance of the parameter estimate. To compute one standard deviation errors on the parameters, use perr = np.sqrt(np.diag(pcov)). Note that the relationship between cov and parameter error estimates is derived based on a linear approximation to the model function around the optimum [1]. When this approximation becomes inaccurate, cov may not provide an accurate measure of uncertainty. [1] K. Vugrin et al. Confidence region estimation techniques for nonlinear regression in groundwater flow: Three case studies. Water Resources Research, Vol. 43, W03423, DOI:10.1029/2005WR004804
-        
+        ::class:`~dosepy.calibration.Calibration`
+            Instance of a Calibration class.
         """
 
         doses = sorted(doses)
         intensity = sorted([properties.intensity_mean for properties in self.region_properties()])
+        intensity -= intensity[0] # Set to 0 for the not irradiated film.
         
-        # Use non-linear least squares to fit a function, f, to data.
-        if f == "P3":
-            popt, pcov = curve_fit(polymonial_g3, intensity, doses)
-        else:
-            raise Exception("Invalid function.")
-        self.calibration_curve_computed = True
-        return popt, pcov, intensity, doses
+        return Calibration(doses, intensity, func = func)
 
         

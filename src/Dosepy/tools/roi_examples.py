@@ -1,40 +1,28 @@
 from pathlib import Path
 from image import load, CalibImage
-from fit_functions import polymonial_g3
 import matplotlib.pyplot as plt
-from tifffile import TiffFile, imread
-import numpy as np
 
 from skimage.filters import threshold_otsu
 from skimage.color import rgb2gray
 from skimage.morphology import closing, square, erosion
 from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops
+from skimage.measure import label
 
 import matplotlib.patches as mpatches
 
-
-
 demo_path = Path(__file__).parent.parent / "data" / "demo_calib.tif"
 
-print("==================Pillow====================")
-#img  = load(demo_path)
-#print(img.array.shape)
-#print(img.array.dtype)
-#print(img.info)
-
 print("==================TIFF====================")
-tImage = load(demo_path)
-#print(tImage.dpmm)
 
-fig, axes = plt.subplots(ncols=4, figsize=(8, 2.5))
+cal_image = CalibImage(demo_path)
+
+fig, axes = plt.subplots(ncols=3, figsize=(8, 2.5))
 ax = axes.ravel()
-ax[0] = plt.subplot(1, 4, 1)
-ax[1] = plt.subplot(1, 4, 2)
-ax[2] = plt.subplot(1, 4, 3)
-ax[3] = plt.subplot(1, 4, 4)
+ax[0] = plt.subplot(1, 3, 1)
+ax[1] = plt.subplot(1, 3, 2)
+ax[2] = plt.subplot(1, 3, 3)
 
-grayscale = rgb2gray(tImage.array)
+grayscale = rgb2gray(cal_image.array)
 thresh = threshold_otsu(grayscale)
 
 # Apply threshold and close small holes with binary closing.
@@ -50,21 +38,14 @@ cleared = clear_border(binary)
 label_image = label(cleared)
 label_image = erosion(label_image, square(24))
 
-ax[0].imshow(grayscale)
-#ax[1].hist(img.array.ravel(), bins = 256)
-ax[1].hist(grayscale.ravel(), bins = 20)
-ax[1].axvline(thresh, color='r')
+ax[0].hist(grayscale.ravel(), bins = 20)
+ax[0].axvline(thresh, color='r')
 
-#ax[2].imshow(binary, cmap=plt.cm.gray)
-#ax[2].set_title('Binary')
-#ax[2].axis('off')
-
-#plt.show()
-
-ax[2].imshow(tImage.array/(2**16))
+ax[1].imshow(grayscale, cmap = "gray")
 
 #regions = regionprops(label_image, tImage, offset = (50,50))
-regions = regionprops(label_image, tImage.array)
+#regions = regionprops(label_image, cal_image.array)
+regions = cal_image.region_properties()
 for region in regions:
     # take regions with large enough areas
     if region.area >= 100:
@@ -72,18 +53,16 @@ for region in regions:
         minr, minc, maxr, maxc = region.bbox
         rect = mpatches.Rectangle((minc, minr), maxc - minc, maxr - minr,
                                   fill=False, edgecolor='red', linewidth=2)
-        ax[2].add_patch(rect)
-        print(region.intensity_mean[0])
+        ax[1].add_patch(rect)
+        print(region.intensity_mean)
 
-ax[2].set_axis_off()
+ax[1].set_axis_off()
 plt.tight_layout()
 
 cal_image = CalibImage(demo_path)
-cal_curve, pcov, int, doses = cal_image.get_calibration_curve([0, 0.5, 1, 2, 4, 6, 8, 10], f = "P3")
+cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3")
 
-x = np.linspace(int[0], int[-1], 100)
-y = polymonial_g3(x, cal_curve[0], cal_curve[1], cal_curve[2], cal_curve[3])
-ax[3].plot(x, y)
+cal.plot(ax[2], show = False)
 
 plt.show()
 
