@@ -1,9 +1,18 @@
+"""
+Module for the managment of calibration curve.
+The calibration, measurement, and unirradiated background films should be of the same model and 
+production lot and the readout system and data acquisition procedures should beconsistent across all films.
+A 16-bits canner is recomended. It measures the intensity of the transmitted or reflected light and scales PVs from zero 
+to 65535 (= 2^16 - 1) wherethe limits are represented by complete darkness and the intensity of the 
+unattenuated light source.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 
-"""Fit functions."""
+"""Functions used for film calibration."""
 def polymonial_g3(x,a,b,c,d):
     """
     Polynomial function of degree 3.
@@ -21,7 +30,9 @@ class Calibration:
             Intensity values used for calibration.
         func : str
             The model function, f(x, …) used for intesity-dose relationship. 
-            "P3": Polynomial function of degree 3. 
+            "P3": Polynomial function of degree 3.
+        channel : str
+            Color channel. "R": Red, "G": Green and "B": Blue. 
         popt : array
             Parameters used by the function.
         pcov : 2-D array
@@ -30,7 +41,7 @@ class Calibration:
             use perr = np.sqrt(np.diag(pcov)).
         """
     
-    def __init__(self, doses: list, intensity: list, func: str):
+    def __init__(self, doses: list, intensity: list, func: str = "P3", channel: str = "R"):
         
         self.doses = sorted(doses)
         self.intensity = sorted(intensity)
@@ -39,6 +50,7 @@ class Calibration:
             self.popt, self.pcov = curve_fit(polymonial_g3, self.intensity, self.doses)
         else:
             raise Exception("Invalid function.")
+        self.channel = channel
 
     def plot(self, ax: plt.Axes = None, show: bool = True, **kwargs) -> plt.Axes:
         """Plot the calibration curve.

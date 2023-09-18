@@ -20,15 +20,18 @@ from calibration import polymonial_g3, Calibration
 
 MM_PER_INCH = 25.4
 
-ImageLike = Union["ArrayImage", "TiffImage"]
+ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
 
-def load(path: str | Path | np.ndarray) -> "ImageLike":
+def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
     r"""Load a TIFF image or numpy 2D array.
 
     Parameters
     ----------
     path : str, file-object
         The path to the image file or data stream or array.
+
+    for_calib : bool, default = False
+        True if the image is going to be used to get a calibration curve.
 
     Returns
     -------
@@ -55,7 +58,10 @@ def load(path: str | Path | np.ndarray) -> "ImageLike":
     if _is_array(path):
         return ArrayImage(path)
     elif _is_image_file(path):
-        return TiffImage(path)
+        if for_calib:
+            return CalibImage(path)
+        else:
+            return TiffImage(path)
     else:
         raise TypeError(
             f"The argument `{path}` was not found to be a valid TIFF file or array."
@@ -112,6 +118,8 @@ class TiffImage(BaseImage):
     ----------
     sid : float
         The SID value as passed in upon construction.
+    tag : dict
+        All tags in the TIFF file.
     """
 
     def __init__(
@@ -120,7 +128,6 @@ class TiffImage(BaseImage):
         *,
         dpi: float | None = None,
         sid: float | None = None,
-        dtype: np.dtype | None = None,
     ):
         """
         Parameters
@@ -130,10 +137,12 @@ class TiffImage(BaseImage):
         dpi : int, float
             The dots-per-inch of the image, defined at isocenter.
 
-            .. note:: If a X and Y Resolution tag is found in the image, that value will override the parameter, otherwise this one
-                will be used.
+            .. note:: If a X and Y Resolution tag is found in the image, that value will override the parameter, 
+                otherwise this one will be used.
         sid : int, float
             The Source-to-Image distance in mm.
+        tag : dict
+            All tags in the TIFF file.
         """
         super().__init__(path)
         with TiffFile(path) as tif:
@@ -228,6 +237,7 @@ class ArrayImage(BaseImage):
                 dpi *= self.sid / 1000
         return dpi
 
+
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
 
@@ -241,7 +251,7 @@ class CalibImage(TiffImage):
         super().__init__(path)
         self.calibration_curve_computed = False    
 
-    def region_properties(self, film_detect = True, crop = 8):
+    def region_properties(self, film_detect = True, crop = 8, channel = "R"):
         """Measure properties of films used for calibration.
 
         Parameters
@@ -249,7 +259,9 @@ class CalibImage(TiffImage):
         film_detect : str
             Define if automatic film position detection is performed. True: The films are detected automatically. Flase: Manual user selection. 
         crop : int = 8
-            Removes milimeters on all edges of the image in-place.
+            Removes all edges of the image in-place (in milimeters).
+        channel : str
+            "R": Red, "G": Green, "B": Blue.
 
         Returns
         -------
@@ -270,11 +282,22 @@ class CalibImage(TiffImage):
         pixels_to_remove_border = int(self.dpmm * crop)
         label_image = erosion(lb, square(pixels_to_remove_border))
         #regions = regionprops(label_image, np.mean(self.array, axis = 2))
-        regions = regionprops(label_image, gray_scale)
+        if channel == "R":
+            regions = regionprops(label_image, self.array[:,:,0])
+        elif channel == "G":
+            regions = regionprops(label_image, self.array[:,:,1])
+        elif channel == "B":
+            regions = regionprops(label_image, self.array[:,:,2])
+        else:
+            raise Exception(
+                        """
+                        {} is not a valid channel. Use "R" for red, "G" for green or "B" for blue.
+                        """.format(channel)
+                        )
         
         return regions
 
-    def get_calibration(self, doses: list, func = "P3"):
+    def get_calibration(self, doses: list, func = "P3", channel = "R"):
         """Computes calibration curve. Use non-linear least squares to fit a function, func, to data. 
         For more information see scipy.optimize.curve_fit.
 
@@ -284,6 +307,8 @@ class CalibImage(TiffImage):
             The doses values that were used to expose films for calibration.
         func : string
             P3: Polynomial function of degree 3.
+        channel : str
+            Color channel. "R": Red, "G": Green and "B": Blue. 
 
         Returns
         -------
@@ -292,9 +317,10 @@ class CalibImage(TiffImage):
         """
 
         doses = sorted(doses)
-        intensity = sorted([properties.intensity_mean for properties in self.region_properties()])
+        regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
+        intensity = sorted([properties.intensity_mean for properties in regions])
         intensity -= intensity[0] # Set to 0 for the not irradiated film.
         
-        return Calibration(doses, intensity, func = func)
+        return Calibration(doses, intensity, func = func, channel = channel)
 
         

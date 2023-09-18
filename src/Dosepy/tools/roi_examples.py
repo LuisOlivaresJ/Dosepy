@@ -14,7 +14,9 @@ demo_path = Path(__file__).parent.parent / "data" / "demo_calib.tif"
 
 print("==================TIFF====================")
 
-cal_image = CalibImage(demo_path)
+#cal_image = CalibImage(demo_path)
+cal_image = load(demo_path, for_calib = True)
+print(cal_image.tags)
 
 fig, axes = plt.subplots(ncols=3, figsize=(8, 2.5))
 ax = axes.ravel()
@@ -41,7 +43,8 @@ label_image = erosion(label_image, square(24))
 ax[0].hist(grayscale.ravel(), bins = 20)
 ax[0].axvline(thresh, color='r')
 
-ax[1].imshow(grayscale, cmap = "gray")
+#ax[1].imshow(grayscale, cmap = "gray")
+ax[1].imshow(cal_image.array[:,:,2], cmap = "gray")
 
 #regions = regionprops(label_image, tImage, offset = (50,50))
 #regions = regionprops(label_image, cal_image.array)
@@ -60,7 +63,7 @@ ax[1].set_axis_off()
 plt.tight_layout()
 
 cal_image = CalibImage(demo_path)
-cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3")
+cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "G")
 
 cal.plot(ax[2], show = False)
 
