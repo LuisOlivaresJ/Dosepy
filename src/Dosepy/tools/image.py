@@ -36,16 +36,14 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
     Returns
     -------
     ::class:`~dosepy.image.BaseImage`
-        Return type depends on input image.
 
     Examples
     --------
-    Load an image from a file and then apply a filter::
+    Load an image from a file::
 
         >>> from dosepy.image import load
         >>> path_to_image = r"C:\QA\image.tif"
         >>> img = load(path_to_image)  # returns a TiffImage
-        >>> img.filter(5)
 
     Loading from an array is just like loading from a file::
 
@@ -64,7 +62,7 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
             return TiffImage(path)
     else:
         raise TypeError(
-            f"The argument `{path}` was not found to be a valid TIFF file or array."
+            f"The argument `{path}` was not found to be a valid TIFF file or an array."
         )
 
 def _is_array(obj: Any) -> bool:
@@ -246,7 +244,7 @@ class CalibImage(TiffImage):
         Parameters
         ----------
         path : str, file-object
-            The path to the file or a data stream.
+            The path to the file.
         """
         super().__init__(path)
         self.calibration_curve_computed = False    
@@ -261,14 +259,26 @@ class CalibImage(TiffImage):
         crop : int = 8
             Removes all edges of the image in-place (in milimeters).
         channel : str
-            "R": Red, "G": Green, "B": Blue.
+            "R": Red, "G": Green, "B": Blue, "Mean": Arithmetic mean from the three channels.
 
         Returns
         -------
         ::class:`~skimage.measure.regionprops`
-            Measure properties of labeled image regions. For more information see 
+            Measure properties of labeled image regions. For more information see: 
             https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.regionprops
+
+        Examples
+        --------
+        Load an image from a file::
+
+        >>> from dosepy.image import load
+        >>> path_to_image = r"C:\QA\image.tif" 
+        >>> cal_image = load(path_to_image, for_calib = True)  # returns a TiffImage used for calibration.
+        >>> regions = cal_image.region_properties(crop = 8, channel = "G")
+        >>> for region in regions:
+        ...     print(region.intensity_mean)    # Print the value with the mean intensity in the region.
         """
+
         gray_scale = rgb2gray(self.array)
         thresh = threshold_otsu(gray_scale)
         # Apply threshold and close small holes with binary closing.
@@ -288,6 +298,8 @@ class CalibImage(TiffImage):
             regions = regionprops(label_image, self.array[:,:,1])
         elif channel == "B":
             regions = regionprops(label_image, self.array[:,:,2])
+        elif channel == "Mean":
+            regions = regionprops(label_image, np.mean(self.array, axis = 2))
         else:
             raise Exception(
                         """
@@ -314,13 +326,25 @@ class CalibImage(TiffImage):
         -------
         ::class:`~dosepy.calibration.Calibration`
             Instance of a Calibration class.
+
+        Examples
+        --------
+        Load an image from a file and compute a calibration curve using green channel::
+
+        >>> from dosepy.image import load
+        >>> path_to_image = r"C:\QA\image.tif" 
+        >>> cal_image = load(path_to_image, for_calib = True)
+        >>> cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], channel = "G")
+        >>> # Plot the calibration curve
+        >>> cal.plot(color = "green")
         """
 
         doses = sorted(doses)
         regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
-        intensity = sorted([properties.intensity_mean for properties in regions])
-        intensity -= intensity[0] # Set to 0 for the not irradiated film.
+        # Higest intensity represents lowest dose.
+        intensity = sorted([properties.intensity_mean for properties in regions], reverse = True)
+        optical_density = -np.log10(intensity/intensity[0])
         
-        return Calibration(doses, intensity, func = func, channel = channel)
+        return Calibration(doses, optical_density, func = func, channel = channel)
 
         

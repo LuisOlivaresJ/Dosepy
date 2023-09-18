@@ -1,5 +1,5 @@
 """
-Module for the managment of calibration curve.
+Module for the management of the calibration curve.
 The calibration, measurement, and unirradiated background films should be of the same model and 
 production lot and the readout system and data acquisition procedures should beconsistent across all films.
 A 16-bits canner is recomended. It measures the intensity of the transmitted or reflected light and scales PVs from zero 
@@ -26,8 +26,8 @@ class Calibration:
         ----------
         doses : list
             The doses values that were used to expose films for calibration.
-        intensity : list
-            Intensity values used for calibration.
+        optical_density : list
+            Optical density used for calibration.
         func : str
             The model function, f(x, …) used for intesity-dose relationship. 
             "P3": Polynomial function of degree 3.
@@ -41,13 +41,13 @@ class Calibration:
             use perr = np.sqrt(np.diag(pcov)).
         """
     
-    def __init__(self, doses: list, intensity: list, func: str = "P3", channel: str = "R"):
+    def __init__(self, doses: list, optical_density: list, func: str = "P3", channel: str = "R"):
         
         self.doses = sorted(doses)
-        self.intensity = sorted(intensity)
+        self.optical_density = sorted(optical_density)
         self.func = func
         if self.func == "P3":
-            self.popt, self.pcov = curve_fit(polymonial_g3, self.intensity, self.doses)
+            self.popt, self.pcov = curve_fit(polymonial_g3, self.optical_density, self.doses)
         else:
             raise Exception("Invalid function.")
         self.channel = channel
@@ -70,9 +70,10 @@ class Calibration:
         if ax is None:
             fig, ax = plt.subplots()
         
-        x = np.linspace(self.intensity[0], self.intensity[-1], 100)
+        x = np.linspace(self.optical_density[0], self.optical_density[-1], 100)
         y = polymonial_g3(x, *self.popt)
         ax.plot(x, y, **kwargs)
+        ax.plot(self.optical_density, self.doses, '*', **kwargs)
         if show:
             plt.show()
         return ax

@@ -14,9 +14,8 @@ demo_path = Path(__file__).parent.parent / "data" / "demo_calib.tif"
 
 print("==================TIFF====================")
 
-#cal_image = CalibImage(demo_path)
 cal_image = load(demo_path, for_calib = True)
-print(cal_image.tags)
+#print(cal_image.tags)
 
 fig, axes = plt.subplots(ncols=3, figsize=(8, 2.5))
 ax = axes.ravel()
@@ -44,11 +43,9 @@ ax[0].hist(grayscale.ravel(), bins = 20)
 ax[0].axvline(thresh, color='r')
 
 #ax[1].imshow(grayscale, cmap = "gray")
-ax[1].imshow(cal_image.array[:,:,2], cmap = "gray")
+ax[1].imshow(cal_image.array[:,:,0], cmap = "gray")
 
-#regions = regionprops(label_image, tImage, offset = (50,50))
-#regions = regionprops(label_image, cal_image.array)
-regions = cal_image.region_properties()
+regions = cal_image.region_properties(crop = 8, channel = "G")
 for region in regions:
     # take regions with large enough areas
     if region.area >= 100:
@@ -63,9 +60,17 @@ ax[1].set_axis_off()
 plt.tight_layout()
 
 cal_image = CalibImage(demo_path)
-cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "G")
+#cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "G")
+calR = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "R")
+calG = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "G")
+calB = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "B")
+calMean = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], func = "P3", channel = "Mean")
 
-cal.plot(ax[2], show = False)
+#cal.plot(ax[2], show = False)
+calR.plot(ax[2], show = False, color = "red")
+calG.plot(ax[2], show = False, color = "green")
+calB.plot(ax[2], show = False, color = "blue")
+calMean.plot(ax[2], show = False, color = "black")
 
 plt.show()
 
