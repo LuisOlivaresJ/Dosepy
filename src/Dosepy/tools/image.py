@@ -9,6 +9,7 @@ from scipy.optimize import curve_fit
 import os.path as osp
 from typing import Any, Union
 from tifffile import TiffFile
+import matplotlib.pyplot as plt
 
 from skimage.color import rgb2gray
 from skimage.filters import threshold_otsu
@@ -182,6 +183,91 @@ class TiffImage(BaseImage):
         except TypeError:
             return
 
+    def region_properties(self, film_detect = True, crop = 8, channel = "R"):
+        """Measure properties of films used for calibration.
+
+        Parameters
+        ----------
+        film_detect : str
+            Define if automatic film position detection is performed. True: The films are detected automatically. Flase: Manual user selection. 
+        crop : int = 8
+            Removes all edges of the image in-place (in milimeters).
+        channel : str
+            "R": Red, "G": Green, "B": Blue, "Mean": Arithmetic mean from the three channels.
+
+        Returns
+        -------
+        ::class:`~skimage.measure.regionprops`
+            Measure properties of labeled image regions. For more information see: 
+            https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.regionprops
+
+        Examples
+        --------
+        Load an image from a file::
+
+        >>> from dosepy.image import load
+        >>> path_to_image = r"C:\QA\image.tif" 
+        >>> cal_image = load(path_to_image, for_calib = True)  # returns a TiffImage used for calibration.
+        >>> regions = cal_image.region_properties(crop = 8, channel = "G")
+        >>> for region in regions:
+        ...     print(region.intensity_mean)    # Print the value with the mean intensity in the region.
+        """
+
+        gray_scale = rgb2gray(self.array)
+        thresh = threshold_otsu(gray_scale)
+        # Apply threshold and close small holes with binary closing.
+        # remove_pixels = 75dpi * 3 mm, is used to close smaller holes than 3 mm.
+        pixels_to_remove_holes = int(self.dpmm * 3)
+        binary = closing(gray_scale < thresh, square(pixels_to_remove_holes))
+        # remove artifacts connected to image border
+        cleared = clear_border(binary)
+        # label image regions
+        lb = label(cleared)
+        pixels_to_remove_border = int(self.dpmm * crop)
+        label_image = erosion(lb, square(pixels_to_remove_border))
+        #regions = regionprops(label_image, np.mean(self.array, axis = 2))
+        if channel == "R":
+            regions = regionprops(label_image, self.array[:,:,0])
+        elif channel == "G":
+            regions = regionprops(label_image, self.array[:,:,1])
+        elif channel == "B":
+            regions = regionprops(label_image, self.array[:,:,2])
+        elif channel == "Mean":
+            regions = regionprops(label_image, np.mean(self.array, axis = 2))
+        else:
+            raise Exception(
+                        """
+                        {} is not a valid channel. Use "R" for red, "G" for green or "B" for blue.
+                        """.format(channel)
+                        )
+        
+        return regions
+
+    def plot(
+        self, ax: plt.Axes = None, show: bool = True, clear_fig: bool = False, **kwargs
+        ) -> plt.Axes:
+        """Plot the image.
+
+        Parameters
+        ----------
+        ax : matplotlib.Axes instance
+            The axis to plot the image to. If None, creates a new figure.
+        show : bool
+            Whether to actually show the image. Set to false when plotting multiple items.
+        clear_fig : bool
+            Whether to clear the prior items on the figure before plotting.
+        kwargs
+            kwargs passed to plt.imshow()
+        """
+        if ax is None:
+            fig, ax = plt.subplots()
+        if clear_fig:
+            plt.clf()
+        ax.imshow(self.array/np.max(self.array), **kwargs)
+        #ax.imshow(self.array[:,:,0], **kwargs)
+        if show:
+            plt.show()
+        return ax
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""
@@ -249,66 +335,6 @@ class CalibImage(TiffImage):
         super().__init__(path)
         self.calibration_curve_computed = False    
 
-    def region_properties(self, film_detect = True, crop = 8, channel = "R"):
-        """Measure properties of films used for calibration.
-
-        Parameters
-        ----------
-        film_detect : str
-            Define if automatic film position detection is performed. True: The films are detected automatically. Flase: Manual user selection. 
-        crop : int = 8
-            Removes all edges of the image in-place (in milimeters).
-        channel : str
-            "R": Red, "G": Green, "B": Blue, "Mean": Arithmetic mean from the three channels.
-
-        Returns
-        -------
-        ::class:`~skimage.measure.regionprops`
-            Measure properties of labeled image regions. For more information see: 
-            https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.regionprops
-
-        Examples
-        --------
-        Load an image from a file::
-
-        >>> from dosepy.image import load
-        >>> path_to_image = r"C:\QA\image.tif" 
-        >>> cal_image = load(path_to_image, for_calib = True)  # returns a TiffImage used for calibration.
-        >>> regions = cal_image.region_properties(crop = 8, channel = "G")
-        >>> for region in regions:
-        ...     print(region.intensity_mean)    # Print the value with the mean intensity in the region.
-        """
-
-        gray_scale = rgb2gray(self.array)
-        thresh = threshold_otsu(gray_scale)
-        # Apply threshold and close small holes with binary closing.
-        # remove_pixels = 75dpi * 3 mm, is used to close smaller holes than 3 mm.
-        pixels_to_remove_holes = int(self.dpmm * 3)
-        binary = closing(gray_scale < thresh, square(pixels_to_remove_holes))
-        # remove artifacts connected to image border
-        cleared = clear_border(binary)
-        # label image regions
-        lb = label(cleared)
-        pixels_to_remove_border = int(self.dpmm * crop)
-        label_image = erosion(lb, square(pixels_to_remove_border))
-        #regions = regionprops(label_image, np.mean(self.array, axis = 2))
-        if channel == "R":
-            regions = regionprops(label_image, self.array[:,:,0])
-        elif channel == "G":
-            regions = regionprops(label_image, self.array[:,:,1])
-        elif channel == "B":
-            regions = regionprops(label_image, self.array[:,:,2])
-        elif channel == "Mean":
-            regions = regionprops(label_image, np.mean(self.array, axis = 2))
-        else:
-            raise Exception(
-                        """
-                        {} is not a valid channel. Use "R" for red, "G" for green or "B" for blue.
-                        """.format(channel)
-                        )
-        
-        return regions
-
     def get_calibration(self, doses: list, func = "P3", channel = "R"):
         """Computes calibration curve. Use non-linear least squares to fit a function, func, to data. 
         For more information see scipy.optimize.curve_fit.
@@ -342,8 +368,8 @@ class CalibImage(TiffImage):
         doses = sorted(doses)
         regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
         # Higest intensity represents lowest dose.
-        intensity = sorted([properties.intensity_mean for properties in regions], reverse = True)
-        optical_density = -np.log10(intensity/intensity[0])
+        intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
+        optical_density = -np.log10(intensities/intensities[0])
         
         return Calibration(doses, optical_density, func = func, channel = channel)
 

@@ -1,8 +1,8 @@
 """
 Module for the management of the calibration curve.
 The calibration, measurement, and unirradiated background films should be of the same model and 
-production lot and the readout system and data acquisition procedures should beconsistent across all films.
-A 16-bits canner is recomended. It measures the intensity of the transmitted or reflected light and scales PVs from zero 
+production lot and the readout system and data acquisition procedures should be consistent across all films.
+A 16-bits scanner is recomended. It measures the intensity of the transmitted or reflected light and scales PVs from zero 
 to 65535 (= 2^16 - 1) wherethe limits are represented by complete darkness and the intensity of the 
 unattenuated light source.
 """

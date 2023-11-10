@@ -1,6 +1,9 @@
+# Usage examples for the new modules image.py and calibration.py 
+
 from pathlib import Path
 from image import load, CalibImage
 import matplotlib.pyplot as plt
+import numpy as np
 
 from skimage.filters import threshold_otsu
 from skimage.color import rgb2gray
@@ -72,5 +75,42 @@ calG.plot(ax[2], show = False, color = "green")
 calB.plot(ax[2], show = False, color = "blue")
 calMean.plot(ax[2], show = False, color = "black")
 
-plt.show()
+#plt.show()
 
+
+#--------------------------------------------------------------------
+# How to use the generated curve?
+#--------------------------------------------------------------------
+
+from i_o import retrieve_demo_file
+
+#####NO ES POSIBLE SU USO DEBIDO A CARTULINA NEGRA EN IMAGEN
+QA_pre_path = retrieve_demo_file("QA_Pre.tif")
+QA_post_path = retrieve_demo_file("QA_Post.tif")
+
+QA_pre = load(QA_pre_path)
+QA_post = load(QA_post_path)
+
+#QA_post.plot(cmap = "gray")
+
+#properties = QA_post.region_properties(crop = 8, channel = "G")
+#for region in properties:
+#    if region.area >= 100:
+#        print(region.intensity_mean)
+#############################################################
+
+image = load(demo_path)
+
+regions = image.region_properties(channel = "G")
+grayscale = rgb2gray(image.array)
+binary = closing(grayscale < thresh, square(9)) 
+
+
+intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
+opt_dens = -np.log10(image.array[:,:,1]/intensities[0])
+dose = calG.popt[0] + calG.popt[1]*opt_dens + calG.popt[2]*opt_dens**2 + calG.popt[3]*opt_dens**3
+# How to apply the calibration curve to only some pixels ???
+
+plt.imshow(dose)
+        
+plt.show()
