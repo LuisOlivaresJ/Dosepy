@@ -13,7 +13,7 @@ from scipy.optimize import curve_fit
 
 
 """Functions used for film calibration."""
-def polymonial_g3(x,a,b,c,d):
+def polynomial_g3(x,a,b,c,d):
     """
     Polynomial function of degree 3.
     """
@@ -47,7 +47,7 @@ class Calibration:
         self.optical_density = sorted(optical_density)
         self.func = func
         if self.func == "P3":
-            self.popt, self.pcov = curve_fit(polymonial_g3, self.optical_density, self.doses)
+            self.popt, self.pcov = curve_fit(polynomial_g3, self.optical_density, self.doses)
         else:
             raise Exception("Invalid function.")
         self.channel = channel
@@ -71,7 +71,7 @@ class Calibration:
             fig, ax = plt.subplots()
         
         x = np.linspace(self.optical_density[0], self.optical_density[-1], 100)
-        y = polymonial_g3(x, *self.popt)
+        y = polynomial_g3(x, *self.popt)
         ax.plot(x, y, **kwargs)
         ax.plot(self.optical_density, self.doses, '*', **kwargs)
         if show:

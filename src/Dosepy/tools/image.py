@@ -9,7 +9,9 @@ from scipy.optimize import curve_fit
 import os.path as osp
 from typing import Any, Union
 from tifffile import TiffFile
+
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 from skimage.color import rgb2gray
 from skimage.filters import threshold_otsu
@@ -17,7 +19,7 @@ from skimage.morphology import closing, square, erosion
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 
-from calibration import polymonial_g3, Calibration
+from calibration import polynomial_g3, Calibration
 
 MM_PER_INCH = 25.4
 
@@ -346,7 +348,7 @@ class CalibImage(TiffImage):
         func : string
             P3: Polynomial function of degree 3.
         channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue. 
+            Color channel. "R": Red, "G": Green and "B": Blue.
 
         Returns
         -------
@@ -373,4 +375,107 @@ class CalibImage(TiffImage):
         
         return Calibration(doses, optical_density, func = func, channel = channel)
 
+    def get_stat(self, ch = 'G', ff = True, ar = 0.5, show = True):
+        """Get average and standar deviation from pixel values in the films.
         
+        Parameter
+        ---------
+        ch : str
+            Color channel. "R": Red, "G": Green and "B": Blue.
+        ff : bool
+            True to show the rois used in the image.
+        ar : float
+            Area ratio used to define the roi size relative to the film. Use 1 for a roi size equal to the film.
+        show : bool
+            Whether to actually show the image.
+        """
+
+        n_crop_pix = int(6*self.dpmm) # Number of pixels used to remove film border.
+
+        gray_scale = rgb2gray(self.array)
+        thresh = threshold_otsu(gray_scale)
+
+        binary = erosion(gray_scale < thresh, square(n_crop_pix))
+        label_image, num = label(binary, return_num = True)
+
+        if show == True:
+                
+            fig, axes = plt.subplots(ncols=1)
+            #ax = axes.ravel()
+            axes = plt.subplot(1, 1, 1)
+            axes.imshow(gray_scale, cmap = "gray")
+            
+        print(f"Number of images detected: {num}")
+
+        # Films
+        if ch == "G":
+            films = regionprops(label_image, intensity_image = self.array[:,:,1])
+        if ch == "R":
+            films = regionprops(label_image, intensity_image = self.array[:,:,0])
+        if ch == "B":
+            films = regionprops(label_image, intensity_image = self.array[:,:,2])
+            
+        mean = []
+        std = []
+        
+        if not ff:
+
+            for film in films:
+
+                mean.append(film.intensity_mean)
+                std.append(np.std(film.image_intensity))
+
+        else:
+            for film in films:
+                minr_film, minc_film, maxr_film, maxc_film  = film.bbox
+                
+                
+                if show == True:
+                    rect_film = mpatches.Rectangle(
+                    (minc_film, minr_film), maxc_film - minc_film, maxr_film - minr_film,
+                    fill = False, 
+                    edgecolor = 'yellow',
+                    linewidth = 1,
+                    )
+
+                    axes.add_patch(rect_film)
+                
+
+                film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white pixels.
+                th = threshold_otsu(film.image_intensity)
+
+                # Used for field detection inside the film
+                bin = erosion(film.image_intensity < th)
+                lb = label(bin)
+                field = regionprops(lb, intensity_image = film.image_intensity)
+
+                minr_field, minc_field, maxr_field, maxc_field  = field[0].bbox
+
+                a = maxr_film - minr_film # Film box height
+                b = maxc_film - minc_film # Film box width.
+                rows_to_crop = int(0.5*a*(1-ar**0.5))
+                colums_to_crop = int(0.5*b*(1-ar**0.5))
+
+                minr_roi = int(minr_film + minr_field + rows_to_crop)
+                minc_roi = int(minc_film + minc_field + colums_to_crop)
+                maxr_roi = int(maxr_film - minr_field - rows_to_crop)
+                maxc_roi = int(maxc_film - minc_field - colums_to_crop)
+
+                roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+
+                mean.append(np.mean(roi))
+                std.append(np.std(roi))
+
+                if show:
+                    rect_roi = mpatches.Rectangle(
+                    (minc_roi, minr_roi), maxc_roi - minc_roi, maxr_roi - minr_roi,
+                    fill = False, 
+                    edgecolor = 'red',
+                    linewidth = 1,
+                    )
+
+                    axes.add_patch(rect_roi)
+        plt.show()
+        
+        #print(sorted(mean, reverse=True))
+        print(mean)
