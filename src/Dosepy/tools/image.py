@@ -368,32 +368,52 @@ class CalibImage(TiffImage):
         """
 
         doses = sorted(doses)
-        regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
+        #regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
         # Higest intensity represents lowest dose.
-        intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
-        optical_density = -np.log10(intensities/intensities[0])
+        #intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
+        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = True, ar = 0.4)
+        mean_pixel = sorted(mean_pixel, reverse = True)
+        mean_pixel = np.array(mean_pixel)
+        #optical_density = -np.log10(intensities/intensities[0])
+        optical_density = -np.log10(mean_pixel/mean_pixel[0])
         
         return Calibration(doses, optical_density, func = func, channel = channel)
 
-    def get_stat(self, ch = 'G', ff = True, ar = 0.5, show = True):
+    def get_stat(self, ch = 'G', field_in_film = False, ar = 0.5, show = False):
         """Get average and standar deviation from pixel values in the films.
         
         Parameter
         ---------
         ch : str
             Color channel. "R": Red, "G": Green and "B": Blue.
-        ff : bool
+        field_in_film : bool
             True to show the rois used in the image.
         ar : float
             Area ratio used to define the roi size relative to the film. Use 1 for a roi size equal to the film.
         show : bool
-            Whether to actually show the image.
+            Whether to actually show the image and rois.
+
+        Returns
+        -------
+        list
+            mean, std
+
+        Examples
+        --------
+        Load an image from a file and compute a calibration curve using green channel::
+
+        >>> from dosepy.image import load
+        >>> path_to_image = r"C:\QA\image.tif" 
+        >>> cal_image = load(path_to_image, for_calib = True)
+        >>> mean, std = cal_image.get_stat(ch = 'G', field_in_film = True, ar = 0.4, show = True)
+        >>> list(zip(mean, std))
+
         """
 
         n_crop_pix = int(6*self.dpmm) # Number of pixels used to remove film border.
 
         gray_scale = rgb2gray(self.array)
-        thresh = threshold_otsu(gray_scale)
+        thresh = threshold_otsu(gray_scale) # Used for films identification.
 
         binary = erosion(gray_scale < thresh, square(n_crop_pix))
         label_image, num = label(binary, return_num = True)
@@ -414,12 +434,18 @@ class CalibImage(TiffImage):
             films = regionprops(label_image, intensity_image = self.array[:,:,0])
         if ch == "B":
             films = regionprops(label_image, intensity_image = self.array[:,:,2])
-            
+
+        # Find the unexposed film.
+        mean_pixel = []
+        for film in films:
+            mean_pixel.append(film.intensity_mean)
+        index_ref = mean_pixel.index(max(mean_pixel))
+        #end Find the unexposed film.
+
         mean = []
         std = []
         
-        if not ff:
-
+        if not field_in_film:
             for film in films:
 
                 mean.append(film.intensity_mean)
@@ -427,8 +453,8 @@ class CalibImage(TiffImage):
 
         else:
             for film in films:
-                minr_film, minc_film, maxr_film, maxc_film  = film.bbox
-                
+
+                minr_film, minc_film, maxr_film, maxc_film  = film.bbox # Used to get film patch rectangle.
                 
                 if show == True:
                     rect_film = mpatches.Rectangle(
@@ -440,7 +466,6 @@ class CalibImage(TiffImage):
 
                     axes.add_patch(rect_film)
                 
-
                 film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white pixels.
                 th = threshold_otsu(film.image_intensity)
 
@@ -461,10 +486,13 @@ class CalibImage(TiffImage):
                 maxr_roi = int(maxr_film - minr_field - rows_to_crop)
                 maxc_roi = int(maxc_film - minc_field - colums_to_crop)
 
-                roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+                if film.label == (index_ref + 1): # Continues with the next iteration of the loop, if unexposed film.
+                    roi = film.image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+                else:
+                    roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
 
-                mean.append(np.mean(roi))
-                std.append(np.std(roi))
+                mean.append(int(np.mean(roi)))
+                std.append(int(np.std(roi)))
 
                 if show:
                     rect_roi = mpatches.Rectangle(
@@ -477,5 +505,4 @@ class CalibImage(TiffImage):
                     axes.add_patch(rect_roi)
         plt.show()
         
-        #print(sorted(mean, reverse=True))
-        print(mean)
+        return mean, std

@@ -74,6 +74,8 @@ class Calibration:
         y = polynomial_g3(x, *self.popt)
         ax.plot(x, y, **kwargs)
         ax.plot(self.optical_density, self.doses, '*', **kwargs)
+        ax.set_xlabel("Optical density")
+        ax.set_ylabel("Dose")
         if show:
             plt.show()
         return ax
