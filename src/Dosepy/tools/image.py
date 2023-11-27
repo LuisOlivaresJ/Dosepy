@@ -371,7 +371,7 @@ class CalibImage(TiffImage):
         #regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
         # Higest intensity represents lowest dose.
         #intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
-        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = True, ar = 0.4)
+        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = False, ar = 0.4)
         mean_pixel = sorted(mean_pixel, reverse = True)
         mean_pixel = np.array(mean_pixel)
         #optical_density = -np.log10(intensities/intensities[0])
