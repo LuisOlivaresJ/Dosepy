@@ -18,6 +18,7 @@ from skimage.filters import threshold_otsu
 from skimage.morphology import closing, square, erosion
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
+from skimage.filters.rank import mean
 
 from calibration import polynomial_g3, Calibration
 
@@ -25,7 +26,7 @@ MM_PER_INCH = 25.4
 
 ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
 
-def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
+def load(path: str | Path | np.ndarray, for_calib: bool = False, filter: int | None = None) -> "ImageLike":
     r"""Load a TIFF image or numpy 2D array.
 
     Parameters
@@ -35,6 +36,10 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
 
     for_calib : bool, default = False
         True if the image is going to be used to get a calibration curve.
+
+    filter : int
+        If None (default), no filtering will be done to the image.
+        If an int, will perform median filtering over image of size ``filter``.
 
     Returns
     -------
@@ -57,12 +62,24 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False) -> "ImageLike":
         return path
 
     if _is_array(path):
-        return ArrayImage(path)
+        array_image = ArrayImage(path)
+        if isinstance(filter, int):
+            array_image.array = mean(array_image.array, footprint = square(filter))
+        return array_image
+        
     elif _is_image_file(path):
         if for_calib:
-            return CalibImage(path)
+            calib_image = CalibImage(path)
+            if isinstance(filter, int):
+                for i in range(3):
+                    calib_image.array[:,:,i] = mean(calib_image.array[:,:,i], footprint = square(filter))
+            return calib_image
         else:
-            return TiffImage(path)
+            tiff_image = TiffImage(path)
+            if isinstance(filter, int):
+                for i in range(3):
+                    tiff_image.array[:,:,i] = mean(tiff_image.array[:,:,i], footprint = square(filter))
+            return tiff_image
     else:
         raise TypeError(
             f"The argument `{path}` was not found to be a valid TIFF file or an array."
@@ -400,6 +417,22 @@ class TiffImage(BaseImage):
         if show:
             plt.show()
         return ax
+    
+    def to_dose(self, cal):
+        mean_pixel, _ = self.get_stat(ch = cal.channel, field_in_film = False, ar = 0.4, show = False)
+        mean_pixel = sorted(mean_pixel, reverse = True)
+
+        if cal.channel == "R":                        
+            optical_density = -np.log10(self.array[:,:,0]/mean_pixel[0])
+        elif cal.channel == "G":
+            optical_density = -np.log10(self.array[:,:,1]/mean_pixel[1])
+        else:
+            optical_density = -np.log10(self.array[:,:,2]/mean_pixel[2])
+        
+        dose_image = polynomial_g3(optical_density, *cal.popt)
+        dose_image[dose_image < 0] = 0 # Remove doses < 0
+        
+        return dose_image
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""
