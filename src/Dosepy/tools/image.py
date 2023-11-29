@@ -202,7 +202,7 @@ class TiffImage(BaseImage):
         except TypeError:
             return
 
-    def get_stat(self, ch = 'G', field_in_film = False, ar = 0.5, show = False):
+    def get_stat(self, ch = 'G', field_in_film = False, ar = 0.5, show = False, threshold = None):
         """Get average and standar deviation from pixel values inside film's roi.
         
         Parameter
@@ -236,8 +236,10 @@ class TiffImage(BaseImage):
         n_crop_pix = int(6*self.dpmm) # Number of pixels used to remove film border.
 
         gray_scale = rgb2gray(self.array)
-        thresh = threshold_otsu(gray_scale) # Used for films identification.
-
+        if not threshold:
+            thresh = threshold_otsu(gray_scale) # Used for films identification.
+        else: 
+            thresh = threshold
         binary = erosion(gray_scale < thresh, square(n_crop_pix))
         label_image, num = label(binary, return_num = True)
 
@@ -500,7 +502,7 @@ class CalibImage(TiffImage):
         super().__init__(path)
         self.calibration_curve_computed = False    
 
-    def get_calibration(self, doses: list, func = "P3", channel = "R", field_in_film = False):
+    def get_calibration(self, doses: list, func = "P3", channel = "R", field_in_film = False, threshold = None):
         """Computes calibration curve. Use non-linear least squares to fit a function, func, to data. 
         For more information see scipy.optimize.curve_fit.
 
@@ -534,7 +536,7 @@ class CalibImage(TiffImage):
         #regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
         # Higest intensity represents lowest dose.
         #intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
-        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = field_in_film, ar = 0.4)
+        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = field_in_film, ar = 0.4, threshold = threshold)
         mean_pixel = sorted(mean_pixel, reverse = True)
         mean_pixel = np.array(mean_pixel)
         #optical_density = -np.log10(intensities/intensities[0])
