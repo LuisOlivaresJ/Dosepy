@@ -267,6 +267,7 @@ class TiffImage(BaseImage):
         for film in films:
             mean_pixel.append(film.intensity_mean)
         index_ref = mean_pixel.index(max(mean_pixel))
+        #print(f"Index reference: {index_ref}")
         #end Find the unexposed film.
 
         mean = []
@@ -282,6 +283,11 @@ class TiffImage(BaseImage):
             for film in films:
 
                 minr_film, minc_film, maxr_film, maxc_film  = film.bbox # Used to get film patch rectangle.
+
+                a = maxr_film - minr_film # Film box height
+                b = maxc_film - minc_film # Film box width.
+                rows_to_crop = int(0.5*a*(1-ar**0.5))
+                colums_to_crop = int(0.5*b*(1-ar**0.5))
                 
                 if show == True:
                     rect_film = mpatches.Rectangle(
@@ -293,32 +299,38 @@ class TiffImage(BaseImage):
 
                     axes.add_patch(rect_film)
                 
-                film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white pixels.
-                th = threshold_otsu(film.image_intensity)
+                if film.label == (index_ref + 1): # Continues with the next iteration of the loop, if unexposed film.
+                    roi = film.image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+                    mean.append(int(np.mean(roi)))
+                    std.append(int(np.std(roi)))
+                    continue
 
                 # Used for field detection inside the film
-                bin = erosion(film.image_intensity < th)
-                lb = label(bin)
+                film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white (black?) pixels.
+                th = threshold_otsu(film.image_intensity)
+
+                fig, _axes = plt.subplots(ncols=2, figsize=(8, 2.5))
+                _ax = _axes.ravel()
+                _ax[0].hist(film.image_intensity.ravel())
+                _ax[0].axvline(th, color='r')
+                plt.show()
+                
+                bin = erosion(film.image_intensity < th, square(n_crop_pix))
+                lb, num_fields = label(bin, return_num = True)
+                #print(f"Number of fields detected: {num_fields}")
                 field = regionprops(lb, intensity_image = film.image_intensity)
 
                 minr_field, minc_field, maxr_field, maxc_field  = field[0].bbox
-
-                a = maxr_film - minr_film # Film box height
-                b = maxc_film - minc_film # Film box width.
-                rows_to_crop = int(0.5*a*(1-ar**0.5))
-                colums_to_crop = int(0.5*b*(1-ar**0.5))
 
                 minr_roi = int(minr_film + minr_field + rows_to_crop)
                 minc_roi = int(minc_film + minc_field + colums_to_crop)
                 maxr_roi = int(maxr_film - minr_field - rows_to_crop)
                 maxc_roi = int(maxc_film - minc_field - colums_to_crop)
 
-                if film.label == (index_ref + 1): # Continues with the next iteration of the loop, if unexposed film.
-                    roi = film.image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
-                else:
-                    roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+                roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
 
                 mean.append(int(np.mean(roi)))
+                print(f"Promedio: {mean}")
                 std.append(int(np.std(roi)))
 
                 if show:
