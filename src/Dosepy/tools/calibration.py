@@ -62,8 +62,6 @@ class Calibration:
             Parameters
         show : bool
             Whether to actually show the image. Set to false when plotting multiple items.
-        clear_fig : bool
-            Whether to clear the prior items on the figure before plotting.
         kwargs
             kwargs passed to plt.plot()
         """
