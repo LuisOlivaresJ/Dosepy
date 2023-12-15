@@ -234,6 +234,7 @@ class TiffImage(BaseImage):
         """
 
         n_crop_pix = int(6*self.dpmm) # Number of pixels used to remove film border.
+        print(f"Number of pixels to remove borders: {n_crop_pix}")
 
         gray_scale = rgb2gray(self.array)
         if not threshold:
@@ -300,8 +301,9 @@ class TiffImage(BaseImage):
                     axes.add_patch(rect_film)
                 
                 if film.label == (index_ref + 1): # Continues with the next iteration of the loop, if unexposed film.
-                    roi = film.image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
+                    roi = film.image_intensity[n_crop_pix : -n_crop_pix, n_crop_pix : -n_crop_pix]
                     mean.append(int(np.mean(roi)))
+                    print(f"Base mean pixel: {mean}")
                     std.append(int(np.std(roi)))
                     continue
 
@@ -309,11 +311,14 @@ class TiffImage(BaseImage):
                 film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white (black?) pixels.
                 th = threshold_otsu(film.image_intensity)
 
-                fig, _axes = plt.subplots(ncols=2, figsize=(8, 2.5))
-                _ax = _axes.ravel()
-                _ax[0].hist(film.image_intensity.ravel())
-                _ax[0].axvline(th, color='r')
-                plt.show()
+                #____________________________________________________
+                # For testing
+                #fig, _axes = plt.subplots(ncols=2, figsize=(8, 2.5))
+                #_ax = _axes.ravel()
+                #_ax[0].hist(film.image_intensity.ravel())
+                #_ax[0].axvline(th, color='r')
+                #plt.show()
+                #____________________________________________________
                 
                 bin = erosion(film.image_intensity < th, square(n_crop_pix))
                 lb, num_fields = label(bin, return_num = True)
@@ -330,7 +335,7 @@ class TiffImage(BaseImage):
                 roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
 
                 mean.append(int(np.mean(roi)))
-                print(f"Promedio: {mean}")
+                # print(f"Promedio: {mean}") For testing
                 std.append(int(np.std(roi)))
 
                 if show:
@@ -439,9 +444,9 @@ class TiffImage(BaseImage):
         if cal.channel == "R":                        
             optical_density = -np.log10(self.array[:,:,0]/mean_pixel[0])
         elif cal.channel == "G":
-            optical_density = -np.log10(self.array[:,:,1]/mean_pixel[1])
+            optical_density = -np.log10(self.array[:,:,1]/mean_pixel[0])
         else:
-            optical_density = -np.log10(self.array[:,:,2]/mean_pixel[2])
+            optical_density = -np.log10(self.array[:,:,2]/mean_pixel[0])
         
         dose_image = polynomial_g3(optical_density, *cal.popt)
         dose_image[dose_image < 0] = 0 # Remove doses < 0
