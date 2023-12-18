@@ -20,7 +20,7 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-from calibration import polynomial_g3, Calibration
+from calibration import polynomial_g3, rational_func, Calibration
 
 MM_PER_INCH = 25.4
 
@@ -202,17 +202,17 @@ class TiffImage(BaseImage):
         except TypeError:
             return
 
-    def get_stat(self, ch = 'G', field_in_film = False, ar = 0.5, show = False, threshold = None):
+    def get_stat(self, ch = 'G', roi = (5, 5), show = False, threshold = None):
         """Get average and standar deviation from pixel values inside film's roi.
         
         Parameter
         ---------
         ch : str
-            Color channel. "R": Red, "G": Green and "B": Blue.
+            Color channel. "R": Red, "G": Green, "B": Blue and "M": mean.
         field_in_film : bool
             True to show the rois used in the image.
-        ar : float
-            Area ratio used to define the roi size relative to the film. Use 1 for a roi size equal to the film.
+        roi : tuple
+            Width and height roi in millimeters.
         show : bool
             Whether to actually show the image and rois.
 
@@ -234,7 +234,7 @@ class TiffImage(BaseImage):
         """
 
         n_crop_pix = int(6*self.dpmm) # Number of pixels used to remove film border.
-        print(f"Number of pixels to remove borders: {n_crop_pix}")
+        #print(f"Number of pixels to remove borders: {n_crop_pix}")
 
         gray_scale = rgb2gray(self.array)
         if not threshold:
@@ -260,97 +260,79 @@ class TiffImage(BaseImage):
             films = regionprops(label_image, intensity_image = self.array[:,:,1])
         if ch == "B":
             films = regionprops(label_image, intensity_image = self.array[:,:,2])
-        if ch == "mean":
+        if ch == "M":
             films = regionprops(label_image, intensity_image = np.mean(self.array, axis = 2))
 
         # Find the unexposed film.
-        mean_pixel = []
-        for film in films:
-            mean_pixel.append(film.intensity_mean)
-        index_ref = mean_pixel.index(max(mean_pixel))
+        #mean_pixel = []
+        #for film in films:
+        #    mean_pixel.append(film.intensity_mean)
+        #index_ref = mean_pixel.index(max(mean_pixel))
         #print(f"Index reference: {index_ref}")
         #end Find the unexposed film.
 
         mean = []
         std = []
         
-        if not field_in_film:
-            for film in films:
+        height_roi_pix = int(roi[1]*self.dpmm)
+        #print(f"height_roi: {height_roi_pix}")
+        width_roi_pix = int(roi[0]*self.dpmm)
+        #print(f"width_roi: {width_roi_pix}")
 
-                mean.append(film.intensity_mean)
-                std.append(np.std(film.image_intensity))
+        for film in films:
+            x0, y0 = film.centroid
+            #print(f"(x0: {x0}, y0: {y0}")
 
-        else:
-            for film in films:
+            #minr_film, minc_film, maxr_film, maxc_film  = film.bbox # Used to get film rectangle.
 
-                minr_film, minc_film, maxr_film, maxc_film  = film.bbox # Used to get film patch rectangle.
+            minc_roi = int(y0 - width_roi_pix/2)
+            minr_roi = int(x0 - height_roi_pix/2)
 
-                a = maxr_film - minr_film # Film box height
-                b = maxc_film - minc_film # Film box width.
-                rows_to_crop = int(0.5*a*(1-ar**0.5))
-                colums_to_crop = int(0.5*b*(1-ar**0.5))
-                
-                if show == True:
-                    rect_film = mpatches.Rectangle(
-                    (minc_film, minr_film), maxc_film - minc_film, maxr_film - minr_film,
-                    fill = False, 
-                    edgecolor = 'yellow',
-                    linewidth = 1,
+            if ch == "R":
+                roi = self.array[
+                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
+                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
+                0,
+                ]
+            if ch == "G":
+                roi = self.array[
+                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
+                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
+                1,
+                ]
+            if ch == "B":
+                roi = self.array[
+                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
+                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
+                2,
+                ]
+            if ch == "M":
+                array = np.mean(self.array, axis = 2)
+                roi = array[
+                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
+                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2)
+                ]
+            #    films = regionprops(label_image, intensity_image = np.mean(self.array, axis = 2))
+            
+            mean.append(int(np.mean(roi)))
+            std.append(int(np.std(roi)))
+
+            if show:
+                rect_roi = mpatches.Rectangle(
+                (minc_roi, minr_roi), width_roi_pix, height_roi_pix,
+                fill = False, 
+                edgecolor = 'red',
+                linewidth = 1,
                     )
 
-                    axes.add_patch(rect_film)
-                
-                if film.label == (index_ref + 1): # Continues with the next iteration of the loop, if unexposed film.
-                    roi = film.image_intensity[n_crop_pix : -n_crop_pix, n_crop_pix : -n_crop_pix]
-                    mean.append(int(np.mean(roi)))
-                    print(f"Base mean pixel: {mean}")
-                    std.append(int(np.std(roi)))
-                    continue
+                axes.add_patch(rect_roi)
 
-                # Used for field detection inside the film
-                film.image_intensity[film.image_intensity == 0] = np.max(film.image_intensity) # Fill white (black?) pixels.
-                th = threshold_otsu(film.image_intensity)
-
-                #____________________________________________________
-                # For testing
-                #fig, _axes = plt.subplots(ncols=2, figsize=(8, 2.5))
-                #_ax = _axes.ravel()
-                #_ax[0].hist(film.image_intensity.ravel())
-                #_ax[0].axvline(th, color='r')
-                #plt.show()
-                #____________________________________________________
-                
-                bin = erosion(film.image_intensity < th, square(n_crop_pix))
-                lb, num_fields = label(bin, return_num = True)
-                #print(f"Number of fields detected: {num_fields}")
-                field = regionprops(lb, intensity_image = film.image_intensity)
-
-                minr_field, minc_field, maxr_field, maxc_field  = field[0].bbox
-
-                minr_roi = int(minr_film + minr_field + rows_to_crop)
-                minc_roi = int(minc_film + minc_field + colums_to_crop)
-                maxr_roi = int(maxr_film - minr_field - rows_to_crop)
-                maxc_roi = int(maxc_film - minc_field - colums_to_crop)
-
-                roi = field[0].image_intensity[rows_to_crop : -rows_to_crop, colums_to_crop : -colums_to_crop]
-
-                mean.append(int(np.mean(roi)))
-                # print(f"Promedio: {mean}") For testing
-                std.append(int(np.std(roi)))
-
-                if show:
-                    rect_roi = mpatches.Rectangle(
-                    (minc_roi, minr_roi), maxc_roi - minc_roi, maxr_roi - minr_roi,
-                    fill = False, 
-                    edgecolor = 'red',
-                    linewidth = 1,
-                    )
-
-                    axes.add_patch(rect_roi)
-        plt.show()
+        if show:    
+            plt.show()
         
         return mean, std
-    
+
+
     def region_properties(self, film_detect = True, crop = 8, channel = "R"):
         """Measure properties of films used for calibration.
 
@@ -400,7 +382,7 @@ class TiffImage(BaseImage):
             regions = regionprops(label_image, self.array[:,:,1])
         elif channel == "B":
             regions = regionprops(label_image, self.array[:,:,2])
-        elif channel == "Mean":
+        elif channel == "M":
             regions = regionprops(label_image, np.mean(self.array, axis = 2))
         else:
             raise Exception(
@@ -438,17 +420,24 @@ class TiffImage(BaseImage):
         return ax
     
     def to_dose(self, cal):
-        mean_pixel, _ = self.get_stat(ch = cal.channel, field_in_film = False, ar = 0.4, show = False)
+        mean_pixel, _ = self.get_stat(ch = cal.channel, roi = (5, 5), show = False)
         mean_pixel = sorted(mean_pixel, reverse = True)
 
         if cal.channel == "R":                        
             optical_density = -np.log10(self.array[:,:,0]/mean_pixel[0])
         elif cal.channel == "G":
             optical_density = -np.log10(self.array[:,:,1]/mean_pixel[0])
-        else:
+        elif cal.channel == "B":
             optical_density = -np.log10(self.array[:,:,2]/mean_pixel[0])
+        elif cal.channel == "M":
+            array = np.mean(self.array, axis = 2)
+            optical_density = -np.log10(array/mean_pixel[0])
         
-        dose_image = polynomial_g3(optical_density, *cal.popt)
+        if cal.func == "P3":
+            dose_image = polynomial_g3(optical_density, *cal.popt)
+        elif cal.func == "RA":
+            dose_image = rational_func(optical_density, *cal.popt)
+
         dose_image[dose_image < 0] = 0 # Remove doses < 0
         
         return dose_image
@@ -519,7 +508,7 @@ class CalibImage(TiffImage):
         super().__init__(path)
         self.calibration_curve_computed = False    
 
-    def get_calibration(self, doses: list, func = "P3", channel = "R", field_in_film = False, threshold = None):
+    def get_calibration(self, doses: list, func = "P3", channel = "R", roi = (5, 5), threshold = None):
         """Computes calibration curve. Use non-linear least squares to fit a function, func, to data. 
         For more information see scipy.optimize.curve_fit.
 
@@ -528,9 +517,12 @@ class CalibImage(TiffImage):
         doses : list
             The doses values that were used to expose films for calibration.
         func : string
-            P3: Polynomial function of degree 3.
+            "P3": Polynomial function of degree 3 or "RF": Rational function.
+            "RA": Rational function.
         channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue, "mean": mean.
+            Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
+        roi : tuple
+            Width and height roi in millimeters.
 
         Returns
         -------
@@ -553,7 +545,7 @@ class CalibImage(TiffImage):
         #regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
         # Higest intensity represents lowest dose.
         #intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
-        mean_pixel, _ = self.get_stat(ch = channel, field_in_film = field_in_film, ar = 0.4, threshold = threshold)
+        mean_pixel, _ = self.get_stat(ch = channel, roi = roi, threshold = threshold)
         mean_pixel = sorted(mean_pixel, reverse = True)
         mean_pixel = np.array(mean_pixel)
         #optical_density = -np.log10(intensities/intensities[0])

@@ -19,6 +19,12 @@ def polynomial_g3(x,a,b,c,d):
     """
     return a + b*x + c*x**2 + d*x**3
 
+def rational_func(x, a, b, c):
+    """
+    Rational function.
+    """
+    return -c + b/(x-a)
+
 class Calibration:
     """Class used to represent a calibration curve.
         
@@ -31,6 +37,7 @@ class Calibration:
         func : str
             The model function, f(x, …) used for intesity-dose relationship. 
             "P3": Polynomial function of degree 3.
+            "RA": Rational function.
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue. 
         popt : array
@@ -48,6 +55,8 @@ class Calibration:
         self.func = func
         if self.func == "P3":
             self.popt, self.pcov = curve_fit(polynomial_g3, self.optical_density, self.doses)
+        elif self.func == "RA":
+            self.popt, self.pcov = curve_fit(rational_func, self.optical_density, self.doses, p0=[0.1, 200, 500])
         else:
             raise Exception("Invalid function.")
         self.channel = channel
@@ -69,7 +78,10 @@ class Calibration:
             fig, ax = plt.subplots()
         
         x = np.linspace(self.optical_density[0], self.optical_density[-1], 100)
-        y = polynomial_g3(x, *self.popt)
+        if self.func == "P3":
+            y = polynomial_g3(x, *self.popt)
+        elif self.func == "RA":
+            y = rational_func(x, *self.popt)
         ax.plot(x, y, **kwargs)
         ax.plot(self.optical_density, self.doses, '*', **kwargs)
         ax.set_xlabel("Optical density")
