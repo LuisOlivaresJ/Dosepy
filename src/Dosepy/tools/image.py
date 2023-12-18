@@ -212,7 +212,7 @@ class TiffImage(BaseImage):
         field_in_film : bool
             True to show the rois used in the image.
         roi : tuple
-            Width and height roi in millimeters.
+            Width and height region of interest (roi) in millimeters, at the center of the film.
         show : bool
             Whether to actually show the image and rois.
 
@@ -312,7 +312,6 @@ class TiffImage(BaseImage):
                 int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
                 int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2)
                 ]
-            #    films = regionprops(label_image, intensity_image = np.mean(self.array, axis = 2))
             
             mean.append(int(np.mean(roi)))
             std.append(int(np.std(roi)))
@@ -522,7 +521,7 @@ class CalibImage(TiffImage):
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
         roi : tuple
-            Width and height roi in millimeters.
+            Width and height region of interest (roi) in millimeters, at the center of the film.
 
         Returns
         -------
