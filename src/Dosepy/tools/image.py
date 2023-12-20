@@ -422,20 +422,35 @@ class TiffImage(BaseImage):
         mean_pixel, _ = self.get_stat(ch = cal.channel, roi = (5, 5), show = False)
         mean_pixel = sorted(mean_pixel, reverse = True)
 
-        if cal.channel == "R":                        
-            optical_density = -np.log10(self.array[:,:,0]/mean_pixel[0])
+        if cal.channel == "R":
+            if cal.func == "P3":                        
+                x = -np.log10(self.array[:,:,0]/mean_pixel[0])
+            elif cal.func == "RF":
+                x = self.array[:,:,0]/mean_pixel[0]
+
         elif cal.channel == "G":
-            optical_density = -np.log10(self.array[:,:,1]/mean_pixel[0])
+            if cal.func == "P3":
+                x = -np.log10(self.array[:,:,1]/mean_pixel[0])
+            elif cal.func == "RF":
+                x = self.array[:,:,1]/mean_pixel[0]
+
         elif cal.channel == "B":
-            optical_density = -np.log10(self.array[:,:,2]/mean_pixel[0])
+            if cal.func == "P3":
+                X = -np.log10(self.array[:,:,2]/mean_pixel[0])
+            elif cal.func == "RF":
+                x = self.array[:,:,2]/mean_pixel[0]
+
         elif cal.channel == "M":
             array = np.mean(self.array, axis = 2)
-            optical_density = -np.log10(array/mean_pixel[0])
-        
+            if cal.func == "P3":
+                x = -np.log10(array/mean_pixel[0])
+            elif cal.func == "RF":
+                x = self.array/mean_pixel[0]
+
         if cal.func == "P3":
-            dose_image = polynomial_g3(optical_density, *cal.popt)
-        elif cal.func == "RA":
-            dose_image = rational_func(optical_density, *cal.popt)
+            dose_image = polynomial_g3(x, *cal.popt)
+        elif cal.func == "RF":
+            dose_image = rational_func(x, *cal.popt)
 
         dose_image[dose_image < 0] = 0 # Remove doses < 0
         
@@ -516,8 +531,8 @@ class CalibImage(TiffImage):
         doses : list
             The doses values that were used to expose films for calibration.
         func : string
-            "P3": Polynomial function of degree 3 or "RF": Rational function.
-            "RA": Rational function.
+            "P3": Polynomial function of degree 3,
+            "RF": Rational function.
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
         roi : tuple
@@ -547,8 +562,12 @@ class CalibImage(TiffImage):
         mean_pixel, _ = self.get_stat(ch = channel, roi = roi, threshold = threshold)
         mean_pixel = sorted(mean_pixel, reverse = True)
         mean_pixel = np.array(mean_pixel)
-        #optical_density = -np.log10(intensities/intensities[0])
-        optical_density = -np.log10(mean_pixel/mean_pixel[0])
         
-        return Calibration(doses, optical_density, func = func, channel = channel)
+        if func == "P3":
+            x = -np.log10(mean_pixel/mean_pixel[0]) # Optical density
+
+        elif func == "RF":
+            x = mean_pixel/mean_pixel[0]
+        
+        return Calibration(y = doses, x = x, func = func, channel = channel)
 

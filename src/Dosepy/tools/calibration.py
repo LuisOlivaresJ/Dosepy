@@ -30,14 +30,14 @@ class Calibration:
         
         Attributes
         ----------
-        doses : list
+        y : list
             The doses values that were used to expose films for calibration.
-        optical_density : list
-            Optical density used for calibration.
+        x : list
+            Optical density or normalized pixel value.
         func : str
             The model function, f(x, …) used for intesity-dose relationship. 
             "P3": Polynomial function of degree 3.
-            "RA": Rational function.
+            "RF": Rational function.
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue. 
         popt : array
@@ -48,17 +48,23 @@ class Calibration:
             use perr = np.sqrt(np.diag(pcov)).
         """
     
-    def __init__(self, doses: list, optical_density: list, func: str = "P3", channel: str = "R"):
+    def __init__(self, y: list, x: list, func: str = "P3", channel: str = "R"):
         
-        self.doses = sorted(doses)
-        self.optical_density = sorted(optical_density)
+        self.doses = sorted(y)
+
+        if func == "P3":
+            self.x = sorted(x) # Optical density
+        elif func == "RF":
+            self.x = sorted(x, reverse = True) # Normalized pixel value
+
         self.func = func
+
         if self.func == "P3":
-            self.popt, self.pcov = curve_fit(polynomial_g3, self.optical_density, self.doses)
-        elif self.func == "RA":
-            self.popt, self.pcov = curve_fit(rational_func, self.optical_density, self.doses, p0=[0.1, 200, 500])
+            self.popt, self.pcov = curve_fit(polynomial_g3, self.x, self.doses)
+        elif self.func == "RF":
+            self.popt, self.pcov = curve_fit(rational_func, self.x, self.doses, p0=[0.1, 200, 500])
         else:
-            raise Exception("Invalid function.")
+            raise Exception("Invalid fit function.")
         self.channel = channel
 
     def plot(self, ax: plt.Axes = None, show: bool = True, **kwargs) -> plt.Axes:
@@ -77,14 +83,15 @@ class Calibration:
         if ax is None:
             fig, ax = plt.subplots()
         
-        x = np.linspace(self.optical_density[0], self.optical_density[-1], 100)
+        x = np.linspace(self.x[0], self.x[-1], 100)
         if self.func == "P3":
             y = polynomial_g3(x, *self.popt)
-        elif self.func == "RA":
+            ax.set_xlabel("Optical density")
+        elif self.func == "RF":
             y = rational_func(x, *self.popt)
+            ax.set_title("Normalized pixel value")
         ax.plot(x, y, **kwargs)
-        ax.plot(self.optical_density, self.doses, '*', **kwargs)
-        ax.set_xlabel("Optical density")
+        ax.plot(self.x, self.doses, '*', **kwargs)
         ax.set_ylabel("Dose")
         if show:
             plt.show()
