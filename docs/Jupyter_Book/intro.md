@@ -2,21 +2,18 @@
 
 ![Portada_Dosepy](../assets/portada_DOSEPY.png)
 
-Dosepy is a python library to easly perform 2D/1D gamma analysis and film dosimetry used in radiotherapy. 
+Dosepy is a python library to easly perform 2D/1D gamma analysis and film dosimetry in radiotherapy. 
 
-Dosepy takes two images (TIFF format) for calibration and two image for dose distribution analysis. After that, a DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
-
-Dose distribution can be in DICOM (.dmc) or text-csv (comma separated values) format.
+Dosepy uses TIFF images for film dosimetry. A DICOM file (typically exported from a treatment planning system) can be loaded to perform gamma index comparison.
 
 ```{note}
 In order to generate easy-to-use software for users who use radiochromic film, the dose distributions to be analysed must meet the following characteristics:
 * Film dose distributions must have the same physical dimensions and spatial resolution (equal number of rows and columns) with respect to the dose distribution to be compared. You can use {py:func}`Dosepy.tools.resol.match_resolution` function to manage array size changes.
-* The distributions must be registered, that is, the coordinate of a point in the reference distribution must be equal to the coordinate of the same point in the distribution to be evaluated. To achieve this, [ImageJ](https://imagej.nih.gov/ij/download.html) is an excellent tool for cropping the region to be analyzed.
+* The distributions must be registered, that is, the coordinate of a point in the reference distribution must be equal to the coordinate of the same point in the distribution to be evaluated. To achieve this, [ImageJ](https://imagej.nih.gov/ij/download.html) is an excellent tool to crop the region to be analyzed.
 * Gray (Gy) and millimeters (mm) are the units used for absorbed dose and physical distance, respectively.
 * The dicom file must contain only a 2D dose distribution.
 
 ```
-
 
 ## Dose comparison
 ### Gamma index
@@ -29,8 +26,8 @@ In order to generate easy-to-use software for users who use radiochromic film, t
   * In relative mode, the percentage could be interpreted with respect to the maximum dose (global normalization), or with respect to the local dose (local normalization); according to user selection.
 * Dose threshold can be adjusted by the user.
 * The reference distribution can be selected by the user.
-* It is allowed to define a search radius as an optimization process for the calculation.
-* By default, percentile 99 from dose distribution is used as maximum dose. This makes it possible to avoid the possible inclusion of artifacts or user labels in specific positions of the distribution (useful with radiochromic film).
+* It is possible to define a search radius as an optimization process for the calculation.
+* By default, percentile 99 from dose distribution is used as maximum dose. This is used to avoid the possible inclusion of artifacts or user markers.
 * Interpolation is not yet supported.
 
 ### Dose profiles
