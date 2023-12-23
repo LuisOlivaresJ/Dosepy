@@ -20,7 +20,7 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-from calibration import polynomial_g3, rational_func, Calibration
+from tools.calibration import polynomial_g3, rational_func, Calibration # TO-DO Change this before push to master
 
 MM_PER_INCH = 25.4
 
@@ -436,7 +436,7 @@ class TiffImage(BaseImage):
 
         elif cal.channel == "B":
             if cal.func == "P3":
-                X = -np.log10(self.array[:,:,2]/mean_pixel[0])
+                x = -np.log10(self.array[:,:,2]/mean_pixel[0])
             elif cal.func == "RF":
                 x = self.array[:,:,2]/mean_pixel[0]
 
