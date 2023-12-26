@@ -9,6 +9,8 @@ from scipy.optimize import curve_fit
 import os.path as osp
 from typing import Any, Union
 from tifffile import TiffFile
+from PIL import Image as pImage
+import imageio.v3 as iio
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -20,7 +22,7 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-from tools.calibration import polynomial_g3, rational_func, Calibration # TO-DO Change this before push to master
+from Dosepy.tools.calibration import polynomial_g3, rational_func, Calibration
 
 MM_PER_INCH = 25.4
 
@@ -32,7 +34,7 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False, filter: int | N
     Parameters
     ----------
     path : str, file-object
-        The path to the image file or data stream or array.
+        The path to the image file or array.
 
     for_calib : bool, default = False
         True if the image is going to be used to get a calibration curve.
@@ -68,35 +70,52 @@ def load(path: str | Path | np.ndarray, for_calib: bool = False, filter: int | N
         return array_image
         
     elif _is_image_file(path):
-        if for_calib:
-            calib_image = CalibImage(path)
-            if isinstance(filter, int):
-                for i in range(3):
-                    calib_image.array[:,:,i] = mean(calib_image.array[:,:,i], footprint = square(filter))
-            return calib_image
+        if _is_tif_file:
+            if _is_RGB:
+                if for_calib:
+                    calib_image = CalibImage(path)
+                    if isinstance(filter, int):
+                        for i in range(3):
+                            calib_image.array[:,:,i] = mean(calib_image.array[:,:,i], footprint = square(filter))
+                    return calib_image
+                else:
+                    tiff_image = TiffImage(path)
+                    if isinstance(filter, int):
+                        for i in range(3):
+                            tiff_image.array[:,:,i] = mean(tiff_image.array[:,:,i], footprint = square(filter))
+                    return tiff_image
+            else:
+                raise TypeError(f"The argument `{path}` was not found to be a RGB TIFF file.")
         else:
-            tiff_image = TiffImage(path)
-            if isinstance(filter, int):
-                for i in range(3):
-                    tiff_image.array[:,:,i] = mean(tiff_image.array[:,:,i], footprint = square(filter))
-            return tiff_image
-    else:
-        raise TypeError(
-            f"The argument `{path}` was not found to be a valid TIFF file or an array."
-        )
+            raise TypeError(f"The argument `{path}` was not found to be a valid TIFF file.")
+    else: 
+        raise TypeError(f"The argument `{path}` was not found to be a valid file.")
 
 def _is_array(obj: Any) -> bool:
     """Whether the object is a numpy array."""
     return isinstance(obj, np.ndarray)
 
 def _is_image_file(path: str | Path) -> bool:
-    """Whether the file is a readable image file via tifffile."""
+    """Whether the file is a readable image file via imageio.v3."""
     try:
-        TiffFile(path)
+        iio.improps(path)
         return True
     except:
         return False
-
+    
+def _is_tif_file(path: str | Path) -> bool:
+    """Whether the file is a tif image file."""
+    if Path(path).suffix in (".tif", ".tiff"):
+        return True
+    else:
+        return False
+    
+def _is_RGB(path: str | Path) -> bool:
+    """Whether the image is RGB."""
+    if (iio.improps(path).shape) == 3:
+        return True
+    else:
+        return False
 
 class BaseImage:
     """Base class for the Image classes.
@@ -136,8 +155,8 @@ class TiffImage(BaseImage):
     ----------
     sid : float
         The SID value as passed in upon construction.
-    tag : dict
-        All tags in the TIFF file.
+    props : imageio.core.v3_plugin_api.ImageProperties
+        Image properties via imageio.v3.
     """
 
     def __init__(
@@ -159,26 +178,16 @@ class TiffImage(BaseImage):
                 otherwise this one will be used.
         sid : int, float
             The Source-to-Image distance in mm.
-        tag : dict
-            All tags in the TIFF file.
         """
         super().__init__(path)
-        with TiffFile(path) as tif:
-            self.array = tif.asarray()
-            try:
-                self.tags = {tag.name: tag.value for tag in tif.pages[0].tags}
+        self.props = iio.improps(path)
+        self.array = iio.imread(path)
 
-                if self.tags['XResolution'][0] != self.tags['YResolution'][0]:
-                    raise Exception(
-                        """
-                        XResolution should be equal to YResolution. The value of x and y was: 
-                        {}""".format(self.tags['XResolution'][0], self.tags['YResolution'][0])
-                        )
-                else:
-                    dpi = self.tags['XResolution'][0]
-                
-            except AttributeError:
-                pass
+        try:
+            dpi = self.props.spacing[0]
+        
+        except AttributeError:
+            pass
 
         self._dpi = dpi
         self.sid = sid
@@ -187,10 +196,15 @@ class TiffImage(BaseImage):
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
 
+        dpi = None
+        if self.pops.spacing:
+            dpi = float(self.props.spacing[0])
+
         if self.sid is not None:
             dpi *= self.sid / 1000
         else:
             dpi = self._dpi
+
         return dpi
 
     @property
@@ -331,66 +345,6 @@ class TiffImage(BaseImage):
         
         return mean, std
 
-
-    def region_properties(self, film_detect = True, crop = 8, channel = "R"):
-        """Measure properties of films used for calibration.
-
-        Parameters
-        ----------
-        film_detect : str
-            Define if automatic film position detection is performed. True: The films are detected automatically. Flase: Manual user selection. 
-        crop : int = 8
-            Removes all edges of the image in-place (in milimeters).
-        channel : str
-            "R": Red, "G": Green, "B": Blue, "Mean": Arithmetic mean from the three channels.
-
-        Returns
-        -------
-        ::class:`~skimage.measure.regionprops`
-            Measure properties of labeled image regions. For more information see: 
-            https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.regionprops
-
-        Examples
-        --------
-        Load an image from a file::
-
-        >>> from dosepy.image import load
-        >>> path_to_image = r"C:\QA\image.tif" 
-        >>> cal_image = load(path_to_image, for_calib = True)  # returns a TiffImage used for calibration.
-        >>> regions = cal_image.region_properties(crop = 8, channel = "G")
-        >>> for region in regions:
-        ...     print(region.intensity_mean)    # Print the value with the mean intensity in the region.
-        """
-
-        gray_scale = rgb2gray(self.array)
-        thresh = threshold_otsu(gray_scale)
-        # Apply threshold and close small holes with binary closing.
-        # remove_pixels = 75dpi * 3 mm, is used to close smaller holes than 3 mm.
-        pixels_to_remove_holes = int(self.dpmm * 3)
-        binary = closing(gray_scale < thresh, square(pixels_to_remove_holes))
-        # remove artifacts connected to image border
-        cleared = clear_border(binary)
-        # label image regions
-        lb = label(cleared)
-        pixels_to_remove_border = int(self.dpmm * crop)
-        label_image = erosion(lb, square(pixels_to_remove_border))
-        #regions = regionprops(label_image, np.mean(self.array, axis = 2))
-        if channel == "R":
-            regions = regionprops(label_image, self.array[:,:,0])
-        elif channel == "G":
-            regions = regionprops(label_image, self.array[:,:,1])
-        elif channel == "B":
-            regions = regionprops(label_image, self.array[:,:,2])
-        elif channel == "M":
-            regions = regionprops(label_image, np.mean(self.array, axis = 2))
-        else:
-            raise Exception(
-                        """
-                        {} is not a valid channel. Use "R" for red, "G" for green or "B" for blue.
-                        """.format(channel)
-                        )
-        
-        return regions
 
     def plot(
         self, ax: plt.Axes = None, show: bool = True, clear_fig: bool = False, **kwargs
@@ -556,9 +510,6 @@ class CalibImage(TiffImage):
         """
 
         doses = sorted(doses)
-        #regions = self.region_properties(film_detect = True, crop = 8, channel = channel)
-        # Higest intensity represents lowest dose.
-        #intensities = sorted([properties.intensity_mean for properties in regions], reverse = True)
         mean_pixel, _ = self.get_stat(ch = channel, roi = roi, threshold = threshold)
         mean_pixel = sorted(mean_pixel, reverse = True)
         mean_pixel = np.array(mean_pixel)
