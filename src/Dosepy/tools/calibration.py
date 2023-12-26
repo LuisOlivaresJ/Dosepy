@@ -1,10 +1,10 @@
 """
-Module for the management of the calibration curve.
-The calibration, measurement, and unirradiated background films should be of the same model and 
-production lot and the readout system and data acquisition procedures should be consistent across all films.
-A 16-bits scanner is recomended. It measures the intensity of the transmitted or reflected light and scales PVs from zero 
-to 65535 (= 2^16 - 1) wherethe limits are represented by complete darkness and the intensity of the 
-unattenuated light source.
+NAME
+    Calibration module
+
+DESCRIPTION
+    Module for the management of the calibration curve. Here are the functions
+    to be used for fitting. See Calibration class for details.
 """
 
 import numpy as np
@@ -35,13 +35,13 @@ class Calibration:
         x : list
             Optical density or normalized pixel value.
         func : str
-            The model function, f(x, …) used for intesity-dose relationship. 
+            The model function used for dose-film response relationship. 
             "P3": Polynomial function of degree 3.
             "RF": Rational function.
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue. 
         popt : array
-            Parameters used by the function.
+            Parameters of the function.
         pcov : 2-D array
             The estimated approximate covariance of popt. The diagonals provide the variance 
             of the parameter estimate. To compute one standard deviation errors on the parameters, 
@@ -53,9 +53,9 @@ class Calibration:
         self.doses = sorted(y)
 
         if func == "P3":
-            self.x = sorted(x) # Optical density
+            self.x = sorted(x) # Film response. 
         elif func == "RF":
-            self.x = sorted(x, reverse = True) # Normalized pixel value
+            self.x = sorted(x, reverse = True)
 
         self.func = func
 
@@ -74,7 +74,6 @@ class Calibration:
         ----------
         ax : matplotlib.Axes instance
             The axis to plot the image to. If None, creates a new figure.
-            Parameters
         show : bool
             Whether to actually show the image. Set to false when plotting multiple items.
         kwargs

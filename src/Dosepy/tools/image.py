@@ -1,6 +1,15 @@
-"""This module holds classes for image loading and manipulation.
-The content is heavily based from pylinac (https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html),
-with some modification to focus on tff files used for film dosimetry.
+"""
+NAME
+    Image module
+
+DESCRIPTION    
+    This module holds functionalities for tif image loading and manipulation.
+    The main function is load. Some common methods are get_stat, to_dose and 
+    get_calibration. The content is heavily based from pylinac 
+    (https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html),
+    and omg_dosimetry
+    https://omg-dosimetry.readthedocs.io/en/latest/
+
 """
 
 from pathlib import Path
