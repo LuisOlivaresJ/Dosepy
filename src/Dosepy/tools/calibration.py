@@ -13,11 +13,14 @@ from scipy.optimize import curve_fit
 
 
 """Functions used for film calibration."""
-def polynomial_g3(x,a,b,c,d):
+
+
+def polynomial_g3(x, a, b, c, d):
     """
     Polynomial function of degree 3.
     """
     return a + b*x + c*x**2 + d*x**3
+
 
 def rational_func(x, a, b, c):
     """
@@ -25,9 +28,10 @@ def rational_func(x, a, b, c):
     """
     return -c + b/(x-a)
 
+
 class Calibration:
     """Class used to represent a calibration curve.
-        
+
         Attributes
         ----------
         y : list
@@ -35,34 +39,39 @@ class Calibration:
         x : list
             Optical density or normalized pixel value.
         func : str
-            The model function used for dose-film response relationship. 
+            The model function used for dose-film response relationship.
             "P3": Polynomial function of degree 3.
             "RF": Rational function.
         channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue. 
+            Color channel. "R": Red, "G": Green and "B": Blue.
         popt : array
             Parameters of the function.
         pcov : 2-D array
-            The estimated approximate covariance of popt. The diagonals provide the variance 
-            of the parameter estimate. To compute one standard deviation errors on the parameters, 
-            use perr = np.sqrt(np.diag(pcov)).
+            The estimated approximate covariance of popt. The diagonals provide
+            the variance of the parameter estimate. To compute one standard
+            deviation errors on the parameters, use perr = np.sqrt(np.diag(pcov)).
         """
-    
+
     def __init__(self, y: list, x: list, func: str = "P3", channel: str = "R"):
-        
+
         self.doses = sorted(y)
 
         if func == "P3":
-            self.x = sorted(x) # Film response. 
+            self.x = sorted(x)  # Film response.
         elif func == "RF":
-            self.x = sorted(x, reverse = True)
+            self.x = sorted(x, reverse=True)
 
         self.func = func
 
         if self.func == "P3":
             self.popt, self.pcov = curve_fit(polynomial_g3, self.x, self.doses)
         elif self.func == "RF":
-            self.popt, self.pcov = curve_fit(rational_func, self.x, self.doses, p0=[0.1, 200, 500])
+            self.popt, self.pcov = curve_fit(
+                                            rational_func,
+                                            self.x,
+                                            self.doses,
+                                            p0=[0.1, 200, 500]
+                                            )
         else:
             raise Exception("Invalid fit function.")
         self.channel = channel
@@ -75,13 +84,14 @@ class Calibration:
         ax : matplotlib.Axes instance
             The axis to plot the image to. If None, creates a new figure.
         show : bool
-            Whether to actually show the image. Set to false when plotting multiple items.
+            Whether to actually show the image. Set to false when plotting
+            multiple items.
         kwargs
             kwargs passed to plt.plot()
         """
         if ax is None:
             fig, ax = plt.subplots()
-        
+
         x = np.linspace(self.x[0], self.x[-1], 100)
         if self.func == "P3":
             y = polynomial_g3(x, *self.popt)
@@ -95,4 +105,3 @@ class Calibration:
         if show:
             plt.show()
         return ax
-    
