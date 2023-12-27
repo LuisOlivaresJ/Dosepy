@@ -279,29 +279,29 @@ class TiffImage(BaseImage):
         gray_scale = rgb2gray(self.array)
         if not threshold:
             thresh = threshold_otsu(gray_scale)  # Used for films identification.
-        else: 
+        else:
             thresh = threshold
         binary = erosion(gray_scale < thresh, square(erosion_pix))
-        label_image, num = label(binary, return_num = True)
+        label_image, num = label(binary, return_num=True)
 
-        if show == True:
+        if show:
             fig, axes = plt.subplots(ncols=1)
             #ax = axes.ravel()
             axes = plt.subplot(1, 1, 1)
-            axes.imshow(gray_scale, cmap = "gray")
-            
+            axes.imshow(gray_scale, cmap="gray")
+
         print(f"Number of images detected: {num}")
 
         # Films
         if ch == "R":
-            films = regionprops(label_image, intensity_image = self.array[:,:,0])
+            films = regionprops(label_image, intensity_image=self.array[:, :, 0])
         if ch == "G":
-            films = regionprops(label_image, intensity_image = self.array[:,:,1])
+            films = regionprops(label_image, intensity_image=self.array[:, :, 1])
         if ch == "B":
-            films = regionprops(label_image, intensity_image = self.array[:,:,2])
+            films = regionprops(label_image, intensity_image=self.array[:, :, 2])
         if ch == "M":
-            films = regionprops(label_image, 
-                                intensity_image = np.mean(self.array, axis = 2)
+            films = regionprops(label_image,
+                                intensity_image=np.mean(self.array, axis=2)
                                 )
 
         # Find the unexposed film.
@@ -314,7 +314,7 @@ class TiffImage(BaseImage):
 
         mean = []
         std = []
-        
+
         height_roi_pix = int(roi[1]*self.dpmm)
         #print(f"height_roi: {height_roi_pix}")
         width_roi_pix = int(roi[0]*self.dpmm)
@@ -332,56 +332,56 @@ class TiffImage(BaseImage):
 
             if ch == "R":
                 roi = self.array[
-                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
-                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
-                0,
+                    int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
+                    int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
+                    0,
                 ]
             if ch == "G":
                 roi = self.array[
-                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
-                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
-                1,
+                    int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
+                    int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
+                    1,
                 ]
             if ch == "B":
                 roi = self.array[
-                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
-                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2),
-                2,
+                    int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
+                    int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
+                    2,
                 ]
             if ch == "M":
-                array = np.mean(self.array, axis = 2)
+                array = np.mean(self.array, axis=2)
                 roi = array[
-                int(x0 - height_roi_pix/2) : int(x0 + height_roi_pix/2),
-                int(y0 - width_roi_pix/2) : int(y0 + width_roi_pix/2)
+                    int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
+                    int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2)
                 ]
-            
+
             mean.append(int(np.mean(roi)))
             std.append(int(np.std(roi)))
 
             if show:
                 rect_roi = mpatches.Rectangle(
-                (minc_roi, minr_roi), 
-                width_roi_pix, 
-                height_roi_pix,
-                fill = False, 
-                edgecolor = 'red',
-                linewidth = 1,
+                    (minc_roi, minr_roi),
+                    width_roi_pix,
+                    height_roi_pix,
+                    fill=False,
+                    edgecolor='red',
+                    linewidth=1,
                 )
 
                 axes.add_patch(rect_roi)
 
-        if show:    
+        if show:
             plt.show()
-        
+
         return mean, std
 
     def plot(
-        self, 
-        ax: plt.Axes = None, 
-        show: bool = True, 
-        clear_fig: bool = False, 
+        self,
+        ax: plt.Axes = None,
+        show: bool = True,
+        clear_fig: bool = False,
         **kwargs
-        ) -> plt.Axes:
+    ) -> plt.Axes:
         """Plot the image.
 
         Parameters
@@ -389,7 +389,7 @@ class TiffImage(BaseImage):
         ax : matplotlib.Axes instance
             The axis to plot the image to. If None, creates a new figure.
         show : bool
-            Whether to actually show the image. Set to false when plotting 
+            Whether to actually show the image. Set to false when plotting
             multiple items.
         clear_fig : bool
             Whether to clear the prior items on the figure before plotting.
@@ -405,31 +405,31 @@ class TiffImage(BaseImage):
         if show:
             plt.show()
         return ax
-    
+
     def to_dose(self, cal):
-        mean_pixel, _ = self.get_stat(ch = cal.channel, roi = (5, 5), show = False)
-        mean_pixel = sorted(mean_pixel, reverse = True)
+        mean_pixel, _ = self.get_stat(ch=cal.channel, roi=(5, 5), show=False)
+        mean_pixel = sorted(mean_pixel, reverse=True)
 
         if cal.channel == "R":
-            if cal.func == "P3":                        
-                x = -np.log10(self.array[:,:,0]/mean_pixel[0])
+            if cal.func == "P3":
+                x = -np.log10(self.array[:, :, 0]/mean_pixel[0])
             elif cal.func == "RF":
-                x = self.array[:,:,0]/mean_pixel[0]
+                x = self.array[:, :, 0]/mean_pixel[0]
 
         elif cal.channel == "G":
             if cal.func == "P3":
-                x = -np.log10(self.array[:,:,1]/mean_pixel[0])
+                x = -np.log10(self.array[:, :, 1]/mean_pixel[0])
             elif cal.func == "RF":
-                x = self.array[:,:,1]/mean_pixel[0]
+                x = self.array[:, :, 1]/mean_pixel[0]
 
         elif cal.channel == "B":
             if cal.func == "P3":
-                x = -np.log10(self.array[:,:,2]/mean_pixel[0])
+                x = -np.log10(self.array[:, :, 2]/mean_pixel[0])
             elif cal.func == "RF":
-                x = self.array[:,:,2]/mean_pixel[0]
+                x = self.array[:, :, 2]/mean_pixel[0]
 
         elif cal.channel == "M":
-            array = np.mean(self.array, axis = 2)
+            array = np.mean(self.array, axis=2)
             if cal.func == "P3":
                 x = -np.log10(array/mean_pixel[0])
             elif cal.func == "RF":
@@ -440,9 +440,10 @@ class TiffImage(BaseImage):
         elif cal.func == "RF":
             dose_image = rational_func(x, *cal.popt)
 
-        dose_image[dose_image < 0] = 0 # Remove doses < 0
-        
+        dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
+
         return dose_image
+
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""
@@ -454,7 +455,7 @@ class ArrayImage(BaseImage):
         dpi: float = None,
         sid: float = None,
         dtype=None,
-        ):
+    ):
         """
         Parameters
         ----------
@@ -463,12 +464,12 @@ class ArrayImage(BaseImage):
         dpi : int, float
             The dots-per-inch of the image, defined at isocenter.
 
-            .. note:: If a DPI tag is found in the image, that value will 
+            .. note:: If a DPI tag is found in the image, that value will
             override the parameter, otherwise this one will be used.
         sid : int, float
             The Source-to-Image distance in mm.
         dtype : dtype, None, optional
-            The data type to cast the image data as. If None, will use 
+            The data type to cast the image data as. If None, will use
             whatever raw image format is.
         """
         if dtype is not None:
@@ -509,17 +510,18 @@ class CalibImage(TiffImage):
             The path to the file.
         """
         super().__init__(path)
-        self.calibration_curve_computed = False    
+        self.calibration_curve_computed = False
 
-    def get_calibration(self, 
-                        doses: list, 
-                        func = "P3", 
-                        channel = "R", 
-                        roi = (5, 5), 
-                        threshold = None
-                        ):
-        """Computes calibration curve. Use non-linear least squares to 
-        fit a function, func, to data. For more information see 
+    def get_calibration(
+        self,
+        doses: list,
+        func="P3",
+        channel="R",
+        roi=(5, 5),
+        threshold=None
+    ):
+        r"""Computes calibration curve. Use non-linear least squares to
+        fit a function, func, to data. For more information see
         scipy.optimize.curve_fit.
 
         Parameter
@@ -532,7 +534,7 @@ class CalibImage(TiffImage):
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
         roi : tuple
-            Width and height region of interest (roi) in millimeters, at the 
+            Width and height region of interest (roi) in millimeters, at the
             center of the film.
 
         Returns
@@ -542,27 +544,28 @@ class CalibImage(TiffImage):
 
         Examples
         --------
-        Load an image from a file and compute a calibration curve using green 
+        Load an image from a file and compute a calibration curve using green
         channel::
 
         >>> from dosepy.image import load
-        >>> path_to_image = r"C:\QA\image.tif" 
+        >>> path_to_image = r"C:\QA\image.tif"
         >>> cal_image = load(path_to_image, for_calib = True)
-        >>> cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], channel = "G")
+        >>> cal = cal_image.get_calibration(
+            doses = [0, 0.5, 1, 2, 4, 6, 8, 10],
+            channel = "G")
         >>> # Plot the calibration curve
         >>> cal.plot(color = "green")
         """
 
         doses = sorted(doses)
-        mean_pixel, _ = self.get_stat(ch = channel, roi = roi, threshold = threshold)
-        mean_pixel = sorted(mean_pixel, reverse = True)
+        mean_pixel, _ = self.get_stat(ch=channel, roi=roi, threshold=threshold)
+        mean_pixel = sorted(mean_pixel, reverse=True)
         mean_pixel = np.array(mean_pixel)
-        
+
         if func == "P3":
             x = -np.log10(mean_pixel/mean_pixel[0])  # Optical density
 
         elif func == "RF":
             x = mean_pixel/mean_pixel[0]
-        
-        return Calibration(y = doses, x = x, func = func, channel = channel)
 
+        return Calibration(y=doses, x=x, func=func, channel=channel)
