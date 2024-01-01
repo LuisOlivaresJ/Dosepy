@@ -8,4 +8,4 @@ The easiest way to use Dosepy is through a graphical user interface (GUI). Open 
 import Dosepy.GUI
 ```
 
-Dosepy comes pre-loaded with two examples of dose distributions, to allow users interaction with the available tools.
+Dosepy comes pre-loaded with two examples of dose distributions, to allow interaction with the available tools.
