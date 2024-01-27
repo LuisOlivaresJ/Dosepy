@@ -492,6 +492,7 @@ class TiffImage(BaseImage):
 
         return dose_in_rois
 
+
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
 
@@ -622,3 +623,19 @@ class ArrayImage(BaseImage):
             if self.sid is not None:
                 dpi *= self.sid / 1000
         return dpi
+
+
+    def save_as_tif(self, file_name):
+        """Used to save a dose distribution (in Gy) as a tif file (in cGy).
+        
+        Parameters
+        ----------
+        file_name : str
+            File name as a string
+
+        """
+        data = np.int64(self.array*100) # Gy to cGy
+        np_tif = data.astype(np.uint16)
+        tif_encoded = iio.imwrite("<bytes>", np_tif, extension=".tif")
+        with open(file_name, 'wb') as f:
+            f.write(tif_encoded)

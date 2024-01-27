@@ -77,3 +77,8 @@ doses_in_central_rois = verif.doses_in_central_rois(cal, roi = (20, 8), show=Tru
 print(doses_in_central_rois)
 ```
 
+Save the dose distribution as a tif file (in cGy)
+
+```python
+dose_img.save_as_tif("dose_in_tif_file")
+```
