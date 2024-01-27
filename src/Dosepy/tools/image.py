@@ -216,8 +216,6 @@ class TiffImage(BaseImage):
         """The dots-per-inch of the image, defined at isocenter."""
 
         dpi = None
-        if self.pops.spacing:
-            dpi = float(self.props.spacing[0])
 
         if self.sid is not None:
             dpi *= self.sid / 1000
@@ -236,7 +234,7 @@ class TiffImage(BaseImage):
             return
 
     def get_stat(self, ch='G', roi=(5, 5), show=False, threshold=None):
-        r"""Get average and standar deviation from pixel values inside film's roi.
+        r"""Get average and standar deviation from pixel values at a central ROI in each film.
 
         Parameter
         ---------
@@ -245,7 +243,7 @@ class TiffImage(BaseImage):
         field_in_film : bool
             True to show the rois used in the image.
         roi : tuple
-            Width and height region of interest (roi) in millimeters, at the
+            Width and height of a region of interest (roi) in millimeters, at the
             center of the film.
         show : bool
             Whether to actually show the image and rois.
@@ -265,10 +263,9 @@ class TiffImage(BaseImage):
         >>> cal_image = load(path_to_image, for_calib = True)
         >>> mean, std = cal_image.get_stat(
                 ch = 'G',
-                field_in_film = True,
-                ar = 0.4,
+                roi=(5,5),
                 show = True
-                    )
+                )
         >>> list(zip(mean, std))
 
         """
@@ -406,7 +403,19 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-    def to_dose(self, cal):
+    def to_dose(self, cal) -> ImageLike:
+        """Convert the tiff image to a dose distribution.
+
+        Parameters
+        ----------
+        cal : dosepy.calibration.Calibration
+            Instance of a Calibration class
+
+        Returns
+        -------
+        ImageLike : ArrayImage
+            Dose distribution.
+        """
         mean_pixel, _ = self.get_stat(ch=cal.channel, roi=(5, 5), show=False)
         mean_pixel = sorted(mean_pixel, reverse=True)
 
@@ -442,7 +451,7 @@ class TiffImage(BaseImage):
 
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
 
-        return dose_image
+        return ArrayImage(dose_image, dpi=self.dpi)
 
 
 class ArrayImage(BaseImage):
