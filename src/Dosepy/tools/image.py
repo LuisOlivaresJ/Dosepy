@@ -36,7 +36,8 @@ ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
 
 def load(path: str | Path | np.ndarray,
          for_calib: bool = False,
-         filter: int | None = None) -> "ImageLike":
+         filter: int | None = None,
+         **kwargs) -> "ImageLike":
     r"""Load a TIFF image or numpy 2D array.
 
     Parameters
@@ -50,6 +51,10 @@ def load(path: str | Path | np.ndarray,
     filter : int
         If None (default), no filtering will be done to the image.
         If an int, will perform median filtering over image of size ``filter``.
+
+    kwargs
+        See :class:`~dosepy.image.ArrayImage`, :class:`~dosepy.image.TiffImage`,
+        or :class:`~dosepy.image.CalibImage` for keyword arguments.
 
     Returns
     -------
@@ -72,7 +77,7 @@ def load(path: str | Path | np.ndarray,
         return path
 
     if _is_array(path):
-        array_image = ArrayImage(path)
+        array_image = ArrayImage(path, **kwargs)
         if isinstance(filter, int):
             array_image.array = mean(array_image.array, footprint=square(filter))
         return array_image
@@ -81,7 +86,7 @@ def load(path: str | Path | np.ndarray,
         if _is_tif_file:
             if _is_RGB:
                 if for_calib:
-                    calib_image = CalibImage(path)
+                    calib_image = CalibImage(path, **kwargs)
                     if isinstance(filter, int):
                         for i in range(3):
                             calib_image.array[:, :, i] = mean(
@@ -89,7 +94,7 @@ def load(path: str | Path | np.ndarray,
                                 footprint=square(filter))
                     return calib_image
                 else:
-                    tiff_image = TiffImage(path)
+                    tiff_image = TiffImage(path, **kwargs)
                     if isinstance(filter, int):
                         for i in range(3):
                             tiff_image.array[:, :, i] = mean(
@@ -451,7 +456,7 @@ class TiffImage(BaseImage):
 
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
 
-        return ArrayImage(dose_image, dpi=self.dpi)
+        return load(dose_image, dpi=self.dpi)
 
 
 class ArrayImage(BaseImage):
@@ -511,14 +516,20 @@ class ArrayImage(BaseImage):
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
 
-    def __init__(self, path: str | Path):
+    def __init__(self, path: str | Path, **kwargs):
         """
         Parameters
         ----------
         path : str, file-object
             The path to the file.
+
+        dpi : float
+            The dots-per-inch of the image, defined at isocenter.
+
+            .. note:: If a DPI tag is found in the image, that value will
+            override the parameter, otherwise this one will be used.
         """
-        super().__init__(path)
+        super().__init__(path, **kwargs)
         self.calibration_curve_computed = False
 
     def get_calibration(
