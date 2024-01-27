@@ -459,6 +459,38 @@ class TiffImage(BaseImage):
 
         return load(dose_image, dpi=self.dpi)
 
+    def doses_in_central_rois(self, cal, roi, show):
+        """Dose in central film rois.
+
+        Parameters
+        ----------
+        cal : dosepy.calibration.Calibration
+            Instance of a Calibration class
+        roi : tuple
+            Width and height of a region of interest (roi) in millimeters (mm), at the
+            center of the film.
+        show : bool
+            Whether to actually show the image and rois.
+
+        Returns
+        -------
+        array : numpy.ndarray
+            Doses on heach founded film.
+        """
+        mean_pixel, _ = self.get_stat(ch=cal.channel, roi=roi, show=show)
+        #
+        if cal.func == "P3":
+            mean_pixel = sorted(mean_pixel)  # Film response.
+            optical_density = -np.log10(mean_pixel/mean_pixel[0])
+            dose_in_rois = polynomial_g3(optical_density, *cal.popt)
+
+        elif cal.func == "RF":
+            # Pixel normalization 
+            mean_pixel = sorted(mean_pixel, reverse = True)
+            norm_pixel = np.array(mean_pixel)/mean_pixel[0]
+            dose_in_rois = rational_func(norm_pixel, *cal.popt)
+
+        return dose_in_rois
 
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
