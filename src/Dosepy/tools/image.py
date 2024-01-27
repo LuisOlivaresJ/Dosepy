@@ -409,7 +409,8 @@ class TiffImage(BaseImage):
         return ax
 
     def to_dose(self, cal) -> ImageLike:
-        """Convert the tiff image to a dose distribution.
+        """Convert the tiff image to a dose distribution. The tiff file image
+        has to contain an unirradiated film used as a reference for zero Gray.
 
         Parameters
         ----------
@@ -457,60 +458,6 @@ class TiffImage(BaseImage):
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
 
         return load(dose_image, dpi=self.dpi)
-
-
-class ArrayImage(BaseImage):
-    """An image constructed solely from a numpy array."""
-
-    def __init__(
-        self,
-        array: np.ndarray,
-        *,
-        dpi: float = None,
-        sid: float = None,
-        dtype=None,
-    ):
-        """
-        Parameters
-        ----------
-        array : numpy.ndarray
-            The image array.
-        dpi : int, float
-            The dots-per-inch of the image, defined at isocenter.
-
-            .. note:: If a DPI tag is found in the image, that value will
-            override the parameter, otherwise this one will be used.
-        sid : int, float
-            The Source-to-Image distance in mm.
-        dtype : dtype, None, optional
-            The data type to cast the image data as. If None, will use
-            whatever raw image format is.
-        """
-        if dtype is not None:
-            self.array = np.array(array, dtype=dtype)
-        else:
-            self.array = array
-        self._dpi = dpi
-        self.sid = sid
-
-    @property
-    def dpmm(self) -> float | None:
-        """The Dots-per-mm of the image, defined at isocenter. E.g. if an EPID
-        image is taken at 150cm SID, the dpmm will scale back to 100cm."""
-        try:
-            return self.dpi / MM_PER_INCH
-        except:
-            return
-
-    @property
-    def dpi(self) -> float | None:
-        """The dots-per-inch of the image, defined at isocenter."""
-        dpi = None
-        if self._dpi is not None:
-            dpi = self._dpi
-            if self.sid is not None:
-                dpi *= self.sid / 1000
-        return dpi
 
 
 class CalibImage(TiffImage):
@@ -589,3 +536,57 @@ class CalibImage(TiffImage):
             x = mean_pixel/mean_pixel[0]
 
         return Calibration(y=doses, x=x, func=func, channel=channel)
+
+
+class ArrayImage(BaseImage):
+    """An image constructed solely from a numpy array."""
+
+    def __init__(
+        self,
+        array: np.ndarray,
+        *,
+        dpi: float = None,
+        sid: float = None,
+        dtype=None,
+    ):
+        """
+        Parameters
+        ----------
+        array : numpy.ndarray
+            The image array.
+        dpi : int, float
+            The dots-per-inch of the image, defined at isocenter.
+
+            .. note:: If a DPI tag is found in the image, that value will
+            override the parameter, otherwise this one will be used.
+        sid : int, float
+            The Source-to-Image distance in mm.
+        dtype : dtype, None, optional
+            The data type to cast the image data as. If None, will use
+            whatever raw image format is.
+        """
+        if dtype is not None:
+            self.array = np.array(array, dtype=dtype)
+        else:
+            self.array = array
+        self._dpi = dpi
+        self.sid = sid
+
+    @property
+    def dpmm(self) -> float | None:
+        """The Dots-per-mm of the image, defined at isocenter. E.g. if an EPID
+        image is taken at 150cm SID, the dpmm will scale back to 100cm."""
+        try:
+            return self.dpi / MM_PER_INCH
+        except:
+            return
+
+    @property
+    def dpi(self) -> float | None:
+        """The dots-per-inch of the image, defined at isocenter."""
+        dpi = None
+        if self._dpi is not None:
+            dpi = self._dpi
+            if self.sid is not None:
+                dpi *= self.sid / 1000
+        return dpi
