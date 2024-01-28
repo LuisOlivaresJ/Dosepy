@@ -327,34 +327,6 @@ class VentanaPrincipal(QMainWindow):
         self.profile_plot.show()
 
 
-    def Cortar_Imagen(self):
-
-        xi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_x())
-        width = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_width())
-        yi = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_y())
-        height = int(self.Bloque_Imagen.Mpl_Izq.Rectangle.get_height())
-
-        npI_Izq = self.Bloque_Imagen.Mpl_Izq.npI[  yi : yi + height , xi : xi + width ]
-        npI_Der = self.Bloque_Imagen.Mpl_Der.npI[  yi : yi + height , xi : xi + width ]
-        self.Bloque_Imagen.D_ref = dp.Dose(npI_Izq, self.Bloque_Imagen.D_ref.resolution)
-        self.Bloque_Imagen.D_eval = dp.Dose(npI_Der, self.Bloque_Imagen.D_eval.resolution)
-
-        self.Bloque_Imagen.Mpl_Izq.Img(self.Bloque_Imagen.D_ref)
-        self.Bloque_Imagen.Mpl_Der.Img(self.Bloque_Imagen.D_eval)
-
-        self.Bloque_Imagen.Mpl_Izq.Colores(npI_Der)
-        self.Bloque_Imagen.Mpl_Der.Colores(npI_Der)
-
-        self.Bloque_Imagen.Mpl_Izq.Cross_Hair_on()
-        self.Bloque_Imagen.Mpl_Der.Cross_Hair_on()
-
-        self.Bloque_Imagen.Mpl_perfiles.set_data_and_plot(npI_Izq, npI_Der, self.Bloque_Imagen.Mpl_Izq.circ)
-
-        self.Bloque_Imagen.Mpl_Izq.ROI_Rect_off()
-        self.Bloque_Imagen.boton_recortar_Izq.setEnabled(False)
-        self.Bloque_Imagen.boton_roi.setChecked(False)
-
-
 ######################################################################
 #   Ventanas para mensajes
     def displayMessageBox(self):

@@ -7,4 +7,6 @@ docs/.jekyll-metadata
 docs/vendor
 docs/NOM_241_SSA1_2021
 src/Dosepy/GUILayouts/__pycache__
+src/Dosepy/tools/__pycache__
+src/Dosepy/tools/demo_files
 debugging.py
