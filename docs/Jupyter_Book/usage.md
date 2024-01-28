@@ -10,9 +10,9 @@ The easiest way to use Dosepy is through a graphical user interface (GUI). Open 
 import Dosepy.GUI
 ```
 
-Dosepy has two pre-loaded with two dose distributions examples, to allow interaction with the available tools.
+Dosepy has two pre-loaded dose distributions examples to allow interaction with the available tools.
 
-## Scripting
+## Scripting (beta version)
 
 ### Film calibration
 
@@ -23,7 +23,7 @@ from Dosepy.tools.image import load
 from pathlib import Path
 ```
 
-Read the tiff file that will be used for film calibration and define the imparted doses.
+Read the tif file that will be used for film calibration and define the imparted doses.
 
 ```python
 file_path = Path("/home/user/tif_files") / "some.tif"
@@ -44,17 +44,17 @@ cal.plot(color = 'red')
 Load another tif file
 
 ```python
-verif_path = Path("/home/user/tif_files") / "other.tif"
-verif = load(verif_path)
+qa_image_path = Path("/home/user/tif_files") / "other.tif"
+qa_image = load(qa_image_path)
 ```
 
 Apply the calibration curve
 
 ```python
-dose_img = verif.to_dose(cal)
+dose_img = qa_image.to_dose(cal)
 ```
 
-Show it
+Plot it
 
 ```python
 import matplotlib.pyplot as plt
@@ -65,15 +65,15 @@ max_dose = np.percentile(dose_img.array, [99.9])[0]
 pos = ax.imshow(dose_img.array, cmap='nipy_spectral')
 pos.set_clim(-.05, max_dose)
 
-# add the colorbar
+# add a colorbar
 fig.colorbar(pos, ax=ax)
 plt.plot()
 ```
 
-Get mean doses from central rois in each founded film.
+Get mean doses from central rois in each founded films.
 
 ```python
-doses_in_central_rois = verif.doses_in_central_rois(cal, roi = (20, 8), show=True)
+doses_in_central_rois = qa_image.doses_in_central_rois(cal, roi = (20, 8), show=True)
 print(doses_in_central_rois)
 ```
 
