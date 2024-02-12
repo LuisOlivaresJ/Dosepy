@@ -1,6 +1,6 @@
 
-from matplotlib.backends.qt_compat import QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+#from matplotlib.backends.qt_compat import QtWidgets
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 import sys
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -135,4 +135,4 @@ if __name__ == '__main__':
     ventana_raiz = Bloque_Imagenes()
     ventana_raiz.setGeometry(100, 150, 500, 350)
     ventana_raiz.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
