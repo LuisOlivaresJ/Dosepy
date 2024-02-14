@@ -25,7 +25,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import tifffile as tiff
 import numpy as np
-import pkg_resources
+from importlib import resources
 import sys
 import os
 
@@ -45,7 +45,7 @@ class Film_to_Dose_Window(QWidget):
 
     def iniciarUI_calibracion(self):
 
-        file_name_folder = pkg_resources.resource_filename('Dosepy', 'Icon/folder.png')
+        file_name_folder = str(resources.files("Dosepy") / "Icon" / "folder.png")
         folder_icon = QIcon(file_name_folder)
 
         layout_bisabuelo = QVBoxLayout()
@@ -85,7 +85,7 @@ class Film_to_Dose_Window(QWidget):
         layout_abuelo.addWidget(self.Qt_Mpl_curva_calib.Qt_fig)
         layout_abuelo.addLayout(layout_padre_botones)
 
-        file_name_image_logo = pkg_resources.resource_filename('Dosepy', 'Icon/Logo_Dosepy.png')
+        file_name_image_logo = str(resources.files("Dosepy") / "Icon" / "Logo_Dosepy.png")
         #file_name_image_logo = 'Logo_Dosepy.png'
         pixmap_logo = QPixmap(file_name_image_logo)
         self.label_logo = QLabel(self)
@@ -319,7 +319,8 @@ class Qt_Figure_CurvaCalibracion:
 
     def __init__(self):
 
-        self.fig = Figure(figsize=(4.5,3), facecolor = 'whitesmoke', tight_layout = True)
+        #self.fig = Figure(figsize=(4.5,3), facecolor = 'whitesmoke', tight_layout = True)
+        self.fig = Figure(figsize=(4.5,3), facecolor = 'whitesmoke', layout="constrained")
         self.Qt_fig = FigureCanvas(self.fig)
 
         #   Axes para la imagen
@@ -339,7 +340,8 @@ class Qt_Figure_Imagen:
 
     def __init__(self):
         #self.fig = Figure(figsize=(4,3), tight_layout = True, facecolor = 'whitesmoke')
-        self.fig = Figure(figsize=(5.5,5), facecolor = 'whitesmoke', tight_layout = True)
+        #self.fig = Figure(figsize=(5.5,5), facecolor = 'whitesmoke', tight_layout = True)
+        self.fig = Figure(figsize=(5.5,5), facecolor = 'whitesmoke', layout="constrained")
         self.Qt_fig = FigureCanvas(self.fig)
 
         self.ax1 = self.fig.add_axes([0.08, 0.08, 0.75, 0.85])

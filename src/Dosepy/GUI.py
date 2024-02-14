@@ -31,7 +31,7 @@ from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
 # from GUILayouts.Bloque_Imagenes import Bloque_Imagenes
 import Dosepy.dose as dp
 import matplotlib as mpl
-import pkg_resources
+from importlib import resources
 
 from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
 # from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setStyleSheet("background-color: whitesmoke;")
         self.setWindowTitle('Dosepy')
-        file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
+        file_name_icon = str(resources.files("Dosepy") / "Icon" / "Icon.png")
         self.setWindowIcon(QIcon(file_name_icon))
         self.setGeometry(150, 100, 1300, 800)
 
@@ -415,7 +415,9 @@ class Ventana_Secundaria(QMainWindow):
 
         self.setStyleSheet("background-color: whitesmoke;")
         self.setWindowTitle('Dosepy')
-        file_name_icon = pkg_resources.resource_filename('Dosepy', 'Icon/Icon.png')
+
+        file_name_icon = str(resources.files("Dosepy") / "Icon" / "Icon.png")
+
         self.setWindowIcon(QIcon(file_name_icon))
 
         label_usuario = QLabel(self)

@@ -15,8 +15,10 @@ from PyQt6.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
 from Dosepy.GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
-# from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
-import pkg_resources
+
+#from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
+from importlib import resources
+
 import Dosepy.dose as dp
 
 
@@ -32,8 +34,9 @@ class Bloque_gamma(QWidget):
 
         # Crear botones para cargar archivos
         #folder_icon = QIcon("Icon/folder.png")
-        file_name_folder = pkg_resources.resource_filename('Dosepy', 'Icon/folder.png')
+        file_name_folder = str(resources.files("Dosepy") / "Icon" / "folder.png")
         folder_icon = QIcon(file_name_folder)
+
 
         self.Refer_button = QPushButton()
         self.Refer_button.setIcon(folder_icon)

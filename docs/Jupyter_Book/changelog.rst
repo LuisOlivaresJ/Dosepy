@@ -3,6 +3,14 @@
 Changelog
 =========
 
+V 0.5.0 (JAN-2024)
+------------------
+
+* New image, calibration and i_o modules to have new functionalities. The content is heavily inspired from `pylinac <https://pylinac.readthedocs.io/en/latest/>`_ and `OMG_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_ libraries.
+* First steps using unittest and flake8. 
+* Use of scikit-image for auto film detection.
+* Documentation for Getting stated with scripting.
+
 V 0.4.0 (AUG-2023)
 -------------------
 

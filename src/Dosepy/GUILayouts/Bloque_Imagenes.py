@@ -12,7 +12,7 @@
 from matplotlib import patches
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 import sys
-import pkg_resources
+from importlib import resources
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
@@ -44,8 +44,8 @@ class Bloque_Imagenes(QWidget):
 #%%
         #   Widget para imagen de referencia
 
-        file_name_FILM = pkg_resources.resource_filename('Dosepy', 'data/D_FILM.csv')
-        file_name_TPS = pkg_resources.resource_filename('Dosepy', 'data/D_TPS.csv')
+        file_name_FILM = str(resources.files("Dosepy") / "data" / "D_FILM.csv")
+        file_name_TPS = str(resources.files("Dosepy") / "data" / "D_TPS.csv")
 
         self.D_ref = dp.from_csv(file_name_FILM, 1)
         self.D_eval = dp.from_csv(file_name_TPS, 1)

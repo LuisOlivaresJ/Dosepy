@@ -37,7 +37,8 @@ class Calibration:
         y : list
             The doses values that were used to expose films for calibration.
         x : list
-            Optical density or normalized pixel value.
+            Optical density if "P3" fit function wll be used, or normalized pixel value
+            for "RF" fit function.
         func : str
             The model function used for dose-film response relationship.
             "P3": Polynomial function of degree 3.
