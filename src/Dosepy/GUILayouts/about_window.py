@@ -11,7 +11,7 @@
 """
 
 import sys
-import pkg_resources
+from importlib import resources
 
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication
 from PyQt6.QtGui import QPixmap
@@ -35,7 +35,7 @@ class About_Window(QWidget):
 
         layout_padre_V = QVBoxLayout()
 
-        file_name_logo = pkg_resources.resource_filename('Dosepy', 'Icon/Logo_Dosepy.png')
+        file_name_logo = str(resources.files("Dosepy") / "Icon" / "Logo_Dosepy.png")
         logo = QPixmap(file_name_logo)
         #logo.scaled(0.5, 0.5) #Qt.KeepAspectRatio)
         label_logo = QLabel(self)
