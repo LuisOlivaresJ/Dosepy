@@ -1,6 +1,8 @@
 
 #from matplotlib.backends.qt_compat import QtWidgets
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from matplotlib.backends.backend_qtagg import \
+	NavigationToolbar2QT as NavigationToolbar
 import sys
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -19,7 +21,7 @@ class BlittedCursorCrossHair:
 		self.horizontal_line = ax.axhline(color = 'cornflowerblue', lw = 1.5, ls = '--', alpha = 0.8)
 		self.vertical_line = ax.axvline(color = 'orange', lw = 1.5, ls = '--', alpha = 0.8)
 		# text location in axes coordinates
-		self.text = ax.text(0.65, 0.9, '', transform=ax.transAxes)
+		#self.text = ax.text(0.65, 0.9, '', transform=ax.transAxes)
 		self._creating_background = False
 		ax.figure.canvas.mpl_connect('draw_event', self.on_draw)
 
@@ -32,7 +34,7 @@ class BlittedCursorCrossHair:
 		need_redraw = self.horizontal_line.get_visible() != visible
 		self.horizontal_line.set_visible(visible)
 		self.vertical_line.set_visible(visible)
-		self.text.set_visible(visible)
+		#self.text.set_visible(visible)
 		return need_redraw
 
 	def create_new_background(self):
@@ -62,77 +64,92 @@ class BlittedCursorCrossHair:
 			self.set_cross_hair_visible(True)
 			# update the line positions
 			x, y = event.xdata, event.ydata
+			#dose = 
 
 			self.horizontal_line.set_ydata(y)
 			self.vertical_line.set_xdata(x)
-			self.text.set_text('x=%1.0f, y=%1.0f' % (x, y))
+			#self.text.set_text('x=%1.0f, y=%1.0f' % (x, y))
 			
 			self.ax.figure.canvas.restore_region(self.background)
 			self.ax.draw_artist(self.horizontal_line)
 			self.ax.draw_artist(self.vertical_line)
-			self.ax.draw_artist(self.text)
+			#self.ax.draw_artist(self.text)
 			self.ax.figure.canvas.blit(self.ax.bbox)
 
 
-class Bloque_Imagenes(QWidget):
+class QtImageWidget(QWidget):
 	def __init__(self):
-		super().__init__()  #   Llamar al constructor de QWidget
-		self.setStyleSheet("background-color: #1d1040;")
-		self.setWindowTitle('Acerca de')
+		super().__init__()  # Call QWidget constructor
+		self.setWindowTitle('Dose distribution')
 
 		file_name_FILM = pkg_resources.resource_filename('Dosepy', 'data/D_FILM.csv')
 		self.array_refer = np.genfromtxt(file_name_FILM, delimiter = ',')
         
-		self.main_label = QVBoxLayout()
+		self.main_layout = QVBoxLayout()
 		self.iniciarUI()
         
 	def iniciarUI(self):
 		
-		self.Mpl_Izq = Qt_Figure_Imagen()
-		self.Mpl_Izq.Img(self.array_refer)
-		self.Mpl_Izq.Colores(self.array_refer) 
-		self.blitted_cross_hair = BlittedCursorCrossHair(self.Mpl_Izq.ax1)
-		self.id_on_press_perfil = self.Mpl_Izq.Qt_fig.figure.canvas.mpl_connect('motion_notify_event', self.blitted_cross_hair.on_mouse_move)
-		self.main_label.addWidget(self.Mpl_Izq.Qt_fig)
-		self.setLayout(self.main_label)	
+		self.Mpl_Izq = Canvas()
+		self.Mpl_Izq.show_dist(self.array_refer)
+		self.Mpl_Izq.set_colorbar(self.array_refer) 
+		self.blitted_cross_hair = BlittedCursorCrossHair(self.Mpl_Izq.ax)
+		#self.id_on_press_perfil = self.Mpl_Izq.canvas.figure.canvas.mpl_connect('motion_notify_event', self.blitted_cross_hair.on_mouse_move)
+		self.id_on_press_perfil = self.Mpl_Izq.canvas.figure.canvas.mpl_connect('button_press_event', self.blitted_cross_hair.on_mouse_move)
+		self.main_layout.addWidget(NavigationToolbar(self.Mpl_Izq.canvas, self))
+		self.main_layout.addWidget(self.Mpl_Izq.canvas)
+		self.setLayout(self.main_layout)
             
-class Qt_Figure_Imagen:
-	"""
-	Clase para contener la distribución de dosis
+class Canvas:
+	"""Widget to show a dose distribution.
 	"""
 
 	def __init__(self):
-		self.fig = Figure(figsize=(3.8,3), facecolor = 'whitesmoke')
-		self.Qt_fig = FigureCanvas(self.fig)
+		fig = Figure(
+			layout='constrained')
+		self.ax = fig.add_subplot()
+		self.canvas = FigureCanvas(fig)
 		
-		#The dimensions (left, bottom, width, height) of the new Axes. All quantities are in fractions of figure width and height.
-		self.ax1 = self.fig.add_axes([0.08, 0.08, 0.75, 0.85])
-		self.ax2 = self.fig.add_axes([0.85, 0.15, 0.04, 0.72])
-		
-	def Img(self, np_I):
-		'''
-		Definir la imagen a partir de un array que se proporciona como argumento.
-		'''
-		self.npI = np_I
-		self.mplI = self.ax1.imshow(self.npI)
-		print(self.mplI)
+	def show_dist(self, array):
+		''' Show the dose distribution.
 
-	def Colores(self, npI_color_ref):
+		Parameters
+		----------
+		array : numpy.ndarray
+            The image represented as a numpy array.
 		'''
-		Definir el mapa de colores a utiliar. Como argumento se requiere de una imagen de referencia para elegui mapa.
-		Por lo general se utiliza la distribución calculada por el TPS.
+		self.npI = array
+		self.mplI = self.ax.imshow(self.npI)
+
+	def set_colorbar(self, npI_color_ref):
+		''' 
+		Set a colorbar. 
+		
+		Parameters
+		----------
+		array : numpy.ndarray
+			An array used as a reference to define dose boundaries.
 		'''
-		color_map = 'viridis'
+		color_map = 'nipy_spectral'
 		bounds = np.linspace(0, round(1.15 * np.percentile(npI_color_ref, 98)), 256)
 		norm = colors.BoundaryNorm(boundaries = bounds, ncolors = 256)
 		self.mplI.set_norm(norm)
 		self.mplI.set_cmap(color_map)
-		self.cbar = self.fig.colorbar(self.mplI, cax = self.ax2, orientation = 'vertical', shrink = 0.6, format = '%.1f')
+
+		self.cbar = self.canvas.figure.colorbar(
+			self.mplI,
+			ax = self.ax,
+			orientation = 'vertical',
+			format = '%.1f',
+			shrink = 0.8,
+			)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ventana_raiz = Bloque_Imagenes()
+
+    ventana_raiz = QtImageWidget()
     ventana_raiz.setGeometry(100, 150, 500, 350)
     ventana_raiz.show()
+
     sys.exit(app.exec())
