@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QTabWidget,
 )
 
-from gui_widgets.calibration import CalibrationWidget
+from gui_widgets.calibration_gui import CalibrationWidget
 
 class MainWindow(QWidget):
     def __init__(self):
