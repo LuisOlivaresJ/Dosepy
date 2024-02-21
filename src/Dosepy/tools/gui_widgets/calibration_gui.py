@@ -46,8 +46,8 @@ class CalibrationWidget(QWidget):
             #figsize=(3, 5),
             layout="constrained"
             )
-        #self.axe_image = fig.add_subplot(2, 1, 1)
-        #elf.axe_curve = fig.add_subplot(2, 1, 2)
+        self.axe_image = fig.add_subplot(2, 1, 1)
+        self.axe_curve = fig.add_subplot(2, 1, 2)
         
         main_layout.addWidget(FigureCanvas(fig), 1) 
         """The second argument (1) is used as a strech factor. 

@@ -20,7 +20,9 @@ class MainWindow(QWidget):
         self.setLayout(tab_layout)
 
         tabs = QTabWidget()
-        tabs.addTab(CalibrationWidget(), "Calibration")
+        self.calibrationWidget = CalibrationWidget()
+        tabs.addTab(self.calibrationWidget, "Calibration")
+        #self.tab_calibration = tabs.indexOf(CalibrationWidget)
         tabs.addTab(QLabel("In progress..."), "Film2Dose")
         tabs.addTab(QLabel("In progress..."), "Analysis")
         tab_layout.addWidget(tabs)
