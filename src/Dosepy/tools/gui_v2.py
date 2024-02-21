@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (
 )
 
 from gui_widgets.calibration_gui import CalibrationWidget
+from controller import DosepyController
+from model import Model
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -20,8 +22,8 @@ class MainWindow(QWidget):
         self.setLayout(tab_layout)
 
         tabs = QTabWidget()
-        self.calibrationWidget = CalibrationWidget()
-        tabs.addTab(self.calibrationWidget, "Calibration")
+        self.calibration_widget = CalibrationWidget()
+        tabs.addTab(self.calibration_widget, "Calibration")
         #self.tab_calibration = tabs.indexOf(CalibrationWidget)
         tabs.addTab(QLabel("In progress..."), "Film2Dose")
         tabs.addTab(QLabel("In progress..."), "Analysis")
@@ -32,7 +34,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     root_window = MainWindow()
+    dosepy_model = Model()
+    dosepy_controller = DosepyController(model=dosepy_model, view=root_window)
     root_window.show()
 
-    app.exec()
+    sys.exit(app.exec())
 
