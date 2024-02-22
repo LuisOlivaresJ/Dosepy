@@ -1,3 +1,4 @@
+dist/
 docs/Jupyter_Book/_build
 docs/_site
 docs/.ipynb_checkpoints
@@ -10,3 +11,4 @@ src/Dosepy/GUILayouts/__pycache__
 src/Dosepy/tools/__pycache__
 src/Dosepy/tools/demo_files
 debugging.py
+tests/unit/__pycache__
