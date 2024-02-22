@@ -3,6 +3,11 @@
 Changelog
 =========
 
+V 0.5.1 (FEB-2024)
+------------------
+
+* Fix issue with *_is_RGB* and *load* functions in tools.image module.
+
 V 0.5.0 (JAN-2024)
 ------------------
 

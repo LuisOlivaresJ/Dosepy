@@ -83,8 +83,8 @@ def load(path: str | Path | np.ndarray,
         return array_image
 
     elif _is_image_file(path):
-        if _is_tif_file:
-            if _is_RGB:
+        if _is_tif_file(path):
+            if _is_RGB(path):
                 if for_calib:
                     calib_image = CalibImage(path, **kwargs)
                     if isinstance(filter, int):
@@ -136,7 +136,8 @@ def _is_tif_file(path: str | Path) -> bool:
 
 def _is_RGB(path: str | Path) -> bool:
     """Whether the image is RGB."""
-    if (iio.improps(path).shape) == 3:
+    img_props = iio.improps(path)
+    if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
         return True
     else:
         return False
