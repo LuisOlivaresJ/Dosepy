@@ -10,8 +10,10 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QLabel,
     QListWidget,
+    QSizePolicy,
+    QDialog,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -31,6 +33,8 @@ class CalibrationWidget(QWidget):
 
         self.open_button = QPushButton("Browse")
         self.files_list = QListWidget()
+        self.files_list.setMaximumSize(QSize(320, 100))
+
         self.channel_combo_box = QComboBox()
         self.channel_combo_box.addItems(["Red", "Green", "Blue"])
         self.fit_combo_box = QComboBox()
@@ -71,3 +75,6 @@ class CalibrationWidget(QWidget):
             paths of the selected files.
         """
         self.files_list.addItems(files)
+
+    def show_tiff_dialog_error(self):
+        dialog = QDialog(self)

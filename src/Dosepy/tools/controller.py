@@ -1,6 +1,12 @@
 """Class used as a controller in a MVC pattern."""
 
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QVBoxLayout,
+)
 from pathlib import Path
 
 class DosepyController():
@@ -23,7 +29,38 @@ class DosepyController():
             if filenames:
                 if self._model.valid_tif_files(list_files):
                     self._view.calibration_widget.set_files_list(list_files)
-            
+                else:
+                    msg = "Invalid tiff file. Is it a RGB file?"
+                    print(msg)
+                    Error_Dialog(msg).exec()
+
 
     def _connectSignalsAndSlots(self):
+        # Calibration Widget
         self._view.calibration_widget.open_button.clicked.connect(self._open_file_button)
+            
+
+class Error_Dialog(QDialog):
+    """
+    Basic QDialog to show an error message.
+    
+    Parameters
+    ----------
+    msg : str
+        The message to show.
+    """
+    def __init__(self, msg):
+        super().__init__()
+
+        self.setWindowTitle("Error")
+
+        buttons = (QDialogButtonBox.StandardButton.Ok)
+        
+        self.buttonBox = QDialogButtonBox(buttons)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QVBoxLayout()
+        message = QLabel(msg)
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
