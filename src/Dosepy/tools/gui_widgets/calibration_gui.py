@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QSizePolicy,
     QDialog,
+    QTableWidget,
 )
 from PySide6.QtCore import Qt, QSize
 
@@ -39,13 +40,17 @@ class CalibrationWidget(QWidget):
         self.files_list = QListWidget()
         self.files_list.setMaximumSize(QSize(320, 100))
 
+        self.dose_table = QTableWidget()
+
         self.channel_combo_box = QComboBox()
         self.channel_combo_box.addItems(["Red", "Green", "Blue"])
         self.fit_combo_box = QComboBox()
         self.fit_combo_box.addItems(["Rational", "Polynomial"])
+
         parameters_layout.addWidget(self.open_button)
         #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
+        parameters_layout.addWidget(self.dose_table)
         parameters_layout.addSpacing(30)
         parameters_layout.addWidget(QLabel("Channel:"))
         parameters_layout.addWidget(self.channel_combo_box)
@@ -92,6 +97,11 @@ class CalibrationWidget(QWidget):
             files_list.append(str(self.files_list.item(index).text()))
         
         return files_list
+    
+    def set_table_rows(self, rows: int):
+        self.dose_table.setRowCount(rows)
+        self.dose_table.setColumnCount(1)
+        self.dose_table.setHorizontalHeaderLabels(["Dose [cGy]"]) 
 
     def plot(self, img):
         """

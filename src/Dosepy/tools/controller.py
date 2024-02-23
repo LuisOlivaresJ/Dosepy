@@ -34,11 +34,21 @@ class DosepyController():
                 if self._model.are_valid_tif_files(list_files):
                     if self._model.are_files_equal_shape(list_files):
 
+                        # Display path to files
                         self._view.calibration_widget.set_files_list(list_files)
 
                         # load the files
-                        img = self._model.load_files(list_files)
-                        self._view.calibration_widget.plot(img)
+                        self._model.calibration_img = self._model.load_files(
+                            list_files,
+                            for_calib=True
+                            )
+                        self._view.calibration_widget.plot(self._model.calibration_img)
+
+                        # find how many film do we have and show a table for user input dose values
+                        self._model.calibration_img.set_labeled_img()
+                        num = self._model.calibration_img.number_of_films
+                        print(num)
+                        self._view.calibration_widget.set_table_rows(rows = num)   
                     
                     else:
                         msg = "The tiff files must have the same shape."

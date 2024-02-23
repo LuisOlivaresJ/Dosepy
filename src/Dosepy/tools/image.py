@@ -203,6 +203,8 @@ class TiffImage(BaseImage):
             value will override the parameter, otherwise this one will be used.
         sid : int, float
             The Source-to-Image distance in mm.
+        label_img : numpy.adarray
+            Label image regions.
         """
         super().__init__(path)
         self.props = iio.improps(path)
@@ -216,6 +218,9 @@ class TiffImage(BaseImage):
 
         self._dpi = dpi
         self.sid = sid
+
+        self.label_img = None
+        self.number_of_films = None
 
     @property
     def dpi(self) -> float | None:
@@ -239,7 +244,13 @@ class TiffImage(BaseImage):
         except TypeError:
             return
 
-    def get_stat(self, ch='G', roi=(5, 5), show=False, threshold=None):
+    def get_stat(
+            self,
+            ch='G',
+            roi=(5, 5),
+            show=False,
+            threshold=None
+            ) -> list:
         r"""Get average and standar deviation from pixel values at a central ROI in each film.
 
         Parameter
@@ -276,34 +287,27 @@ class TiffImage(BaseImage):
 
         """
 
-        erosion_pix = int(6*self.dpmm)  # Number of pixels used for erosion.
-        #print(f"Number of pixels to remove borders: {erosion_pix}")
-
-        gray_scale = rgb2gray(self.array)
-        if not threshold:
-            thresh = threshold_otsu(gray_scale)  # Used for films identification.
-        else:
-            thresh = threshold
-        binary = erosion(gray_scale < thresh, square(erosion_pix))
-        label_image, num = label(binary, return_num=True)
+        if not self.label_img:
+            self.set_labeled_img(threshold = threshold)
 
         if show:
             fig, axes = plt.subplots(ncols=1)
             #ax = axes.ravel()
             axes = plt.subplot(1, 1, 1)
-            axes.imshow(gray_scale, cmap="gray")
+            #axes.imshow(gray_scale, cmap="gray")
+            axes.imshow(self.label_img, cmap="gray")
 
-        print(f"Number of images detected: {num}")
+        #print(f"Number of images detected: {num}")
 
         # Films
         if ch == "R":
-            films = regionprops(label_image, intensity_image=self.array[:, :, 0])
+            films = regionprops(self.label_image, intensity_image=self.array[:, :, 0])
         if ch == "G":
-            films = regionprops(label_image, intensity_image=self.array[:, :, 1])
+            films = regionprops(self.label_image, intensity_image=self.array[:, :, 1])
         if ch == "B":
-            films = regionprops(label_image, intensity_image=self.array[:, :, 2])
+            films = regionprops(self.label_image, intensity_image=self.array[:, :, 2])
         if ch == "M":
-            films = regionprops(label_image,
+            films = regionprops(self.label_image,
                                 intensity_image=np.mean(self.array, axis=2)
                                 )
 
@@ -492,6 +496,20 @@ class TiffImage(BaseImage):
             dose_in_rois = rational_func(norm_pixel, *cal.popt)
 
         return dose_in_rois
+    
+    def set_labeled_img(self, threshold=None):
+        
+        erosion_pix = int(6*self.dpmm)  # Number of pixels used for erosion.
+        #print(f"Number of pixels to remove borders: {erosion_pix}")
+
+        gray_scale = rgb2gray(self.array)
+        if not threshold:
+            thresh = threshold_otsu(gray_scale)  # Used for films identification.
+        else:
+            thresh = threshold
+        binary = erosion(gray_scale < thresh, square(erosion_pix))
+        self.label_image, self.number_of_films = label(binary, return_num=True)
+        
 
 
 class CalibImage(TiffImage):
@@ -641,7 +659,7 @@ class ArrayImage(BaseImage):
         with open(file_name, 'wb') as f:
             f.write(tif_encoded)
 
-def load_multiples(image_file_list):
+def load_multiples(image_file_list, for_calib=False):
     """
     Combine multiple image files into one superimposed image.
 
@@ -658,7 +676,7 @@ def load_multiples(image_file_list):
     From omg_dosimetry.imageRGB load_multiples and pylinac.image
     """
     # load images
-    img_list = [TiffImage(path) for path in image_file_list]
+    img_list = [load(path, for_calib=for_calib) for path in image_file_list]
     first_img = img_list[0]
     
     if len(img_list) > 1:
