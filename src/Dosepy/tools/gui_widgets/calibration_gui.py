@@ -18,6 +18,8 @@ from PySide6.QtCore import Qt, QSize
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 
+import numpy as np
+
 class CalibrationWidget(QWidget):
     def __init__(self):
         super().__init__()
@@ -32,6 +34,8 @@ class CalibrationWidget(QWidget):
         parameters_widget.setLayout(parameters_layout)
 
         self.open_button = QPushButton("Browse")
+        self.open_button.setMinimumSize(QSize(150, 50))
+        #self.clear_button = QPushButton("Clear")
         self.files_list = QListWidget()
         self.files_list.setMaximumSize(QSize(320, 100))
 
@@ -40,6 +44,7 @@ class CalibrationWidget(QWidget):
         self.fit_combo_box = QComboBox()
         self.fit_combo_box.addItems(["Rational", "Polynomial"])
         parameters_layout.addWidget(self.open_button)
+        #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
         parameters_layout.addSpacing(30)
         parameters_layout.addWidget(QLabel("Channel:"))
@@ -51,14 +56,14 @@ class CalibrationWidget(QWidget):
         main_layout.addWidget(parameters_widget)
         print(self.children())
 
-        fig = Figure(
+        self.fig = Figure(
             #figsize=(3, 5),
             layout="constrained"
             )
-        self.axe_image = fig.add_subplot(2, 1, 1)
-        self.axe_curve = fig.add_subplot(2, 1, 2)
+        self.axe_image = self.fig.add_subplot(2, 1, 1)
+        self.axe_curve = self.fig.add_subplot(2, 1, 2)
         
-        main_layout.addWidget(FigureCanvas(fig), 1) 
+        main_layout.addWidget(FigureCanvas(self.fig), 1) 
         """The second argument (1) is used as a strech factor. 
         Widgets with higher stretch factors grow more on 
         window resizing.
@@ -74,7 +79,29 @@ class CalibrationWidget(QWidget):
             List of strings containing the absolute 
             paths of the selected files.
         """
+        self.files_list.clear()
         self.files_list.addItems(files)
 
-    def show_tiff_dialog_error(self):
-        dialog = QDialog(self)
+    def get_files_list(self) -> list:
+        """
+        Get the current files in the view.
+        """
+        files_list = []
+        
+        for index in range(self.files_list.count()):
+            files_list.append(str(self.files_list.item(index).text()))
+        
+        return files_list
+
+    def plot(self, img):
+        """
+        Show an array.
+
+        Parameters
+        ----------
+        img : Dosepy.tools.image.TiffImage
+            
+        """
+        #self.fig.add_axes(img.plot(show=False))
+        self.axe_image.imshow(img.array/np.max(img.array))
+        self.fig.canvas.draw()

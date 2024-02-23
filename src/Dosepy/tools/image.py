@@ -102,14 +102,14 @@ def load(path: str | Path | np.ndarray,
                                 footprint=square(filter))
                     return tiff_image
             else:
-                raise TypeError(f"""The argument '{path}' was not found to be
-                                a RGB TIFF file.""")
+                raise TypeError(f"The argument '{path}' was not found to be\
+                                a RGB TIFF file.")
         else:
-            raise TypeError(f"""The argument '{path}' was not found to be
-                            a valid TIFF file.""")
+            raise TypeError(f"The argument '{path}' was not found to be\
+                            a valid TIFF file.")
     else:
-        raise TypeError(f"""The argument '{path}' was not found to be
-                        a valid file.""")
+        raise TypeError(f"The argument '{path}' was not found to be\
+                        a valid file.")
 
 
 def _is_array(obj: Any) -> bool:
@@ -640,3 +640,38 @@ class ArrayImage(BaseImage):
         tif_encoded = iio.imwrite("<bytes>", np_tif, extension=".tif")
         with open(file_name, 'wb') as f:
             f.write(tif_encoded)
+
+def load_multiples(image_file_list):
+    """
+    Combine multiple image files into one superimposed image.
+
+    Parameters
+    ----------
+    image_file_list : list
+        A list of paths to the files to be superimposed.
+
+    Returns
+    -------
+    ::class:`~dosepy.image.TiffImage`
+        Instance of a TiffImage class.
+
+    From omg_dosimetry.imageRGB load_multiples and pylinac.image
+    """
+    # load images
+    img_list = [TiffImage(path) for path in image_file_list]
+    first_img = img_list[0]
+    
+    if len(img_list) > 1:
+        # check that all images are the same size
+        for img in img_list:
+            if img.array.shape != first_img.array.shape:
+                raise ValueError("Images were not the same shape")
+    
+        # stack and combine arrays
+        new_array = np.stack(tuple(img.array for img in img_list), axis=-1)
+        combined_arr = np.mean(new_array, axis=3)
+    
+        # replace array of first object and return
+        first_img.array = combined_arr
+
+    return first_img
