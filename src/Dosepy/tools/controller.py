@@ -48,7 +48,9 @@ class DosepyController():
                         self._model.calibration_img.set_labeled_img()
                         num = self._model.calibration_img.number_of_films
                         print(f"Number of detected films: {num}")
-                        self._view.calibration_widget.set_table_rows(rows = num)   
+                        self._view.calibration_widget.set_table_rows(rows = num)
+                        #self._connectSignalsAndSlots()
+                        self._view.calibration_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
                     
                     else:
                         msg = "The tiff files must have the same shape."
@@ -63,6 +65,16 @@ class DosepyController():
     def _clear_file_button(self):
         #TODO_
         self._view.calibration_widget.files_list.clear()
+
+    def _is_a_valid_dose(self, row):
+        print(f"The row is: {row + 1}")
+        data = self._view.calibration_widget.dose_table.item(row, 0).text()
+        try:
+            float(data)
+            print("Data OK")
+        except ValueError:
+            print("Bad dose input. Changing to 0")
+            self._view.calibration_widget.dose_table.item(row, 0).setText("0")
 
 
     def _connectSignalsAndSlots(self):
