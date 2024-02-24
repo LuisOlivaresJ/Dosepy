@@ -47,7 +47,7 @@ class DosepyController():
                         # find how many film do we have and show a table for user input dose values
                         self._model.calibration_img.set_labeled_img()
                         num = self._model.calibration_img.number_of_films
-                        print(num)
+                        print(f"Number of detected films: {num}")
                         self._view.calibration_widget.set_table_rows(rows = num)   
                     
                     else:

@@ -18,6 +18,8 @@ from PySide6.QtCore import Qt, QSize
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.backends.backend_qtagg import \
+    NavigationToolbar2QT as NavigationToolbar
 
 import numpy as np
 
@@ -29,6 +31,8 @@ class CalibrationWidget(QWidget):
         main_layout = QHBoxLayout()
         self.setLayout(main_layout)
         
+
+        # Paramters Widget
         parameters_widget = QWidget()
         parameters_layout = QVBoxLayout()
         parameters_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -50,7 +54,7 @@ class CalibrationWidget(QWidget):
         parameters_layout.addWidget(self.open_button)
         #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
-        parameters_layout.addWidget(self.dose_table)
+        parameters_layout.addWidget(self.dose_table, 1)
         parameters_layout.addSpacing(30)
         parameters_layout.addWidget(QLabel("Channel:"))
         parameters_layout.addWidget(self.channel_combo_box)
@@ -59,20 +63,32 @@ class CalibrationWidget(QWidget):
         parameters_layout.addStretch()
 
         main_layout.addWidget(parameters_widget)
-        print(self.children())
+        #print(self.children())
 
-        self.fig = Figure(
+
+        # Plots Widget
+        plot_widget = QWidget()
+        plot_layout = QVBoxLayout()
+        plot_widget.setLayout(plot_layout)
+        fig = Figure(
             #figsize=(3, 5),
             layout="constrained"
             )
-        self.axe_image = self.fig.add_subplot(2, 1, 1)
-        self.axe_curve = self.fig.add_subplot(2, 1, 2)
+        self.canvas = FigureCanvas(fig)
+
+        self.axe_image = fig.add_subplot(2, 1, 1)
+        self.axe_curve = fig.add_subplot(2, 1, 2)
         
-        main_layout.addWidget(FigureCanvas(self.fig), 1) 
+        #main_layout.addWidget(FigureCanvas(self.fig), 1) 
+        plot_layout.addWidget(NavigationToolbar(self.canvas, self))
+        plot_layout.addWidget(self.canvas)
         """The second argument (1) is used as a strech factor. 
         Widgets with higher stretch factors grow more on 
         window resizing.
         """
+
+
+        main_layout.addWidget(plot_widget)
 
     def set_files_list(self, files: list):
         """
@@ -112,6 +128,5 @@ class CalibrationWidget(QWidget):
         img : Dosepy.tools.image.TiffImage
             
         """
-        #self.fig.add_axes(img.plot(show=False))
-        self.axe_image.imshow(img.array/np.max(img.array))
-        self.fig.canvas.draw()
+        img.plot(ax = self.axe_image, show=False)
+        self.canvas.draw()
