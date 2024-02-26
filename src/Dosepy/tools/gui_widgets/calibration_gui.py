@@ -52,7 +52,7 @@ class CalibrationWidget(QWidget):
         self.apply_button.setEnabled(False)
 
         self.channel_combo_box = QComboBox()
-        self.channel_combo_box.addItems(["Red", "Green", "Blue"])
+        self.channel_combo_box.addItems(["Red", "Green", "Blue", "Mean"])
         self.fit_combo_box = QComboBox()
         self.fit_combo_box.addItems(["Rational", "Polynomial"])
 
@@ -60,12 +60,12 @@ class CalibrationWidget(QWidget):
         #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
         parameters_layout.addWidget(self.dose_table, 1)
-        parameters_layout.addWidget(self.apply_button)
-        parameters_layout.addSpacing(30)
+        #parameters_layout.addSpacing(30)
         parameters_layout.addWidget(QLabel("Channel:"))
         parameters_layout.addWidget(self.channel_combo_box)
         parameters_layout.addWidget(QLabel("Fit function:"))
         parameters_layout.addWidget(self.fit_combo_box)
+        parameters_layout.addWidget(self.apply_button)
         parameters_layout.addStretch()
 
         main_layout.addWidget(parameters_widget)
@@ -150,9 +150,9 @@ class CalibrationWidget(QWidget):
             return False
 
 
-    def plot(self, img):
+    def plot_image(self, img):
         """
-        Show an array.
+        Show an array image.
 
         Parameters
         ----------
@@ -160,4 +160,9 @@ class CalibrationWidget(QWidget):
             
         """
         img.plot(ax = self.axe_image, show=False)
+        self.canvas_widg.draw()
+
+    def plot_cal_curve(self, cal):
+        self.axe_curve.clear()
+        cal.plot(self.axe_curve, show=False)
         self.canvas_widg.draw()

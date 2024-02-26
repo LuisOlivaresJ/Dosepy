@@ -43,7 +43,7 @@ class DosepyController():
                             list_files,
                             for_calib=True
                             )
-                        self._view.cal_widget.plot(self._model.calibration_img)
+                        self._view.cal_widget.plot_image(self._model.calibration_img)
 
                         # Find how many film we have and show a table for user input dose values
                         self._model.calibration_img.set_labeled_img()
@@ -76,6 +76,18 @@ class DosepyController():
             dose_list = [self._view.cal_widget.dose_table.item(row, 0).text() for row in range(num)]
             doses = sorted([float(dose) for dose in dose_list])
             print(doses)
+            if self._model.calibration_img:
+                cal = self._model.calibration_img.get_calibration(
+                    doses = doses,
+                    channel = self._view.cal_widget.channel_combo_box.currentText(), #self._view.cal_widget.channel_combo_box
+                    roi = (16, 8),
+                    func = self._view.cal_widget.fit_combo_box.currentText()
+                    )
+                self._view.cal_widget.plot_cal_curve(cal)
+            else:
+                msg = "Something wrong with the image."
+                print(msg)
+                Error_Dialog(msg).exec()
         else:
             msg = "Invalid dose values"
             print(msg)

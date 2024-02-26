@@ -27,7 +27,8 @@ from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-from Dosepy.tools.calibration import polynomial_g3, rational_func, Calibration
+#from Dosepy.tools.calibration import polynomial_g3, rational_func, Calibration
+from calibration import polynomial_g3, rational_func, Calibration
 
 MM_PER_INCH = 25.4
 
@@ -300,16 +301,18 @@ class TiffImage(BaseImage):
         #print(f"Number of images detected: {num}")
 
         # Films
-        if ch == "R":
+        if ch in ["R", "Red", "r", "red"]:
             films = regionprops(self.label_image, intensity_image=self.array[:, :, 0])
-        if ch == "G":
+        elif ch in ["G", "Green", "g", "green"]:
             films = regionprops(self.label_image, intensity_image=self.array[:, :, 1])
-        if ch == "B":
+        elif ch in ["B", "Blue", "b", "blue"]:
             films = regionprops(self.label_image, intensity_image=self.array[:, :, 2])
-        if ch == "M":
+        elif ch in ["M", "Mean", "m", "mean"]:
             films = regionprops(self.label_image,
                                 intensity_image=np.mean(self.array, axis=2)
                                 )
+        else:
+            print("Channel not founded")
 
         # Find the unexposed film.
         #mean_pixel = []
@@ -337,25 +340,25 @@ class TiffImage(BaseImage):
             minc_roi = int(y0 - width_roi_pix/2)
             minr_roi = int(x0 - height_roi_pix/2)
 
-            if ch == "R":
+            if ch in ["R", "Red", "r", "red"]:
                 roi = self.array[
                     int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
                     int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
                     0,
                 ]
-            if ch == "G":
+            elif ch in ["G", "Green", "g", "green"]:
                 roi = self.array[
                     int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
                     int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
                     1,
                 ]
-            if ch == "B":
+            elif ch in ["B", "Blue", "b", "blue"]:
                 roi = self.array[
                     int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
                     int(y0 - width_roi_pix/2): int(y0 + width_roi_pix/2),
                     2,
                 ]
-            if ch == "M":
+            elif ch in ["M", "Mean", "m", "mean"]:
                 array = np.mean(self.array, axis=2)
                 roi = array[
                     int(x0 - height_roi_pix/2): int(x0 + height_roi_pix/2),
@@ -430,34 +433,34 @@ class TiffImage(BaseImage):
         mean_pixel, _ = self.get_stat(ch=cal.channel, roi=(5, 5), show=False)
         mean_pixel = sorted(mean_pixel, reverse=True)
 
-        if cal.channel == "R":
-            if cal.func == "P3":
+        if cal.channel in ["R", "Red", "r", "red"]:
+            if cal.func in ["P3", "Polynomial"]:
                 x = -np.log10(self.array[:, :, 0]/mean_pixel[0])
-            elif cal.func == "RF":
+            elif cal.func in ["RF", "Rational"]:
                 x = self.array[:, :, 0]/mean_pixel[0]
 
-        elif cal.channel == "G":
-            if cal.func == "P3":
+        elif cal.channel in ["G", "Green", "g", "green"]:
+            if cal.func in ["P3", "Polynomial"]:
                 x = -np.log10(self.array[:, :, 1]/mean_pixel[0])
-            elif cal.func == "RF":
+            elif cal.func in ["RF", "Rational"]:
                 x = self.array[:, :, 1]/mean_pixel[0]
 
-        elif cal.channel == "B":
-            if cal.func == "P3":
+        elif cal.channel in ["B", "Blue", "b", "blue"]:
+            if cal.func in ["P3", "Polynomial"]:
                 x = -np.log10(self.array[:, :, 2]/mean_pixel[0])
-            elif cal.func == "RF":
+            elif cal.func in ["RF", "Rational"]:
                 x = self.array[:, :, 2]/mean_pixel[0]
 
-        elif cal.channel == "M":
+        elif cal.channel in ["M", "Mean", "m", "mean"]:
             array = np.mean(self.array, axis=2)
-            if cal.func == "P3":
+            if cal.func in ["P3", "Polynomial"]:
                 x = -np.log10(array/mean_pixel[0])
-            elif cal.func == "RF":
+            elif cal.func in ["RF", "Rational"]:
                 x = self.array/mean_pixel[0]
 
-        if cal.func == "P3":
+        if cal.func in ["P3", "Polynomial"]:
             dose_image = polynomial_g3(x, *cal.popt)
-        elif cal.func == "RF":
+        elif cal.func in ["RF", "Rational"]:
             dose_image = rational_func(x, *cal.popt)
 
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
@@ -484,12 +487,12 @@ class TiffImage(BaseImage):
         """
         mean_pixel, _ = self.get_stat(ch=cal.channel, roi=roi, show=show)
         #
-        if cal.func == "P3":
+        if cal.func in ["P3", "Polynomial"]:
             mean_pixel = sorted(mean_pixel)  # Film response.
             optical_density = -np.log10(mean_pixel/mean_pixel[0])
             dose_in_rois = polynomial_g3(optical_density, *cal.popt)
 
-        elif cal.func == "RF":
+        elif cal.func in ["RF", "Rational"]:
             # Pixel normalization 
             mean_pixel = sorted(mean_pixel, reverse = True)
             norm_pixel = np.array(mean_pixel)/mean_pixel[0]
@@ -549,7 +552,7 @@ class CalibImage(TiffImage):
             The doses values that were used to expose films for calibration.
         func : string
             "P3": Polynomial function of degree 3,
-            "RF": Rational function.
+            "RF" or "Rational": Rational function.
         channel : str
             Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
         roi : tuple
@@ -581,10 +584,10 @@ class CalibImage(TiffImage):
         mean_pixel = sorted(mean_pixel, reverse=True)
         mean_pixel = np.array(mean_pixel)
 
-        if func == "P3":
+        if func in ["P3", "Polynomial"]:
             x = -np.log10(mean_pixel/mean_pixel[0])  # Optical density
 
-        elif func == "RF":
+        elif func in ["RF", "Rational"]:
             x = mean_pixel/mean_pixel[0]
 
         return Calibration(y=doses, x=x, func=func, channel=channel)

@@ -57,16 +57,16 @@ class Calibration:
 
         self.doses = sorted(y)
 
-        if func == "P3":
+        if func in ["P3", "Polynomial"]:
             self.x = sorted(x)  # Film response.
-        elif func == "RF":
+        elif func in ["RF", "Rational"]:
             self.x = sorted(x, reverse=True)
 
         self.func = func
 
-        if self.func == "P3":
+        if self.func in ["P3", "Polynomial"]:
             self.popt, self.pcov = curve_fit(polynomial_g3, self.x, self.doses)
-        elif self.func == "RF":
+        elif self.func in ["RF", "Rational"]:
             self.popt, self.pcov = curve_fit(
                                             rational_func,
                                             self.x,
@@ -94,15 +94,25 @@ class Calibration:
             fig, ax = plt.subplots()
 
         x = np.linspace(self.x[0], self.x[-1], 100)
-        if self.func == "P3":
+        if self.func in ["P3", "Polynomial"]:
             y = polynomial_g3(x, *self.popt)
             ax.set_xlabel("Optical density")
-        elif self.func == "RF":
+        elif self.func in ["RF", "Rational"]:
             y = rational_func(x, *self.popt)
-            ax.set_title("Normalized pixel value")
-        ax.plot(x, y, **kwargs)
+            ax.set_xlabel("Normalized pixel value")
+
+        if self.channel in ["R", "Red", "r", "red"]:
+            color = "red"
+        elif self.channel in ["G", "Green", "g", "green"]:
+            color = "green"
+        elif self.channel in ["B", "Blue", "b", "blue"]:
+            color = "blue"
+        elif self.channel in ["M", "Mean", "m", "mean"]:
+            color = "black"
+        
+        ax.plot(x, y, color = color, **kwargs)
         ax.plot(self.x, self.doses, '*', **kwargs)
-        ax.set_ylabel("Dose")
+        ax.set_ylabel("Dose [cGy]")
         if show:
             plt.show()
         return ax
