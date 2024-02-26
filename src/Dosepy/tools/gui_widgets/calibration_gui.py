@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QDialog,
     QTableWidget,
+    QTableWidgetItem,
 )
 from PySide6.QtCore import Qt, QSize
 
@@ -42,9 +43,13 @@ class CalibrationWidget(QWidget):
         self.open_button.setMinimumSize(QSize(150, 50))
         #self.clear_button = QPushButton("Clear")
         self.files_list = QListWidget()
-        self.files_list.setMaximumSize(QSize(320, 100))
+        self.files_list.setMaximumSize(QSize(250, 100))
 
         self.dose_table = QTableWidget()
+
+        self.apply_button = QPushButton("Apply")
+        self.apply_button.setMinimumSize(QSize(150, 50))
+        self.apply_button.setEnabled(False)
 
         self.channel_combo_box = QComboBox()
         self.channel_combo_box.addItems(["Red", "Green", "Blue"])
@@ -55,6 +60,7 @@ class CalibrationWidget(QWidget):
         #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
         parameters_layout.addWidget(self.dose_table, 1)
+        parameters_layout.addWidget(self.apply_button)
         parameters_layout.addSpacing(30)
         parameters_layout.addWidget(QLabel("Channel:"))
         parameters_layout.addWidget(self.channel_combo_box)
@@ -74,21 +80,26 @@ class CalibrationWidget(QWidget):
             #figsize=(3, 5),
             layout="constrained"
             )
-        self.canvas = FigureCanvas(fig)
+        self.canvas_widg = FigureCanvas(fig)
+        self.canvas_widg.setMinimumSize(QSize(450, 50))
 
-        self.axe_image = fig.add_subplot(2, 1, 1)
-        self.axe_curve = fig.add_subplot(2, 1, 2)
+        self.axe_image = fig.add_subplot(1, 2, 1)
+        #self.axe_image.set_axis_off()
+        #self.axe_image.legend().set_visible(False)
+        self.axe_image.set_xticks([])
+        self.axe_image.set_yticks([])
+        self.axe_curve = fig.add_subplot(1, 2, 2)
         
         #main_layout.addWidget(FigureCanvas(self.fig), 1) 
-        plot_layout.addWidget(NavigationToolbar(self.canvas, self))
-        plot_layout.addWidget(self.canvas)
+        plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
+        plot_layout.addWidget(self.canvas_widg)
         """The second argument (1) is used as a strech factor. 
         Widgets with higher stretch factors grow more on 
         window resizing.
         """
 
 
-        main_layout.addWidget(plot_widget)
+        main_layout.addWidget(plot_widget, 1)
 
     def set_files_list(self, files: list):
         """
@@ -117,7 +128,27 @@ class CalibrationWidget(QWidget):
     def set_table_rows(self, rows: int):
         self.dose_table.setRowCount(rows)
         self.dose_table.setColumnCount(1)
-        self.dose_table.setHorizontalHeaderLabels(["Dose [cGy]"]) 
+        self.dose_table.setHorizontalHeaderLabels(["Dose [cGy]"])
+        for row in range(rows):
+            self.dose_table.setItem(row, 0, QTableWidgetItem(""))
+            self.dose_table.item(row, 0).setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def is_dose_table_complete(self, rows):
+        def is_number(s):
+            try:
+                float(s)
+                return True
+            except ValueError:
+                return False
+            
+        if all(
+            [is_number(self.dose_table.item(row, 0).text()) for row in range(rows)]
+            ):
+            return True
+        
+        else: 
+            return False
+
 
     def plot(self, img):
         """
@@ -129,4 +160,4 @@ class CalibrationWidget(QWidget):
             
         """
         img.plot(ax = self.axe_image, show=False)
-        self.canvas.draw()
+        self.canvas_widg.draw()

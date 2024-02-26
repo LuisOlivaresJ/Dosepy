@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QDialogButtonBox,
     QLabel,
     QVBoxLayout,
+    QHeaderView,
 )
 from pathlib import Path
 
@@ -28,29 +29,32 @@ class DosepyController():
             # Absolute paths to files
             list_files = \
                 [str(Path(filename)) for filename in filenames] + \
-                self._view.calibration_widget.get_files_list()
+                self._view.cal_widget.get_files_list()
             
             if filenames:
                 if self._model.are_valid_tif_files(list_files):
                     if self._model.are_files_equal_shape(list_files):
 
                         # Display path to files
-                        self._view.calibration_widget.set_files_list(list_files)
+                        self._view.cal_widget.set_files_list(list_files)
 
                         # load the files
                         self._model.calibration_img = self._model.load_files(
                             list_files,
                             for_calib=True
                             )
-                        self._view.calibration_widget.plot(self._model.calibration_img)
+                        self._view.cal_widget.plot(self._model.calibration_img)
 
-                        # find how many film do we have and show a table for user input dose values
+                        # Find how many film we have and show a table for user input dose values
                         self._model.calibration_img.set_labeled_img()
                         num = self._model.calibration_img.number_of_films
                         print(f"Number of detected films: {num}")
-                        self._view.calibration_widget.set_table_rows(rows = num)
-                        #self._connectSignalsAndSlots()
-                        self._view.calibration_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
+                        self._view.cal_widget.set_table_rows(rows = num)
+                        header = self._view.cal_widget.dose_table.horizontalHeader()
+                        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
+                        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+
+                        self._view.cal_widget.apply_button.setEnabled(True)
                     
                     else:
                         msg = "The tiff files must have the same shape."
@@ -62,25 +66,47 @@ class DosepyController():
                     print(msg)
                     Error_Dialog(msg).exec()
 
+    def _apply_calib_button(self):
+        print("Apply button pressed.")
+        # Is dose table completed?
+        num = self._model.calibration_img.number_of_films
+        if self._view.cal_widget.is_dose_table_complete(num):
+        #if all([self._view.cal_widget.dose_table.item(row, 0) for row in range(num)]):
+            print("Doses OK")
+            dose_list = [self._view.cal_widget.dose_table.item(row, 0).text() for row in range(num)]
+            doses = sorted([float(dose) for dose in dose_list])
+            print(doses)
+        else:
+            msg = "Invalid dose values"
+            print(msg)
+            Error_Dialog(msg).exec()
+
     def _clear_file_button(self):
         #TODO_
-        self._view.calibration_widget.files_list.clear()
+        self._view.cal_widget.files_list.clear()
 
+    # Secondary functions
+    # -------------------
+    # TODO_ 
+    # Is here, in controller, a good place to have this funtion?
+    # Is there another approach to resolve this?
+    # Negative values are not valid doses.
     def _is_a_valid_dose(self, row):
         print(f"The row is: {row + 1}")
-        data = self._view.calibration_widget.dose_table.item(row, 0).text()
+        data = self._view.cal_widget.dose_table.item(row, 0).text()
         try:
             float(data)
+            #self._view.cal_widget.dose_table.item(row, 0).setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             print("Data OK")
         except ValueError:
             print("Bad dose input. Changing to 0")
-            self._view.calibration_widget.dose_table.item(row, 0).setText("0")
-
+            self._view.cal_widget.dose_table.item(row, 0).setText("0")
 
     def _connectSignalsAndSlots(self):
         # Calibration Widget
-        self._view.calibration_widget.open_button.clicked.connect(self._open_file_button)
-        #self._view.calibration_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
+        self._view.cal_widget.open_button.clicked.connect(self._open_file_button)
+        self._view.cal_widget.apply_button.clicked.connect(self._apply_calib_button)
+        #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
             
 
 class Error_Dialog(QDialog):
