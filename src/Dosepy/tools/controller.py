@@ -8,7 +8,10 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHeaderView,
 )
+from PySide6.QtCore import QDir
 from pathlib import Path
+import os
+import numpy as np
 
 class DosepyController():
     def __init__(self, model, view):
@@ -16,12 +19,16 @@ class DosepyController():
         self._view = view
         self._lut = None
         self._connectSignalsAndSlots()
-
-
+    
+    ########################
+    #-----------------------
+    # Related to Calibration
+        
     def _open_file_button(self):
         #print("Hola boton open")
         dialog = QFileDialog()
-        dialog.setDirectory(r'C:\images')
+        #dialog.setDirectory(r'C:\images')
+        dialog.setDirectory(QDir.home())
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         dialog.setNameFilter("Images (*.tif *.tiff)")
 
@@ -86,7 +93,7 @@ class DosepyController():
                 self._view.cal_widget.save_cal_button.setEnabled(True)
 
                 # Dosepy implementation.
-                self.lut = self._model.create_lut(doses, roi=(16, 8))
+                self._lut = self._model.create_dosepy_lut(doses, roi=(16, 8))
                 # OMG_dosimetry implementation.
 
             else:
@@ -98,10 +105,22 @@ class DosepyController():
             print(msg)
             Error_Dialog(msg).exec()
 
+
     def _save_calib_button(self):
-        #doses = self._view.cal_widget.get_doses()
-        self._model.save_lut(self.lut)
-        #return
+        root_calibration_path = Path(__file__).parent.parent / "user" / "calibration"
+        if not root_calibration_path.exists():
+            os.makedirs(root_calibration_path)
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self._view,
+            "Save as",
+            str(root_calibration_path),
+            "Array (*.npy)"
+            )
+        print(file_path)
+        if file_path != "":
+            np.save(file_path, self._lut)
+
 
     def _clear_file_button(self):
         #TODO_
@@ -118,11 +137,14 @@ class DosepyController():
         data = self._view.cal_widget.dose_table.item(row, 0).text()
         try:
             float(data)
-            #self._view.cal_widget.dose_table.item(row, 0).setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             print("Data OK")
         except ValueError:
             print("Bad dose input. Changing to 0")
             self._view.cal_widget.dose_table.item(row, 0).setText("0")
+
+    # end related to calibration
+    # --------------------------
+    ############################
 
     def _connectSignalsAndSlots(self):
         # Calibration Widget

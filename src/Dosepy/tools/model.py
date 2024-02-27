@@ -31,7 +31,7 @@ class Model:
             return load_multiples(files, for_calib=for_calib)
     
 
-    def create_lut(self, doses, roi):
+    def create_dosepy_lut(self, doses, roi):
         #channel = ["m", "r", "g", "b"]
         doses = np.array(doses)
         lut = np.zeros([6, len(doses)])
@@ -72,12 +72,4 @@ class Model:
 
         return lut
 
-    def save_lut(self, lut):
-        root_calibration_path = Path(__file__).parent.parent / "user" / "calibration"
-        if not root_calibration_path.exists():
-            os.makedirs(root_calibration_path)
-        
-        file_name = "test"
-    
-        np.save(root_calibration_path / file_name, lut)
         
