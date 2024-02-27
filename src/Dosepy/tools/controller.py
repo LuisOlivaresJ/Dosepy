@@ -14,6 +14,7 @@ class DosepyController():
     def __init__(self, model, view):
         self._model = model
         self._view = view
+        self._lut = None
         self._connectSignalsAndSlots()
 
 
@@ -71,19 +72,23 @@ class DosepyController():
         # Is dose table completed?
         num = self._model.calibration_img.number_of_films
         if self._view.cal_widget.is_dose_table_complete(num):
-        #if all([self._view.cal_widget.dose_table.item(row, 0) for row in range(num)]):
             print("Doses OK")
-            dose_list = [self._view.cal_widget.dose_table.item(row, 0).text() for row in range(num)]
-            doses = sorted([float(dose) for dose in dose_list])
+            doses = self._view.cal_widget.get_doses()
             print(doses)
             if self._model.calibration_img:
                 cal = self._model.calibration_img.get_calibration(
                     doses = doses,
-                    channel = self._view.cal_widget.channel_combo_box.currentText(), #self._view.cal_widget.channel_combo_box
+                    channel = self._view.cal_widget.channel_combo_box.currentText(),
                     roi = (16, 8),
                     func = self._view.cal_widget.fit_combo_box.currentText()
                     )
                 self._view.cal_widget.plot_cal_curve(cal)
+                self._view.cal_widget.save_cal_button.setEnabled(True)
+
+                # Dosepy implementation.
+                self.lut = self._model.create_lut(doses, roi=(16, 8))
+                # OMG_dosimetry implementation.
+
             else:
                 msg = "Something wrong with the image."
                 print(msg)
@@ -92,6 +97,11 @@ class DosepyController():
             msg = "Invalid dose values"
             print(msg)
             Error_Dialog(msg).exec()
+
+    def _save_calib_button(self):
+        #doses = self._view.cal_widget.get_doses()
+        self._model.save_lut(self.lut)
+        #return
 
     def _clear_file_button(self):
         #TODO_
@@ -118,6 +128,7 @@ class DosepyController():
         # Calibration Widget
         self._view.cal_widget.open_button.clicked.connect(self._open_file_button)
         self._view.cal_widget.apply_button.clicked.connect(self._apply_calib_button)
+        self._view.cal_widget.save_cal_button.clicked.connect(self._save_calib_button)
         #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
             
 

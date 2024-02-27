@@ -10,8 +10,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QLabel,
     QListWidget,
-    QSizePolicy,
-    QDialog,
     QTableWidget,
     QTableWidgetItem,
 )
@@ -22,7 +20,19 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import \
     NavigationToolbar2QT as NavigationToolbar
 
-import numpy as np
+#from Dosepy.tools.styles.styles import Size
+from enum import Enum
+#import Dosepy.tools.styles.styles import Size
+
+class Size(Enum):
+    ZERO = 0
+    #SMALL = "0.6em"
+    #MEDIUM = "0.9em"
+    #DEFAULT = "1.1em"
+    MAIN_BUTTON = QSize(150, 60)
+    #LARGE = "1.6em"
+    #BIG = "1.8em"
+
 
 class CalibrationWidget(QWidget):
     def __init__(self):
@@ -40,7 +50,7 @@ class CalibrationWidget(QWidget):
         parameters_widget.setLayout(parameters_layout)
 
         self.open_button = QPushButton("Browse")
-        self.open_button.setMinimumSize(QSize(150, 50))
+        self.open_button.setMinimumSize(Size.MAIN_BUTTON.value)
         #self.clear_button = QPushButton("Clear")
         self.files_list = QListWidget()
         self.files_list.setMaximumSize(QSize(250, 100))
@@ -48,8 +58,12 @@ class CalibrationWidget(QWidget):
         self.dose_table = QTableWidget()
 
         self.apply_button = QPushButton("Apply")
-        self.apply_button.setMinimumSize(QSize(150, 50))
+        self.apply_button.setMinimumSize(Size.MAIN_BUTTON.value)
         self.apply_button.setEnabled(False)
+
+        self.save_cal_button = QPushButton("Save")
+        self.save_cal_button.setMinimumSize(Size.MAIN_BUTTON.value)
+        self.save_cal_button.setEnabled(False)
 
         self.channel_combo_box = QComboBox()
         self.channel_combo_box.addItems(["Red", "Green", "Blue", "Mean"])
@@ -66,6 +80,7 @@ class CalibrationWidget(QWidget):
         parameters_layout.addWidget(QLabel("Fit function:"))
         parameters_layout.addWidget(self.fit_combo_box)
         parameters_layout.addWidget(self.apply_button)
+        parameters_layout.addWidget(self.save_cal_button)
         parameters_layout.addStretch()
 
         main_layout.addWidget(parameters_widget)
@@ -125,6 +140,15 @@ class CalibrationWidget(QWidget):
         
         return files_list
     
+    def get_doses(self) -> list:
+        """
+        Get the input doses as a list of float numbers.
+        """
+        num = self.dose_table.rowCount()
+        dose_list = [self.dose_table.item(row, 0).text() for row in range(num)]
+        doses = sorted([float(dose) for dose in dose_list])
+        return doses
+
     def set_table_rows(self, rows: int):
         self.dose_table.setRowCount(rows)
         self.dose_table.setColumnCount(1)

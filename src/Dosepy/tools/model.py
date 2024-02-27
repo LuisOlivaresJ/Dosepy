@@ -3,6 +3,10 @@
 #from Dosepy.tools.image import _is_RGB
 from image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
 import imageio.v3 as iio
+import numpy as np
+from importlib import resources
+import os
+from pathlib import Path
 
 class Model:
     def __init__(self):
@@ -25,3 +29,55 @@ class Model:
         
         elif len(files) > 1:
             return load_multiples(files, for_calib=for_calib)
+    
+
+    def create_lut(self, doses, roi):
+        #channel = ["m", "r", "g", "b"]
+        doses = np.array(doses)
+        lut = np.zeros([6, len(doses)])
+        lut[0,:] = doses
+        lut[1,:] = doses * 1  # Correct doses for machine daily output
+        lut[2,:], _ = np.array(
+            self.calibration_img.get_stat(
+                ch="m",
+                roi=roi,
+                show=False,
+                threshold=None
+                )
+            )
+        lut[3,:], _ = np.array(
+            self.calibration_img.get_stat(
+                ch="r",
+                roi=roi,
+                show=False,
+                threshold=None
+               )
+            )
+        lut[4,:], _ = np.array(
+            self.calibration_img.get_stat(
+                ch="g",
+                roi=roi,
+                show=False,
+                threshold=None
+                )
+            )
+        lut[5,:], _ = np.array(
+            self.calibration_img.get_stat(
+                ch="b",
+                roi=roi,
+                show=False,
+                threshold=None
+                )
+            )
+
+        return lut
+
+    def save_lut(self, lut):
+        root_calibration_path = Path(__file__).parent.parent / "user" / "calibration"
+        if not root_calibration_path.exists():
+            os.makedirs(root_calibration_path)
+        
+        file_name = "test"
+    
+        np.save(root_calibration_path / file_name, lut)
+        
