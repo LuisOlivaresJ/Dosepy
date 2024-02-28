@@ -8,7 +8,8 @@ from PySide6.QtWidgets import (
     QTabWidget,
 )
 
-from gui_widgets.calibration_gui import CalibrationWidget
+from gui_widgets.calibration_widget import CalibrationWidget
+from gui_widgets.tiff2dose_widget import Tiff2DoseWidget
 from controller import DosepyController
 from model import Model
 
@@ -24,8 +25,8 @@ class MainWindow(QWidget):
         tabs = QTabWidget()
         self.cal_widget = CalibrationWidget()
         tabs.addTab(self.cal_widget, "Calibration")
-        #self.tab_calibration = tabs.indexOf(CalibrationWidget)
-        tabs.addTab(QLabel("In progress..."), "Film2Dose")
+        self.tif_widget = Tiff2DoseWidget()
+        tabs.addTab(self.tif_widget, "Film2Dose")
         tabs.addTab(QLabel("In progress..."), "Analysis")
         tab_layout.addWidget(tabs)
 

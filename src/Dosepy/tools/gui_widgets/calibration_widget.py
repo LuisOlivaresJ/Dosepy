@@ -20,18 +20,10 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import \
     NavigationToolbar2QT as NavigationToolbar
 
-#from Dosepy.tools.styles.styles import Size
+#import styles.styles.Size as Size
+from .styles.styles import Size
 from enum import Enum
 #import Dosepy.tools.styles.styles import Size
-
-class Size(Enum):
-    ZERO = 0
-    #SMALL = "0.6em"
-    #MEDIUM = "0.9em"
-    #DEFAULT = "1.1em"
-    MAIN_BUTTON = QSize(150, 60)
-    #LARGE = "1.6em"
-    #BIG = "1.8em"
 
 
 class CalibrationWidget(QWidget):
@@ -53,7 +45,7 @@ class CalibrationWidget(QWidget):
         self.open_button.setMinimumSize(Size.MAIN_BUTTON.value)
         #self.clear_button = QPushButton("Clear")
         self.files_list = QListWidget()
-        self.files_list.setMaximumSize(QSize(250, 100))
+        self.files_list.setMaximumSize(QSize(300, 100))
 
         self.dose_table = QTableWidget()
 
@@ -83,9 +75,6 @@ class CalibrationWidget(QWidget):
         parameters_layout.addWidget(self.save_cal_button)
         parameters_layout.addStretch()
 
-        main_layout.addWidget(parameters_widget)
-        #print(self.children())
-
 
         # Plots Widget
         plot_widget = QWidget()
@@ -99,13 +88,10 @@ class CalibrationWidget(QWidget):
         self.canvas_widg.setMinimumSize(QSize(450, 50))
 
         self.axe_image = fig.add_subplot(1, 2, 1)
-        #self.axe_image.set_axis_off()
-        #self.axe_image.legend().set_visible(False)
         self.axe_image.set_xticks([])
         self.axe_image.set_yticks([])
         self.axe_curve = fig.add_subplot(1, 2, 2)
         
-        #main_layout.addWidget(FigureCanvas(self.fig), 1) 
         plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
         plot_layout.addWidget(self.canvas_widg)
         """The second argument (1) is used as a strech factor. 
@@ -115,6 +101,8 @@ class CalibrationWidget(QWidget):
 
 
         main_layout.addWidget(plot_widget, 1)
+        main_layout.addWidget(parameters_widget)
+
 
     def set_files_list(self, files: list):
         """
