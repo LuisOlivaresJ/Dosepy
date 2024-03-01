@@ -10,7 +10,9 @@ docs/NOM_241_SSA1_2021
 src/Dosepy/user
 src/Dosepy/GUILayouts/__pycache__
 src/Dosepy/tools/__pycache__
+src/Dosepy/tools/styles/__pycache__
 src/Dosepy/tools/gui_widgets/__pycache__
+src/Dosepy/tools/gui_widgets/styles/__pycache__
 src/Dosepy/tools/demo_files
 debugging.py
 tests/unit/__pycache__

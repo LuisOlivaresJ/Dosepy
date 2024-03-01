@@ -80,9 +80,37 @@ class Tiff2DoseWidget(QWidget):
 
         Parameters
         ----------
-        img : numpy.ndarray
+        img : Dosepy.tools.image.ArrayImage
         """
-        max_dose = np.percentile(img, [99.9])[0]
+        max_dose = np.percentile(img.array, [99.9])[0]
+        print(f"Maximum dose: {max_dose}")
         pos = self.axe_image.imshow(img.array, cmap='nipy_spectral')
-        pos.set_clim(-.05, max_dose)
+        pos.set_clim(-0.05, max_dose)
         self.canvas_widg.figure.colorbar(pos, ax=self.axe_image)
+        self.canvas_widg.draw()
+
+
+    def set_files_list(self, files: list):
+        """
+        Set the files list.
+        
+        Parameters
+        ----------
+        files : list
+            List of strings containing the absolute 
+            paths of the selected files.
+        """
+        self.files_list.clear()
+        self.files_list.addItems(files)
+
+
+    def get_files_list(self) -> list:
+        """
+        Get the current files in the view.
+        """
+        files_list = []
+        
+        for index in range(self.files_list.count()):
+            files_list.append(str(self.files_list.item(index).text()))
+        
+        return files_list

@@ -422,7 +422,7 @@ class TiffImage(BaseImage):
 
         Parameters
         ----------
-        cal : dosepy.calibration.Calibration
+        cal : Dosepy.calibration.Calibration
             Instance of a Calibration class
 
         Returns

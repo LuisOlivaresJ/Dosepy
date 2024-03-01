@@ -9,7 +9,7 @@ from PySide6.QtCore import QDir
 
 from pathlib import Path
 
-def open_files_dialog(filter):
+def open_files_dialog(filter, dir = "home"):
     """
     Use of QFileDialog to get a list of paths to files.
 
@@ -17,6 +17,9 @@ def open_files_dialog(filter):
     ---------
     filter : str
         Filters used by QFileDialog.
+    dir : str
+        Sets the file dialog's current directory.
+        "home", "calib"
 
     Returns
     -------
@@ -31,8 +34,15 @@ def open_files_dialog(filter):
 
     """
     dialog = QFileDialog()
-    dialog.setDirectory(QDir.home())
-    dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+
+    if dir == "home":
+        dialog.setDirectory(QDir.home())
+
+    elif dir == "calib":
+        cali_path = Path(__file__).parent.parent.parent / "user" / "calibration"
+        dialog.setDirectory(str(cali_path))
+
+    dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
     dialog.setNameFilter(filter)
 
     if dialog.exec():
@@ -43,6 +53,14 @@ def open_files_dialog(filter):
     else:
         return None
     
+
+def save_lut_file_dialog(root_directory: str):
+    file_path, _ = QFileDialog.getSaveFileName(
+        None,
+        "Save as",
+        root_directory,
+        )
+    return file_path
 
 class Error_Dialog(QDialog):
     """

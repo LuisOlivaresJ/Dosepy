@@ -5,12 +5,13 @@ from image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
 import imageio.v3 as iio
 import numpy as np
 from importlib import resources
-import os
-from pathlib import Path
+import pickle
 
 class Model:
     def __init__(self):
         self.calibration_img = None
+        self.tif_img = None
+        self.lut = None
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
@@ -71,5 +72,16 @@ class Model:
             )
 
         return lut
+    
+    def save_lut(self, file_path: str):
+        
+        file = open(file_path + ".cal", 'wb')
+        pickle.dump(self.lut, file, pickle.HIGHEST_PROTOCOL)
+        file.close()
 
+    def load_lut(self, lut_path: str):
+        file = open(lut_path, 'rb')
+        lut = pickle.load(file)
+        file.close()
+        return lut
         
