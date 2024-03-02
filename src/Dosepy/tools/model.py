@@ -12,6 +12,7 @@ class Model:
         self.calibration_img = None
         self.tif_img = None
         self.lut = None
+        self.dose = None
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
@@ -84,4 +85,6 @@ class Model:
         lut = pickle.load(file)
         file.close()
         return lut
-        
+    
+    def save_dose_as_tif(self, file_name: str):
+        self.dose.save_as_tif(file_name)

@@ -112,6 +112,9 @@ class DosepyController():
             print(lut_file_name)
         
             self._model.save_lut(str(lut_file_name))
+            #self._view.tif_widget.cali_label.setText(
+            #    f"Calibration file: " + str(lut_file_name)
+            #    )
 
 
     def _clear_file_button(self):
@@ -144,7 +147,7 @@ class DosepyController():
     # Related to Tiff2Dose
 
     def _open_tif2dose_button(self):
-        print("Hola desde btn open tiff2dose.")
+        
         new_files = open_files_dialog("Images (*.tif *.tiff)")
 
         if new_files:
@@ -161,9 +164,9 @@ class DosepyController():
                     self._model.tif_img = self._model.load_files(
                         list_files,
                         )
-                    print(self._model.tif_img)
+                    
                     if self._model.lut:
-                        dose = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
+                        self._model.dose = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
 
                     else:
                         "Open lut"
@@ -171,17 +174,21 @@ class DosepyController():
                             filter = "Calibration. (*.cal)",
                             dir = "calib"
                             )
-                        print(lut_file_path)
+                        
                         if lut_file_path:
                             if len(lut_file_path) == 1:
-                                lut = self._model.load_lut(lut_file_path[0])
-                                dose = self._model.tif_img.to_dose(lut) # An ArrayImage
+                                self._model.lut = self._model.load_lut(lut_file_path[0])
+                                self._model.dose = self._model.tif_img.to_dose(
+                                    self._model.lut
+                                    ) # An ArrayImage
                             else:
                                 msg = "Chose one calibration file."
                                 print(msg)
                                 Error_Dialog(msg).exec()
+                        else:
+                            self._view.tif_widget.files_list.clear()
 
-                    self._view.tif_widget.plot_dose(dose)
+                    self._view.tif_widget.plot_dose(self._model.dose)
 
                 else:
                     msg = "The tiff files must have the same shape."
@@ -192,6 +199,23 @@ class DosepyController():
                 msg = "Invalid file. Is it a tiff RGB file?"
                 print(msg)
                 Error_Dialog(msg).exec()
+
+
+    def _save_tif2dose_button(self):
+
+        print("Hola save as tif button")
+        root_dose_path = Path(__file__).parent.parent / "user" / "dose distr"
+        if not root_dose_path.exists():
+            os.makedirs(root_dose_path)
+
+        dose_file_name = save_lut_file_dialog(
+            root_directory = str(root_dose_path)
+        )
+
+        if dose_file_name:
+            print(dose_file_name)
+        
+            self._model.save_dose_as_tif(str(dose_file_name))
 
     # end related to tiff2dose
     # --------------------------
@@ -205,4 +229,5 @@ class DosepyController():
         #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
 
         self._view.tif_widget.open_button.clicked.connect(self._open_tif2dose_button)
+        self._view.tif_widget.save_button.clicked.connect(self._save_tif2dose_button)
             

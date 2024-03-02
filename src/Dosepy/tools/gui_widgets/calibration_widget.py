@@ -140,7 +140,7 @@ class CalibrationWidget(QWidget):
     def set_table_rows(self, rows: int):
         self.dose_table.setRowCount(rows)
         self.dose_table.setColumnCount(1)
-        self.dose_table.setHorizontalHeaderLabels(["Dose [cGy]"])
+        self.dose_table.setHorizontalHeaderLabels(["Dose [Gy]"])
         for row in range(rows):
             self.dose_table.setItem(row, 0, QTableWidgetItem(""))
             self.dose_table.item(row, 0).setTextAlignment(Qt.AlignmentFlag.AlignCenter)

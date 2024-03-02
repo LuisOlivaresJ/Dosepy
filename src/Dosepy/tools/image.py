@@ -658,7 +658,12 @@ class ArrayImage(BaseImage):
         """
         data = np.int64(self.array*100) # Gy to cGy
         np_tif = data.astype(np.uint16)
-        tif_encoded = iio.imwrite("<bytes>", np_tif, extension=".tif")
+        tif_encoded = iio.imwrite(
+            "<bytes>",
+            np_tif,
+            extension=".tif",
+            resolution = (self.dpi, self.dpi),
+            )
         with open(file_name, 'wb') as f:
             f.write(tif_encoded)
 
@@ -673,7 +678,7 @@ def load_multiples(image_file_list, for_calib=False):
 
     Returns
     -------
-    ::class:`~dosepy.image.TiffImage`
+    ::class:`~Dosepy.image.TiffImage`
         Instance of a TiffImage class.
 
     From omg_dosimetry.imageRGB load_multiples and pylinac.image

@@ -112,7 +112,7 @@ class Calibration:
         
         ax.plot(x, y, color = color, **kwargs)
         ax.plot(self.x, self.doses, '*', **kwargs)
-        ax.set_ylabel("Dose [cGy]")
+        ax.set_ylabel("Dose [Gy]")
         if show:
             plt.show()
         return ax
