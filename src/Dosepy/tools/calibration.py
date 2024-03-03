@@ -37,7 +37,7 @@ class Calibration:
         y : list
             The doses values that were used to expose films for calibration.
         x : list
-            Optical density if "P3" fit function wll be used, or normalized pixel value
+            Optical density if "P3" fit function is used, or normalized pixel value
             for "RF" fit function.
         func : str
             The model function used for dose-film response relationship.
@@ -111,7 +111,14 @@ class Calibration:
             color = "black"
         
         ax.plot(x, y, color = color, **kwargs)
-        ax.plot(self.x, self.doses, '*', **kwargs)
+        ax.plot(
+            self.x,
+            self.doses,
+            color = color,
+            marker = '*',
+            linestyle = 'None',
+            **kwargs
+            )
         ax.set_ylabel("Dose [Gy]")
         if show:
             plt.show()
