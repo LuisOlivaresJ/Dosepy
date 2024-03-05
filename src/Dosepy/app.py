@@ -8,10 +8,12 @@ from PySide6.QtWidgets import (
     QTabWidget,
 )
 
-from gui_widgets.calibration_widget import CalibrationWidget
-from gui_widgets.tiff2dose_widget import Tiff2DoseWidget
-from controller import DosepyController
-from model import Model
+#from gui_widgets.calibration_widget import CalibrationWidget
+#from gui_widgets.tiff2dose_widget import Tiff2DoseWidget
+from app_components.calibration_widget import CalibrationWidget
+from app_components.tiff2dose_widget import Tiff2DoseWidget
+from app_controller import DosepyController
+from app_model import Model
 
 class MainWindow(QWidget):
     def __init__(self):

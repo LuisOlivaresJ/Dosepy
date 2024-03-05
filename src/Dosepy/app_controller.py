@@ -8,7 +8,7 @@ from pathlib import Path
 import os
 import numpy as np
 
-from gui_widgets.file_dialog import (
+from app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,
@@ -100,7 +100,7 @@ class DosepyController():
 
 
     def _save_calib_button(self):
-        root_calibration_path = Path(__file__).parent.parent / "user" / "calibration"
+        root_calibration_path = Path(__file__).parent / "user" / "calibration"
         if not root_calibration_path.exists():
             os.makedirs(root_calibration_path)
 
@@ -204,7 +204,7 @@ class DosepyController():
     def _save_tif2dose_button(self):
 
         print("Hola save as tif button")
-        root_dose_path = Path(__file__).parent.parent / "user" / "dose distr"
+        root_dose_path = Path(__file__).parent / "user" / "dose distr"
         if not root_dose_path.exists():
             os.makedirs(root_dose_path)
 
