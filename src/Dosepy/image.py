@@ -27,8 +27,7 @@ from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-#from Dosepy.tools.calibration import polynomial_g3, rational_func, Calibration
-from calibration import polynomial_g3, rational_func, Calibration
+from .calibration import polynomial_g3, rational_func, Calibration
 
 MM_PER_INCH = 25.4
 

@@ -1,7 +1,6 @@
 """Functions used as a model. VMC pattern."""
 
-#from Dosepy.tools.image import _is_RGB
-from image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
+from .image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
 import imageio.v3 as iio
 import numpy as np
 from importlib import resources

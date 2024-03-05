@@ -39,7 +39,7 @@ def open_files_dialog(filter, dir = "home"):
         dialog.setDirectory(QDir.home())
 
     elif dir == "calib":
-        cali_path = Path(__file__).parent.parent.parent / "user" / "calibration"
+        cali_path = Path(__file__).parent.parent / "user" / "calibration"
         dialog.setDirectory(str(cali_path))
 
     dialog.setFileMode(QFileDialog.FileMode.ExistingFile)

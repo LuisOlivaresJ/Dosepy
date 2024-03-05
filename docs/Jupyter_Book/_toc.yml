@@ -10,5 +10,5 @@ chapters:
 - file: JB_Dosepy_Notebook
 - file: JB_DICOM
 - file: bibliography
-- file: api
+#- file: api
 - file: changelog

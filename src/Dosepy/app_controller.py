@@ -8,7 +8,7 @@ from pathlib import Path
 import os
 import numpy as np
 
-from app_components.file_dialog import (
+from .app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,

@@ -23,21 +23,22 @@ from relative_dose_1d.tools import build_from_array_and_step
 from relative_dose_1d.GUI_tool import plot
 
 import numpy as np
-from Dosepy.GUILayouts.Bloque_gamma import Bloque_gamma
+from .gui_components.Bloque_gamma import Bloque_gamma
 # For testing, import from local PC
 # from GUILayouts.Bloque_gamma import Bloque_gamma
-from Dosepy.GUILayouts.Bloque_Imagenes import Bloque_Imagenes
+from .gui_components.Bloque_Imagenes import Bloque_Imagenes
 # For testing, import from local PC
 # from GUILayouts.Bloque_Imagenes import Bloque_Imagenes
-import Dosepy.dose as dp
+#import dose as dp
+import Dosepy.old as dp
 import matplotlib as mpl
 from importlib import resources
 
-from Dosepy.GUILayouts.film_to_doseGUI import Film_to_Dose_Window
+from .gui_components.film_to_doseGUI import Film_to_Dose_Window
 # from GUILayouts.film_to_doseGUI import Film_to_Dose_Window
-from Dosepy.GUILayouts.about_window import About_Window
+from .gui_components.about_window import About_Window
 # from GUILayouts.about_window import About_Window
-from Dosepy.GUILayouts.licencia_window import Licencia_Window
+from .gui_components.licencia_window import Licencia_Window
 # from GUILayouts.licencia_window import Licencia_Window
 # ---------------------------------------------
 

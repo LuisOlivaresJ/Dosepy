@@ -13,9 +13,9 @@
 import sys
 from importlib import resources
 
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication
-from PySide6.QtGui import QPixmap
-from PySide6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QApplication
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 
 
 class About_Window(QWidget):

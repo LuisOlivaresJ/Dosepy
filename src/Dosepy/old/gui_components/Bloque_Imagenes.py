@@ -18,7 +18,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 import matplotlib.colors as colors
 import numpy as np
 #from PyQt5.QtGui import QIcon
-import Dosepy.dose as dp
+import Dosepy.old.dose as dp
 
 
 

@@ -14,5 +14,6 @@ src/Dosepy/tools/styles/__pycache__
 src/Dosepy/tools/gui_widgets/__pycache__
 src/Dosepy/tools/gui_widgets/styles/__pycache__
 src/Dosepy/tools/demo_files
+src/Dosepy.egg-info
 debugging.py
 tests/unit/__pycache__
