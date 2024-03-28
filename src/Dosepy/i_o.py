@@ -3,6 +3,7 @@
 from pathlib import Path
 import os
 from pylinac.core.io import get_url
+import pydicom
 
 def retrieve_demo_file(name: str, force: bool = False) -> Path:
     """Retrieve the demo file either by getting it from file or from a URL.
@@ -31,3 +32,14 @@ def retrieve_demo_file(name: str, force: bool = False) -> Path:
     if force or not demo_path.exists():
         get_url(url, destination = demo_path)
     return demo_path
+
+def retrieve_dicom_file(file: str | Path) -> pydicom.FileDataset:
+    """Read and return the DICOM dataset.
+
+    Parameters
+    ----------
+    file : str
+        The path to the file.
+    """
+    ds = pydicom.dcmread(file, force=True)
+    return ds

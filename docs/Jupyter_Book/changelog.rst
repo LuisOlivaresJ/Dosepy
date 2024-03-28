@@ -3,6 +3,14 @@
 Changelog
 =========
 
+V 0.6.0 (MAR-2024)
+--------------------
+
+* New graphical user interface (GUI), using Model-View-Controller architecture.
+* The new GUI focuses just on film dosimetry. Gamma index analysis requires the use of a Python script (see :doc:`gamma` section).
+* The gamma2D method from ArrayImage class is addapted from the dose module.
+* The load function from image module, now supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
+
 V 0.5.1 (FEB-2024)
 ------------------
 
@@ -23,6 +31,7 @@ V 0.4.0 (AUG-2023)
 * When a csv file is open, a new window shows to ask for resolution.
 * Quality control tests for new versions or post installation acceptance.
 * New tool for horizontal profile analysis, based on `relative_dose_1d. <https://github.com/LuisOlivaresJ/relative_dose_1d package>`_
+
 .. image:: ../assets/Relative_dose_1d_incorporation.PNG
    :scale: 50 %
 
@@ -31,7 +40,7 @@ V 0.3.8 (MAY-2023)
 
 * Firsts steps for spanish to english documentation using Read The Docs Documentation.
 
-V 0.3.7 (MARCH-2023)
+V 0.3.7 (MAR-2023)
 --------------------
 
 * Se resuelve `error <https://github.com/LuisOlivaresJ/Dosepy/issues/32>`_ de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. En la `página principal <https://luisolivaresj.github.io/Dosepy/>`_ de Dosepy, se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.

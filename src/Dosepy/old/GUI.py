@@ -30,7 +30,7 @@ from .gui_components.Bloque_Imagenes import Bloque_Imagenes
 # For testing, import from local PC
 # from GUILayouts.Bloque_Imagenes import Bloque_Imagenes
 #import dose as dp
-import Dosepy.old as dp
+import Dosepy.old.dose as dp
 import matplotlib as mpl
 from importlib import resources
 

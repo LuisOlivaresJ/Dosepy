@@ -1,10 +1,11 @@
-"""Class used as a controller in a ModelViewControll (MVC) pattern."""
+"""Classes used as controllers in a ModelViewControll (MVC) pattern."""
 
 from PySide6.QtWidgets import (
     QFileDialog,
     QHeaderView,
 )
 from pathlib import Path
+from abc import ABC, abstractmethod
 import os
 import numpy as np
 
@@ -14,17 +15,26 @@ from .app_components.file_dialog import (
     Error_Dialog,
 )
 
-class DosepyController():
+class BaseController(ABC):
+    """Abstract class."""
     def __init__(self, model, view):
 
         self._model = model
         self._view = view
 
+    @abstractmethod
+    def _connectSignalsAndSlots(self):
+        pass
+
+
+class CalibrationController(BaseController):
+    """Related to Calibration."""
+    def __init__(self, model, view):
+
+        super().__init__(model, view)
+
         self._connectSignalsAndSlots()
     
-    ########################
-    #-----------------------
-    # Related to Calibration
         
     def _open_file_button(self):
         new_files = open_files_dialog("Images (*.tif *.tiff)")
@@ -137,15 +147,24 @@ class DosepyController():
             print("Bad dose input. Changing to 0")
             self._view.cal_widget.dose_table.item(row, 0).setText("0")
 
-    # end related to calibration
-    # --------------------------
-    ############################
 
+    def _connectSignalsAndSlots(self):
+        # Calibration Widget
+        self._view.cal_widget.open_button.clicked.connect(self._open_file_button)
+        self._view.cal_widget.apply_button.clicked.connect(self._apply_calib_button)
+        self._view.cal_widget.save_cal_button.clicked.connect(self._save_calib_button)
+        #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
+            
 
-    ############################
-    # --------------------------
-    # Related to Tiff2Dose
+class Tiff2DoseController(BaseController):
+    """Related to Tiff to Dose."""
 
+    def __init__(self, model, view):
+        super().__init__(model, view)
+
+        self._connectSignalsAndSlots()
+
+    
     def _open_tif2dose_button(self):
         
         new_files = open_files_dialog("Images (*.tif *.tiff)")
@@ -220,14 +239,9 @@ class DosepyController():
     # end related to tiff2dose
     # --------------------------
     ############################
-
+    
     def _connectSignalsAndSlots(self):
-        # Calibration Widget
-        self._view.cal_widget.open_button.clicked.connect(self._open_file_button)
-        self._view.cal_widget.apply_button.clicked.connect(self._apply_calib_button)
-        self._view.cal_widget.save_cal_button.clicked.connect(self._save_calib_button)
-        #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
 
         self._view.tif_widget.open_button.clicked.connect(self._open_tif2dose_button)
         self._view.tif_widget.save_button.clicked.connect(self._save_tif2dose_button)
-            
+

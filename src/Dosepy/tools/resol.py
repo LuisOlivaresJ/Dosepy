@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 """
+NAME
+    Resolution function
+
+DESCRIPTION
+    Script to match the number of rows and columns between two arrays, based on physical resolution.
+
+"""
+
+"""
 @author:
     Luis Alfonso Olivares Jimenez
 
-	Script to match the number of rows and columns between two arrays, based on physical resolution.
+	
 """
 
 import numpy as np
@@ -107,7 +116,7 @@ def match_resolution(array, array_resolution, target_resolution):
 	(256 points * 0.78125 mm/point = 199.99 mm)
 
 	To reduce the size of matrix A to be equal to the size of
-	matrix B, the match_resolution function is used:
+	matrix B, the match_resolution function is used as:
 
 		import Dosepy.tools.resol as resol
 		import numpy as np

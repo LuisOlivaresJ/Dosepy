@@ -7,6 +7,12 @@ from importlib import resources
 import pickle
 
 class Model:
+    """
+    This class is used to store main data for film dosimetry like tif images and 
+    lut file for calibration.
+    Also, there are methods to open tif files, to ask for correct tif files,
+    save or load a lut.
+    """
     def __init__(self):
         self.calibration_img = None
         self.tif_img = None
