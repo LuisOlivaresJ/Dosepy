@@ -4,9 +4,11 @@ NAME
 
 DESCRIPTION
     This module holds functionalities for tif image loading and manipulation.
-    The content is heavily based from pylinac
+    The content is heavily based 
+    from pylinac
     (https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html),
-    and omg_dosimetry
+    and 
+    omg_dosimetry
     https://omg-dosimetry.readthedocs.io/en/latest/
 
 """
@@ -16,6 +18,8 @@ import numpy as np
 import os.path as osp
 from typing import Any, Union
 import imageio.v3 as iio
+import copy
+from scipy import ndimage
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -139,6 +143,7 @@ def _is_dicom(path: str | Path) -> bool:
     """Whether the file is a readable DICOM file via pydicom."""
     return is_dicom_image(file=path)
 
+
 def _is_image_file(path: str | Path) -> bool:
     """Whether the file is a readable image file via imageio.v3."""
     try:
@@ -193,6 +198,21 @@ class BaseImage:
         else:
             self.path = path
             self.base_path = osp.basename(path)
+
+    
+    @property
+    def physical_shape(self) -> tuple[float, float]:
+        """The physical size of the image in mm."""
+        return self.shape[0] / self.dpmm, self.shape[1] / self.dpmm
+    
+
+    @property
+    def shape(self) -> tuple[int, int]:
+        return self.array.shape
+
+
+    def as_type(self, dtype: np.dtype) -> np.ndarray:
+        return self.array.astype(dtype)
 
 
 class TiffImage(BaseImage):
@@ -529,7 +549,6 @@ class TiffImage(BaseImage):
         binary = erosion(gray_scale < thresh, square(erosion_pix))
         self.label_image, self.number_of_films = label(binary, return_num=True)
         
-
 
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
@@ -939,6 +958,7 @@ class ArrayImage(BaseImage):
         gamma_percent = float(less_than_1)/total_points*100
         return gamma, gamma_percent            
 
+
 def load_multiples(image_file_list, for_calib=False):
     """
     Combine multiple image files into one superimposed image.
@@ -973,3 +993,58 @@ def load_multiples(image_file_list, for_calib=False):
         first_img.array = combined_arr
 
     return first_img
+
+
+def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, ArrayImage]:
+    """
+    Crop and resize two images to make them:
+      * The same pixel dimensions
+      * The same DPI
+
+    The usefulness of the function comes when trying to compare images from different sources.
+    The best example is calculating gamma. The physical
+    and pixel dimensions must be normalized, the SID normalized
+
+    Parameters
+    ----------
+    image1 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.DicomImage`, :class:`~pylinac.core.image.TiffImage`}
+        Must have DPI and SID.
+    image2 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.DicomImage`, :class:`~pylinac.core.image.TiffImage`}
+        Must have DPI and SID.
+
+    Returns
+    -------
+    image1 : :class:`~Dosepy.image.ArrayImage`
+        The first image croped (if needed).
+    image2 : :class:`~Dosepy.image.ArrayImage`
+        The second image equated.
+    """
+    image1 = copy.deepcopy(image1)
+    image2 = copy.deepcopy(image2)
+    # crop images to be the same physical size
+    # ...crop height
+    physical_height_diff = image1.physical_shape[0] - image2.physical_shape[0]
+    if physical_height_diff < 0:  # image2 is bigger
+        img = image2
+    else:
+        img = image1
+    pixel_height_diff = abs(int(round(-physical_height_diff * img.dpmm / 2)))
+    if pixel_height_diff > 0:
+        img.crop(pixel_height_diff, edges=("top", "bottom"))
+
+    # ...crop width
+    physical_width_diff = image1.physical_shape[1] - image2.physical_shape[1]
+    if physical_width_diff > 0:
+        img = image1
+    else:
+        img = image2
+    pixel_width_diff = abs(int(round(physical_width_diff * img.dpmm / 2)))
+    if pixel_width_diff > 0:
+        img.crop(pixel_width_diff, edges=("left", "right"))
+
+    # resize images to be of the same shape
+    zoom_factor = image1.shape[1] / image2.shape[1]
+    image2_array = ndimage.interpolation.zoom(image2.as_type(float), zoom_factor)
+    image2 = load(image2_array, dpi=image2.dpi * zoom_factor)
+
+    return image1, image2
