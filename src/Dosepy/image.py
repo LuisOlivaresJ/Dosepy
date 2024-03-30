@@ -33,6 +33,7 @@ from skimage.filters.rank import mean
 from pylinac.core.io import is_dicom_image
 
 from .calibration import polynomial_g3, rational_func, Calibration
+from .tools.resol import equate_resolution
 from .i_o import retrieve_dicom_file
 
 MM_PER_INCH = 25.4
@@ -850,8 +851,8 @@ class ArrayImage(BaseImage):
 
         #%%
 
-        #   Verificar la ocurrencia de excepciones
-        if reference.array.shape != self.array.shape:
+        # error checking
+        if reference.shape != self.shape:
             raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
 
         if local_norm and dose_ta_Gy:
@@ -872,10 +873,10 @@ class ArrayImage(BaseImage):
             maximum_dose = np.percentile(D_eval, 99)
         else:
             maximum_dose = np.amax(D_eval)
-        print(f'Dosis máxima: {maximum_dose:.1f}')
+        #print(f'Maximum dose: {maximum_dose:.1f}')
         #  Umbral de dosis
         Dose_threshold = (dose_threshold/100)*maximum_dose
-        print(f'Umbral de dosis: {Dose_threshold:.1f}')
+        #print(f'Dose_threshold: {Dose_threshold:.1f}')
 
         #   Dosis de tolerancia absoluta o relativa
         if dose_ta_Gy:
@@ -997,9 +998,9 @@ def load_multiples(image_file_list, for_calib=False):
 
 def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, ArrayImage]:
     """
-    Crop and resize two images to make them:
-      * The same pixel dimensions
-      * The same DPI
+    Crop the biggest of the two images and resize image2 to make them:
+    * The same pixel dimensions
+    * The same DPI
 
     The usefulness of the function comes when trying to compare images from different sources.
     The best example is calculating gamma. The physical
@@ -1025,7 +1026,7 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
     # ...crop height
     physical_height_diff = image1.physical_shape[0] - image2.physical_shape[0]
     if physical_height_diff < 0:  # image2 is bigger
-        img = image2
+        img = image2  # img is a view of image2 (not a copy)
     else:
         img = image1
     pixel_height_diff = abs(int(round(-physical_height_diff * img.dpmm / 2)))
@@ -1043,8 +1044,17 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
         img.crop(pixel_width_diff, edges=("left", "right"))
 
     # resize images to be of the same shape
-    zoom_factor = image1.shape[1] / image2.shape[1]
-    image2_array = ndimage.interpolation.zoom(image2.as_type(float), zoom_factor)
-    image2 = load(image2_array, dpi=image2.dpi * zoom_factor)
+    if image2.dpmm > image1.dpmm:
+        image2_array = equate_resolution(
+            array=image2.array,
+            array_resolution=1./image2.dpmm,
+            target_resolution=1./image1.dpmm)
+        image2 = load(image2_array, dpi=image1.dpi)
+
+    else:
+        zoom_factor = image1.shape[1] / image2.shape[1]
+        image2_array = ndimage.interpolation.zoom(image2.as_type(float), zoom_factor)
+        image2 = load(image2_array, dpi=image2.dpi * zoom_factor)
+
 
     return image1, image2

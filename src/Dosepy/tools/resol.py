@@ -68,9 +68,9 @@ def _points_to_average(res_A, res_B, points):
 
 	return points_to_average_lista
 
-def match_resolution(array, array_resolution, target_resolution):
+def equate_resolution(array, array_resolution, target_resolution):
 	"""
-	Reduces the arrya size so that its new spatial resolution equals a given one. 
+	Reduces the arrya size so that its new spatial resolution equals to a target resolution. 
 	The algorithm averages a number of points given by target_resolution // array_resolution.
 
 	Parameters
@@ -83,13 +83,13 @@ def match_resolution(array, array_resolution, target_resolution):
 		Spatial resolution of the array, in millimeters per point.
 
 	target_resolution : float
-		Reference spatial resolution, in millimeters per point.
+		Target spatial resolution, in millimeters per point.
 		
 	Returns
 	-------
 
 	ndarray
-		Reduced size array
+		Array with a reduced size
 
 	Examples
 	--------
@@ -97,13 +97,11 @@ def match_resolution(array, array_resolution, target_resolution):
 
 	Let A be an array of (100, 100) with a 0.1 mm/point spatial resolution, and B another 
 	array of (10, 10) with a 1 mm/point resolution. To perform an ponit-by-point comparison, we need a
-	new (10, 10) representative array of A:
+	new (10, 10) representative array of A::
 
-		import numpy as np
-
-		A = np.random.rand(100, 100)	# With an asossiated spatial resolution of 0.1 mm/point.
-
-		new_A = resol.match_resolution(A, 0.1, 1)
+	>>> import numpy as np
+	>>> A = np.random.rand(100, 100)  # With an asossiated spatial resolution of 0.1 mm/point.
+	>>> new_A = equate_resolution(A, 0.1, 1)
 	
 
 	**Example 2**
@@ -116,41 +114,38 @@ def match_resolution(array, array_resolution, target_resolution):
 	(256 points * 0.78125 mm/point = 199.99 mm)
 
 	To reduce the size of matrix A to be equal to the size of
-	matrix B, the match_resolution function is used as:
+	matrix B, the equate_resolution function is used as::
 
-		import Dosepy.tools.resol as resol
-		import numpy as np
-
-		A = np.zeros( (2362, 2362) )
-
-		C = resol.match_resolution(A, 0.08467, 0.78125)
-		C.shape
-		(256, 256)
-
+	>>> import Dosepy.tools.resol as resol
+	>>> import numpy as np
+	>>> A = np.zeros( (2362, 2362) )
+	>>> C = equate_resolution(A, 0.08467, 0.78125)
+	>>> C.shape
+	>>> (256, 256)
 	"""
 
 	list_points_column = _points_to_average(array_resolution, target_resolution, array.shape[1])
 	list_points_row = _points_to_average(array_resolution, target_resolution, array.shape[0])
 	new_reduced_array = np.zeros( (len(list_points_row), len(list_points_column) ) )
-	f = 0		#Contador para número de fila
+	f = 0  # Row counter
 	for i in np.arange( len(list_points_row) ):
-		c = 0	#Contador para número de columna
+		c = 0  # Column counter
 		for j in np.arange( len(list_points_column) ):
-			DUMMY = array[ f : f + list_points_row[i], c : c + list_points_column[j] ]
-			new_reduced_array[i,j] = np.mean(DUMMY)
+			temporal = array[ f : f + list_points_row[i], c : c + list_points_column[j] ]
+			new_reduced_array[i,j] = np.mean(temporal)
 			c = c + list_points_column[j]
 		f = f + list_points_row[i]
 	return new_reduced_array
 
 
 
-def main():         # For testing
+def main():  # For testing
 	a = _points_to_average(6, 20, 13)
 	print(a)
 
 	A = np.zeros( (2362, 2362) )
-	C = match_resolution(A, 0.08467, 0.78125)
-	print(C.shape)	# Expected (256, 256)
+	C = equate_resolution(A, 0.08467, 0.78125)
+	print(C.shape)  # Expected (256, 256)
 
 if __name__ == "__main__":
 	main()

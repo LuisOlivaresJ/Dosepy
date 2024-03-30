@@ -13,8 +13,8 @@
 #---------------------------------------------
 #   Importaciones
 from Dosepy.tools.film_to_dose import calibracion, cubico
-from Dosepy.tools.resol import match_resolution
-#from ..tools.resol import match_resolution
+from Dosepy.tools.resol import equate_resolution
+#from ..tools.resol import equate_resolution
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QHBoxLayout, QMessageBox, QMainWindow, QLabel, QPushButton, QFileDialog, QLayout, QCheckBox, QLineEdit, QFormLayout
 from PyQt6.QtGui import QIcon, QPixmap
@@ -290,7 +290,7 @@ class Film_to_Dose_Window(QWidget):
 
     def reducir_tamano(self):
 
-        self.Dosis_FILM = match_resolution(self.Dosis_FILM, self.image_distr_resolucion_mm_punto, float(self.QLineEdit_resol.text()))
+        self.Dosis_FILM = equate_resolution(self.Dosis_FILM, self.image_distr_resolucion_mm_punto, float(self.QLineEdit_resol.text()))
         self.Qt_Mpl_distribucion.Img(self.Dosis_FILM)
         self.Qt_Mpl_distribucion.Colores(self.Dosis_FILM)
         self.Qt_Mpl_distribucion.fig.canvas.draw()
