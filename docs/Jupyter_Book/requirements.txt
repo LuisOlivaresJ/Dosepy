@@ -3,3 +3,6 @@ matplotlib
 numpy
 Dosepy
 imageio
+skimage
+pydicom
+scipy
