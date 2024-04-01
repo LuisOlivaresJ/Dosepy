@@ -3,13 +3,14 @@
 Changelog
 =========
 
-V 0.6.0 (MAR-2024)
+V 0.6.0 (APR-2024)
 --------------------
 
 * New graphical user interface (GUI), using Model-View-Controller architecture.
 * The new GUI focuses just on film dosimetry. Gamma index analysis requires the use of a Python script (see :doc:`gamma` section).
 * The gamma2D method from ArrayImage class is addapted from the dose module.
-* The load function from image module, now supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
+* The load function (an extension from `pylinac package <https://pylinac.readthedocs.io/en/latest/core_modules.html#pylinac.core.image.load>`_), supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
+* PyPi README and gamma2D method are translated to English.
 
 V 0.5.1 (FEB-2024)
 ------------------

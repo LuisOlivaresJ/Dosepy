@@ -4,12 +4,9 @@ NAME
 
 DESCRIPTION
     This module holds functionalities for tif image loading and manipulation.
-    The content is heavily based 
-    from pylinac
-    (https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html),
-    and 
-    omg_dosimetry
-    https://omg-dosimetry.readthedocs.io/en/latest/
+    ArryaImage class is used as representation of dose distributions.
+    The content is heavily based from 
+    `pylinac <https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html>`_, and `omg_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_
 
 """
 
@@ -30,11 +27,9 @@ from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 
-from pylinac.core.io import is_dicom_image
-
 from .calibration import polynomial_g3, rational_func, Calibration
 from .tools.resol import equate_resolution
-from .i_o import retrieve_dicom_file
+from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
 
@@ -60,12 +55,12 @@ def load(path: str | Path | np.ndarray,
         If an int, will perform median filtering over image of size ``filter``.
 
     kwargs
-        See :class:`~dosepy.image.ArrayImage`, :class:`~dosepy.image.TiffImage`,
-        or :class:`~dosepy.image.CalibImage` for keyword arguments.
+        See :class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`,
+        or :class:`~Dosepy.image.CalibImage` for keyword arguments.
 
     Returns
     -------
-    ::class:`~dosepy.image.BaseImage`
+    ::class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`
 
     Examples
     --------
@@ -104,7 +99,7 @@ def load(path: str | Path | np.ndarray,
             raise Exception("Pixel spacing must be equal in both dimensions.")
 
         return ArrayImage(d_array, dpi=MM_PER_INCH/resolution_mm[0])
-
+    
     elif _is_image_file(path):
         if _is_tif_file(path):
             if _is_RGB(path):
@@ -459,12 +454,12 @@ class TiffImage(BaseImage):
 
         Parameters
         ----------
-        cal : Dosepy.calibration.Calibration
+        cal : :class:`~Dosepy.calibration.Calibration`
             Instance of a Calibration class
 
         Returns
         -------
-        ImageLike : ArrayImage
+        :class:`~Dosepy.image.ArrayImage`
             Dose distribution.
         """
         mean_pixel, _ = self.get_stat(ch=cal.channel, roi=(5, 5), show=False)
@@ -712,92 +707,87 @@ class ArrayImage(BaseImage):
                 max_as_percentile=True
                 ):
         '''
-        Cálculo del índice gamma contra una distribución de referencia.
-        Se obtiene una matriz que representa los índices gamma en cada posición de la distribución de dosis,
-        así como el índice de aprobación definido como el porcentaje de valores gamma que son menor o igual a 1.
-        Se asume el registro de las distribuciones de dosis, es decir, que la coordenada espacial de un punto en la distribución de
-        referencia es igual a la coordenada del mismo punto en la distribución a evaluar.
+        Calculate the gamma between the current image (reference) and a comparison image.
+        The images must have the same spatial resolution (dpi) to be comparable. The size of the images must also be the same.
+        An array is ​​obtained. It represents the gamma indices at each position of the dose distribution,
+        as well as the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
+        The registration of dose distributions is assumed, i.e. the spatial coordinate of a point in the
+        reference dose distribution is equal to the coordinate of the same point in the distribution to be evaluated.
 
         Parameters
         ----------
-
-        reference : Dosepy.image.ArrayImage
-            Distribución de dosis de referencia contra la cual se realizará la comparación.
-            El número de filas y columnas debe de ser igual a la distribución a evaluar (self.array).
-            Lo anterior implica que las dimesiones espaciales de las distribuciones deben de ser iguales.
+        reference ::class:`~Dosepy.image.ArrayImage`
+            The reference image.
 
         dose_ta : float, default = 3
             Dose-to-agreement.
-            Este valor puede interpretarse de 3 formas diferentes según los parámetros dose_ta_Gy,
-            local_norm y max_as_percentil, los cuales se describen más adelante.
+            This value can be interpreted in 3 different ways depending on the dose_ta_Gy,
+            local_norm and max_as_percentile  parameters, which are described below.
 
         dist_ta : float, default = 3
             Distance-to-agreement in mm.
 
         dose_threshold : float, default = 10
-            Umbral de dosis, en porcentaje (0 a 100) con respecto a la dosis máxima de la 
-            distribución de referencia (o al percentil 99 si max_as_percentile = TRUE). 
-            Todo punto en la distribución de dosis con un valor menor al umbral
-            de dosis, es excluido del análisis.
+            Dose threshold in percentage (0 to 100) with respect to the maximum dose of the
+            reference distribution (or to 99th percentile if max_as_percentile = True).
+            Any point in the dose distribution with a value less than the dose threshold,
+            is excluded from the analysis.
             
         dose_ta_Gy : bool, default: False
-            Si el argumento es True, entonces "dose_ta" (la dosis de tolerancia) se interpreta como un valor fijo y absoluto en Gray [Gy].
-            Si el argumento es False (default), "dose_ta" se interpreta como un porcentaje.
+            If True, then "dose_ta" (the tolerance dose) is interpreted as an absolute value in Gray.
+            If False (default), "dose_ta" is interpreted as a percentage.
 
         local_norm : bool, default: False
-            Si el argumento es True (normalización local), el porcentaje de dosis de tolerancia "dose_ta" se interpreta con respecto a la dosis local
-            en cada punto de la distribución de referencia.
-            Si el argumento es False (normalización global), el porcentaje de dosis de tolerancia "dose_ta" se interpreta con respecto al
-            máximo de la distribución a evaluar.
-            Notas:
-            * Los argumentos dose_ta_Gy y local_norm NO deben ser seleccionados como True de forma simultánea.
-            * Si se desea utilizar directamente el máximo de la distirbución, utilizar el parámetro max_as_percentile = False (ver explicación mas adelante).
+            If the argument is True (local normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the local dose
+            at each point of the reference distribution.
+            If the argument is False (global normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the
+            maximum of the distribution to be evaluated.
+            * The dose_ta_Gy and local_norm arguments must NOT be selected as True simultaneously.
+            * If you want to use the maximum of the distribution directly, use the parameter max_as_percentile = False (see explanation below).
 
         mask_radius : float, default: 10
-            Distancia física en milímetros que se utiliza para acotar el cálculo con posiciones que estén dentro de una vecindad dada por mask_radius.
+            Physical distance in millimeters used to limit the calculation to positions that are within a neighborhood given by mask_radius.
 
-            Para lo anterior, se genera un área de busqueda cuadrada o "máscara" aldrededor de cada punto o posición en la distribución de referencia.
-            El uso de esta máscara permite reducir el tiempo de cálculo debido al siguiente proceso:
+            The use of this mask allows reducing the calculation time due to the following process:
             
-                Por cada punto en la distribución de referencia, el cálculo de la función Gamma se realiza solamente
-                con aquellos puntos o posiciones de la distribución a evaluar que se encuentren a una distancia relativa
-                menor o igual a mask_radius, es decir, con los puntos que están dentro de la vecindad dada por mask_radius.
-                La longitud de uno de los lados de la máscara cuadrada es de 2*mask_radius + 1.
+                For each point in the reference distribution, the calculation of the Gamma function is performed only
+                with those points or positions of the distribution to be evaluated that are at a relative distance
+                less than or equal to mask_radius, that is, with the points that are within the neighborhood given by mask_radius.
+                The length of one side of the square mask is 2*mask_radius + 1.
 
-            Por otro lado, si se prefiere comparar con todos los puntos de la distribución a evaluar, es suficiente con ingresar
-            una distancia mayor a las dimensiones de la distribución de dosis (por ejemplo mask_radius = 1000).
+            On the other hand, if you prefer to compare with all the points of the distribution to be evaluated, it is enough to enter
+            a distance greater than the dimensions of the dose distribution (for example mask_radius = 1000).
 
         max_as_percentile : bool, default: True
-            Si el argumento es True, se utiliza el percentil 99 como una aproximación del valor máximo de la
-            distribución de dosis. Lo anterior permite excluir artefactos o errores en posiciones puntuales
-            (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
-            Si el argumento es False, se utiliza directamente el valor máximo de la distribución a evaluar.
+            If the argument is True, 99th percentile is used as an approximation of the maximum value of the
+            dose distribution. This allows us to exclude artifacts or errors in specific positions.
+            If the argument is False, the maximum value of the distribution is used.
 
         Returns
         -------
 
-        ndarray :
-            Array, o matriz bidimensional con la distribución de índices gamma.
+        gamma_map : numpy.ndarray
+            The calculated gamma distribution.
 
-        float :
-            Índice de aprobación. Se calcula como el porcentaje de valores gamma <= 1, sin incluir las posiciones
-            en donde la dosis es menor al umbral de dosis.
+        pass_rate : float
+            Approval rate. It is calculated as the percentage of gamma values ​​<= 1. 
+            Points with dose below than the dose threshold are not accounted.
 
         Notes
         -----
 
-        Es posible utilizar el percentil 99 de la distribución de dosis como una aproximación del valor máximo.
-        Esto permite evitar la posible inclusión de artefactos o errores en posiciones puntuales de la distribución
-        (de utilidad por ejemplo cuando se utiliza película radiocrómica o etiquetas puntuales en la distribución).
+        Percentile 99th of the dose distribution can be used as an approximation of the maximum value.
+        This allows us to avoid artifacts or errors in specific positions of the distribution.
+        (useful for example for spot labels are used in films).
 
-        Se asume que ambas distribuciones a evaluar representan exactamente las mismas dimensiones físicas, y las posiciones
-        espaciales para cada punto conciden entre ellas, es decir, las imagenes de cada distribución están registradas.
+        It is assumed that both distributions have exactly the same physical dimensions, and the positions
+        ​​for each point coincide with each other, that is, the images are registered.
 
-        No se realiza interpolación entre puntos.
+        Interpolation is not supported yet.
 
-        **Referencias**
+        **References**
         
-        Para mayor información sobre los mecanismos de operación, efectividad y exactitud de la herramienta gamma consultar:
+        For more information about the operating mechanisms, effectiveness and accuracy of the gamma tool:
 
         [1] M. Miften, A. Olch, et. al. "Tolerance Limits and Methodologies for IMRT Measurement-Based
         Verification QA: Recommendations of AAPM Task Group No. 218" Medical Physics, vol. 45, nº 4, pp. e53-e83, 2018.
@@ -812,57 +802,68 @@ class ArrayImage(BaseImage):
         Examples
         --------
 
-        >>> # Importamos los paquetes Dosepy, así como numpy para crear matrices de ejemplo que representen dos distribuciones de dosis.
+        Numpy arrays as dose distributions::
+        
+        >>> # We import the Dosepy packages as well as numpy to create example arrays representing two dose distributions.
         >>> from Dosepy.image import load
         >>> import numpy as np
 
-        >>> # Generamos las matrices, A y B, con los valores 96 y 100 en todos sus elementos.
+        >>> # We generate the arrays, A and B, with the values ​​96 and 100 in all their elements.
         >>> A = np.zeros((30, 30)) + 96
         >>> B = np.zeros((30, 30)) + 100
 
-        >>> # Generamos las distribuciones de dosis
+        >>> # We generate the dose distributions
         >>> D_ref = load(A, dpi = 25.4)
         >>> D_eval = load(B, dpi = 25.4)
 
-        >>> # Sobre la variable D_eval, aplicamos el método gamma2D proporcionando como argumentos la distribución de referencia, D_ref, y el criterio (3 %, 1 mm).
+        >>> # On the variable D_eval, we apply the gamma2D method providing as arguments the reference distribution, D_ref, and the criteria (3%, 1 mm).
         >>> gamma_distribution, pass_rate = D_eval.gamma2D( D_ref, 3, 1) 
-        >>> print(f"El porcentaje de aporbación es: {pass_rate:.1f} %")
+        >>> print(f"Pass rate: {pass_rate:.1f} %")
 
-        Archivos en formato CSV (comma separated values)::
+        CSV files (comma separated values)::
 
         >>> from Dosepy.image import load
 
-        >>> # Cargamos los archivos "D_TPS.csv" y "D_FILM.csv"
-        >>> # Los archivos de ejemplo .csv se encuentran dentro del paquete Dosepy, en la carpeta src/Dosepy/data
+        >>> # Load "D_TPS.csv" y "D_FILM.csv"
+        >>> # The example .csv files are located within the Dosepy package, in the src/Dosepy/data
         >>> np_film = np.genfromtxt('../D_FILM.csv', delimiter = ",", comments = "#")
         >>> np_tps = np.genfromtxt('../D_TPS.csv', delimiter = ",", comments = "#")
         >>> d_film = load(np_film, dpi=25.4)
         >>> d_tps = load(np_tps, dpi=25.4)
 
-        >>> # Llamamos al método gamma2D, con criterio 3 %, 2 mm.
+        We call the method gamma2D, with criteria 3%, 2 mm::
+
         >>> g, pass_rate = d_tps.gamma2D(d_film, 3, 2)
 
-        >>> # Imprimimos el resultado
-        >>> print(f'El índice de aprobación es: {pass_rate:.1f} %')
+        >>> # Print the result
+        >>> print(f'Pass rate: {pass_rate:.1f} %')
         >>> plt.imshow(g, vmax = 1.4)
         >>> plt.show()
-        >>> # El índice de aprobación es: 98.9 %
+        >>> # Pass rate: 98.9 %
         '''
 
         #%%
 
         # error checking
         if reference.shape != self.shape:
-            raise Exception("No es posible el cálculo con matrices de diferente tamaño.")
+            raise AttributeError(
+                f"The images are not the same size: {self.shape} vs. {reference.shape}"
+                )
 
         if local_norm and dose_ta_Gy:
-            raise Exception("No es posible la selección simultánea de dose_ta_Gy y local_norm.")
+            raise AttributeError(
+                "Simultaneous selection of dose_ta_Gy and local_norm is not possible."
+                )
 
         if not self.dpi:
-            raise Exception("La distribución no tiene asociada una resolución espacial.")
+            raise AttributeError(
+                "The distribution has no associated spatial resolution."
+                )
 
         if reference.dpi != self.dpi:
-            raise Exception("No es posible el cálculo con resoluciones diferentes para cada distribución.")
+            raise AttributeError(
+                f"The image DPIs to not match: {self.dpi:.2f} vs. {reference.dpi:.2f}"
+                )
 
         #%%
 
@@ -878,7 +879,7 @@ class ArrayImage(BaseImage):
         Dose_threshold = (dose_threshold/100)*maximum_dose
         #print(f'Dose_threshold: {Dose_threshold:.1f}')
 
-        #   Dosis de tolerancia absoluta o relativa
+        # Absolute or relative dose-to-agreement
         if dose_ta_Gy:
             pass
         elif local_norm:
@@ -886,18 +887,18 @@ class ArrayImage(BaseImage):
         else:
             dose_ta = (dose_ta/100) * maximum_dose
 
-        #   Número de pixeles que se usarán para definir una vecindad sobre la que se calculará el índice gamma.
+        # Number of pixels that will be used to define a neighborhood 
+        # over which the gamma index will be calculated.
         neighborhood = round(mask_radius*self.dpmm)
 
-        #   Matriz que guardará el resultado del índice gamma.
+        # Array that will store the result of the gamma index.
         gamma = np.zeros( (self.array.shape[0], self.array.shape[1]) )
-
 
 
 
         #%%
         for i in np.arange( D_ref.shape[0] ):
-            #   Código que permite incluir puntos cerca de la frontera de la distribución de dosis
+            # Code that allows including points near the border of the dose distribution
             mi = -(neighborhood - max(0, neighborhood - i))
             mf = neighborhood - max(0, neighborhood - (D_eval.shape[0] - (i+1))) + 1
 
@@ -905,27 +906,29 @@ class ArrayImage(BaseImage):
                 ni = -(neighborhood - max(0, neighborhood - j))
                 nf = neighborhood - max(0, neighborhood - (D_eval.shape[1] - (j+1))) + 1
 
-                #   Para almacenar temporalmente los valores de la función Gamma por cada punto en la distribución de referencia
+                # To temporarily store the Gamma function values ​​for 
+                # each point in the reference distribution
                 Gamma = []
 
                 for m in np.arange(mi , mf):
                     for n in np.arange(ni, nf):
 
-                        # Distancia entre dos posiciones (en milímetros), por fila
+                        # Row physical distance (mm)
                         dm = m*(1./self.dpmm)
-                        # Distancia entre dos posiciones (en milímetros), por columna
+                        # Column physical distance (mm)
                         dn = n*(1./self.dpmm)
                         
-                        # Distancia total entre dos puntos
+                        # Distance between two points 
                         distance = np.sqrt(dm**2 + dn**2)
 
-                        # Diferencia en dosis
+                        # Dose difference
                         dose_dif = D_eval[i + m, j + n] - D_ref[i,j]
 
 
                         if local_norm:
-                            # La dosis de tolerancia se actualiza al porcentaje con respecto al valor
-                            # de dosis local en la distribución de referencia.
+                            # The dose-to-agreement is updated to the percentage 
+                            # with respect to the value
+                            # of local dose in the reference distribution.
                             dose_t_local = dose_ta * D_ref[i,j] / 100
 
                             Gamma.append(
@@ -943,19 +946,19 @@ class ArrayImage(BaseImage):
 
                 gamma[i,j] = min(Gamma)
 
-                # Para la posición en cuestión, si la dosis es menor al umbral de dosis,
-                # entonces dicho punto no se toma en cuenta en el porcentaje de aprobación.
+                # For the position in question, if the dose is below than the dose threshold,
+                # then this point is not taken into account in the approval percentage.
                 if D_eval[i,j] < Dose_threshold:
                     gamma[i,j] = np.nan
 
-        # Arroja las coordenadas en donde los valores gamma son menor o igual a 1
+        # Returns the coordinates where the gamma values ​​are less than or equal to 1
         less_than_1_coordinate = np.where(gamma <= 1)
-        # Cuenta el número de coordenadas en donde se cumple que gamma <= 1
+        # Counts the number of coordinates where gamma <= 1 is True
         less_than_1 = np.shape(less_than_1_coordinate)[1]
-        # Número de valores gamma diferentes de np.nan
+        # Number of values that are not np.nan
         total_points = np.shape(gamma)[0]*np.shape(gamma)[1] - np.shape(np.where(np.isnan(gamma)))[1]
 
-        #   Índice de aprobación
+        # Pass rate
         gamma_percent = float(less_than_1)/total_points*100
         return gamma, gamma_percent            
 
@@ -997,10 +1000,9 @@ def load_multiples(image_file_list, for_calib=False):
 
 
 def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, ArrayImage]:
-    """
-    Crop the biggest of the two images and resize image2 to make them:
-    * The same pixel dimensions
-    * The same DPI
+    """Crop the biggest of the two images and resize image2 to make them:
+        * The same pixel dimensions
+        * The same DPI
 
     The usefulness of the function comes when trying to compare images from different sources.
     The best example is calculating gamma. The physical
@@ -1008,9 +1010,9 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
 
     Parameters
     ----------
-    image1 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.DicomImage`, :class:`~pylinac.core.image.TiffImage`}
+    image1 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`}
         Must have DPI and SID.
-    image2 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.DicomImage`, :class:`~pylinac.core.image.TiffImage`}
+    image2 : {:class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`}
         Must have DPI and SID.
 
     Returns

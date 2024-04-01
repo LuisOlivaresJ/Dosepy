@@ -17,5 +17,4 @@ Dosepy.calibration
 ------------------
 
 .. automodule:: Dosepy.calibration
-
-Dosepy.i_o
+    :members:

@@ -4,6 +4,8 @@ from pathlib import Path
 import os
 from pylinac.core.io import get_url
 import pydicom
+import struct
+from pydicom.errors import InvalidDicomError
 
 def retrieve_demo_file(name: str, force: bool = False) -> Path:
     """Retrieve the demo file either by getting it from file or from a URL.
@@ -43,3 +45,26 @@ def retrieve_dicom_file(file: str | Path) -> pydicom.FileDataset:
     """
     ds = pydicom.dcmread(file, force=True)
     return ds
+
+def is_dicom_image(file: str | Path) -> bool:
+    """Boolean specifying if file is a proper DICOM file with a image
+
+    Parameters
+    ----------
+    file : str
+        The path to the file.
+
+    See Also
+    --------
+    pydicom.filereader.read_preamble
+    pydicom.filereader.read_partial
+    """
+    result = False
+    try:
+        pydicom.dcmread(file)
+        result = True
+    except InvalidDicomError as error:
+        #print(f"A {type(error).__name__} has occurred.")
+        pass
+
+    return result
