@@ -2,7 +2,7 @@
 
 ![Portada_Dosepy](../assets/Calibration_tab.png)
 
-Dosepy allows to easily perform film dosimetry and 2D/1D gamma analysis.
+Dosepy allows to easily perform film dosimetry and 2D gamma analysis.
 
 The software uses tif images for film dosimetry. A DICOM file exported from a treatment planning system can be loaded to perform gamma index comparison.
 
