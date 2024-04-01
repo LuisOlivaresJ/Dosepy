@@ -23,6 +23,9 @@ def retrieve_demo_file(name: str, force: bool = False) -> Path:
     urls = {
         "QA_Post.tif": r"https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/main/docs/Jupyter/",
         "QA_Pre.tif": r"https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/main/docs/Jupyter/",
+        "cal_48h.tif": r"https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/main/docs/Jupyter/",
+        "verif.tif": r"https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/main/docs/Jupyter/",
+        "RD_20x20cm2_256x256pix.dcm": r"https://raw.githubusercontent.com/LuisOlivaresJ/Dosepy/main/docs/Jupyter/",
         }
     
     url = urls[name] + name

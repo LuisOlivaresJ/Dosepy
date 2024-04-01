@@ -2,3 +2,8 @@ jupyter-book
 matplotlib
 numpy
 Dosepy
+imageio
+scikit-image
+pydicom
+scipy
+pylinac
