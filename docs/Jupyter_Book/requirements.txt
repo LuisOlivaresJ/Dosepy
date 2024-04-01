@@ -3,6 +3,6 @@ matplotlib
 numpy
 Dosepy
 imageio
-skimage
+skimage-image
 pydicom
 scipy
