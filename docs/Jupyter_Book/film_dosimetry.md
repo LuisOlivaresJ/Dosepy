@@ -24,14 +24,16 @@ Start importing two libraries.
 
 ```{code-cell} python
 from Dosepy.image import load
+from Dosepy.i_o import retrieve_demo_file
 from pathlib import Path
 ```
 
-Read the tif file used for film calibration and create a list with the imparted doses.
+Read the tif file for film calibration and create a list with the imparted doses. For this example a demo file will be used.
 
 ```{code-cell} python
-file_path = Path("/home/luis/Descargas") / "POS48_1.tif"
-cal_image = load(file_path, for_calib = True)
+# Change the line below to something like: path_to_file = "path/to/my/image.tif"
+path_to_file = retrieve_demo_file("cal_48h.tif")
+cal_image = load(path_to_file, for_calib = True)
 
 imparted_doses = [0, 0.5, 1, 1.5, 2, 3, 5, 8, 10]
 ```
@@ -53,7 +55,7 @@ _ = cal.plot()
 Load another tif file
 
 ```{code-cell} python
-qa_image_path = Path("/home/luis/Descargas") / "to_dose.tif"
+qa_image_path = retrieve_demo_file("verif.tif")
 qa_image = load(qa_image_path)
 qa_image.plot()
 ```
