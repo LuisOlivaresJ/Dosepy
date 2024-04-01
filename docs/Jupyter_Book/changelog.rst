@@ -3,6 +3,16 @@
 Changelog
 =========
 
+V 0.6.0 (APR-2024)
+--------------------
+
+* New graphical user interface (GUI), using Model-View-Controller architecture.
+* The number of films, their size and the dose imparted to each of them can be defined by the user.
+* The new GUI focuses just on film dosimetry. Gamma index analysis requires the use of a Python script (see :doc:`gamma` section).
+* The gamma2D method from ArrayImage class is addapted from the dose module.
+* The load function (an extension from `pylinac package <https://pylinac.readthedocs.io/en/latest/core_modules.html#pylinac.core.image.load>`_), supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
+* PyPI README and gamma2D method are translated to English.
+
 V 0.5.1 (FEB-2024)
 ------------------
 
@@ -11,7 +21,7 @@ V 0.5.1 (FEB-2024)
 V 0.5.0 (JAN-2024)
 ------------------
 
-* New image, calibration and i_o modules to have new functionalities. The content is heavily inspired from `pylinac <https://pylinac.readthedocs.io/en/latest/>`_ and `OMG_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_ libraries.
+* New image, calibration and i_o modules with new functionalities. The content is heavily inspired from `pylinac <https://pylinac.readthedocs.io/en/latest/>`_ and `OMG_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_ libraries.
 * First steps using unittest and flake8. 
 * Use of scikit-image for auto film detection.
 * Documentation for Getting stated with scripting.
@@ -23,6 +33,7 @@ V 0.4.0 (AUG-2023)
 * When a csv file is open, a new window shows to ask for resolution.
 * Quality control tests for new versions or post installation acceptance.
 * New tool for horizontal profile analysis, based on `relative_dose_1d. <https://github.com/LuisOlivaresJ/relative_dose_1d package>`_
+
 .. image:: ../assets/Relative_dose_1d_incorporation.PNG
    :scale: 50 %
 
@@ -31,7 +42,7 @@ V 0.3.8 (MAY-2023)
 
 * Firsts steps for spanish to english documentation using Read The Docs Documentation.
 
-V 0.3.7 (MARCH-2023)
+V 0.3.7 (MAR-2023)
 --------------------
 
 * Se resuelve `error <https://github.com/LuisOlivaresJ/Dosepy/issues/32>`_ de ejecución con archivos de prueba. Se define una vecindad de 2 cm x 2 cm para reducir el tiempo de cálculo para el índice gamma. En la `página principal <https://luisolivaresj.github.io/Dosepy/>`_ de Dosepy, se muestra la validación para la dosimetría con película al medir los factores de campo de un haz 6FFF.

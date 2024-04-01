@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.5.1"
+version = "0.6.0"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
-description = "Gamma analysis and film dosimetry for dose distributions in radiotherapy"
+description = "Film dosimetry and gamma analysis for dose distributions in radiotherapy"
 readme = "README.md"
 requires-python = ">=3.7"
 license = {file = "LICENCE"}
@@ -33,7 +33,8 @@ dependencies = [
   "tifffile >= 2022.10.10",
   "scipy >= 1.9.3",
   "PyQt6 >= 6.5.1",
-  "relative_dose_1d >= 0.1.7"
+  "relative_dose_1d >= 0.1.7",
+  "PySide6 >= 6.6.1",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
@@ -44,4 +45,4 @@ Bug-Tracker = "https://github.com/LuisOlivaresJ/Dosepy"
 where = ["src"]
 
 [tool.setuptools.package-data]
-dp_dep = ["*.csv", "*.png"]
+Dosepy = ["*.csv", "*.png"]

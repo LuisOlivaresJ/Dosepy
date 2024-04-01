@@ -6,9 +6,9 @@ root: intro
 chapters:
 - file: installation
 - file: usage
-- file: JB_Pelicula_Notebook
-- file: JB_Dosepy_Notebook
-- file: JB_DICOM
+- file: film_dosimetry
+- file: gamma
+- file: dicom
 - file: bibliography
 - file: api
 - file: changelog

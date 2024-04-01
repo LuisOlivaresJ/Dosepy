@@ -1,17 +1,20 @@
-API (Under construction)
-========================
+API
+===
 
-Tools
------
-
-.. autofunction:: Dosepy.tools.resol.match_resolution
-.. autofunction:: Dosepy.tools.film_to_dose.calibracion
-
-Dose Module
+Dosepy.image
 ------------
 
-.. automodule:: Dosepy.dose
+.. automodule:: Dosepy.image
     :members:
 
+Dosepy.tools
+------------
 
+.. automodule:: Dosepy.tools.resol
+    :members:
 
+Dosepy.calibration
+------------------
+
+.. automodule:: Dosepy.calibration
+    :members:

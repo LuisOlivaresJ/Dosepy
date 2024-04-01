@@ -1,36 +1,42 @@
 import sys
 from matplotlib.backends.backend_qtagg import FigureCanvas
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFormLayout, QLineEdit, QHBoxLayout, QVBoxLayout, QMessageBox
-from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtWidgets import (
+    QApplication,
+    QWidget,
+    QLabel,
+    QPushButton,
+    QFormLayout,
+    QLineEdit,
+    QHBoxLayout,
+    QVBoxLayout,
+)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from matplotlib.figure import Figure
 import numpy as np
-from Dosepy.GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
+from .Bloque_Imagenes import Qt_Figure_Imagen
+
 #from GUILayouts.Bloque_Imagenes import Qt_Figure_Imagen
-import pkg_resources
-import Dosepy.dose as dp
+from importlib import resources
+
+import Dosepy.old.dose as dp
 
 
 class Bloque_gamma(QWidget):
     """
     Permite mostrar los archivos a cargar, parámetros gamma y resultados.
     """
-    def __init__(self, Us):
+    def __init__(self):
         super().__init__()
-        self.Us = Us
-        self.iniciarUI()
+        self.setup()
 
-    def iniciarUI(self):
-        self.Widgets_Labels()
-        #self.show()
-
-    def Widgets_Labels(self):
+    def setup(self):
 
         # Crear botones para cargar archivos
         #folder_icon = QIcon("Icon/folder.png")
-        file_name_folder = pkg_resources.resource_filename('Dosepy', 'Icon/folder.png')
+        file_name_folder = str(resources.files("Dosepy") / "Icon" / "folder.png")
         folder_icon = QIcon(file_name_folder)
+
 
         self.Refer_button = QPushButton()
         self.Refer_button.setIcon(folder_icon)
@@ -117,14 +123,13 @@ class Bloque_gamma(QWidget):
         archivos_Post_h_box.addWidget(Eval_label)
         archivos_Post_h_box.addWidget(self.Eval_button)
 
-        if self.Us == 'P':
-            #   Crear FormLayout
-            Parametros_gamma_Layout = QFormLayout()
-            #Parametros_gamma_Layout.setLabelAlignment(Qt.AlignLeft)
-            Parametros_gamma_Layout.setFormAlignment(Qt.AlignmentFlag.AlignRight)
-            Parametros_gamma_Layout.addRow('Toler. en dosis [%]', self.Toler_dosis)
-            Parametros_gamma_Layout.addRow('Toler. en distancia [mm]', self.Toler_dist)
-            Parametros_gamma_Layout.addRow('Umbral de dosis [%]', self.Umbral_dosis)
+        #   Crear FormLayout
+        Parametros_gamma_Layout = QFormLayout()
+        #Parametros_gamma_Layout.setLabelAlignment(Qt.AlignLeft)
+        Parametros_gamma_Layout.setFormAlignment(Qt.AlignmentFlag.AlignRight)
+        Parametros_gamma_Layout.addRow('Toler. en dosis [%]', self.Toler_dosis)
+        Parametros_gamma_Layout.addRow('Toler. en distancia [mm]', self.Toler_dist)
+        Parametros_gamma_Layout.addRow('Umbral de dosis [%]', self.Umbral_dosis)
 
         #   Crear vertical Layout
 
@@ -132,9 +137,8 @@ class Bloque_gamma(QWidget):
         Padre_Info_V_Layout.addLayout(archivos_Pre_h_box)
         Padre_Info_V_Layout.addLayout(archivos_Post_h_box)
 
-        if self.Us == 'P':
-            Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
-            Padre_Info_V_Layout.addStretch()
+        Padre_Info_V_Layout.addLayout(Parametros_gamma_Layout)
+        Padre_Info_V_Layout.addStretch()
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_maximo_Label)
         #Padre_Info_V_Layout.addWidget(self.Indice_gamma_mediana_Label)
         Padre_Info_V_Layout.addWidget(self.Calcular_Button)
