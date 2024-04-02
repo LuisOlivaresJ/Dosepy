@@ -1,0 +1,1250 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API &#8212; Dosepy Jupyter Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Bibliography" href="bibliography.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/Logo_Dosepy.png" class="logo__image only-light" alt="Dosepy Jupyter Book - Home"/>
+    <script>document.write(`<img src="_static/Logo_Dosepy.png" class="logo__image only-dark" alt="Dosepy Jupyter Book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Dosepy
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="film_dosimetry.html">Film dosimetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dicom.html">DICOM example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/LuisOlivaresJ/Dosepy/tree/main/docs/Jupyter_Book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/LuisOlivaresJ/Dosepy/tree/main/docs/Jupyter_Book/issues/new?title=Issue%20on%20page%20%2Fapi.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/api.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>API</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.image">Dosepy.image</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage"><code class="docutils literal notranslate"><span class="pre">ArrayImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.dpi"><code class="docutils literal notranslate"><span class="pre">ArrayImage.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.dpmm"><code class="docutils literal notranslate"><span class="pre">ArrayImage.dpmm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.gamma2D"><code class="docutils literal notranslate"><span class="pre">ArrayImage.gamma2D()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.save_as_tif"><code class="docutils literal notranslate"><span class="pre">ArrayImage.save_as_tif()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage"><code class="docutils literal notranslate"><span class="pre">BaseImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.path"><code class="docutils literal notranslate"><span class="pre">BaseImage.path</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.array"><code class="docutils literal notranslate"><span class="pre">BaseImage.array</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.physical_shape"><code class="docutils literal notranslate"><span class="pre">BaseImage.physical_shape</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.CalibImage"><code class="docutils literal notranslate"><span class="pre">CalibImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.CalibImage.get_calibration"><code class="docutils literal notranslate"><span class="pre">CalibImage.get_calibration()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage"><code class="docutils literal notranslate"><span class="pre">TiffImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.sid"><code class="docutils literal notranslate"><span class="pre">TiffImage.sid</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.props"><code class="docutils literal notranslate"><span class="pre">TiffImage.props</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.doses_in_central_rois"><code class="docutils literal notranslate"><span class="pre">TiffImage.doses_in_central_rois()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.dpi"><code class="docutils literal notranslate"><span class="pre">TiffImage.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.dpmm"><code class="docutils literal notranslate"><span class="pre">TiffImage.dpmm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.get_stat"><code class="docutils literal notranslate"><span class="pre">TiffImage.get_stat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.plot"><code class="docutils literal notranslate"><span class="pre">TiffImage.plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.to_dose"><code class="docutils literal notranslate"><span class="pre">TiffImage.to_dose()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.equate_images"><code class="docutils literal notranslate"><span class="pre">equate_images()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.load_multiples"><code class="docutils literal notranslate"><span class="pre">load_multiples()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.tools.resol">Dosepy.tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.tools.resol.equate_resolution"><code class="docutils literal notranslate"><span class="pre">equate_resolution()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.calibration">Dosepy.calibration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration"><code class="docutils literal notranslate"><span class="pre">Calibration</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.y"><code class="docutils literal notranslate"><span class="pre">Calibration.y</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.x"><code class="docutils literal notranslate"><span class="pre">Calibration.x</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.func"><code class="docutils literal notranslate"><span class="pre">Calibration.func</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.channel"><code class="docutils literal notranslate"><span class="pre">Calibration.channel</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.popt"><code class="docutils literal notranslate"><span class="pre">Calibration.popt</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.pcov"><code class="docutils literal notranslate"><span class="pre">Calibration.pcov</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.plot"><code class="docutils literal notranslate"><span class="pre">Calibration.plot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.polynomial_g3"><code class="docutils literal notranslate"><span class="pre">polynomial_g3()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.rational_func"><code class="docutils literal notranslate"><span class="pre">rational_func()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h1>
+<section id="module-Dosepy.image">
+<span id="dosepy-image"></span><h2>Dosepy.image<a class="headerlink" href="#module-Dosepy.image" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>NAME</dt><dd><p>Image module</p>
+</dd>
+<dt>DESCRIPTION</dt><dd><p>This module holds functionalities for tif image loading and manipulation.
+ArryaImage class is used as representation of dose distributions.
+The content is heavily based from
+<a class="reference external" href="https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html">pylinac</a>, and <a class="reference external" href="https://omg-dosimetry.readthedocs.io/en/latest/">omg_dosimetry</a></p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="Dosepy.image.ArrayImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">ArrayImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#ArrayImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.ArrayImage" title="Link to this definition">#</a></dt>
+<dd><p>An image constructed solely from a numpy array.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="Dosepy.image.ArrayImage.dpi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dpi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#Dosepy.image.ArrayImage.dpi" title="Link to this definition">#</a></dt>
+<dd><p>The dots-per-inch of the image, defined at isocenter.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Dosepy.image.ArrayImage.dpmm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dpmm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#Dosepy.image.ArrayImage.dpmm" title="Link to this definition">#</a></dt>
+<dd><p>The Dots-per-mm of the image, defined at isocenter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.ArrayImage.gamma2D">
+<span class="sig-name descname"><span class="pre">gamma2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dose_ta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_ta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dose_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dose_ta_Gy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_as_percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#ArrayImage.gamma2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.ArrayImage.gamma2D" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the gamma between the current image (reference) and a comparison image.
+The images must have the same spatial resolution (dpi) to be comparable. The size of the images must also be the same.
+An array is ​​obtained. It represents the gamma indices at each position of the dose distribution,
+as well as the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
+The registration of dose distributions is assumed, i.e. the spatial coordinate of a point in the
+reference dose distribution is equal to the coordinate of the same point in the distribution to be evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference</strong> (<a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>) – The reference image.</p></li>
+<li><p><strong>dose_ta</strong> (<em>float</em><em>, </em><em>default = 3</em>) – Dose-to-agreement.
+This value can be interpreted in 3 different ways depending on the dose_ta_Gy,
+local_norm and max_as_percentile  parameters, which are described below.</p></li>
+<li><p><strong>dist_ta</strong> (<em>float</em><em>, </em><em>default = 3</em>) – Distance-to-agreement in mm.</p></li>
+<li><p><strong>dose_threshold</strong> (<em>float</em><em>, </em><em>default = 10</em>) – Dose threshold in percentage (0 to 100) with respect to the maximum dose of the
+reference distribution (or to 99th percentile if max_as_percentile = True).
+Any point in the dose distribution with a value less than the dose threshold,
+is excluded from the analysis.</p></li>
+<li><p><strong>dose_ta_Gy</strong> (<em>bool</em><em>, </em><em>default: False</em>) – If True, then “dose_ta” (the tolerance dose) is interpreted as an absolute value in Gray.
+If False (default), “dose_ta” is interpreted as a percentage.</p></li>
+<li><p><strong>local_norm</strong> (<em>bool</em><em>, </em><em>default: False</em>) – If the argument is True (local normalization), the tolerance dose percentage “dose_ta” is interpreted with respect to the local dose
+at each point of the reference distribution.
+If the argument is False (global normalization), the tolerance dose percentage “dose_ta” is interpreted with respect to the
+maximum of the distribution to be evaluated.
+* The dose_ta_Gy and local_norm arguments must NOT be selected as True simultaneously.
+* If you want to use the maximum of the distribution directly, use the parameter max_as_percentile = False (see explanation below).</p></li>
+<li><p><strong>mask_radius</strong> (<em>float</em><em>, </em><em>default: 10</em>) – <p>Physical distance in millimeters used to limit the calculation to positions that are within a neighborhood given by mask_radius.</p>
+<p>The use of this mask allows reducing the calculation time due to the following process:</p>
+<blockquote>
+<div><p>For each point in the reference distribution, the calculation of the Gamma function is performed only
+with those points or positions of the distribution to be evaluated that are at a relative distance
+less than or equal to mask_radius, that is, with the points that are within the neighborhood given by mask_radius.
+The length of one side of the square mask is 2*mask_radius + 1.</p>
+</div></blockquote>
+<p>On the other hand, if you prefer to compare with all the points of the distribution to be evaluated, it is enough to enter
+a distance greater than the dimensions of the dose distribution (for example mask_radius = 1000).</p>
+</p></li>
+<li><p><strong>max_as_percentile</strong> (<em>bool</em><em>, </em><em>default: True</em>) – If the argument is True, 99th percentile is used as an approximation of the maximum value of the
+dose distribution. This allows us to exclude artifacts or errors in specific positions.
+If the argument is False, the maximum value of the distribution is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>gamma_map</strong> (<em>numpy.ndarray</em>) – The calculated gamma distribution.</p></li>
+<li><p><strong>pass_rate</strong> (<em>float</em>) – Approval rate. It is calculated as the percentage of gamma values ​​&lt;= 1.
+Points with dose below than the dose threshold are not accounted.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Percentile 99th of the dose distribution can be used as an approximation of the maximum value.
+This allows us to avoid artifacts or errors in specific positions of the distribution.
+(useful for example for spot labels are used in films).</p>
+<p>It is assumed that both distributions have exactly the same physical dimensions, and the positions
+​​for each point coincide with each other, that is, the images are registered.</p>
+<p>Interpolation is not supported yet.</p>
+<p><strong>References</strong></p>
+<p>For more information about the operating mechanisms, effectiveness and accuracy of the gamma tool:</p>
+<p>[1] M. Miften, A. Olch, et. al. “Tolerance Limits and Methodologies for IMRT Measurement-Based
+Verification QA: Recommendations of AAPM Task Group No. 218” Medical Physics, vol. 45, nº 4, pp. e53-e83, 2018.</p>
+<p>[2] D. Low, W. Harms, S. Mutic y J. Purdy, «A technique for the quantitative evaluation of dose distributions,»
+Medical Physics, vol. 25, nº 5, pp. 656-661, 1998.</p>
+<p>[3] L. A. Olivares-Jimenez, “Distribución de dosis en radioterapia de intensidad modulada usando películas de tinte
+radiocrómico : irradiación de cerebro completo con protección a hipocampo y columna con protección a médula”
+(Tesis de Maestría) Posgrado en Ciencias Físicas, IF-UNAM, México, 2019</p>
+<p class="rubric">Examples</p>
+<p>Numpy arrays as dose distributions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># We import the Dosepy packages as well as numpy to create example arrays representing two dose distributions.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Dosepy.image</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># We generate the arrays, A and B, with the values ​​96 and 100 in all their elements.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span> <span class="o">+</span> <span class="mi">96</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span> <span class="o">+</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># We generate the dose distributions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D_ref</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mf">25.4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D_eval</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mf">25.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># On the variable D_eval, we apply the gamma2D method providing as arguments the reference distribution, D_ref, and the criteria (3%, 1 mm).</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gamma_distribution</span><span class="p">,</span> <span class="n">pass_rate</span> <span class="o">=</span> <span class="n">D_eval</span><span class="o">.</span><span class="n">gamma2D</span><span class="p">(</span> <span class="n">D_ref</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pass rate: </span><span class="si">{</span><span class="n">pass_rate</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> %&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>CSV files (comma separated values):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Dosepy.image</span> <span class="kn">import</span> <span class="n">load</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load &quot;D_TPS.csv&quot; y &quot;D_FILM.csv&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The example .csv files are located within the Dosepy package, in the src/Dosepy/data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np_film</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;../D_FILM.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np_tps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="s1">&#39;../D_TPS.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d_film</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">np_film</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mf">25.4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d_tps</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">np_tps</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mf">25.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We call the method gamma2D, with criteria 3%, 2 mm:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">,</span> <span class="n">pass_rate</span> <span class="o">=</span> <span class="n">d_tps</span><span class="o">.</span><span class="n">gamma2D</span><span class="p">(</span><span class="n">d_film</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Print the result</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pass rate: </span><span class="si">{</span><span class="n">pass_rate</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> %&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Pass rate: 98.9 %</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.ArrayImage.save_as_tif">
+<span class="sig-name descname"><span class="pre">save_as_tif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#ArrayImage.save_as_tif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.ArrayImage.save_as_tif" title="Link to this definition">#</a></dt>
+<dd><p>Used to save a dose distribution (in Gy) as a tif file (in cGy).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – File name as a string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Dosepy.image.BaseImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">BaseImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#BaseImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.BaseImage" title="Link to this definition">#</a></dt>
+<dd><p>Base class for the Image classes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.image.BaseImage.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#Dosepy.image.BaseImage.path" title="Link to this definition">#</a></dt>
+<dd><p>The path to the image file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.image.BaseImage.array">
+<span class="sig-name descname"><span class="pre">array</span></span><a class="headerlink" href="#Dosepy.image.BaseImage.array" title="Link to this definition">#</a></dt>
+<dd><p>The actual image pixel array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Dosepy.image.BaseImage.physical_shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">physical_shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#Dosepy.image.BaseImage.physical_shape" title="Link to this definition">#</a></dt>
+<dd><p>The physical size of the image in mm.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Dosepy.image.CalibImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">CalibImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#CalibImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.CalibImage" title="Link to this definition">#</a></dt>
+<dd><p>A tiff image used for calibration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.CalibImage.get_calibration">
+<span class="sig-name descname"><span class="pre">get_calibration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'R'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#CalibImage.get_calibration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.CalibImage.get_calibration" title="Link to this definition">#</a></dt>
+<dd><p>Computes calibration curve. Use non-linear least squares to
+fit a function, func, to data. For more information see
+scipy.optimize.curve_fit.</p>
+<section id="parameter">
+<h3>Parameter<a class="headerlink" href="#parameter" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>doses<span class="classifier">list</span></dt><dd><p>Doses values used to expose films for calibration.</p>
+</dd>
+<dt>func<span class="classifier">string</span></dt><dd><p>“P3”: Polynomial function of degree 3, using optical density as film response. “RF” or “Rational”: Rational function, using normalized pixel value relative to the unexposed film.</p>
+</dd>
+<dt>channel<span class="classifier">str</span></dt><dd><p>Color channel. “R”: Red, “G”: Green and “B”: Blue, “M”: mean.</p>
+</dd>
+<dt>roi<span class="classifier">tuple</span></dt><dd><p>Width and height region of interest (roi) in millimeters, at the
+center of the film.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instance of a Calibration class.</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#Dosepy.calibration.Calibration" title="Dosepy.calibration.Calibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Calibration</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Load an image from a file and compute a calibration curve using green
+channel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Dosepy.image</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_to_image</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\QA\image.tif&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cal_image</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">path_to_image</span><span class="p">,</span> <span class="n">for_calib</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cal</span> <span class="o">=</span> <span class="n">cal_image</span><span class="o">.</span><span class="n">get_calibration</span><span class="p">(</span><span class="n">doses</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">channel</span> <span class="o">=</span> <span class="s2">&quot;G&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot the calibration curve</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cal</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">TiffImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#TiffImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.TiffImage" title="Link to this definition">#</a></dt>
+<dd><p>An image from a tiff file.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.sid">
+<span class="sig-name descname"><span class="pre">sid</span></span><a class="headerlink" href="#Dosepy.image.TiffImage.sid" title="Link to this definition">#</a></dt>
+<dd><p>The SID value as passed in upon construction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.props">
+<span class="sig-name descname"><span class="pre">props</span></span><a class="headerlink" href="#Dosepy.image.TiffImage.props" title="Link to this definition">#</a></dt>
+<dd><p>Image properties via imageio.v3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>imageio.core.v3_plugin_api.ImageProperties</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.doses_in_central_rois">
+<span class="sig-name descname"><span class="pre">doses_in_central_rois</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#TiffImage.doses_in_central_rois"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.TiffImage.doses_in_central_rois" title="Link to this definition">#</a></dt>
+<dd><p>Dose in central film rois.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cal</strong> (<a class="reference internal" href="#Dosepy.calibration.Calibration" title="Dosepy.calibration.Calibration"><em>Dosepy.calibration.Calibration</em></a>) – Instance of a Calibration class</p></li>
+<li><p><strong>roi</strong> (<em>tuple</em>) – Width and height of a region of interest (roi) in millimeters (mm), at the
+center of the film.</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Whether to actually show the image and rois.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>array</strong> – Doses on heach founded film.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.dpi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dpi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#Dosepy.image.TiffImage.dpi" title="Link to this definition">#</a></dt>
+<dd><p>The dots-per-inch of the image, defined at isocenter.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.dpmm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dpmm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#Dosepy.image.TiffImage.dpmm" title="Link to this definition">#</a></dt>
+<dd><p>The Dots-per-mm of the image, defined at isocenter. E.g. if an EPID
+image is taken at 150cm SID, the dpmm will scale back to 100cm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.get_stat">
+<span class="sig-name descname"><span class="pre">get_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/Dosepy/image.html#TiffImage.get_stat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.TiffImage.get_stat" title="Link to this definition">#</a></dt>
+<dd><p>Get average and standar deviation from pixel values at a central ROI in each film.</p>
+<section id="id1">
+<h3>Parameter<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>ch<span class="classifier">str</span></dt><dd><p>Color channel. “R”: Red, “G”: Green, “B”: Blue and “M”: mean.</p>
+</dd>
+<dt>field_in_film<span class="classifier">bool</span></dt><dd><p>True to show the rois used in the image.</p>
+</dd>
+<dt>roi<span class="classifier">tuple</span></dt><dd><p>Width and height of a region of interest (roi) in millimeters, at the
+center of the film.</p>
+</dd>
+<dt>show<span class="classifier">bool</span></dt><dd><p>Whether to actually show the image and rois.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mean, std</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Load an image from a file and compute a calibration curve using
+green channel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dosepy.image</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_to_image</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\QA\image.tif&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cal_image</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">path_to_image</span><span class="p">,</span> <span class="n">for_calib</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">cal_image</span><span class="o">.</span><span class="n">get_stat</span><span class="p">(</span><span class="n">ch</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">roi</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">show</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Axes</span></span></span><a class="reference internal" href="_modules/Dosepy/image.html#TiffImage.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.TiffImage.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.Axes instance</em>) – The axis to plot the image to. If None, creates a new figure.</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Whether to actually show the image. Set to false when plotting
+multiple items.</p></li>
+<li><p><strong>clear_fig</strong> (<em>bool</em>) – Whether to clear the prior items on the figure before plotting.</p></li>
+<li><p><strong>kwargs</strong> – kwargs passed to plt.imshow()</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.image.TiffImage.to_dose">
+<span class="sig-name descname"><span class="pre">to_dose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cal</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><span class="pre">TiffImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.CalibImage" title="Dosepy.image.CalibImage"><span class="pre">CalibImage</span></a></span></span><a class="reference internal" href="_modules/Dosepy/image.html#TiffImage.to_dose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.TiffImage.to_dose" title="Link to this definition">#</a></dt>
+<dd><p>Convert the tiff image to a dose distribution. The tiff file image
+has to contain an unirradiated film used as a reference for zero Gray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cal</strong> (<a class="reference internal" href="#Dosepy.calibration.Calibration" title="Dosepy.calibration.Calibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Calibration</span></code></a>) – Instance of a Calibration class</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dose distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.image.equate_images">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">equate_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><span class="pre">TiffImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.CalibImage" title="Dosepy.image.CalibImage"><span class="pre">CalibImage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">image2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><span class="pre">TiffImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.CalibImage" title="Dosepy.image.CalibImage"><span class="pre">CalibImage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/Dosepy/image.html#equate_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.equate_images" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Crop the biggest of the two images and resize image2 to make them:</dt><dd><ul class="simple">
+<li><p>The same pixel dimensions</p></li>
+<li><p>The same DPI</p></li>
+</ul>
+</dd>
+</dl>
+<p>The usefulness of the function comes when trying to compare images from different sources.
+The best example is calculating gamma. The physical
+and pixel dimensions must be normalized, the SID normalized</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image1</strong> ({<a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>, <a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">TiffImage</span></code></a>}) – Must have DPI and SID.</p></li>
+<li><p><strong>image2</strong> ({<a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>, <a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">TiffImage</span></code></a>}) – Must have DPI and SID.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>image1</strong> (<a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>) – The first image croped (if needed).</p></li>
+<li><p><strong>image2</strong> (<a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>) – The second image equated.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.image.load">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">for_calib</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><span class="pre">ArrayImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><span class="pre">TiffImage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#Dosepy.image.CalibImage" title="Dosepy.image.CalibImage"><span class="pre">CalibImage</span></a></span></span><a class="reference internal" href="_modules/Dosepy/image.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.load" title="Link to this definition">#</a></dt>
+<dd><p>Load a DICOM image, TIF image, or numpy 2D array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>file-object</em>) – The path to the image file or array.</p></li>
+<li><p><strong>for_calib</strong> (<em>bool</em><em>, </em><em>default = False</em>) – True if the image is going to be used to get a calibration curve.</p></li>
+<li><p><strong>filter</strong> (<em>int</em>) – If None (default), no filtering will be done to the image.
+If an int, will perform median filtering over image of size <code class="docutils literal notranslate"><span class="pre">filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> – See <a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>, <a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">TiffImage</span></code></a>,
+or <a class="reference internal" href="#Dosepy.image.CalibImage" title="Dosepy.image.CalibImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibImage</span></code></a> for keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#Dosepy.image.ArrayImage" title="Dosepy.image.ArrayImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayImage</span></code></a>, <a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">TiffImage</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Load an image from a file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Dosepy.image</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_to_image</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;C:\QA\image.tif&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">path_to_image</span><span class="p">)</span>  <span class="c1"># returns a TiffImage</span>
+</pre></div>
+</div>
+<p>Loading from an array is just like loading from a file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>  <span class="c1"># returns an ArrayImage</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.image.load_multiples">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.image.</span></span><span class="sig-name descname"><span class="pre">load_multiples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_file_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">for_calib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/image.html#load_multiples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.image.load_multiples" title="Link to this definition">#</a></dt>
+<dd><p>Combine multiple image files into one superimposed image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image_file_list</strong> (<em>list</em>) – A list of paths to the files to be superimposed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><a class="reference internal" href="#Dosepy.image.TiffImage" title="Dosepy.image.TiffImage"><code class="xref py py-class docutils literal notranslate"><span class="pre">TiffImage</span></code></a> – Instance of a TiffImage class.</p></li>
+<li><p><em>From omg_dosimetry.imageRGB load_multiples and pylinac.image</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-Dosepy.tools.resol">
+<span id="dosepy-tools"></span><h2>Dosepy.tools<a class="headerlink" href="#module-Dosepy.tools.resol" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>NAME</dt><dd><p>Resolution function</p>
+</dd>
+<dt>DESCRIPTION</dt><dd><p>Script to match the number of rows and columns between two arrays, based on physical resolution.</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.tools.resol.equate_resolution">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.tools.resol.</span></span><span class="sig-name descname"><span class="pre">equate_resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/tools/resol.html#equate_resolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.tools.resol.equate_resolution" title="Link to this definition">#</a></dt>
+<dd><p>Reduces the arrya size so that its new spatial resolution equals to a target resolution.
+The algorithm averages a number of points given by target_resolution // array_resolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>ndarray</em>) – The array that is required to reduce its size.</p></li>
+<li><p><strong>array_resolution</strong> (<em>float</em>) – Spatial resolution of the array, in millimeters per point.</p></li>
+<li><p><strong>target_resolution</strong> (<em>float</em>) – Target spatial resolution, in millimeters per point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array with a reduced size</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p><strong>Example 1</strong></p>
+<p>Let A be an array of (100, 100) with a 0.1 mm/point spatial resolution, and B another
+array of (10, 10) with a 1 mm/point resolution. To perform an ponit-by-point comparison, we need a
+new (10, 10) representative array of A:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># With an asossiated spatial resolution of 0.1 mm/point.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_A</span> <span class="o">=</span> <span class="n">equate_resolution</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Example 2</strong></p>
+<p>Let A and B be two arrays of size (2362 x 2362) and (256 x 256), with spatial resolution of 0.08467 mm/point and 0.78125 mm/point, respectively.</p>
+<p>The physical dimension of array A is 200.06 mm
+(2362 points * 0.08467 mm/point = 200.06 mm)
+The spatial dimension of matrix B is 199.99 mm.
+(256 points * 0.78125 mm/point = 199.99 mm)</p>
+<p>To reduce the size of matrix A to be equal to the size of
+matrix B, the equate_resolution function is used as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">Dosepy.tools.resol</span> <span class="k">as</span> <span class="nn">resol</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="mi">2362</span><span class="p">,</span> <span class="mi">2362</span><span class="p">)</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">equate_resolution</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mf">0.08467</span><span class="p">,</span> <span class="mf">0.78125</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-Dosepy.calibration">
+<span id="dosepy-calibration"></span><h2>Dosepy.calibration<a class="headerlink" href="#module-Dosepy.calibration" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>NAME</dt><dd><p>Calibration module</p>
+</dd>
+<dt>DESCRIPTION</dt><dd><p>Module for the management of the calibration curve. Here are the functions
+to be used for fitting. See Calibration class for details.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Dosepy.calibration.</span></span><span class="sig-name descname"><span class="pre">Calibration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'P3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'R'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/calibration.html#Calibration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.calibration.Calibration" title="Link to this definition">#</a></dt>
+<dd><p>Class used to represent a calibration curve.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.y" title="Link to this definition">#</a></dt>
+<dd><p>The doses values that were used to expose films for calibration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.x" title="Link to this definition">#</a></dt>
+<dd><p>Optical density if “P3” fit function is used, or normalized pixel value
+for “RF” fit function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.func" title="Link to this definition">#</a></dt>
+<dd><p>The model function used for dose-film response relationship.
+“P3”: Polynomial function of degree 3.
+“RF”: Rational function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.channel" title="Link to this definition">#</a></dt>
+<dd><p>Color channel. “R”: Red, “G”: Green and “B”: Blue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.popt">
+<span class="sig-name descname"><span class="pre">popt</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.popt" title="Link to this definition">#</a></dt>
+<dd><p>Parameters of the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.pcov">
+<span class="sig-name descname"><span class="pre">pcov</span></span><a class="headerlink" href="#Dosepy.calibration.Calibration.pcov" title="Link to this definition">#</a></dt>
+<dd><p>The estimated approximate covariance of popt. The diagonals provide
+the variance of the parameter estimate. To compute one standard
+deviation errors on the parameters, use perr = np.sqrt(np.diag(pcov)).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>2-D array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Dosepy.calibration.Calibration.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Axes</span></span></span><a class="reference internal" href="_modules/Dosepy/calibration.html#Calibration.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.calibration.Calibration.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot the calibration curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.Axes instance</em>) – The axis to plot the image to. If None, creates a new figure.</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Whether to actually show the image. Set to false when plotting
+multiple items.</p></li>
+<li><p><strong>kwargs</strong> – kwargs passed to plt.plot()</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.calibration.polynomial_g3">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.calibration.</span></span><span class="sig-name descname"><span class="pre">polynomial_g3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/calibration.html#polynomial_g3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.calibration.polynomial_g3" title="Link to this definition">#</a></dt>
+<dd><p>Polynomial function of degree 3.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Dosepy.calibration.rational_func">
+<span class="sig-prename descclassname"><span class="pre">Dosepy.calibration.</span></span><span class="sig-name descname"><span class="pre">rational_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Dosepy/calibration.html#rational_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Dosepy.calibration.rational_func" title="Link to this definition">#</a></dt>
+<dd><p>Rational function.</p>
+</dd></dl>
+
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="bibliography.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="changelog.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Changelog</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.image">Dosepy.image</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage"><code class="docutils literal notranslate"><span class="pre">ArrayImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.dpi"><code class="docutils literal notranslate"><span class="pre">ArrayImage.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.dpmm"><code class="docutils literal notranslate"><span class="pre">ArrayImage.dpmm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.gamma2D"><code class="docutils literal notranslate"><span class="pre">ArrayImage.gamma2D()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.ArrayImage.save_as_tif"><code class="docutils literal notranslate"><span class="pre">ArrayImage.save_as_tif()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage"><code class="docutils literal notranslate"><span class="pre">BaseImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.path"><code class="docutils literal notranslate"><span class="pre">BaseImage.path</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.array"><code class="docutils literal notranslate"><span class="pre">BaseImage.array</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.BaseImage.physical_shape"><code class="docutils literal notranslate"><span class="pre">BaseImage.physical_shape</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.CalibImage"><code class="docutils literal notranslate"><span class="pre">CalibImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.CalibImage.get_calibration"><code class="docutils literal notranslate"><span class="pre">CalibImage.get_calibration()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage"><code class="docutils literal notranslate"><span class="pre">TiffImage</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.sid"><code class="docutils literal notranslate"><span class="pre">TiffImage.sid</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.props"><code class="docutils literal notranslate"><span class="pre">TiffImage.props</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.doses_in_central_rois"><code class="docutils literal notranslate"><span class="pre">TiffImage.doses_in_central_rois()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.dpi"><code class="docutils literal notranslate"><span class="pre">TiffImage.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.dpmm"><code class="docutils literal notranslate"><span class="pre">TiffImage.dpmm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.get_stat"><code class="docutils literal notranslate"><span class="pre">TiffImage.get_stat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.plot"><code class="docutils literal notranslate"><span class="pre">TiffImage.plot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.TiffImage.to_dose"><code class="docutils literal notranslate"><span class="pre">TiffImage.to_dose()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.equate_images"><code class="docutils literal notranslate"><span class="pre">equate_images()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.image.load_multiples"><code class="docutils literal notranslate"><span class="pre">load_multiples()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.tools.resol">Dosepy.tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.tools.resol.equate_resolution"><code class="docutils literal notranslate"><span class="pre">equate_resolution()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-Dosepy.calibration">Dosepy.calibration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration"><code class="docutils literal notranslate"><span class="pre">Calibration</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.y"><code class="docutils literal notranslate"><span class="pre">Calibration.y</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.x"><code class="docutils literal notranslate"><span class="pre">Calibration.x</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.func"><code class="docutils literal notranslate"><span class="pre">Calibration.func</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.channel"><code class="docutils literal notranslate"><span class="pre">Calibration.channel</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.popt"><code class="docutils literal notranslate"><span class="pre">Calibration.popt</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.pcov"><code class="docutils literal notranslate"><span class="pre">Calibration.pcov</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.Calibration.plot"><code class="docutils literal notranslate"><span class="pre">Calibration.plot()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.polynomial_g3"><code class="docutils literal notranslate"><span class="pre">polynomial_g3()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Dosepy.calibration.rational_func"><code class="docutils literal notranslate"><span class="pre">rational_func()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Luis Alfonso Olivares Jimenez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
