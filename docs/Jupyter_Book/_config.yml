@@ -10,6 +10,10 @@ logo: ../assets/Logo_Dosepy.png
 execute:
   execute_notebooks: cache
   timeout: 500
+  exclude_patterns:
+    - 'film_dosimetry'
+    - 'gamma'
+    - 'dicom'
 
 # Define the name of the latex output file for PDF builds
 latex:
