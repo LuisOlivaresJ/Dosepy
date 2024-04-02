@@ -6,12 +6,25 @@ Changelog
 V 0.6.1 (APR-2024)
 --------------------
 
+New Features
+^^^^^^^^^^^^
+
 * New graphical user interface (GUI), using Model-View-Controller architecture.
-* The number of films, their size and the dose imparted to each of them can be defined by the user.
-* The new GUI focuses just on film dosimetry. Gamma index analysis requires the use of a Python script (see :doc:`gamma` section).
-* The gamma2D method from ArrayImage class is addapted from the dose module.
-* The load function (an extension from `pylinac package <https://pylinac.readthedocs.io/en/latest/core_modules.html#pylinac.core.image.load>`_), supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
+* The number of films, their size and dose imparted to each of them can be defined by the user.
+* Once a tif file is loaded, films are automatically detected.
+* Average multiple scans of the same film to increase signal-to-noise ratio.
+
+Improvements
+^^^^^^^^^^^^
+
+* The gamma2D method from ArrayImage class is adapted from the previous Dosepy.dose module.
+* The load function (an extension from `pylinac <https://pylinac.readthedocs.io/en/latest/core_modules.html#pylinac.core.image.load>`_), supports DICOM files used for dose distributions (RD.dcm from Eclipse treatment planning system).
 * PyPI README and gamma2D method are translated to English.
+
+Breaking Change
+^^^^^^^^^^^^^^^
+
+* The new GUI focuses just on film dosimetry. Gamma index analysis requires a Python script. 
 
 V 0.5.1 (FEB-2024)
 ------------------
