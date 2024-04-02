@@ -8,12 +8,8 @@ logo: ../assets/Logo_Dosepy.png
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: 'off'
+  execute_notebooks: 'off'  # ReadTheDocs does not work as spected if we change to cache. 
   timeout: 500
-  exclude_patterns:
-    - 'film_dosimetry'
-    - 'gamma'
-    - 'dicom'
 
 # Define the name of the latex output file for PDF builds
 latex:

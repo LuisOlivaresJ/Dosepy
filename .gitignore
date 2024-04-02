@@ -1,5 +1,6 @@
 dist/
 docs/_site
+docs/Jupyter_Book/_build
 docs/.ipynb_checkpoints
 docs/.sass-cache
 docs/.jekyll-cache
