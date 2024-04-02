@@ -1,7 +1,7 @@
 jupyter-book
 matplotlib
 numpy
-Dosepy
+Dosepy >= 0.6.1
 imageio
 scikit-image
 pydicom

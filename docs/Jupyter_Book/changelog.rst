@@ -3,7 +3,7 @@
 Changelog
 =========
 
-V 0.6.0 (APR-2024)
+V 0.6.1 (APR-2024)
 --------------------
 
 * New graphical user interface (GUI), using Model-View-Controller architecture.
