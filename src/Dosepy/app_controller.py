@@ -166,6 +166,11 @@ class Tiff2DoseController(BaseController):
 
     
     def _open_tif2dose_button(self):
+        """
+        Uses a QFileDialog window to ask for tif files.
+        If files are ok, uses a calibration (ask if not exists) and calculate the dose distribution.
+        Show the dose distribution.
+        """
         
         new_files = open_files_dialog("Images (*.tif *.tiff)")
 
@@ -185,7 +190,7 @@ class Tiff2DoseController(BaseController):
                         )
                     
                     if self._model.lut:
-                        self._model.dose = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
+                        self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
 
                     else:
                         "Open lut"
@@ -197,7 +202,7 @@ class Tiff2DoseController(BaseController):
                         if lut_file_path:
                             if len(lut_file_path) == 1:
                                 self._model.lut = self._model.load_lut(lut_file_path[0])
-                                self._model.dose = self._model.tif_img.to_dose(
+                                self._model.ref_dose_img = self._model.tif_img.to_dose(
                                     self._model.lut
                                     ) # An ArrayImage
                             else:
@@ -207,7 +212,7 @@ class Tiff2DoseController(BaseController):
                         else:
                             self._view.tif_widget.files_list.clear()
 
-                    self._view.tif_widget.plot_dose(self._model.dose)
+                    self._view.tif_widget.plot_dose(self._model.ref_dose_img)
 
                 else:
                     msg = "The tiff files must have the same shape."
