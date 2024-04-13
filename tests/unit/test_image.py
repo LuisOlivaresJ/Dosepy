@@ -2,7 +2,7 @@ import unittest
 
 from pathlib import Path
 
-from Dosepy.tools import image
+from Dosepy import image
 
 cwd = Path(__file__).parent
 
