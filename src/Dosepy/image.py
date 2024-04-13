@@ -707,7 +707,7 @@ class ArrayImage(BaseImage):
                 max_as_percentile=True
                 ):
         '''
-        Calculate the gamma between the current image (reference) and a comparison image.
+        Calculate gamma between the current image against a reference image.
         The images must have the same spatial resolution (dpi) to be comparable. The size of the images must also be the same.
         An array is ​​obtained. It represents the gamma indices at each position of the dose distribution,
         as well as the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
