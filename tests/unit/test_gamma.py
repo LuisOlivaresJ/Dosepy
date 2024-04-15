@@ -56,13 +56,34 @@ class TestGammaParameters(unittest.TestCase):
         gamma, _ = D_eval.gamma2D(D_ref, 3, 1, dose_threshold=21)
 
         # The positions where we have nan are the first and second columns.
-        #nan_points = np.shape(np.where(np.isnan(gamma)))[1]
         nan_points = np.isnan(gamma).sum(where=True)
 
         self.assertEqual(nan_points, 20)
 
     def test_exclude_above(self):
-        return
+
+        row = np.arange(10, 101, 10)
+        a = np.tile(row, (10, 1))
+        b = np.tile(row, (10, 1))
+        D_ref = image.load(a, dpi = 75)
+        D_eval = image.load(b, dpi = 75)
+        """
+        a = [
+            [10, 20, ..., 90, 100],
+	        [10, 20, ..., 90, 100],
+	        ...,
+	        [10, 20, ..., 90, 100],
+            ]
+        a.shape # (10, 10)
+        """
+
+        # Execute the code being tested
+        gamma, _ = D_eval.gamma2D(D_ref, 3, 1, dose_ta_Gy=True, exclude_above=89)
+
+        # The positions where we have nan are the last two columns.
+        nan_points = np.isnan(gamma).sum(where=True)
+
+        self.assertEqual(nan_points, 20)
 
 """
 A = [[1, 2, 3, ..., 9, 9],
