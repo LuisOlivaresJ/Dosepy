@@ -211,6 +211,32 @@ class BaseImage:
         return self.array.astype(dtype)
 
 
+    def crop(
+        self,
+        pixels: int = 15,
+        edges: tuple[str, ...] = ("top", "bottom", "left", "right"),
+    ) -> None:
+        """Removes pixels on all edges of the image in-place.
+
+        Parameters
+        ----------
+        pixels : int
+            Number of pixels to cut off all sides of the image.
+        edges : tuple
+            Which edges to remove from. Can be any combination of the four edges.
+        """
+        if pixels <= 0:
+            raise ValueError("Pixels to remove must be a positive number")
+        if "top" in edges:
+            self.array = self.array[pixels:, :]
+        if "bottom" in edges:
+            self.array = self.array[:-pixels, :]
+        if "left" in edges:
+            self.array = self.array[:, pixels:]
+        if "right" in edges:
+            self.array = self.array[:, :-pixels]
+
+
 class TiffImage(BaseImage):
     """An image from a tiff file.
 
@@ -448,7 +474,7 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-    def to_dose(self, cal) -> ImageLike:
+    def to_dose(self, cal, clip=False) -> ImageLike:
         """Convert the tiff image to a dose distribution. The tiff file image
         has to contain an unirradiated film used as a reference for zero Gray.
 
@@ -456,6 +482,9 @@ class TiffImage(BaseImage):
         ----------
         cal : :class:`~Dosepy.calibration.Calibration`
             Instance of a Calibration class
+
+        clip : bool, default: False
+            If True, limit the maximum dose to the greatest used for calibration. Useful to avoid very high doses.
 
         Returns
         -------
@@ -496,6 +525,10 @@ class TiffImage(BaseImage):
             dose_image = rational_func(x, *cal.popt)
 
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
+
+        if clip:  # Limit the maximum dose
+            max_calib_dose = cal.doses[-1]
+            dose_image[dose_image > max_calib_dose] = max_calib_dose
 
         return load(dose_image, dpi=self.dpi)
 
@@ -672,6 +705,11 @@ class ArrayImage(BaseImage):
             if self.sid is not None:
                 dpi *= self.sid / 1000
         return dpi
+
+    @property
+    def physical_shape(self):
+        """The physical size of the image in mm."""
+        return self.shape[0] / self.dpmm, self.shape[1] / self.dpmm
 
 
     def save_as_tif(self, file_name):
