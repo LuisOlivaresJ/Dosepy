@@ -3,6 +3,14 @@
 Changelog
 =========
 
+
+V 0.6.2 (MAY-2024)
+
+Improvements
+^^^^^^^^^^^^
+* New *clip* parameter in *to_dose* method to limit the maximum dose, (usefull in brachytherapy film dosimetry).
+* New *exclude_above* parameter in *gamma2D* method. Any point in the evaluated distribution greater than exclude_above, is not accounted in the pass rate.
+
 V 0.6.1 (APR-2024)
 --------------------
 
