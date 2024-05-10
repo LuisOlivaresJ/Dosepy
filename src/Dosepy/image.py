@@ -211,6 +211,32 @@ class BaseImage:
         return self.array.astype(dtype)
 
 
+    def crop(
+        self,
+        pixels: int = 15,
+        edges: tuple[str, ...] = ("top", "bottom", "left", "right"),
+    ) -> None:
+        """Removes pixels on all edges of the image in-place.
+
+        Parameters
+        ----------
+        pixels : int
+            Number of pixels to cut off all sides of the image.
+        edges : tuple
+            Which edges to remove from. Can be any combination of the four edges.
+        """
+        if pixels <= 0:
+            raise ValueError("Pixels to remove must be a positive number")
+        if "top" in edges:
+            self.array = self.array[pixels:, :]
+        if "bottom" in edges:
+            self.array = self.array[:-pixels, :]
+        if "left" in edges:
+            self.array = self.array[:, pixels:]
+        if "right" in edges:
+            self.array = self.array[:, :-pixels]
+
+
 class TiffImage(BaseImage):
     """An image from a tiff file.
 
@@ -448,7 +474,7 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-    def to_dose(self, cal) -> ImageLike:
+    def to_dose(self, cal, clip=False) -> ImageLike:
         """Convert the tiff image to a dose distribution. The tiff file image
         has to contain an unirradiated film used as a reference for zero Gray.
 
@@ -456,6 +482,9 @@ class TiffImage(BaseImage):
         ----------
         cal : :class:`~Dosepy.calibration.Calibration`
             Instance of a Calibration class
+
+        clip : bool, default: False
+            If True, limit the maximum dose to the greatest used for calibration. Useful to avoid very high doses.
 
         Returns
         -------
@@ -496,6 +525,10 @@ class TiffImage(BaseImage):
             dose_image = rational_func(x, *cal.popt)
 
         dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
+
+        if clip:  # Limit the maximum dose
+            max_calib_dose = cal.doses[-1]
+            dose_image[dose_image > max_calib_dose] = max_calib_dose
 
         return load(dose_image, dpi=self.dpi)
 
@@ -673,6 +706,11 @@ class ArrayImage(BaseImage):
                 dpi *= self.sid / 1000
         return dpi
 
+    @property
+    def physical_shape(self):
+        """The physical size of the image in mm."""
+        return self.shape[0] / self.dpmm, self.shape[1] / self.dpmm
+
 
     def save_as_tif(self, file_name):
         """Used to save a dose distribution (in Gy) as a tif file (in cGy).
@@ -704,10 +742,11 @@ class ArrayImage(BaseImage):
                 dose_ta_Gy=False,
                 local_norm=False,
                 mask_radius=10,
-                max_as_percentile=True
+                max_as_percentile=True,
+                exclude_above=None
                 ):
         '''
-        Calculate the gamma between the current image (reference) and a comparison image.
+        Calculate gamma between the current image against a reference image.
         The images must have the same spatial resolution (dpi) to be comparable. The size of the images must also be the same.
         An array is ​​obtained. It represents the gamma indices at each position of the dose distribution,
         as well as the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
@@ -762,6 +801,9 @@ class ArrayImage(BaseImage):
             If the argument is True, 99th percentile is used as an approximation of the maximum value of the
             dose distribution. This allows us to exclude artifacts or errors in specific positions.
             If the argument is False, the maximum value of the distribution is used.
+
+        exclude_above : float, default: None
+            Dose limit in Gy. Any point in the evaluated distribution greater than exclude_above, is not accounted in the pass rate. dose_ta_Gy should be set as True.
 
         Returns
         -------
@@ -946,17 +988,21 @@ class ArrayImage(BaseImage):
 
                 gamma[i,j] = min(Gamma)
 
-                # For the position in question, if the dose is below than the dose threshold,
+                # For the position in question, if the dose is below than the dose threshold, or above exclude_above,
                 # then this point is not taken into account in the approval percentage.
                 if D_eval[i,j] < Dose_threshold:
                     gamma[i,j] = np.nan
+
+                if exclude_above:
+                    if D_eval[i,j] > exclude_above:
+                        gamma[i,j] = np.nan
 
         # Returns the coordinates where the gamma values ​​are less than or equal to 1
         less_than_1_coordinate = np.where(gamma <= 1)
         # Counts the number of coordinates where gamma <= 1 is True
         less_than_1 = np.shape(less_than_1_coordinate)[1]
         # Number of values that are not np.nan
-        total_points = np.shape(gamma)[0]*np.shape(gamma)[1] - np.shape(np.where(np.isnan(gamma)))[1]
+        total_points = gamma.size - np.isnan(gamma).sum(where=True)
 
         # Pass rate
         gamma_percent = float(less_than_1)/total_points*100
