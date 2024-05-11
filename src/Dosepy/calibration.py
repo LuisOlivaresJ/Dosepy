@@ -110,7 +110,6 @@ class Calibration:
         elif self.channel in ["M", "Mean", "m", "mean"]:
             color = "black"
         
-        ax.plot(x, y, color = color, **kwargs)
         ax.plot(
             self.x,
             self.doses,

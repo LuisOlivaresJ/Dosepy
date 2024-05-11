@@ -8,8 +8,13 @@ V 0.6.2 (MAY-2024)
 
 Improvements
 ^^^^^^^^^^^^
-* New *clip* parameter in *to_dose* method to limit the maximum dose, (usefull for brachytherapy film dosimetry).
-* New *exclude_above* parameter in *gamma2D* method. Any point in the evaluated distribution greater than exclude_above, is not accounted in the pass rate.
+* New *clip* parameter for *to_dose* method to limit the maximum dose, (usefull for brachytherapy film dosimetry).
+* New *exclude_above* parameter for *gamma2D* method. Any point in the evaluated distribution greater than exclude_above, is not accounted in the pass rate.
+* set_labeled_img method from TiffImage uses a default threshold of 90% for films identification. Previously, it used threshold_otsu but were not useful for tif images where there is a small region of empty area relative to the film area.
+
+Issue
+^^^^^
+* Now it is possible to open many tif files when Browse button is clicked in Dosepy.app.
 
 V 0.6.1 (APR-2024)
 --------------------
