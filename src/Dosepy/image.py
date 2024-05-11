@@ -313,7 +313,6 @@ class TiffImage(BaseImage):
             ch='G',
             roi=(5, 5),
             show=False,
-            threshold=None
             ) -> list:
         r"""Get average and standar deviation from pixel values at a central ROI in each film.
 
@@ -347,7 +346,7 @@ class TiffImage(BaseImage):
         """
 
         if not self.label_image.any():
-            self.set_labeled_img(threshold = threshold)
+            self.set_labeled_img(threshold = 0.90)
 
         if show:
             fig, axes = plt.subplots(ncols=1)
@@ -491,7 +490,11 @@ class TiffImage(BaseImage):
         :class:`~Dosepy.image.ArrayImage`
             Dose distribution.
         """
-        mean_pixel, _ = self.get_stat(ch=cal.channel, roi=(5, 5), show=False)
+        mean_pixel, _ = self.get_stat(
+            ch=cal.channel,
+            roi=(5, 5),
+            show=False,
+            )
         mean_pixel = sorted(mean_pixel, reverse=True)
 
         if cal.channel in ["R", "Red", "r", "red"]:
@@ -574,7 +577,7 @@ class TiffImage(BaseImage):
         if not threshold:
             thresh = threshold_otsu(gray_scale)  # Used for films identification.
         else:
-            thresh = threshold
+            thresh = threshold * np.amax(gray_scale)
         binary = erosion(gray_scale < thresh, square(erosion_pix))
         self.label_image, self.number_of_films = label(binary, return_num=True)
         
@@ -641,7 +644,7 @@ class CalibImage(TiffImage):
         """
 
         doses = sorted(doses)
-        mean_pixel, _ = self.get_stat(ch=channel, roi=roi, threshold=threshold)
+        mean_pixel, _ = self.get_stat(ch=channel, roi=roi)
         mean_pixel = sorted(mean_pixel, reverse=True)
         mean_pixel = np.array(mean_pixel)
 
