@@ -1,6 +1,6 @@
 """Functions used as a model. VMC pattern."""
 
-from .image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
+from Dosepy.image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
 import imageio.v3 as iio
 import numpy as np
 from importlib import resources
@@ -14,10 +14,10 @@ class Model:
     save or load a lut.
     """
     def __init__(self):
-        self.calibration_img = None
-        self.tif_img = None
-        self.lut = None
-        self.dose = None
+        self.calibration_img = None  # TiffImage instance, used for calibration.
+        self.tif_img = None  # TiffImage instance. The tif file to be tansformed to dose.
+        self.lut = None  # Calibration instance.
+        self.dose = None  # ArrayImage instance.
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])

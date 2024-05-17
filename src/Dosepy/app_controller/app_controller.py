@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 import os
 import numpy as np
 
-from .app_components.file_dialog import (
+from Dosepy.app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,
@@ -122,7 +122,7 @@ class CalibrationController(BaseController):
             print(lut_file_name)
         
             self._model.save_lut(str(lut_file_name))
-            #self._view.tif_widget.cali_label.setText(
+            #self._view.dose_widget.cali_label.setText(
             #    f"Calibration file: " + str(lut_file_name)
             #    )
 
@@ -172,12 +172,12 @@ class Tiff2DoseController(BaseController):
         if new_files:
     
             if self._model.are_valid_tif_files(new_files):
-                current_files = self._view.tif_widget.get_files_list()
+                current_files = self._view.dose_widget.get_files_list()
                 list_files = current_files + new_files
                 if self._model.are_files_equal_shape(list_files):
 
                     # Display path to files
-                    self._view.tif_widget.set_files_list(list_files)
+                    self._view.dose_widget.set_files_list(list_files)
 
                     # load the files
                     self._model.tif_img = self._model.load_files(
@@ -205,9 +205,9 @@ class Tiff2DoseController(BaseController):
                                 print(msg)
                                 Error_Dialog(msg).exec()
                         else:
-                            self._view.tif_widget.files_list.clear()
+                            self._view.dose_widget.files_list.clear()
 
-                    self._view.tif_widget.plot_dose(self._model.dose)
+                    self._view.dose_widget.plot_dose(self._model.dose)
 
                 else:
                     msg = "The tiff files must have the same shape."
@@ -242,6 +242,6 @@ class Tiff2DoseController(BaseController):
     
     def _connectSignalsAndSlots(self):
 
-        self._view.tif_widget.open_button.clicked.connect(self._open_tif2dose_button)
-        self._view.tif_widget.save_button.clicked.connect(self._save_tif2dose_button)
+        self._view.dose_widget.open_button.clicked.connect(self._open_tif2dose_button)
+        self._view.dose_widget.save_button.clicked.connect(self._save_tif2dose_button)
 
