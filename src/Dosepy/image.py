@@ -1067,7 +1067,7 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
     Returns
     -------
     image1 : :class:`~Dosepy.image.ArrayImage`
-        The first image croped (if needed).
+        The first image croped.
     image2 : :class:`~Dosepy.image.ArrayImage`
         The second image equated.
     """
@@ -1094,6 +1094,25 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
     if pixel_width_diff > 0:
         img.crop(pixel_width_diff, edges=("left", "right"))
 
+    # make sure we have exactly the same shape
+    # ...crop height
+    height_diff = image1.shape[0] - image2.shape[0]
+    if height_diff < 0:  # image2 is bigger
+        img = image2
+    else:
+        img = image1
+    if abs(height_diff) > 0:
+        img.crop(abs(height_diff), edges='bottom')
+
+    # ...crop width
+    width_diff = image1.shape[1] - image2.shape[1]
+    if width_diff > 0:
+        img = image1
+    else:
+        img = image2
+    if abs(width_diff) > 0:
+        img.crop(abs(width_diff), edges='right')
+
     # resize images to be of the same shape
     if image2.dpmm > image1.dpmm:
         image2_array = equate_resolution(
@@ -1102,10 +1121,9 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
             target_resolution=1./image1.dpmm)
         image2 = load(image2_array, dpi=image1.dpi)
 
-    else:
+    elif image1.dpmm > image2.dpmm:
         zoom_factor = image1.shape[1] / image2.shape[1]
         image2_array = ndimage.interpolation.zoom(image2.as_type(float), zoom_factor)
         image2 = load(image2_array, dpi=image2.dpi * zoom_factor)
-
 
     return image1, image2
