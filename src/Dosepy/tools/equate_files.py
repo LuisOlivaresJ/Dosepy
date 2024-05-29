@@ -41,7 +41,9 @@ def _save_as_tif(file_names, images, folder_path):
 
         file_path = os.path.join(folder_path, new_folder, file_names[count])
 
-        img_array = img.array.astype(np.uint16)
+        img_array = load(img.array.astype(np.uint16), dpi=img.dpi)
+        img_array.save_as_tif(file_path)
+        """
         tif_encoded = iio.imwrite(
             "<bytes>",
             img_array,
@@ -51,7 +53,7 @@ def _save_as_tif(file_names, images, folder_path):
         with open (file_path, "wb") as f:
             f.write(tif_encoded)
             f.close()
-
+        """
 
 def equate(path: str):
     """

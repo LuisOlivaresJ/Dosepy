@@ -474,7 +474,7 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-    def to_dose(self, cal, clip=False) -> ImageLike:
+    def to_dose(self, cal, clip=False):
         """Convert the tiff image to a dose distribution. The tiff file image
         has to contain an unirradiated film used as a reference for zero Gray.
 
@@ -725,8 +725,7 @@ class ArrayImage(BaseImage):
             File name as a string
 
         """
-        data = np.int64(self.array*100) # Gy to cGy
-        np_tif = data.astype(np.uint16)
+        np_tif = self.array.astype(np.uint16)
         tif_encoded = iio.imwrite(
             "<bytes>",
             np_tif,
