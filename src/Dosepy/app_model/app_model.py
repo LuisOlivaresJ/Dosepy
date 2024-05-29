@@ -14,10 +14,10 @@ class Model:
     save or load a lut.
     """
     def __init__(self):
-        self.calibration_img = None  # TiffImage instance, used for calibration.
-        self.tif_img = None  # TiffImage instance. The tif file to be tansformed to dose.
-        self.lut = None  # Calibration instance.
-        self.dose = None  # ArrayImage instance.
+        self.calibration_img = None  # The image used to produce a calibration curve
+        self.tif_img = None  # The tif image to be analysed
+        self.lut = None  # The calibration object used for tif to dose calculation
+        self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
@@ -92,4 +92,4 @@ class Model:
         return lut
     
     def save_dose_as_tif(self, file_name: str):
-        self.dose.save_as_tif(file_name)
+        self.ref_dose_img.save_as_tif(file_name)
