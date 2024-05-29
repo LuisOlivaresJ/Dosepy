@@ -1048,12 +1048,30 @@ def load_multiples(image_file_list, for_calib=False):
 
     return first_img
 
-def stack_images(img_list, axis=0):
-    """Takes in an image list and concatenate them side by side.
-    Useful for calibration of scanner, when more than one image is needed
+def stack_images(img_list, axis=0, padding=0):
+    """
+    Takes in an image list and concatenate them side by side.
+    Useful for film calibration, when more than one image is needed
     to scan all gafchromic bands.
     
     Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
+
+    Parameters
+    ----------
+    img_list : list
+        The images to be stacked. List of TiffImage objects.
+
+    axis : int, default: 0
+        The axis along which the arrays will be joined.
+
+    padding : float, default: 0
+        Add padding as a percentage (0-1) of the array size to simulate an empty space betwen films.
+
+    Returns
+    -------
+    ::class:`~Dosepy.image.TiffImage`
+        Instance of a TiffImage class.
+
     """
     first_img = copy.copy(img_list[0])
 
