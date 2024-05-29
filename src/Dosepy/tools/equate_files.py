@@ -31,14 +31,15 @@ def _find_smallest_image(images):
     return index_min_height, index_min_width
 
 
-def _save_as_tif(file_names, images):
+def _save_as_tif(file_names, images, folder_path):
 
     new_folder = "cropped_files"
-    os.mkdir(new_folder)
+    path = os.path.join(folder_path, new_folder)
+    os.mkdir(path)
 
     for count, img in enumerate(images):
 
-        file_path = os.path.join(os.getcwd(), new_folder, file_names[count])
+        file_path = os.path.join(folder_path, new_folder, file_names[count])
 
         img_array = img.array.astype(np.uint16)
         tif_encoded = iio.imwrite(
@@ -75,4 +76,4 @@ def equate(path: str):
         if count in [idx_min_width, idx_min_height]: continue
         _, images[count] = equate_images(images[idx_min_height], img)
 
-    _save_as_tif(os.listdir(folder_path), images)
+    _save_as_tif(os.listdir(folder_path), images, folder_path)

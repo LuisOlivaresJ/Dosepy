@@ -17,6 +17,7 @@ from typing import Any, Union
 import imageio.v3 as iio
 import copy
 from scipy import ndimage
+import os
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -1047,6 +1048,54 @@ def load_multiples(image_file_list, for_calib=False):
 
     return first_img
 
+def stack_images(img_list, axis=0):
+    """Takes in an image list and concatenate them side by side.
+    Useful for calibration of scanner, when more than one image is needed
+    to scan all gafchromic bands.
+    
+    Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
+    """
+    first_img = copy.copy(img_list[0])
+
+    # check that all images are the same size
+    for img in img_list:
+        if img.shape[0] != first_img.shape[0]:
+            raise ValueError("Images were not the same shape")
+
+    height = first_img.shape[0]
+    width = first_img.shape[1]
+
+    padding = int(height * 0.1)
+
+    new_img_list = []
+    
+    for img in img_list:
+        background = np.zeros((2*padding + height, 2*padding + first_img.shape[1], 3)) + int(2**16-1)
+        background[padding: padding + height, padding: padding + width, :] = img.array
+        img.array = background
+        new_img_list.append(img)
+    
+    new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
+    first_img.array = new_array
+    return first_img
+
+def load_folder(path):
+    files = os.listdir(path)
+    tif_files = []
+    for file in files:
+        if file.endswith(".tif") or file.endswith(".tiff"):
+            tif_files.append(os.path.join(path,file))
+    
+    film_list = list(set([x[:-7] for x in tif_files]))
+    img_list = []
+    for film in film_list:
+        file_list =[]
+        for file in tif_files:
+            if file[:-7] == film:
+                file_list.append(file)
+        img = load_multiples(file_list)
+        img_list.append(img)
+    return img_list
 
 def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, ArrayImage]:
     """Crop the biggest of the two images and resize image2 to make them:
