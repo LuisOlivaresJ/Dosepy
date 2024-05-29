@@ -9,14 +9,14 @@ from PySide6.QtWidgets import (
 )
 
 # Import app views
-from app_components.calibration_widget import CalibrationWidget
-from app_components.tiff2dose_widget import Tiff2DoseWidget
-from app_components.tif_widget import TifWidget
+from Dosepy.app_components.calibration_widget import CalibrationWidget
+from Dosepy.app_components.tiff2dose_widget import Tiff2DoseWidget
+from Dosepy.app_components.tif_widget import TifWidget
 
 # Import app controllers
-from app_controller.app_controller import CalibrationController, Tiff2DoseController
+from Dosepy.app_controller.app_controller import CalibrationController, Tiff2DoseController
 # Import app model
-from app_model.app_model import Model
+from Dosepy.app_model.app_model import Model
 
 class MainWindow(QWidget):
     def __init__(self):
