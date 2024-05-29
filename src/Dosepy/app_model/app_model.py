@@ -92,4 +92,8 @@ class Model:
         return lut
     
     def save_dose_as_tif(self, file_name: str):
-        self.ref_dose_img.save_as_tif(file_name)
+        data_array = self.dose.array*100  # Gy to cGy
+        data = data_array.astype(np.uint16)
+        img = load(data, dpi = self.dose.dpi)
+        img.save_as_tif(file_name)
+        #self.dose.save_as_tif(file_name)
