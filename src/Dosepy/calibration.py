@@ -118,6 +118,11 @@ class Calibration:
             linestyle = 'None',
             **kwargs
             )
+        ax.plot(
+            x,
+            y,
+            color=color,
+        )
         ax.set_ylabel("Dose [Gy]")
         if show:
             plt.show()
