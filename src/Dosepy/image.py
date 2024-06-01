@@ -27,6 +27,7 @@ from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
+import math
 
 from .calibration import polynomial_g3, rational_func, Calibration
 from .tools.resol import equate_resolution
@@ -1072,28 +1073,40 @@ def stack_images(img_list, axis=0, padding=0):
         Instance of a TiffImage class.
 
     """
-    first_img = copy.copy(img_list[0])
+
+    first_img = copy.deepcopy(img_list[0])
 
     # check that all images are the same size
     for img in img_list:
+        
         if img.shape[0] != first_img.shape[0]:
             raise ValueError("Images were not the same shape")
 
     height = first_img.shape[0]
     width = first_img.shape[1]
 
-    padding = int(height * 0.1)
+    padding_pixels = int(height * padding)
 
     new_img_list = []
     
     for img in img_list:
-        background = np.zeros((2*padding + height, 2*padding + first_img.shape[1], 3)) + int(2**16-1)
-        background[padding: padding + height, padding: padding + width, :] = img.array
-        img.array = background
-        new_img_list.append(img)
+
+        background = np.zeros(
+            (2*padding_pixels + height, 2*padding_pixels + width, 3)
+            ) + int(2**16 - 1)
+
+        background[
+            padding_pixels: padding_pixels + height,
+            padding_pixels: padding_pixels + width,
+            :
+            ] = img.array
+        new_img = copy.deepcopy(img)
+        new_img.array = background
+        new_img_list.append(new_img)
     
     new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
     first_img.array = new_array
+
     return first_img
 
 def load_folder(path):
@@ -1146,8 +1159,9 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
         img = image2  # img is a view of image2 (not a copy)
     else:
         img = image1
-    pixel_height_diff = abs(int(round(-physical_height_diff * img.dpmm / 2)))
+    pixel_height_diff = abs(int(math.floor(-physical_height_diff * img.dpmm / 2)))
     if pixel_height_diff > 0:
+        print(f"Cropping {pixel_height_diff} pixels height (top and bottom) to {img.shape}")
         img.crop(pixel_height_diff, edges=("top", "bottom"))
 
     # ...crop width
@@ -1156,7 +1170,7 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
         img = image1
     else:
         img = image2
-    pixel_width_diff = abs(int(round(physical_width_diff * img.dpmm / 2)))
+    pixel_width_diff = abs(int(math.floor(physical_width_diff * img.dpmm / 2)))
     if pixel_width_diff > 0:
         img.crop(pixel_width_diff, edges=("left", "right"))
 
