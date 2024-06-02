@@ -12,7 +12,7 @@ from Dosepy.image import load
 from Dosepy.image import equate_images, load_multiples
 
 
-def _find_smallest_image(images):
+def _find_smallest_images(images):
 
     min_higth = images[0].shape[0]
     min_width = images[0].shape[1]
@@ -75,7 +75,7 @@ def _equate_width(small_image, image):
             image.crop(width_diff, edges="right")
 
         elif not(width_diff%2):
-            image.crop(width_diff, edges=("left", "right"))
+            image.crop(int(width_diff/2), edges=("left", "right"))
 
         else:
             image.crop(int(math.floor(width_diff/2)), edges="left")
@@ -83,14 +83,17 @@ def _equate_width(small_image, image):
 
     return image
 
-def equate(file_list: list, save=False):
+def equate(file_list: list, axis: tuple[str, ...] = ("height", "width"), save=False):
     """
-    Equate several TIFF files to have the same array size.
+    Equate several TIFF files to have the same array size of the samllest array.
 
     Parameters
     ----------
     file_list : list
         List with the paths of the TIFF files.
+
+    axis : str
+        Axis to equate: height or width
 
     save : bool
         True if we need to save the cutted images as tif files in the Home directory.
@@ -106,15 +109,23 @@ def equate(file_list: list, save=False):
         images.append(load(file))
     
     cropped_images = copy.deepcopy(images)
-    idx_min_height, idx_min_width =_find_smallest_image(images)
+    idx_min_height, idx_min_width =_find_smallest_images(images)
+    print("Inside equate index")
+    print(idx_min_height, idx_min_width)
 
-    for count, img in enumerate(images):
-        if count == idx_min_height: continue
-        cropped_images[count] = _equate_height(images[idx_min_height], img)
+    if "height" in axis:
+        for count, img in enumerate(images):
+            if count == idx_min_height: continue
+            cropped_images[count] = _equate_height(images[idx_min_height], img)
     
-    for count, img in enumerate(images):
-        if count == idx_min_width: continue
-        cropped_images[count] = _equate_width(images[idx_min_width], img)
+    if "width" in axis:
+
+        print("Inside equate")
+        for count, img in enumerate(images):
+            if count == idx_min_width: continue
+            cropped_images[count] = _equate_width(images[idx_min_width], img)
+            print(f"img shape: {img.shape}")
+            print(f"cropped: {cropped_images[count].shape}")
 
     if save:
         _save_as_tif(file_list, cropped_images, os.path.expandvars("HOME"))

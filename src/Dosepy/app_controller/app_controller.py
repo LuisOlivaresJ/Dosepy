@@ -275,14 +275,64 @@ class Tiff2DoseController(BaseController):
                     button = dlg.exec()
 
                     if button == QMessageBox.Yes:
-                        print("Yes")
-                        """
                         # Display path to files
+                        #self._view.cal_widget.set_files_list(list_files)
                         self._view.dose_widget.set_files_list(list_files)
-                        files_path = Path(list_files[0])
-                        parent_folder = str(files_path.parent)
-                        self._model.tif_img = stack_images(equate(parent_folder))
+                        file_path = list_files[0]
+                        self._model.tif_img = load(file_path)  # Placeholder
+                        
+                        equal_images = equate(list_files, axis="width")
+
+                        merged_images = merge(list_files, equal_images)
+
+                        img = stack_images(merged_images, padding=0.15)
+                        # load the files
+                        self._model.tif_img.array = img.array 
+
+                        if self._model.lut:
+                            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
+
+                        else:
+                            "Open lut"
+                            lut_file_path = open_files_dialog(
+                                filter = "Calibration. (*.cal)",
+                                dir = "calib"
+                                )
+                            
+                            if lut_file_path:
+                                if len(lut_file_path) == 1:
+                                    self._model.lut = self._model.load_lut(lut_file_path[0])
+                                    self._model.ref_dose_img = self._model.tif_img.to_dose(
+                                        self._model.lut
+                                        ) # An ArrayImage
+                                else:
+                                    msg = "Chose one calibration file."
+                                    print(msg)
+                                    Error_Dialog(msg).exec()
+                            else:
+                                self._view.dose_widget.files_list.clear()
+
+                        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+
+                        # TO DELETE
                         """
+                        self._view.cal_widget.plot_image(self._model.calibration_img)
+
+                        # Find how many film we have and show a table for user input dose values
+                        self._model.calibration_img.set_labeled_img()
+                        num = self._model.calibration_img.number_of_films
+                        print(f"Number of detected films: {num}")
+                        self._view.cal_widget.set_table_rows(rows = num)
+                        header = self._view.cal_widget.dose_table.horizontalHeader()
+                        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
+                        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+
+                        self._view.cal_widget.apply_button.setEnabled(True)
+                        
+                        """
+                        # end TO DELETE
+
                         
 
                     else:

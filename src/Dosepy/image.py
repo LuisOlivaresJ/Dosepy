@@ -1079,8 +1079,8 @@ def stack_images(img_list, axis=0, padding=0):
     # check that all images are the same size
     for img in img_list:
         
-        if img.shape[0] != first_img.shape[0]:
-            raise ValueError("Images were not the same shape")
+        if img.shape[1] != first_img.shape[1]:
+            raise ValueError("Images were not the same width")
 
     height = first_img.shape[0]
     width = first_img.shape[1]
