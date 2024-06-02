@@ -1065,7 +1065,7 @@ def stack_images(img_list, axis=0, padding=0):
         The axis along which the arrays will be joined.
 
     padding : float, default: 0
-        Add padding as a percentage (0-1) of the array size to simulate an empty space betwen films.
+        Add padding in milimeters to simulate an empty space betwen films.
 
     Returns
     -------
@@ -1082,14 +1082,16 @@ def stack_images(img_list, axis=0, padding=0):
         if img.shape[1] != first_img.shape[1]:
             raise ValueError("Images were not the same width")
 
-    height = first_img.shape[0]
+    #height = first_img.shape[0]
     width = first_img.shape[1]
 
-    padding_pixels = int(height * padding)
+    padding_pixels = int(padding * img_list[0].dpmm)
 
     new_img_list = []
     
     for img in img_list:
+
+        height = img.shape[0]
 
         background = np.zeros(
             (2*padding_pixels + height, 2*padding_pixels + width, 3)

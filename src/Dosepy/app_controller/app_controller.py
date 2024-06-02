@@ -95,7 +95,7 @@ class CalibrationController(BaseController):
                         equal_images = equate(list_files)
                         merged_images = merge(list_files, equal_images)
 
-                        img = stack_images(merged_images, padding=0.15)  # ArrayImage, but we need CalibrationImage
+                        img = stack_images(merged_images, padding=6)  # ArrayImage, but we need CalibrationImage
                         self._model.calibration_img.array = img.array
 
                         self._view.cal_widget.plot_image(self._model.calibration_img)
@@ -285,7 +285,7 @@ class Tiff2DoseController(BaseController):
 
                         merged_images = merge(list_files, equal_images)
 
-                        img = stack_images(merged_images, padding=0.15)
+                        img = stack_images(merged_images, padding=6)
                         # load the files
                         self._model.tif_img.array = img.array 
 
@@ -313,26 +313,6 @@ class Tiff2DoseController(BaseController):
                                 self._view.dose_widget.files_list.clear()
 
                         self._view.dose_widget.plot_dose(self._model.ref_dose_img)
-
-
-                        # TO DELETE
-                        """
-                        self._view.cal_widget.plot_image(self._model.calibration_img)
-
-                        # Find how many film we have and show a table for user input dose values
-                        self._model.calibration_img.set_labeled_img()
-                        num = self._model.calibration_img.number_of_films
-                        print(f"Number of detected films: {num}")
-                        self._view.cal_widget.set_table_rows(rows = num)
-                        header = self._view.cal_widget.dose_table.horizontalHeader()
-                        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
-                        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-
-                        self._view.cal_widget.apply_button.setEnabled(True)
-                        
-                        """
-                        # end TO DELETE
-
                         
 
                     else:
