@@ -157,7 +157,7 @@ class CalibrationController(BaseController):
 
 
     def _save_calib_button(self):
-        root_calibration_path = Path(__file__).parent / "user" / "calibration"
+        root_calibration_path = Path(__file__).parent.parent / "user" / "calibration"
         if not root_calibration_path.exists():
             os.makedirs(root_calibration_path)
 
