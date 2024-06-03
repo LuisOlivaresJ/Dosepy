@@ -32,8 +32,8 @@ class MainWindow(QWidget):
         tabs.addTab(self.cal_widget, "Calibration")
         self.dose_widget = Tiff2DoseWidget()
         tabs.addTab(self.dose_widget, "Film2Dose")
-        self.tif_widget = TifWidget()
-        tabs.addTab(self.tif_widget, "Tif Image")
+        #self.tif_widget = TifWidget()
+        #tabs.addTab(self.tif_widget, "Tif Image")
         tab_layout.addWidget(tabs)
 
 '''
