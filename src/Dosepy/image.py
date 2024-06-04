@@ -17,6 +17,7 @@ from typing import Any, Union
 import imageio.v3 as iio
 import copy
 from scipy import ndimage
+import os
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -26,6 +27,7 @@ from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
+import math
 
 from .calibration import polynomial_g3, rational_func, Calibration
 from .tools.resol import equate_resolution
@@ -473,7 +475,7 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-    def to_dose(self, cal, clip=False) -> ImageLike:
+    def to_dose(self, cal, clip=False):
         """Convert the tiff image to a dose distribution. The tiff file image
         has to contain an unirradiated film used as a reference for zero Gray.
 
@@ -724,8 +726,7 @@ class ArrayImage(BaseImage):
             File name as a string
 
         """
-        data = np.int64(self.array*100) # Gy to cGy
-        np_tif = data.astype(np.uint16)
+        np_tif = self.array.astype(np.uint16)
         tif_encoded = iio.imwrite(
             "<bytes>",
             np_tif,
@@ -1047,6 +1048,86 @@ def load_multiples(image_file_list, for_calib=False):
 
     return first_img
 
+def stack_images(img_list, axis=0, padding=0):
+    """
+    Takes in an image list and concatenate them side by side.
+    Useful for film calibration, when more than one image is needed
+    to scan all gafchromic bands.
+    
+    Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
+
+    Parameters
+    ----------
+    img_list : list
+        The images to be stacked. List of TiffImage objects.
+
+    axis : int, default: 0
+        The axis along which the arrays will be joined.
+
+    padding : float, default: 0
+        Add padding in milimeters to simulate an empty space betwen films.
+
+    Returns
+    -------
+    ::class:`~Dosepy.image.TiffImage`
+        Instance of a TiffImage class.
+
+    """
+
+    first_img = copy.deepcopy(img_list[0])
+
+    # check that all images are the same size
+    for img in img_list:
+        
+        if img.shape[1] != first_img.shape[1]:
+            raise ValueError("Images were not the same width")
+
+    #height = first_img.shape[0]
+    width = first_img.shape[1]
+
+    padding_pixels = int(padding * img_list[0].dpmm)
+
+    new_img_list = []
+    
+    for img in img_list:
+
+        height = img.shape[0]
+
+        background = np.zeros(
+            (2*padding_pixels + height, 2*padding_pixels + width, 3)
+            ) + int(2**16 - 1)
+
+        background[
+            padding_pixels: padding_pixels + height,
+            padding_pixels: padding_pixels + width,
+            :
+            ] = img.array
+        new_img = copy.deepcopy(img)
+        new_img.array = background
+        new_img_list.append(new_img)
+    
+    new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
+    first_img.array = new_array
+
+    return first_img
+
+def load_folder(path):
+    files = os.listdir(path)
+    tif_files = []
+    for file in files:
+        if file.endswith(".tif") or file.endswith(".tiff"):
+            tif_files.append(os.path.join(path,file))
+    
+    film_list = list(set([x[:-7] for x in tif_files]))
+    img_list = []
+    for film in film_list:
+        file_list =[]
+        for file in tif_files:
+            if file[:-7] == film:
+                file_list.append(file)
+        img = load_multiples(file_list)
+        img_list.append(img)
+    return img_list
 
 def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, ArrayImage]:
     """Crop the biggest of the two images and resize image2 to make them:
@@ -1067,7 +1148,7 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
     Returns
     -------
     image1 : :class:`~Dosepy.image.ArrayImage`
-        The first image croped (if needed).
+        The first image croped.
     image2 : :class:`~Dosepy.image.ArrayImage`
         The second image equated.
     """
@@ -1080,8 +1161,9 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
         img = image2  # img is a view of image2 (not a copy)
     else:
         img = image1
-    pixel_height_diff = abs(int(round(-physical_height_diff * img.dpmm / 2)))
+    pixel_height_diff = abs(int(math.floor(-physical_height_diff * img.dpmm / 2)))
     if pixel_height_diff > 0:
+        print(f"Cropping {pixel_height_diff} pixels height (top and bottom) to {img.shape}")
         img.crop(pixel_height_diff, edges=("top", "bottom"))
 
     # ...crop width
@@ -1090,9 +1172,28 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
         img = image1
     else:
         img = image2
-    pixel_width_diff = abs(int(round(physical_width_diff * img.dpmm / 2)))
+    pixel_width_diff = abs(int(math.floor(physical_width_diff * img.dpmm / 2)))
     if pixel_width_diff > 0:
         img.crop(pixel_width_diff, edges=("left", "right"))
+
+    # make sure we have exactly the same shape
+    # ...crop height
+    height_diff = image1.shape[0] - image2.shape[0]
+    if height_diff < 0:  # image2 is bigger
+        img = image2
+    else:
+        img = image1
+    if abs(height_diff) > 0:
+        img.crop(abs(height_diff), edges='bottom')
+
+    # ...crop width
+    width_diff = image1.shape[1] - image2.shape[1]
+    if width_diff > 0:
+        img = image1
+    else:
+        img = image2
+    if abs(width_diff) > 0:
+        img.crop(abs(width_diff), edges='right')
 
     # resize images to be of the same shape
     if image2.dpmm > image1.dpmm:
@@ -1102,10 +1203,9 @@ def equate_images(image1: ImageLike, image2: ImageLike) -> tuple[ArrayImage, Arr
             target_resolution=1./image1.dpmm)
         image2 = load(image2_array, dpi=image1.dpi)
 
-    else:
+    elif image1.dpmm > image2.dpmm:
         zoom_factor = image1.shape[1] / image2.shape[1]
         image2_array = ndimage.interpolation.zoom(image2.as_type(float), zoom_factor)
         image2 = load(image2_array, dpi=image2.dpi * zoom_factor)
-
 
     return image1, image2

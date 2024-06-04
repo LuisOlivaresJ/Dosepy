@@ -3,6 +3,19 @@
 Changelog
 =========
 
+V 0.6.3 (JUN-2024)
+
+Improvements
+^^^^^^^^^^^^
+
+* New functions to equate and stack images of different sizes (adapted from OMG_Dosimetry and pylinac). They are useful
+if each film has been scanned in separate TIFF images.
+
+Issue
+^^^^^
+
+* Save button for calibration now saves the file in the correct folder.
+
 
 V 0.6.2 (MAY-2024)
 

@@ -9,9 +9,9 @@ from PySide6.QtCore import QDir
 
 from pathlib import Path
 
-def open_files_dialog(filter, dir = "home"):
+def open_files_dialog(filter, dir = "home") -> list:
     """
-    Use of QFileDialog to get a list of paths to files.
+    Use of QFileDialog to get a list of strings (paths) to the files selected.
 
     Paramters
     ---------
