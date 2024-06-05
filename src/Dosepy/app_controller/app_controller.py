@@ -44,6 +44,7 @@ class CalibrationController(BaseController):
         if new_files:
     
             if self._model.are_valid_tif_files(new_files):
+                
                 current_files = self._view.cal_widget.get_files_list()
                 list_files = current_files + new_files
 
@@ -55,7 +56,6 @@ class CalibrationController(BaseController):
                     # load files
                     self._model.calibration_img = self._model.load_calib_files(
                         list_files,
-                        for_calib=True
                         )
                     self._prepare_for_calibration()
                 
@@ -221,35 +221,11 @@ class Tiff2DoseController(BaseController):
                     self._model.tif_img = self._model.load_files(
                         list_files,
                         )
-                    
-                    if self._model.lut:
-                        self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
-
-                    else:
-                        "Open lut"
-                        lut_file_path = open_files_dialog(
-                            filter = "Calibration. (*.cal)",
-                            dir = "calib"
-                            )
-                        
-                        if lut_file_path:
-                            if len(lut_file_path) == 1:
-                                self._model.lut = self._model.load_lut(lut_file_path[0])
-                                self._model.ref_dose_img = self._model.tif_img.to_dose(
-                                    self._model.lut
-                                    ) # An ArrayImage
-                            else:
-                                msg = "Chose one calibration file."
-                                print(msg)
-                                Error_Dialog(msg).exec()
-                        else:
-                            self._view.dose_widget.files_list.clear()
-
-                    self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+                    self._prepare_for_tif_to_dose()
 
                 else:
                     
-                    msg = "Do you want to equalize the files?"
+                    msg = "Do you want to cut the images to have the same size?"
                     print(msg)
                     dlg = QMessageBox()
                     dlg.setWindowTitle("Equate images")
@@ -259,45 +235,15 @@ class Tiff2DoseController(BaseController):
                     button = dlg.exec()
 
                     if button == QMessageBox.Yes:
+
                         # Display path to files
-                        #self._view.cal_widget.set_files_list(list_files)
                         self._view.dose_widget.set_files_list(list_files)
-                        file_path = list_files[0]
-                        self._model.tif_img = load(file_path)  # Placeholder
+
+                        self._model.tif_img = self._model.load_files(
+                            list_files,
+                            )
                         
-                        equal_images = equate(list_files, axis="width")
-
-                        merged_images = merge(list_files, equal_images)
-
-                        img = stack_images(merged_images, padding=6)
-                        # load the files
-                        self._model.tif_img.array = img.array 
-
-                        if self._model.lut:
-                            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
-
-                        else:
-                            "Open lut"
-                            lut_file_path = open_files_dialog(
-                                filter = "Calibration. (*.cal)",
-                                dir = "calib"
-                                )
-                            
-                            if lut_file_path:
-                                if len(lut_file_path) == 1:
-                                    self._model.lut = self._model.load_lut(lut_file_path[0])
-                                    self._model.ref_dose_img = self._model.tif_img.to_dose(
-                                        self._model.lut
-                                        ) # An ArrayImage
-                                else:
-                                    msg = "Chose one calibration file."
-                                    print(msg)
-                                    Error_Dialog(msg).exec()
-                            else:
-                                self._view.dose_widget.files_list.clear()
-
-                        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
-                        
+                        self._prepare_for_tif_to_dose()                        
 
                     else:
 
@@ -309,6 +255,35 @@ class Tiff2DoseController(BaseController):
                 msg = "Invalid file. Is it a tiff RGB file?"
                 print(msg)
                 Error_Dialog(msg).exec()
+
+
+    def _prepare_for_tif_to_dose(self):
+        
+        if self._model.lut:
+            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
+
+        else:
+            "Open lut"
+            lut_file_path = open_files_dialog(
+                filter = "Calibration. (*.cal)",
+                dir = "calib"
+                )
+            
+            if lut_file_path:
+                if len(lut_file_path) == 1:
+
+                    self._model.lut = self._model.load_lut(lut_file_path[0])
+                    self._model.ref_dose_img = self._model.tif_img.to_dose(
+                        self._model.lut
+                        ) # An ArrayImage
+                else:
+                    msg = "Chose one calibration file."
+                    print(msg)
+                    Error_Dialog(msg).exec()
+            else:
+                self._view.dose_widget.files_list.clear()
+
+        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
 
 
     def _save_tif2dose_button(self):

@@ -9,7 +9,6 @@ import copy
 import math
 
 from Dosepy.image import load
-from Dosepy.image import equate_images, load_multiples
 
 
 def _find_smallest_images(images):

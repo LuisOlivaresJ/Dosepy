@@ -1,6 +1,6 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load_multiples, load, ImageLike
+from Dosepy.image import _is_RGB, _is_image_file, load, ImageLike
 from Dosepy.tools.files_to_image import equate, merge, load_images, stack_images
 import imageio.v3 as iio
 import numpy as np
@@ -47,7 +47,21 @@ class Model:
             img.array = stacked.array
 
             return img
-    
+
+
+    def load_files(self, files: list) -> ImageLike:
+        if len(files) == 1:
+            return load(files[0])
+        
+        else:
+            img = load(files[0]) # Placeholder
+            images = load_images(files)
+            equated_images = equate(images, axis=("width", "height"))
+            merged_images = merge(files, equated_images)
+            stacked = stack_images(merged_images, padding=6)
+            img.array = stacked.array
+            return img
+
 
     def create_dosepy_lut(self, doses, roi):
         #channel = ["m", "r", "g", "b"]
