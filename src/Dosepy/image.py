@@ -1048,68 +1048,6 @@ def load_multiples(image_file_list, for_calib=False):
 
     return first_img
 
-def stack_images(img_list, axis=0, padding=0):
-    """
-    Takes in an image list and concatenate them side by side.
-    Useful for film calibration, when more than one image is needed
-    to scan all gafchromic bands.
-    
-    Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
-
-    Parameters
-    ----------
-    img_list : list
-        The images to be stacked. List of TiffImage objects.
-
-    axis : int, default: 0
-        The axis along which the arrays will be joined.
-
-    padding : float, default: 0
-        Add padding in milimeters to simulate an empty space betwen films.
-
-    Returns
-    -------
-    ::class:`~Dosepy.image.TiffImage`
-        Instance of a TiffImage class.
-
-    """
-
-    first_img = copy.deepcopy(img_list[0])
-
-    # check that all images are the same size
-    for img in img_list:
-        
-        if img.shape[1] != first_img.shape[1]:
-            raise ValueError("Images were not the same width")
-
-    #height = first_img.shape[0]
-    width = first_img.shape[1]
-
-    padding_pixels = int(padding * img_list[0].dpmm)
-
-    new_img_list = []
-    
-    for img in img_list:
-
-        height = img.shape[0]
-
-        background = np.zeros(
-            (2*padding_pixels + height, 2*padding_pixels + width, 3)
-            ) + int(2**16 - 1)
-
-        background[
-            padding_pixels: padding_pixels + height,
-            padding_pixels: padding_pixels + width,
-            :
-            ] = img.array
-        new_img = copy.deepcopy(img)
-        new_img.array = background
-        new_img_list.append(new_img)
-    
-    new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
-    first_img.array = new_array
-
-    return first_img
 
 def load_folder(path):
     files = os.listdir(path)
