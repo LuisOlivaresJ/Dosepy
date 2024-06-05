@@ -3,6 +3,14 @@
 Changelog
 =========
 
+
+V 0.6.4 (JUN-2024)
+
+Issue
+^^^^^
+
+* Loading TIFF files with the same size but different name, were merged.
+
 V 0.6.3 (JUN-2024)
 
 Improvements

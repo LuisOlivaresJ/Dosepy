@@ -15,8 +15,7 @@ from Dosepy.app_components.file_dialog import (
     save_lut_file_dialog,
     Error_Dialog,
 )
-from Dosepy.tools.equate_files import equate, merge
-from Dosepy.image import stack_images, load
+from Dosepy.image import load
 
 class BaseController(ABC):
     """Abstract class."""
@@ -45,6 +44,7 @@ class CalibrationController(BaseController):
         if new_files:
     
             if self._model.are_valid_tif_files(new_files):
+                
                 current_files = self._view.cal_widget.get_files_list()
                 list_files = current_files + new_files
 
@@ -53,27 +53,15 @@ class CalibrationController(BaseController):
                     # Display path to files
                     self._view.cal_widget.set_files_list(list_files)
 
-                    # load the files
-                    self._model.calibration_img = self._model.load_files(
+                    # load files
+                    self._model.calibration_img = self._model.load_calib_files(
                         list_files,
-                        for_calib=True
                         )
-                    self._view.cal_widget.plot_image(self._model.calibration_img)
-
-                    # Find how many film we have and show a table for user input dose values
-                    self._model.calibration_img.set_labeled_img()
-                    num = self._model.calibration_img.number_of_films
-                    print(f"Number of detected films: {num}")
-                    self._view.cal_widget.set_table_rows(rows = num)
-                    header = self._view.cal_widget.dose_table.horizontalHeader()
-                    self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
-                    header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-
-                    self._view.cal_widget.apply_button.setEnabled(True)
+                    self._prepare_for_calibration()
                 
                 else:
                     
-                    msg = "Do you want to equalize the files?"
+                    msg = "Do you want to cut the images to have the same size?"
                     print(msg)
                     dlg = QMessageBox()
                     dlg.setWindowTitle("Equate images")
@@ -85,32 +73,12 @@ class CalibrationController(BaseController):
                     if button == QMessageBox.Yes:
                         # Display path to files
                         self._view.cal_widget.set_files_list(list_files)
-                        file_path = list_files[0]
-                        
-                        self._model.calibration_img = load(
-                            file_path,
-                            for_calib=True,
+
+                        # load files
+                        self._model.calibration_img = self._model.load_calib_files(
+                        list_files,
                         )
-
-                        equal_images = equate(list_files)
-                        merged_images = merge(list_files, equal_images)
-
-                        img = stack_images(merged_images, padding=6)  # ArrayImage, but we need CalibrationImage
-                        self._model.calibration_img.array = img.array
-
-                        self._view.cal_widget.plot_image(self._model.calibration_img)
-
-                        # Find how many film we have and show a table for user input dose values
-                        self._model.calibration_img.set_labeled_img()
-                        num = self._model.calibration_img.number_of_films
-                        print(f"Number of detected films: {num}")
-                        self._view.cal_widget.set_table_rows(rows = num)
-                        header = self._view.cal_widget.dose_table.horizontalHeader()
-                        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
-                        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-
-                        self._view.cal_widget.apply_button.setEnabled(True)
-                        
+                        self._prepare_for_calibration()
 
                     else:
 
@@ -118,20 +86,36 @@ class CalibrationController(BaseController):
                         print(msg)
                         Error_Dialog(msg).exec()
 
-
             else:
                 msg = "Invalid file. Is it a tiff RGB file?"
                 print(msg)
                 Error_Dialog(msg).exec()
+
+
+    def _prepare_for_calibration(self):
+
+        self._view.cal_widget.plot_image(self._model.calibration_img)
+
+        # Find how many film we have and show a table for user input dose values
+        self._model.calibration_img.set_labeled_img()
+        num = self._model.calibration_img.number_of_films
+        print(f"Number of detected films: {num}")
+        self._view.cal_widget.set_table_rows(rows = num)
+        header = self._view.cal_widget.dose_table.horizontalHeader()
+        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+
+        self._view.cal_widget.apply_button.setEnabled(True)
+
 
     def _apply_calib_button(self):
         print("Apply button pressed.")
         # Is dose table completed?
         num = self._model.calibration_img.number_of_films
         if self._view.cal_widget.is_dose_table_complete(num):
-            print("Doses OK")
+            #print("Doses OK")
             doses = self._view.cal_widget.get_doses()
-            print(doses)
+            #print(doses)
             if self._model.calibration_img:
                 cal = self._model.calibration_img.get_calibration(
                     doses = doses,
@@ -237,35 +221,11 @@ class Tiff2DoseController(BaseController):
                     self._model.tif_img = self._model.load_files(
                         list_files,
                         )
-                    
-                    if self._model.lut:
-                        self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
-
-                    else:
-                        "Open lut"
-                        lut_file_path = open_files_dialog(
-                            filter = "Calibration. (*.cal)",
-                            dir = "calib"
-                            )
-                        
-                        if lut_file_path:
-                            if len(lut_file_path) == 1:
-                                self._model.lut = self._model.load_lut(lut_file_path[0])
-                                self._model.ref_dose_img = self._model.tif_img.to_dose(
-                                    self._model.lut
-                                    ) # An ArrayImage
-                            else:
-                                msg = "Chose one calibration file."
-                                print(msg)
-                                Error_Dialog(msg).exec()
-                        else:
-                            self._view.dose_widget.files_list.clear()
-
-                    self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+                    self._prepare_for_tif_to_dose()
 
                 else:
                     
-                    msg = "Do you want to equalize the files?"
+                    msg = "Do you want to cut the images to have the same size?"
                     print(msg)
                     dlg = QMessageBox()
                     dlg.setWindowTitle("Equate images")
@@ -275,45 +235,15 @@ class Tiff2DoseController(BaseController):
                     button = dlg.exec()
 
                     if button == QMessageBox.Yes:
+
                         # Display path to files
-                        #self._view.cal_widget.set_files_list(list_files)
                         self._view.dose_widget.set_files_list(list_files)
-                        file_path = list_files[0]
-                        self._model.tif_img = load(file_path)  # Placeholder
+
+                        self._model.tif_img = self._model.load_files(
+                            list_files,
+                            )
                         
-                        equal_images = equate(list_files, axis="width")
-
-                        merged_images = merge(list_files, equal_images)
-
-                        img = stack_images(merged_images, padding=6)
-                        # load the files
-                        self._model.tif_img.array = img.array 
-
-                        if self._model.lut:
-                            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
-
-                        else:
-                            "Open lut"
-                            lut_file_path = open_files_dialog(
-                                filter = "Calibration. (*.cal)",
-                                dir = "calib"
-                                )
-                            
-                            if lut_file_path:
-                                if len(lut_file_path) == 1:
-                                    self._model.lut = self._model.load_lut(lut_file_path[0])
-                                    self._model.ref_dose_img = self._model.tif_img.to_dose(
-                                        self._model.lut
-                                        ) # An ArrayImage
-                                else:
-                                    msg = "Chose one calibration file."
-                                    print(msg)
-                                    Error_Dialog(msg).exec()
-                            else:
-                                self._view.dose_widget.files_list.clear()
-
-                        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
-                        
+                        self._prepare_for_tif_to_dose()                        
 
                     else:
 
@@ -325,6 +255,35 @@ class Tiff2DoseController(BaseController):
                 msg = "Invalid file. Is it a tiff RGB file?"
                 print(msg)
                 Error_Dialog(msg).exec()
+
+
+    def _prepare_for_tif_to_dose(self):
+        
+        if self._model.lut:
+            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
+
+        else:
+            "Open lut"
+            lut_file_path = open_files_dialog(
+                filter = "Calibration. (*.cal)",
+                dir = "calib"
+                )
+            
+            if lut_file_path:
+                if len(lut_file_path) == 1:
+
+                    self._model.lut = self._model.load_lut(lut_file_path[0])
+                    self._model.ref_dose_img = self._model.tif_img.to_dose(
+                        self._model.lut
+                        ) # An ArrayImage
+                else:
+                    msg = "Chose one calibration file."
+                    print(msg)
+                    Error_Dialog(msg).exec()
+            else:
+                self._view.dose_widget.files_list.clear()
+
+        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
 
 
     def _save_tif2dose_button(self):
