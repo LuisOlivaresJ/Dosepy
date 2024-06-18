@@ -19,6 +19,7 @@ class Model:
         self.tif_img = None  # The tif image to be analysed
         self.lut = None  # The calibration object used for tif to dose calculation
         self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
+        self.lut_calibration = None  # Instance of LutCalibration
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
@@ -122,3 +123,21 @@ class Model:
         img = load(data, dpi = self.ref_dose_img.dpi)
         img.save_as_tif(file_name)
 
+class LutCalibration:
+    """Class for data related to calibration."""
+    def __init__(self):
+        self.image = None
+        self.doses = None
+        self.rois = None
+        self.median_pixels = None
+        self.std = None
+
+    def create_automatic_rois(self):
+        """Find and create regions of interes."""
+        # Update self.rois 
+
+    def get_statistics(self):
+        """Get meadian and standar """
+        # Update self.median_pixel and std
+
+    

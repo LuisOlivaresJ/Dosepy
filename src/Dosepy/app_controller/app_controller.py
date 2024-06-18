@@ -100,9 +100,10 @@ class CalibrationController(BaseController):
         self._model.calibration_img.set_labeled_img()
         num = self._model.calibration_img.number_of_films
         print(f"Number of detected films: {num}")
+
         self._view.cal_widget.set_table_rows(rows = num)
         header = self._view.cal_widget.dose_table.horizontalHeader()
-        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
+        
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
 
         self._view.cal_widget.apply_button.setEnabled(True)
@@ -184,6 +185,7 @@ class CalibrationController(BaseController):
         self._view.cal_widget.open_button.clicked.connect(self._open_file_button)
         self._view.cal_widget.apply_button.clicked.connect(self._apply_calib_button)
         self._view.cal_widget.save_cal_button.clicked.connect(self._save_calib_button)
+        self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
         #self._view.cal_widget.clear_button.clicked.connect(self._clear_file_button) #TODO_
             
 
