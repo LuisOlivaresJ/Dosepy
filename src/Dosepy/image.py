@@ -15,9 +15,7 @@ import numpy as np
 import os.path as osp
 from typing import Any, Union
 import imageio.v3 as iio
-import copy
-from scipy import ndimage
-import os
+from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -27,10 +25,8 @@ from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
-import math
 
 from .calibration import polynomial_g3, rational_func, Calibration
-from .tools.resol import equate_resolution
 from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
@@ -168,8 +164,8 @@ def _is_RGB(path: str | Path) -> bool:
         return False
 
 
-class BaseImage:
-    """Base class for the Image classes.
+class BaseImage(ABC):
+    """Base abstract class for the Image classes.
 
     Attributes
     ----------
@@ -195,7 +191,8 @@ class BaseImage:
                 f"File `{path}` does not exist. Verify the file path name.")
         else:
             self.path = path
-            self.base_path = osp.basename(path)
+
+        super().__init__()
 
     
     @property
