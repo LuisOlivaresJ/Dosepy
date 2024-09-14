@@ -1,0 +1,6 @@
+# This file holds the configuration for the application
+
+[user]
+# ROI size in mm
+roi_size_h = 8.0
+roi_size_v = 8.0

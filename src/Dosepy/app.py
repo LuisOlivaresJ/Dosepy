@@ -36,24 +36,15 @@ class MainWindow(QWidget):
         #tabs.addTab(self.tif_widget, "Tif Image")
         tab_layout.addWidget(tabs)
 
-'''
-if __name__ == "__main__":
 
-    app = QApplication(sys.argv)
-
-    root_window = MainWindow()
-    dosepy_model = Model()
-    dosepy_controller = DosepyController(model=dosepy_model, view=root_window)
-    root_window.show()
-
-    sys.exit(app.exec())
-'''
-
+# Create the application
 app = QApplication(sys.argv)
-
+# Create the main window (view)
 root_window = MainWindow()
-
+# Create the model
 dosepy_model = Model()
+
+# Create the controllers
 dosepy_calibration_controller = CalibrationController(model=dosepy_model, view=root_window)
 dosepy_tiff2dose_controller = Tiff2DoseController(model=dosepy_model, view=root_window)
 

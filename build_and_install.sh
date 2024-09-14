@@ -9,6 +9,9 @@
 # Delete the dist directory
 rm -rf dist
 
+# Delete __pycache__ directories
+find . -type d -name __pycache__ -exec rm -rf {} +
+
 # Uninstall the package
 python3 -m pip uninstall -y Dosepy
 

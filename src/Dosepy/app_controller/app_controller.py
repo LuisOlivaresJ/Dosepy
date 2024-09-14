@@ -17,6 +17,7 @@ from Dosepy.app_components.file_dialog import (
 )
 from Dosepy.image import load
 
+
 class BaseController(ABC):
     """Abstract class."""
     def __init__(self, model, view):
@@ -115,14 +116,17 @@ class CalibrationController(BaseController):
         if self._view.cal_widget.is_dose_table_complete(num):
             #print("Doses OK")
             doses = self._view.cal_widget.get_doses()
+            roi_size = self._model.config.get_calib_roi_size()
+            #breakpoint()
             #print(doses)
             if self._model.calibration_img:
                 cal = self._model.calibration_img.get_calibration(
                     doses = doses,
                     channel = self._view.cal_widget.channel_combo_box.currentText(),
-                    roi = (16, 8),
+                    roi = roi_size,
                     func = self._view.cal_widget.fit_combo_box.currentText()
                     )
+                #breakpoint()
                 self._view.cal_widget.plot_cal_curve(cal)
                 self._view.cal_widget.save_cal_button.setEnabled(True)
 

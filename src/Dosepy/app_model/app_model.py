@@ -6,6 +6,8 @@ import imageio.v3 as iio
 import numpy as np
 from importlib import resources
 import pickle
+from Dosepy.config.io_settings import load_settings
+
 
 class Model:
     """
@@ -19,6 +21,8 @@ class Model:
         self.tif_img = None  # The tif image to be analysed
         self.lut = None  # The calibration object used for tif to dose calculation
         self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
+
+        self.config = load_settings()  # The settings for the application (settings.toml file)
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
