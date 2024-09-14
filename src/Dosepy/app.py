@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QLabel,
     QTabWidget,
+    QMainWindow,
 )
 
 # Import app views
@@ -18,14 +19,14 @@ from Dosepy.app_controller.app_controller import CalibrationController, Tiff2Dos
 # Import app model
 from Dosepy.app_model.app_model import Model
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Dosepy")
 
-        tab_layout = QVBoxLayout()
-        self.setLayout(tab_layout)
+        self.main_widget = QWidget()
+        self.tab_layout = QVBoxLayout()
 
         tabs = QTabWidget()
         self.cal_widget = CalibrationWidget()
@@ -34,8 +35,10 @@ class MainWindow(QWidget):
         tabs.addTab(self.dose_widget, "Film2Dose")
         #self.tif_widget = TifWidget()
         #tabs.addTab(self.tif_widget, "Tif Image")
-        tab_layout.addWidget(tabs)
+        self.tab_layout.addWidget(tabs)
 
+        self.main_widget.setLayout(self.tab_layout)
+        self.setCentralWidget(self.main_widget)
 
 # Create the application
 app = QApplication(sys.argv)

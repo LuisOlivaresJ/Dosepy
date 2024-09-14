@@ -8,6 +8,7 @@ import pathlib
 
 from pydantic import BaseModel, Field, ValidationError
 
+toml_file_path = pathlib.Path(__file__).parent.parent / "config" / "settings.toml"
 
 class Settings(BaseModel):
     """ Class to store the settings from the settings.toml file. An instance class is created using the load_settings function"""
@@ -17,17 +18,52 @@ class Settings(BaseModel):
 
     def get_calib_roi_size(self) -> tuple:
         return (self.roi_size_h, self.roi_size_v)
+    
+    def set_calib_roi_size(self, roi_size: tuple) -> None:
+        """ 
+        Set the ROI size in the settings.toml file 
+        Parameters
+        ----------
+            roi_size : tuple 
+            Tuple with two floats representing the horizontal and vertical size of the ROI in mm
+        """
+        # Handle exceptions if the tuple is not well formatted
+        if not isinstance(roi_size, tuple) or len(roi_size) != 2:
+            raise ValueError("The ROI size must be a tuple with two elements")
+        
+        try:
+            # Update the ROI size
+            self.roi_size_h, self.roi_size_v = roi_size
+            seetings = _load_toml_file()
+            seetings["user"]["roi_size_h"] = roi_size[0]
+            seetings["user"]["roi_size_v"] = roi_size[1]
+            # Save to the settings.toml file
+            with open(toml_file_path, mode="wt", encoding="utf-8") as fp:
+                tomlkit.dump(seetings, fp)
+
+        except ValidationError as e:
+            print(e)
+            raise ValueError("The ROI size must be a tuple with two floats")
+
+
+def _load_toml_file() -> tomlkit.TOMLDocument:
+    _create_toml_file_if_not_exists()
+    with open(toml_file_path, mode="rt", encoding="utf-8") as fp:
+        return tomlkit.load(fp)
+
+
+def _create_toml_file_if_not_exists() -> None:
+    if not toml_file_path.exists():
+        # Create the file if it does not exist
+        toml_file_path.touch()
+        # Create the default settings
+        create_default_settings(toml_file_path)
 
 
 def load_settings() -> Settings:
-    path = pathlib.Path(__file__).parent.parent / "config" / "settings.toml"
-    if not path.exists():
-        # Create the file if it does not exist
-        path.touch()
-        # Create the default settings
-        create_default_settings(path)
+    _create_toml_file_if_not_exists()
 
-    with open(path) as fp:
+    with open(toml_file_path) as fp:
         raw_settings = tomlkit.load(fp)
 
     # Handle exceptions if the settings toml file is not well formatted
@@ -37,7 +73,7 @@ def load_settings() -> Settings:
     
     except ValidationError as e:
         # If the settings file is not well formatted, create a new one
-        create_default_settings(path)
+        create_default_settings(toml_file_path)
         print(e)
         print("The settings file was not well formatted. A new one was created with default values.")
         return load_settings()
