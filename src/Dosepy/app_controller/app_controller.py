@@ -14,8 +14,10 @@ from Dosepy.app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,
+
 )
 from Dosepy.image import load
+from Dosepy.config.io_settings import load_settings
 
 
 class BaseController(ABC):
@@ -28,6 +30,39 @@ class BaseController(ABC):
     @abstractmethod
     def _connectSignalsAndSlots(self):
         pass
+
+
+# Class that controls the toolbar widget
+class ToolbarController(BaseController):
+    """Related to the toolbar."""
+    def __init__(self, model, view):
+        super().__init__(model, view)
+
+        self._connectSignalsAndSlots()
+
+
+    def _open_calibration_settings(self):
+
+        if self._view.conf_window.isVisible():
+            self._view.conf_window.hide()
+        else:
+            self._view.conf_window.show()
+
+    def _save_settings(self):
+        print("Save settings")
+        roi_size_h = self._view.conf_window.roi_size_h.text()
+        roi_size_v = self._view.conf_window.roi_size_v.text()
+
+        settings = load_settings()
+        settings.set_calib_roi_size((float(roi_size_h), float(roi_size_v)))
+        self._view.conf_window.roi_size_h_label.setText(
+            f"ROI size horizontal (mm): {settings.get_calib_roi_size()[0]}")
+        self._view.conf_window.roi_size_v_label.setText(
+            f"ROI size vertical (mm): {settings.get_calib_roi_size()[1]}")
+
+    def _connectSignalsAndSlots(self):
+        self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
+        self._view.conf_window.save_button.clicked.connect(self._save_settings)
 
 
 class CalibrationController(BaseController):

@@ -61,6 +61,7 @@ def _create_toml_file_if_not_exists() -> None:
 
 
 def load_settings() -> Settings:
+    """ Load the settings from the settings.toml file """
     _create_toml_file_if_not_exists()
 
     with open(toml_file_path) as fp:
