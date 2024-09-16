@@ -53,12 +53,26 @@ class ToolbarController(BaseController):
         roi_size_h = self._view.conf_window.roi_size_h.text()
         roi_size_v = self._view.conf_window.roi_size_v.text()
 
+        channel = self._view.conf_window.channel.currentText()
+        fit_function = self._view.conf_window.fit_function.currentText()
+
         settings = load_settings()
+
         settings.set_calib_roi_size((float(roi_size_h), float(roi_size_v)))
         self._view.conf_window.roi_size_h_label.setText(
             f"ROI size horizontal (mm): {settings.get_calib_roi_size()[0]}")
         self._view.conf_window.roi_size_v_label.setText(
             f"ROI size vertical (mm): {settings.get_calib_roi_size()[1]}")
+        
+        settings.set_channel(channel)
+        self._view.conf_window.channel_label.setText(
+            f"Channel: {settings.get_channel()}"
+            )
+        settings.set_fit_function(fit_function)
+        self._view.conf_window.fit_label.setText(
+            f"Fit function: {settings.get_fit_function()}"
+            )
+
 
     def _connectSignalsAndSlots(self):
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
@@ -152,14 +166,16 @@ class CalibrationController(BaseController):
             #print("Doses OK")
             doses = self._view.cal_widget.get_doses()
             roi_size = self._model.config.get_calib_roi_size()
+            channel = self._model.config.get_channel()
+            fit = self._model.config.get_fit_function()
             #breakpoint()
             #print(doses)
             if self._model.calibration_img:
                 cal = self._model.calibration_img.get_calibration(
                     doses = doses,
-                    channel = self._view.cal_widget.channel_combo_box.currentText(),
+                    channel = channel,
                     roi = roi_size,
-                    func = self._view.cal_widget.fit_combo_box.currentText()
+                    func = fit,
                     )
                 #breakpoint()
                 self._view.cal_widget.plot_cal_curve(cal)

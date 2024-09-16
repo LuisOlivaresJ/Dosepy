@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 from PySide6.QtGui import QAction
+from PySide6.QtCore import Qt
 
 # Import app views
 from Dosepy.app_components.calibration_widget import CalibrationWidget
@@ -44,6 +45,7 @@ class MainWindow(QMainWindow):
     def _create_toolbar(self):
         toolbar = self.addToolBar("Settings")
         toolbar.addAction(self.calib_setings_action)
+        toolbar.setOrientation(Qt.Orientation.Horizontal)
         self.conf_window = ConfigWindow()
 
 
@@ -71,7 +73,7 @@ dosepy_model = Model()
 # Create the controllers
 dosepy_calibration_controller = CalibrationController(model=dosepy_model, view=root_window)
 dosepy_tiff2dose_controller = Tiff2DoseController(model=dosepy_model, view=root_window)
-dosepy_tiff2dose_controller = ToolbarController(model=dosepy_model, view=root_window)
+dosepy_toolbar_controller = ToolbarController(model=dosepy_model, view=root_window)
 
 root_window.show()
 
