@@ -45,4 +45,4 @@ Bug-Tracker = "https://github.com/LuisOlivaresJ/Dosepy"
 where = ["src"]
 
 [tool.setuptools.package-data]
-Dosepy = ["*.csv", "*.png"]
+Dosepy = ["*.csv", "*.png", "*.toml"]

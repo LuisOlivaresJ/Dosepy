@@ -20,10 +20,8 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import \
     NavigationToolbar2QT as NavigationToolbar
 
-#import styles.styles.Size as Size
 from .styles.styles import Size
 from enum import Enum
-#import Dosepy.tools.styles.styles import Size
 
 
 class CalibrationWidget(QWidget):
@@ -57,20 +55,9 @@ class CalibrationWidget(QWidget):
         self.save_cal_button.setMinimumSize(Size.MAIN_BUTTON.value)
         self.save_cal_button.setEnabled(False)
 
-        self.channel_combo_box = QComboBox()
-        self.channel_combo_box.addItems(["Red", "Green", "Blue", "Mean"])
-        self.fit_combo_box = QComboBox()
-        self.fit_combo_box.addItems(["Rational", "Polynomial"])
-
         parameters_layout.addWidget(self.open_button)
-        #parameters_layout.addWidget(self.clear_button)
         parameters_layout.addWidget(self.files_list)
         parameters_layout.addWidget(self.dose_table, 1)
-        #parameters_layout.addSpacing(30)
-        parameters_layout.addWidget(QLabel("Channel:"))
-        parameters_layout.addWidget(self.channel_combo_box)
-        parameters_layout.addWidget(QLabel("Fit function:"))
-        parameters_layout.addWidget(self.fit_combo_box)
         parameters_layout.addWidget(self.apply_button)
         parameters_layout.addWidget(self.save_cal_button)
         parameters_layout.addStretch()
