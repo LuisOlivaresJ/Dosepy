@@ -20,6 +20,9 @@ python3 -m pip uninstall -y Dosepy
 #pyphon3 -m pip install --upgrade build
 #python3 -m pip install --upgrade twine
 
+# Install build
+python3 -m pip install build
+
 # Create a source distribution
 python3 -m build
 

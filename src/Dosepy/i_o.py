@@ -2,10 +2,67 @@
 
 from pathlib import Path
 import os
-from pylinac.core.io import get_url
+#from pylinac.core.io import get_url
 import pydicom
 import struct
 from pydicom.errors import InvalidDicomError
+
+from tqdm import tqdm
+from urllib.request import urlopen, urlretrieve
+from urllib.error import HTTPError, URLError
+
+
+def get_url(
+    url: str, destination: str | Path | None = None, progress_bar: bool = True
+) -> str:
+    """Download a URL to a local file.
+
+    Parameters
+    ----------
+    url : str
+        The URL to download.
+    destination : str, None
+        The destination of the file. If None is given the file is saved to a temporary directory.
+    progress_bar : bool
+        Whether to show a command-line progress bar while downloading.
+
+    Returns
+    -------
+    filename : str
+        The location of the downloaded file.
+
+    Notes
+    -----
+    This fuction is copied from pylinac https://pylinac.readthedocs.io/en/latest/overview.html
+    Progress bar use/example adapted from tqdm documentation: https://github.com/tqdm/tqdm
+    """
+
+    def my_hook(t):
+        last_b = [0]
+
+        def inner(b=1, bsize=1, tsize=None):
+            if tsize is not None:
+                t.total = tsize
+            if b > 0:
+                t.update((b - last_b[0]) * bsize)
+            last_b[0] = b
+
+        return inner
+
+    try:
+        if progress_bar:
+            with tqdm(
+                unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+            ) as t:
+                filename, _ = urlretrieve(
+                    url, filename=destination, reporthook=my_hook(t)
+                )
+        else:
+            filename, _ = urlretrieve(url, filename=destination)
+    except (HTTPError, URLError, ValueError) as e:
+        raise e
+    return filename
+
 
 def retrieve_demo_file(name: str, force: bool = False) -> Path:
     """Retrieve the demo file either by getting it from file or from a URL.
