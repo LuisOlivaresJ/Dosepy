@@ -19,7 +19,7 @@ from matplotlib.backends.backend_qtagg import \
 
 import numpy as np
 
-from .styles.styles import Size
+from Dosepy.app_components.styles.styles import Size
 
 class Tiff2DoseWidget(QWidget):
     def __init__(self):
@@ -28,7 +28,15 @@ class Tiff2DoseWidget(QWidget):
         main_layout = QHBoxLayout()
         self.setLayout(main_layout)
 
-        # Paramters Widget
+        buttons_widget = self._setup_right_widget()
+        plot_widget = self._setup_left_widget()
+
+        main_layout.addWidget(plot_widget, 1)
+        main_layout.addWidget(buttons_widget)
+
+
+    def _setup_right_widget(self) -> QWidget:
+        # Paramters and buttons Widget
         parameters_widget = QWidget()
         parameters_layout = QVBoxLayout()
         parameters_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -52,6 +60,10 @@ class Tiff2DoseWidget(QWidget):
         self.save_button.setMinimumSize(Size.MAIN_BUTTON.value)
         parameters_layout.addStretch()
 
+        return parameters_widget
+    
+
+    def _setup_left_widget(self) -> QWidget:
         # Plots Widget
         plot_widget = QWidget()
         plot_layout = QVBoxLayout()
@@ -67,13 +79,38 @@ class Tiff2DoseWidget(QWidget):
         self.axe_image.set_xticks([])
         self.axe_image.set_yticks([])
         
-        plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
+        #plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
+        plot_buttons_w = self._setup_plot_buttons()
+        plot_layout.addWidget(plot_buttons_w)
         plot_layout.addWidget(self.canvas_widg)
 
-        main_layout.addWidget(plot_widget, 1)
-        main_layout.addWidget(parameters_widget)
-
+        return plot_widget
     
+
+    def _setup_plot_buttons(self) -> QWidget:
+        self.flip_button_h = QPushButton(text = "Flip H")
+        self.flip_button_v = QPushButton(text = "Flip V")
+        self.rotate_cw = QPushButton(text = "Rotate CW")
+        self.rotate_ccw = QPushButton(text = " Rotate CCW")
+        self.selection_button = QPushButton(text = "Selection")
+        self.selection_button.setCheckable(True)
+
+        self.cut_button = QPushButton(text = "Cut")
+        self.cut_button.setEnabled(False)
+
+        layout = QHBoxLayout()
+        layout.addWidget(self.flip_button_h)
+        layout.addWidget(self.flip_button_v)
+        layout.addWidget(self.rotate_cw)
+        layout.addWidget(self.rotate_ccw)
+        layout.addWidget(self.selection_button)
+        layout.addWidget(self.cut_button)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        return widget
+
     def plot_dose(self, img):
         """
         Show the transformed tif to dose distribution.
@@ -114,3 +151,16 @@ class Tiff2DoseWidget(QWidget):
             files_list.append(str(self.files_list.item(index).text()))
         
         return files_list
+
+# Used for development
+if __name__ == "__main__":
+    from PySide6.QtWidgets import QApplication
+    import sys
+    # Create the application
+    app = QApplication(sys.argv)
+    # Create the main window (view)
+    root_window = Tiff2DoseWidget()
+
+    root_window.show()
+
+    sys.exit(app.exec())
