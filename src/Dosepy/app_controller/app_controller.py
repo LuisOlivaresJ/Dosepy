@@ -357,6 +357,12 @@ class Tiff2DoseController(BaseController):
         
             self._model.save_dose_as_tif(str(dose_file_name))
 
+
+    def _flip_h_button(self):
+        """Flip the the dose distribution in the left/right direction."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.fliplr()
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
     # end related to tiff2dose
     # --------------------------
     ############################
@@ -365,4 +371,5 @@ class Tiff2DoseController(BaseController):
 
         self._view.dose_widget.open_button.clicked.connect(self._open_tif2dose_button)
         self._view.dose_widget.save_button.clicked.connect(self._save_tif2dose_button)
+        self._view.dose_widget.flip_button_h.clicked.connect(self._flip_h_button)
 

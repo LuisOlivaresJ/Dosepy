@@ -6,7 +6,7 @@ from enum import Enum
 class Size(Enum):
     ZERO = 0
     #SMALL = "0.6em"
-    #MEDIUM = "0.9em"
+    MEDIUM = QSize(30, 30)
     #DEFAULT = "1.1em"
     MAIN_BUTTON = QSize(150, 50)
     #LARGE = "1.6em"

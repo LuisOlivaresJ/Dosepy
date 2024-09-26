@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QListWidget,
     QLabel,
+    QToolButton,
 )
 
 from PySide6.QtCore import Qt, QSize
@@ -90,13 +91,13 @@ class Tiff2DoseWidget(QWidget):
     
 
     def _setup_plot_buttons(self) -> QWidget:
-        self.flip_button_h = QPushButton()
-        self.flip_button_v = QPushButton()
-        self.rotate_cw = QPushButton()
-        self.rotate_ccw = QPushButton()
-        self.selection_button = QPushButton()
+        self.flip_button_h = QToolButton()
+        self.flip_button_v = QToolButton()
+        self.rotate_cw = QToolButton()
+        self.rotate_ccw = QToolButton()
+        self.selection_button = QToolButton()
         self.selection_button.setCheckable(True)
-        self.cut_button = QPushButton()
+        self.cut_button = QToolButton()
         self.cut_button.setEnabled(False)
 
         # Flip horizontal icon
@@ -104,6 +105,8 @@ class Tiff2DoseWidget(QWidget):
             "Icon", "reflect-horizontal-regular-60.png")
         flip_h_icon = QtGui.QIcon(str(flip_h_icon_path))
         self.flip_button_h.setIcon(flip_h_icon)
+        #self.flip_button_h.setIconSize(Size.MEDIUM.value)
+        #self.flip_button_h.setIconSize(QSize(30,30))
         #Flip vertical icon
         flip_v_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
             "Icon", "reflect-vertical-regular-60.png")
