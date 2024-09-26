@@ -3,8 +3,17 @@
 Changelog
 =========
 
+v 0.7.0 (SEP-2024)
+------------------
+
+Improvements
+^^^^^^^^^^^^
+* The app now allows to store configuration settings for film calibration.
+* Better management of dependencies for the app.
+
 
 V 0.6.4 (JUN-2024)
+------------------
 
 Issue
 ^^^^^
@@ -12,6 +21,7 @@ Issue
 * Loading TIFF files with the same size but different name, were merged.
 
 V 0.6.3 (JUN-2024)
+------------------
 
 Improvements
 ^^^^^^^^^^^^
@@ -26,6 +36,7 @@ Issue
 
 
 V 0.6.2 (MAY-2024)
+------------------
 
 Improvements
 ^^^^^^^^^^^^
