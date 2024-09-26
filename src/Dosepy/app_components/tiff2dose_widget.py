@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from PySide6.QtCore import Qt, QSize
+from PySide6 import QtGui
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import \
@@ -20,6 +21,7 @@ from matplotlib.backends.backend_qtagg import \
 import numpy as np
 
 from Dosepy.app_components.styles.styles import Size
+import pathlib
 
 class Tiff2DoseWidget(QWidget):
     def __init__(self):
@@ -88,15 +90,45 @@ class Tiff2DoseWidget(QWidget):
     
 
     def _setup_plot_buttons(self) -> QWidget:
-        self.flip_button_h = QPushButton(text = "Flip H")
-        self.flip_button_v = QPushButton(text = "Flip V")
-        self.rotate_cw = QPushButton(text = "Rotate CW")
-        self.rotate_ccw = QPushButton(text = " Rotate CCW")
-        self.selection_button = QPushButton(text = "Selection")
+        self.flip_button_h = QPushButton()
+        self.flip_button_v = QPushButton()
+        self.rotate_cw = QPushButton()
+        self.rotate_ccw = QPushButton()
+        self.selection_button = QPushButton()
         self.selection_button.setCheckable(True)
-
-        self.cut_button = QPushButton(text = "Cut")
+        self.cut_button = QPushButton()
         self.cut_button.setEnabled(False)
+
+        # Flip horizontal icon
+        flip_h_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "reflect-horizontal-regular-60.png")
+        flip_h_icon = QtGui.QIcon(str(flip_h_icon_path))
+        self.flip_button_h.setIcon(flip_h_icon)
+        #Flip vertical icon
+        flip_v_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "reflect-vertical-regular-60.png")
+        flip_v_icon = QtGui.QIcon(str(flip_v_icon_path))
+        self.flip_button_v.setIcon(flip_v_icon)
+        #Flip rotate right icon
+        rotate_r_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "rotate-right-regular-60.png")
+        rotate_r_icon = QtGui.QIcon(str(rotate_r_icon_path))
+        self.rotate_cw.setIcon(rotate_r_icon)
+        #Flip rotate left icon
+        rotate_l_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "rotate-left-regular-60.png")
+        rotate_l_icon = QtGui.QIcon(str(rotate_l_icon_path))
+        self.rotate_ccw.setIcon(rotate_l_icon)
+        # Selection icon
+        selection_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "selection-regular-60.png")
+        selection_icon = QtGui.QIcon(str(selection_icon_path))
+        self.selection_button.setIcon(selection_icon)
+        # Cut icon
+        cut_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
+            "Icon", "cut-regular-60.png")
+        cut_icon = QtGui.QIcon(str(cut_icon_path))
+        self.cut_button.setIcon(cut_icon)
 
         layout = QHBoxLayout()
         layout.addWidget(self.flip_button_h)
