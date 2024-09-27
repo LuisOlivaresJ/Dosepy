@@ -79,8 +79,6 @@ class Tiff2DoseWidget(QWidget):
         self.canvas_widg.setMinimumSize(QSize(450, 50))
 
         self.axe_image = fig.add_subplot(1, 1, 1)
-        self.axe_image.set_xticks([])
-        self.axe_image.set_yticks([])
         
         #plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
         plot_buttons_w = self._setup_plot_buttons()
@@ -99,6 +97,8 @@ class Tiff2DoseWidget(QWidget):
         self.selection_button.setCheckable(True)
         self.cut_button = QToolButton()
         self.cut_button.setEnabled(False)
+        self.grid_button = QToolButton()
+        self.grid_button.setCheckable(True)
 
         layout = QHBoxLayout()
         layout.addWidget(self.flip_button_h)
@@ -107,6 +107,7 @@ class Tiff2DoseWidget(QWidget):
         layout.addWidget(self.rotate_ccw)
         layout.addWidget(self.selection_button)
         layout.addWidget(self.cut_button)
+        layout.addWidget(self.grid_button)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -119,7 +120,8 @@ class Tiff2DoseWidget(QWidget):
             "rotate-right-regular-60.png",
             "rotate-left-regular-60.png",
             "selection-regular-60.png",
-            "cut-regular-60.png"
+            "cut-regular-60.png",
+            "grid-regular-60.png",
         ]
         counter = 0
         for w in widget.children():         
@@ -132,6 +134,7 @@ class Tiff2DoseWidget(QWidget):
 
         return widget
 
+
     def plot_dose(self, img):
         """
         Show the transformed tif to dose distribution.
@@ -141,10 +144,10 @@ class Tiff2DoseWidget(QWidget):
         img : Dosepy.tools.image.ArrayImage
         """
         max_dose = np.percentile(img.array, [99.9])[0]
-        print(f"Maximum dose: {max_dose}")
+        #print(f"Maximum dose: {max_dose}")
         pos = self.axe_image.imshow(img.array, cmap='nipy_spectral')
         pos.set_clim(-0.05, max_dose)
-        try:
+        try:  # If there is a colorbar, use the same axis
             self.canvas_widg.figure.axes[1]
             axes_cbar = self.canvas_widg.figure.axes[1]
         except:
@@ -181,6 +184,25 @@ class Tiff2DoseWidget(QWidget):
             files_list.append(str(self.files_list.item(index).text()))
         
         return files_list
+    
+
+    def grid(self) -> None:
+        """
+        Show grid in the plot.
+        """
+        if self.grid_button.isChecked():
+            self.axe_image.grid(
+                visible = True,
+                which = 'both',
+                linestyle = '--',
+                color = 'white',
+                linewidth = 1,
+                alpha = 0.5,
+                )
+        else:
+            self.axe_image.grid(False)
+        self.canvas_widg.draw()
+
 
 # Used for development
 if __name__ == "__main__":

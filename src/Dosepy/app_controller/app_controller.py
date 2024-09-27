@@ -32,7 +32,7 @@ class BaseController(ABC):
         pass
 
 
-# Class that controls the toolbar widget
+# Class that controls the main toolbar widget
 class ToolbarController(BaseController):
     """Related to the toolbar."""
     def __init__(self, model, view):
@@ -358,11 +358,35 @@ class Tiff2DoseController(BaseController):
             self._model.save_dose_as_tif(str(dose_file_name))
 
 
+    # Related to tiff2dose tool buttons in plot
     def _flip_h_button(self):
         """Flip the the dose distribution in the left/right direction."""
         if self._model.ref_dose_img is not None:
             self._model.ref_dose_img.fliplr()
             self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _flip_v_button(self):
+        """Flip the the dose distribution in the up/down direction."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.flipud()
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _rotate_cw_button(self):
+        """Rotate the the dose distribution clockwise."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.rotate(angle = 1)
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _rotate_ccw_button(self):
+        """Rotate the the dose distribution counter clockwise."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.rotate(angle = -1)
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _grid_button(self):
+        """Show or hide the grid in the plot."""
+        self._view.dose_widget.grid()
+
     # end related to tiff2dose
     # --------------------------
     ############################
@@ -372,4 +396,8 @@ class Tiff2DoseController(BaseController):
         self._view.dose_widget.open_button.clicked.connect(self._open_tif2dose_button)
         self._view.dose_widget.save_button.clicked.connect(self._save_tif2dose_button)
         self._view.dose_widget.flip_button_h.clicked.connect(self._flip_h_button)
+        self._view.dose_widget.flip_button_v.clicked.connect(self._flip_v_button)
+        self._view.dose_widget.rotate_cw.clicked.connect(self._rotate_cw_button)
+        self._view.dose_widget.rotate_ccw.clicked.connect(self._rotate_ccw_button)
+        self._view.dose_widget.grid_button.clicked.connect(self._grid_button)
 
