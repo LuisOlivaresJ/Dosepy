@@ -21,7 +21,7 @@ from matplotlib.backends.backend_qtagg import \
 
 import numpy as np
 
-from Dosepy.app_components.styles.styles import Size
+from Dosepy.app_components.styles.styles import Size, SizeButton
 import pathlib
 
 class Tiff2DoseWidget(QWidget):
@@ -100,39 +100,6 @@ class Tiff2DoseWidget(QWidget):
         self.cut_button = QToolButton()
         self.cut_button.setEnabled(False)
 
-        # Flip horizontal icon
-        flip_h_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "reflect-horizontal-regular-60.png")
-        flip_h_icon = QtGui.QIcon(str(flip_h_icon_path))
-        self.flip_button_h.setIcon(flip_h_icon)
-        #self.flip_button_h.setIconSize(Size.MEDIUM.value)
-        #self.flip_button_h.setIconSize(QSize(30,30))
-        #Flip vertical icon
-        flip_v_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "reflect-vertical-regular-60.png")
-        flip_v_icon = QtGui.QIcon(str(flip_v_icon_path))
-        self.flip_button_v.setIcon(flip_v_icon)
-        #Flip rotate right icon
-        rotate_r_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "rotate-right-regular-60.png")
-        rotate_r_icon = QtGui.QIcon(str(rotate_r_icon_path))
-        self.rotate_cw.setIcon(rotate_r_icon)
-        #Flip rotate left icon
-        rotate_l_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "rotate-left-regular-60.png")
-        rotate_l_icon = QtGui.QIcon(str(rotate_l_icon_path))
-        self.rotate_ccw.setIcon(rotate_l_icon)
-        # Selection icon
-        selection_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "selection-regular-60.png")
-        selection_icon = QtGui.QIcon(str(selection_icon_path))
-        self.selection_button.setIcon(selection_icon)
-        # Cut icon
-        cut_icon_path = pathlib.Path(__file__).parent.parent.joinpath(
-            "Icon", "cut-regular-60.png")
-        cut_icon = QtGui.QIcon(str(cut_icon_path))
-        self.cut_button.setIcon(cut_icon)
-
         layout = QHBoxLayout()
         layout.addWidget(self.flip_button_h)
         layout.addWidget(self.flip_button_v)
@@ -143,6 +110,25 @@ class Tiff2DoseWidget(QWidget):
 
         widget = QWidget()
         widget.setLayout(layout)
+
+        # Setup button icons and sizes
+        icons_path = pathlib.Path(__file__).parent.parent.joinpath("Icon")
+        icon_file_name = [
+            "reflect-horizontal-regular-60.png",
+            "reflect-vertical-regular-60.png",
+            "rotate-right-regular-60.png",
+            "rotate-left-regular-60.png",
+            "selection-regular-60.png",
+            "cut-regular-60.png"
+        ]
+        counter = 0
+        for w in widget.children():         
+            if isinstance(w, QToolButton):
+                w.setIconSize(SizeButton.TOOL.value)
+                icon_path = icons_path.joinpath(icon_file_name[counter])
+                icon = QtGui.QIcon(str(icon_path))
+                w.setIcon(icon)
+                counter += 1
 
         return widget
 
@@ -158,7 +144,16 @@ class Tiff2DoseWidget(QWidget):
         print(f"Maximum dose: {max_dose}")
         pos = self.axe_image.imshow(img.array, cmap='nipy_spectral')
         pos.set_clim(-0.05, max_dose)
-        self.canvas_widg.figure.colorbar(pos, ax=self.axe_image)
+        try:
+            self.canvas_widg.figure.axes[1]
+            axes_cbar = self.canvas_widg.figure.axes[1]
+        except:
+            axes_cbar = None
+        self.canvas_widg.figure.colorbar(
+            pos,
+            cax = axes_cbar,
+            ax = self.axe_image,
+            )
         self.canvas_widg.draw()
 
 
