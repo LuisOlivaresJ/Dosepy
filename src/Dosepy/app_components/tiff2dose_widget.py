@@ -18,6 +18,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import \
     NavigationToolbar2QT as NavigationToolbar
+import matplotlib.widgets as mwidgets
 
 import numpy as np
 
@@ -79,11 +80,35 @@ class Tiff2DoseWidget(QWidget):
         self.canvas_widg.setMinimumSize(QSize(450, 50))
 
         self.axe_image = fig.add_subplot(1, 1, 1)
+
+        # Rectangle selector
+        properties = dict(
+            alpha=0.5,
+            fill=False,
+            edgecolor='red',
+            linestyle='--',
+            linewidth=2,
+        )
+        self.rs = mwidgets.RectangleSelector(
+            self.axe_image,
+            self.line_select_callback,
+            useblit=True,
+            button=[1, 3],  # left and right buttons
+            minspanx=10,
+            minspany=10,
+            spancoords='pixels',
+            interactive=True,
+            drag_from_anywhere=True,
+            props=properties,
+            )
+        # ...end of rectangle selector
         
         #plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
         plot_buttons_w = self._setup_plot_buttons()
+        self.dose_label = QLabel()
         plot_layout.addWidget(plot_buttons_w)
         plot_layout.addWidget(self.canvas_widg)
+        plot_layout.addWidget(self.dose_label)
 
         return plot_widget
     
@@ -160,6 +185,40 @@ class Tiff2DoseWidget(QWidget):
         self.canvas_widg.draw()
 
 
+    def grid(self) -> None:
+        """
+        Show grid in the plot.
+        """
+        if self.grid_button.isChecked():
+            self.axe_image.grid(
+                visible = True,
+                which = 'both',
+                linestyle = '--',
+                color = 'white',
+                linewidth = 1,
+                alpha = 0.5,
+                )
+        else:
+            self.axe_image.grid(False)
+        self.canvas_widg.draw()
+
+
+    def show_dose_value(self, x: int, y: int, dose: float) -> None:
+        """
+        Show the dose value in the label.
+
+        Parameters
+        ----------
+        x : int
+            x coordinate.
+        y : int
+            y coordinate.
+        dose : float
+            Dose value.
+        """
+        self.dose_label.setText(f'x={x:.0f}, y={y:.0f} dose={dose:.2f} Gy')
+
+
     def set_files_list(self, files: list):
         """
         Set the files list.
@@ -184,25 +243,16 @@ class Tiff2DoseWidget(QWidget):
             files_list.append(str(self.files_list.item(index).text()))
         
         return files_list
-    
 
-    def grid(self) -> None:
+        
+    def line_select_callback(self, eclick, erelease):
         """
-        Show grid in the plot.
+        Callback for the rectangle selector.
         """
-        if self.grid_button.isChecked():
-            self.axe_image.grid(
-                visible = True,
-                which = 'both',
-                linestyle = '--',
-                color = 'white',
-                linewidth = 1,
-                alpha = 0.5,
-                )
-        else:
-            self.axe_image.grid(False)
-        self.canvas_widg.draw()
-
+        x1, y1 = eclick.xdata, eclick.ydata
+        x2, y2 = erelease.xdata, erelease.ydata
+        self.cut_button.setEnabled(True)
+        #self.cut_button.clicked.connect(lambda: self.cut(x1, y1, x2, y2))
 
 # Used for development
 if __name__ == "__main__":

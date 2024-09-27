@@ -383,9 +383,29 @@ class Tiff2DoseController(BaseController):
             self._model.ref_dose_img.rotate(angle = -1)
             self._view.dose_widget.plot_dose(self._model.ref_dose_img)
 
+    def _selection_button(self):
+        """Select a region of interest in the dose distribution."""
+        if self._view.dose_widget.selection_button.isChecked():
+            self._view.dose_widget.rs.set_active(True)
+
+        else:
+            self._view.dose_widget.rs.set_active(False)
+            #self._view.dose_widget.rs.set_visible(False)
+
+
     def _grid_button(self):
         """Show or hide the grid in the plot."""
         self._view.dose_widget.grid()
+
+
+    def _on_move_plot(self, event):
+        """Show the dose value in the plot view label."""
+        if event.inaxes == self._view.dose_widget.axe_image and self._model.ref_dose_img is not None:
+            column = int(event.xdata)
+            row = int(event.ydata)
+            dose = self._model.ref_dose_img.array[row, column]
+            self._view.dose_widget.show_dose_value(column, row, dose)
+
 
     # end related to tiff2dose
     # --------------------------
@@ -400,4 +420,7 @@ class Tiff2DoseController(BaseController):
         self._view.dose_widget.rotate_cw.clicked.connect(self._rotate_cw_button)
         self._view.dose_widget.rotate_ccw.clicked.connect(self._rotate_ccw_button)
         self._view.dose_widget.grid_button.clicked.connect(self._grid_button)
+        self._view.dose_widget.selection_button.clicked.connect(self._selection_button)
+
+        self._view.dose_widget.canvas_widg.figure.canvas.mpl_connect('motion_notify_event', self._on_move_plot)
 
