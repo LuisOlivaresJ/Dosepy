@@ -9,7 +9,8 @@ v 0.7.0 (SEP-2024)
 Improvements
 ^^^^^^^^^^^^
 * The app now allows to store configuration settings for film calibration.
-* Better management of dependencies for the app.
+* Better management of dependencies.
+* New functionalities for the GUI, like buttons for dose image manipulation.
 
 
 V 0.6.4 (JUN-2024)
