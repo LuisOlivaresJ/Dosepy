@@ -25,6 +25,7 @@ from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
+from skimage.transform import rotate
 
 from .calibration import polynomial_g3, rational_func, Calibration
 from .i_o import retrieve_dicom_file, is_dicom_image
@@ -235,6 +236,19 @@ class BaseImage(ABC):
         if "right" in edges:
             self.array = self.array[:, :-pixels]
 
+
+    def flipud(self) -> None:
+        """Flip the image array upside down. Wrapper for np.flipud()"""
+        self.array = np.flipud(self.array)
+
+    def fliplr(self) -> None:
+        """Flip the image array in the left/right direction. Wrapper for np.fliplr()"""
+        self.array = np.fliplr(self.array)
+
+    def rotate(self, angle: float, mode: str = "edge", *args, **kwargs):
+        """Rotate the image counter-clockwise. Simple wrapper for scikit-image. See https://scikit-image.org/docs/stable/api/skimage.transform.html#skimage.transform.rotate.
+        All parameters are passed to that function."""
+        self.array = rotate(self.array, angle, mode=mode, *args, **kwargs)
 
 class TiffImage(BaseImage):
     """An image from a tiff file.
