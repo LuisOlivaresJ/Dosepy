@@ -81,27 +81,8 @@ class Tiff2DoseWidget(QWidget):
 
         self.axe_image = fig.add_subplot(1, 1, 1)
 
-        # Rectangle selector
-        properties = dict(
-            alpha=0.5,
-            fill=False,
-            edgecolor='red',
-            linestyle='--',
-            linewidth=2,
-        )
-        self.rs = mwidgets.RectangleSelector(
-            self.axe_image,
-            self.line_select_callback,
-            useblit=True,
-            button=[1, 3],  # left and right buttons
-            minspanx=10,
-            minspany=10,
-            spancoords='pixels',
-            interactive=True,
-            drag_from_anywhere=True,
-            props=properties,
-            )
-        # ...end of rectangle selector
+        self._create_rectangle_selector()
+
         
         #plot_layout.addWidget(NavigationToolbar(self.canvas_widg, self))
         plot_buttons_w = self._setup_plot_buttons()
@@ -159,6 +140,29 @@ class Tiff2DoseWidget(QWidget):
 
         return widget
 
+    def _create_rectangle_selector(self):
+        # Rectangle selector
+        properties = dict(
+            alpha=0.5,
+            fill=False,
+            edgecolor='red',
+            linestyle='--',
+            linewidth=2,
+        )
+        self.rs = mwidgets.RectangleSelector(
+            self.axe_image,
+            self.line_select_callback,
+            useblit=True,
+            button=[1, 3],  # left and right buttons
+            minspanx=10,
+            minspany=10,
+            spancoords='pixels',
+            interactive=True,
+            drag_from_anywhere=True,
+            props=properties,
+            )
+        self.rs.set_active(False)
+        
 
     def plot_dose(self, img):
         """

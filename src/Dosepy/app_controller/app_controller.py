@@ -406,6 +406,16 @@ class Tiff2DoseController(BaseController):
             dose = self._model.ref_dose_img.array[row, column]
             self._view.dose_widget.show_dose_value(column, row, dose)
 
+    def _cut_button(self):
+        """Cut the dose distribution based on rectangle selection."""
+        xmin, xmax, ymin, ymax = self._view.dose_widget.rs.extents
+        self._model.ref_dose_img.array = self._model.ref_dose_img.array[int(ymin): int(ymax), int(xmin): int(xmax)]
+        self._view.dose_widget.rs.set_visible(False)
+        self._view.dose_widget.selection_button.setChecked(False)
+        self._view.dose_widget.cut_button.setEnabled(False)
+        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        self._view.dose_widget._create_rectangle_selector()
+
 
     # end related to tiff2dose
     # --------------------------
@@ -421,6 +431,7 @@ class Tiff2DoseController(BaseController):
         self._view.dose_widget.rotate_ccw.clicked.connect(self._rotate_ccw_button)
         self._view.dose_widget.grid_button.clicked.connect(self._grid_button)
         self._view.dose_widget.selection_button.clicked.connect(self._selection_button)
+        self._view.dose_widget.cut_button.clicked.connect(self._cut_button)
 
         self._view.dose_widget.canvas_widg.figure.canvas.mpl_connect('motion_notify_event', self._on_move_plot)
 
