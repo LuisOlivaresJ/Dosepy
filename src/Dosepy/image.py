@@ -1115,6 +1115,7 @@ class ArrayImage(BaseImage):
 
         self._dpi = reference.dpi
 
+
 class DoseImage(ArrayImage):
     """ A dose distribution image."""
 

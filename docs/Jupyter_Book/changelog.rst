@@ -28,6 +28,7 @@ Issue
 ^^^^^
 * There is no fuction called equate_images() in Dosepy.image module, as it was stated in readthedocs documentation.To solve this, a new method called reduce_resolution_as() is created as a method of ArrayImage class.
 * _equate_height() function from tools.files_to_image module did not worked properly. It is now fixed.
+* Dosepy.old.gui_components.Bloque_Imagenes uses a float for the axes.set_xdata() method instead of a sequence.
 
 V 0.6.4 (JUN-2024)
 ------------------
