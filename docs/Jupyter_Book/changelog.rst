@@ -9,9 +9,26 @@ v 0.7.0 (SEP-2024)
 Improvements
 ^^^^^^^^^^^^
 * The app now allows to store configuration settings for film calibration.
-* Better management of dependencies.
 * New functionalities for the GUI, like buttons for dose image manipulation.
+* New method for resolution management, called reduce_resolution_as(). The user can now reduce the resolution of an ArrayImage to match the resolution of a reference one.
+* README update to be more user-friendly for Python developers.
 
+Improvements for developing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* New name and new functionalities for build_and_installing.sh file. Now it is called packaging_installing_testing.sh and it is used to build, install and test the package.
+* Better management of dependencies using pyproject.toml file.
+* Firts steps with Test-Driven Development.
+
+Refactor
+^^^^^^^^
+* The equate() fuction from tools.files_to_image module is now called equate_array_size().
+
+Issue
+^^^^^
+* There is no fuction called equate_images() in Dosepy.image module, as it was stated in readthedocs documentation.To solve this, a new method called reduce_resolution_as() is created as a method of ArrayImage class.
+* _equate_height() function from tools.files_to_image module did not worked properly. It is now fixed.
+* Dosepy.old.gui_components.Bloque_Imagenes uses a float for the axes.set_xdata() method instead of a sequence.
 
 V 0.6.4 (JUN-2024)
 ------------------

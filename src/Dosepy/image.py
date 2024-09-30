@@ -26,6 +26,10 @@ from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 from skimage.transform import rotate
+from .tools.resol import equate_resolution
+from .tools.files_to_image import equate_array_size
+
+import math
 
 from .calibration import polynomial_g3, rational_func, Calibration
 from .i_o import retrieve_dicom_file, is_dicom_image
@@ -127,6 +131,25 @@ def load(path: str | Path | np.ndarray,
     else:
         raise TypeError(f"The argument '{path}' was not found to be\
                         a valid file.")
+
+
+def load_images(paths: list):
+    """
+    Parameters
+    ----------
+    paths : list
+        List with the paths to the TIFF files.
+
+    Return
+    ------
+    list of TIffImage
+    """
+    images = []
+
+    for file in paths:
+        images.append(load(file))
+    
+    return images
 
 
 def _is_array(obj: Any) -> bool:
@@ -249,6 +272,7 @@ class BaseImage(ABC):
         """Rotate the image counter-clockwise. Simple wrapper for scikit-image. See https://scikit-image.org/docs/stable/api/skimage.transform.html#skimage.transform.rotate.
         All parameters are passed to that function."""
         self.array = rotate(self.array, angle, mode=mode, *args, **kwargs)
+
 
 class TiffImage(BaseImage):
     """An image from a tiff file.
@@ -1022,3 +1046,88 @@ class ArrayImage(BaseImage):
         # Pass rate
         gamma_percent = float(less_than_1)/total_points*100
         return gamma, gamma_percent            
+
+
+    def reduce_resolution_as(self, reference):
+        """
+        Reduce the spatial resolution of the image to have the same a reference image. Usefull for gamma analysis.
+        The physical dimensions of the images must be the same (within half of the reference resolution).
+        The algorithm averages a number of pixels given by reference_resolution // image_resolution.
+
+
+        Parameters
+        ----------
+        reference : :class:`~Dosepy.image.ArrayImage`
+            The reference image that has the target resolution.
+
+        Raises
+        ------
+        AttributeError
+            If the physical dimensions of the images are not the same.
+
+        Examples
+        --------
+        Create two images with different resolutions and reduce the resolution of one of them::
+        
+        >>> from Dosepy.image import load
+        >>> import numpy as np
+
+        >>> # Generate the arrays, A and B.
+        >>> A = np.random.rand(100, 100)
+        >>> B = np.random.rand(10, 10)
+
+        >>> # Create the dose distributions.
+        >>> D_eval = load(A, dpi = 10)
+        >>> D_ref = load(B, dpi = 1)
+
+        >>> # Reduce the resolution of the image D_eval to have the same resolution as D_ref.
+        >>> D_eval.reduce_resolution_as(D_ref)
+
+        >>> # Print the new shape of the D_eval array.
+        >>> print(D_eval.shape) # (10, 10)
+        """
+
+        # Check that reference has a higher resolution
+        if reference.dpi > self.dpi:
+            raise AttributeError(
+                "The reference image must have a higher resolution than the image to be reduced."
+            )
+        elif reference.dpi == self.dpi:
+            print("The spatial resolution of both images is the same.")
+            return
+
+        ## Check if the physical dimensions are the same within a tolerance
+        if not math.isclose(self.physical_shape[0], reference.physical_shape[0], abs_tol = 1./reference.dpmm/2):
+            raise AttributeError(
+                "The physical dimensions of the images are not the same."
+                )
+
+        # Average pixels to reduce resolution
+        self.array = equate_resolution(
+            array = self.array,
+            array_resolution = 1/self.dpmm,
+            target_resolution = 1./reference.dpmm
+            )
+        
+        # Equate array shape 
+        reduced_img, _ = equate_array_size([self, reference])
+        self.array = reduced_img.array
+
+        self._dpi = reference.dpi
+
+
+class DoseImage(ArrayImage):
+    """ A dose distribution image."""
+
+    def __init__(
+            self,
+            array: np.ndarray,
+            dpi: float,
+            reference_point: list[float, float],
+            orientation: tuple[int, int, int, int, int, int],
+            dose_unit: str,
+            ):
+        super().__init__(array, dpi=dpi)
+        self._reference_point  = reference_point
+        self._orientation = orientation
+        self._dose_unit = dose_unit

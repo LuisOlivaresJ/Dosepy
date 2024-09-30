@@ -2,9 +2,12 @@
 
 ![Portada_Dosepy](../assets/Calibration_tab.png)
 
-Dosepy allows to easily perform film dosimetry and 2D gamma analysis.
+Dosepy is an open source application to perform radiochromic film dosimetry.
 
-The software uses tif images for film dosimetry. A DICOM file exported from a treatment planning system can be loaded to perform gamma index comparison.
+Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform patient-specific dose verification based on film measurements.
+
+The software works with scanned films (in TIFF format) and a DICOM file (typically exported from a treatment planning system, TPS).
+A 2D gamma analysis can be performed in order to evaluate the similarity between the measured (scanned film) and the planed (DICOM file) dose distributions.
 
 ## Film dosimetry
 

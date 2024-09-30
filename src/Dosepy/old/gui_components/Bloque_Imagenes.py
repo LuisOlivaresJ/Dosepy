@@ -285,8 +285,8 @@ class Qt_Figure_Imagen:
         self.circ.center  = self.x0, self.y0
         self.circ.set_radius( 0.04 *  np.min(self.npI.shape))
 
-        self.hline.set_ydata( int(self.circ.center[1]) )
-        self.vline.set_xdata( int(self.circ.center[0]) )
+        self.hline.set_ydata( [int(self.circ.center[1])] )
+        self.vline.set_xdata( [int(self.circ.center[0])] )
         self.ax1.add_patch(self.circ)
 
         self.Cross_Hair_set_up()
@@ -331,8 +331,8 @@ class Qt_Figure_Imagen:
         Definición del Cross Hair.
         '''
 
-        self.hline.set_ydata( int(self.circ.center[1]) )
-        self.vline.set_xdata( int(self.circ.center[0]) )
+        self.hline.set_ydata( [int(self.circ.center[1])] )
+        self.vline.set_xdata( [int(self.circ.center[0])] )
 
     def Cross_Hair_on(self):
         '''

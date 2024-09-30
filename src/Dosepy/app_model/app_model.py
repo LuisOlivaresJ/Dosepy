@@ -1,7 +1,7 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load, ImageLike
-from Dosepy.tools.files_to_image import equate, merge, load_images, stack_images
+from Dosepy.image import _is_RGB, _is_image_file, load, load_images, ImageLike
+from Dosepy.tools.files_to_image import equate_array_size, merge, stack_images
 import imageio.v3 as iio
 import numpy as np
 from importlib import resources
@@ -45,7 +45,7 @@ class Model:
 
             img = load(files[0], for_calib=True) # Placeholder
             images = load_images(files)
-            equated_images = equate(images, axis=("width", "height"))
+            equated_images = equate_array_size(images, axis=("width", "height"))
             merged_images = merge(files, equated_images)
             stacked = stack_images(merged_images, padding=6)
             img.array = stacked.array
@@ -60,7 +60,7 @@ class Model:
         else:
             img = load(files[0]) # Placeholder
             images = load_images(files)
-            equated_images = equate(images, axis=("width", "height"))
+            equated_images = equate_array_size(images, axis=("width", "height"))
             merged_images = merge(files, equated_images)
             stacked = stack_images(merged_images, padding=6)
             img.array = stacked.array
