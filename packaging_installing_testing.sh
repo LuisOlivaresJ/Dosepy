@@ -36,3 +36,7 @@ python3 -m uv pip install *.tar.gz
 
 # Delete __pycache__ directories
 find . -type d -name __pycache__ -exec rm -rf {} +
+
+# Testing the application
+cd ..
+python3 -m pytest
