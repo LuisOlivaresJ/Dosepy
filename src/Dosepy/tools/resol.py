@@ -119,7 +119,7 @@ def equate_resolution(array, array_resolution, target_resolution):
 	>>> import Dosepy.tools.resol as resol
 	>>> import numpy as np
 	>>> A = np.zeros( (2362, 2362) )
-	>>> C = equate_resolution(A, 0.08467, 0.78125)
+	>>> C = resol.equate_resolution(A, 0.08467, 0.78125)
 	>>> C.shape
 	>>> (256, 256)
 	"""

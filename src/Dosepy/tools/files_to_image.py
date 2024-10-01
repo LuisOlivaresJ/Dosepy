@@ -7,11 +7,20 @@ import numpy as np
 import imageio.v3 as iio
 import copy
 import math
+import logging
 
-from Dosepy.image import load
+#from Dosepy.image import load
+
+logging.basicConfig(
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+    level=logging.WARNING,
+    filename="files_to_image.log",
+    )
 
 
-def _find_smallest_images(images):
+def _find_smallest_image(images):
 
     min_higth = images[0].shape[0]
     min_width = images[0].shape[1]
@@ -29,9 +38,11 @@ def _find_smallest_images(images):
             min_width = img.shape[1]
             index_min_width = count
 
+    logging.debug(f"Smallest height: {min_higth} at index {index_min_height}")
+    logging.debug(f"Smallest width: {min_width} at index {index_min_width}")
     return index_min_height, index_min_width
 
-
+"""
 def _save_as_tif(file_names, images, folder_path):
 
     new_folder = "cropped_files"
@@ -44,16 +55,23 @@ def _save_as_tif(file_names, images, folder_path):
 
         img_array = load(img.array.astype(np.uint16), dpi=img.dpi)
         img_array.save_as_tif(file_path)
+"""
 
 
 def _equate_height(small_image, image):
-
+    """
+    Crop the image to have the same height as the small_image. 
+    If the difference is odd, the extra pixel is cropped from the top.
+    Otherwise, the extra pixels are cropped equally from both sides.
+    """
+    logging.debug(f"Image height before cropping: {image.shape}")
     height_diff = abs(int(image.shape[0] - small_image.shape[0]))
+    logging.debug(f"Height difference: {height_diff}")
 
     if height_diff > 0:
                 
         if height_diff == 1:
-            image.crop(height_diff, edges="botton")
+            image.crop(height_diff, edges="bottom")
 
         elif not(height_diff%2):
             image.crop(int(height_diff/2), edges=('bottom', 'top'))
@@ -62,10 +80,17 @@ def _equate_height(small_image, image):
             image.crop(int(math.floor(height_diff/2)), edges="top")
             image.crop(int(math.floor(height_diff/2) + 1), edges="bottom")
 
+
+    logging.debug(f"Image height after cropping: {image.shape}")
     return image
 
 
 def _equate_width(small_image, image):
+    """
+    Crop the image to have the same width as the small_image.
+    If the difference is odd, the extra pixel is cropped from the left.
+    Otherwise, the extra pixels are cropped equally from both sides.
+    """
 
     width_diff = abs(int(image.shape[1] - small_image.shape[1]))
 
@@ -84,26 +109,7 @@ def _equate_width(small_image, image):
     return image
 
 
-def load_images(paths: list):
-    """
-    Parameters
-    ----------
-    paths : list
-        List with the paths to the TIFF files.
-
-    Return
-    ------
-    list of TIffImage
-    """
-    images = []
-
-    for file in paths:
-        images.append(load(file))
-    
-    return images
-
-
-def equate(
+def equate_array_size(
         image_list: list,
         axis: tuple[str, ...] = ("height", "width"),
         ) -> list:
@@ -113,7 +119,7 @@ def equate(
     Parameters
     ----------
     image_list : list
-        List with images (TiffImage instance).
+        List with images (TiffImage, ArrayImage instance).
 
     axis : str
         Axis to equate: height, width or both.
@@ -124,13 +130,14 @@ def equate(
     """
     
     cropped_images = copy.deepcopy(image_list)
-    idx_min_height, idx_min_width =_find_smallest_images(image_list)
+    idx_min_height, idx_min_width = _find_smallest_image(image_list)
 
     if "height" in axis:
         for count, img in enumerate(image_list):
             if count == idx_min_height: continue
             cropped_images[count] = _equate_height(image_list[idx_min_height], img)
-    
+            
+    image_list = cropped_images
     if "width" in axis:
 
         for count, img in enumerate(image_list):

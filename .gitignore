@@ -14,8 +14,15 @@ src/Dosepy/tools/styles/__pycache__
 src/Dosepy/tools/gui_widgets/__pycache__
 src/Dosepy/tools/gui_widgets/styles/__pycache__
 src/Dosepy/tools/demo_files
+src/Dosepy/config/settings.toml
 src/Dosepy.egg-info
 src/Dosepy/__pycache__
 debugging.py
 tests/unit/__pycache__
 __pycache__/app.cpython-310.pyc
+
+# Virtual environments
+.venv
+
+# UV
+uv.lock

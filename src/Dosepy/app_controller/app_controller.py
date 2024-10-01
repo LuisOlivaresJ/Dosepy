@@ -14,8 +14,11 @@ from Dosepy.app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,
+
 )
 from Dosepy.image import load
+from Dosepy.config.io_settings import load_settings
+
 
 class BaseController(ABC):
     """Abstract class."""
@@ -27,6 +30,53 @@ class BaseController(ABC):
     @abstractmethod
     def _connectSignalsAndSlots(self):
         pass
+
+
+# Class that controls the main toolbar widget
+class ToolbarController(BaseController):
+    """Related to the toolbar."""
+    def __init__(self, model, view):
+        super().__init__(model, view)
+
+        self._connectSignalsAndSlots()
+
+
+    def _open_calibration_settings(self):
+
+        if self._view.conf_window.isVisible():
+            self._view.conf_window.hide()
+        else:
+            self._view.conf_window.show()
+
+    def _save_settings(self):
+        print("Save settings")
+        roi_size_h = self._view.conf_window.roi_size_h.text()
+        roi_size_v = self._view.conf_window.roi_size_v.text()
+
+        channel = self._view.conf_window.channel.currentText()
+        fit_function = self._view.conf_window.fit_function.currentText()
+
+        settings = load_settings()
+
+        settings.set_calib_roi_size((float(roi_size_h), float(roi_size_v)))
+        self._view.conf_window.roi_size_h_label.setText(
+            f"ROI size horizontal (mm): {settings.get_calib_roi_size()[0]}")
+        self._view.conf_window.roi_size_v_label.setText(
+            f"ROI size vertical (mm): {settings.get_calib_roi_size()[1]}")
+        
+        settings.set_channel(channel)
+        self._view.conf_window.channel_label.setText(
+            f"Channel: {settings.get_channel()}"
+            )
+        settings.set_fit_function(fit_function)
+        self._view.conf_window.fit_label.setText(
+            f"Fit function: {settings.get_fit_function()}"
+            )
+
+
+    def _connectSignalsAndSlots(self):
+        self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
+        self._view.conf_window.save_button.clicked.connect(self._save_settings)
 
 
 class CalibrationController(BaseController):
@@ -115,14 +165,19 @@ class CalibrationController(BaseController):
         if self._view.cal_widget.is_dose_table_complete(num):
             #print("Doses OK")
             doses = self._view.cal_widget.get_doses()
+            roi_size = self._model.config.get_calib_roi_size()
+            channel = self._model.config.get_channel()
+            fit = self._model.config.get_fit_function()
+            #breakpoint()
             #print(doses)
             if self._model.calibration_img:
                 cal = self._model.calibration_img.get_calibration(
                     doses = doses,
-                    channel = self._view.cal_widget.channel_combo_box.currentText(),
-                    roi = (16, 8),
-                    func = self._view.cal_widget.fit_combo_box.currentText()
+                    channel = channel,
+                    roi = roi_size,
+                    func = fit,
                     )
+                #breakpoint()
                 self._view.cal_widget.plot_cal_curve(cal)
                 self._view.cal_widget.save_cal_button.setEnabled(True)
 
@@ -302,6 +357,66 @@ class Tiff2DoseController(BaseController):
         
             self._model.save_dose_as_tif(str(dose_file_name))
 
+
+    # Related to tiff2dose tool buttons in plot
+    def _flip_h_button(self):
+        """Flip the the dose distribution in the left/right direction."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.fliplr()
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _flip_v_button(self):
+        """Flip the the dose distribution in the up/down direction."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.flipud()
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _rotate_cw_button(self):
+        """Rotate the the dose distribution clockwise."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.rotate(angle = 1)
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _rotate_ccw_button(self):
+        """Rotate the the dose distribution counter clockwise."""
+        if self._model.ref_dose_img is not None:
+            self._model.ref_dose_img.rotate(angle = -1)
+            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+
+    def _selection_button(self):
+        """Select a region of interest in the dose distribution."""
+        if self._view.dose_widget.selection_button.isChecked():
+            self._view.dose_widget.rs.set_active(True)
+
+        else:
+            self._view.dose_widget.rs.set_active(False)
+            #self._view.dose_widget.rs.set_visible(False)
+
+
+    def _grid_button(self):
+        """Show or hide the grid in the plot."""
+        self._view.dose_widget.grid()
+
+
+    def _on_move_plot(self, event):
+        """Show the dose value in the plot view label."""
+        if event.inaxes == self._view.dose_widget.axe_image and self._model.ref_dose_img is not None:
+            column = int(event.xdata)
+            row = int(event.ydata)
+            dose = self._model.ref_dose_img.array[row, column]
+            self._view.dose_widget.show_dose_value(column, row, dose)
+
+    def _cut_button(self):
+        """Cut the dose distribution based on rectangle selection."""
+        xmin, xmax, ymin, ymax = self._view.dose_widget.rs.extents
+        self._model.ref_dose_img.array = self._model.ref_dose_img.array[int(ymin): int(ymax), int(xmin): int(xmax)]
+        self._view.dose_widget.rs.set_visible(False)
+        self._view.dose_widget.selection_button.setChecked(False)
+        self._view.dose_widget.cut_button.setEnabled(False)
+        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        self._view.dose_widget._create_rectangle_selector()
+
+
     # end related to tiff2dose
     # --------------------------
     ############################
@@ -310,4 +425,13 @@ class Tiff2DoseController(BaseController):
 
         self._view.dose_widget.open_button.clicked.connect(self._open_tif2dose_button)
         self._view.dose_widget.save_button.clicked.connect(self._save_tif2dose_button)
+        self._view.dose_widget.flip_button_h.clicked.connect(self._flip_h_button)
+        self._view.dose_widget.flip_button_v.clicked.connect(self._flip_v_button)
+        self._view.dose_widget.rotate_cw.clicked.connect(self._rotate_cw_button)
+        self._view.dose_widget.rotate_ccw.clicked.connect(self._rotate_ccw_button)
+        self._view.dose_widget.grid_button.clicked.connect(self._grid_button)
+        self._view.dose_widget.selection_button.clicked.connect(self._selection_button)
+        self._view.dose_widget.cut_button.clicked.connect(self._cut_button)
+
+        self._view.dose_widget.canvas_widg.figure.canvas.mpl_connect('motion_notify_event', self._on_move_plot)
 
