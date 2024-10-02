@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, ValidationError
 toml_file_path = pathlib.Path(__file__).parent.parent / "config" / "settings.toml"
 
 class Settings(BaseModel):
-    """ Class to store the settings from the settings.toml file. An instance class is created using the load_settings function"""
+    """ Class to store the settings from the settings.toml file. An instance class must be created using the load_settings function"""
     
     roi_size_h: float = Field(gt=0)  # Horizontal size of the ROI in mm, must be greater than 0
     roi_size_v: float = Field(gt=0)  # Vertical size of the ROI in mm, must be greater than 0
@@ -115,6 +115,7 @@ def load_settings() -> Settings:
     except ValidationError as e:
         # If the settings file is not well formatted, create a new one
         _create_default_settings(toml_file_path)
+        print(e)
         print("The settings file was not well formatted. A new one was created with default values.")
         return load_settings()
 

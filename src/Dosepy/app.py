@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
 
 # Create the application
 app = QApplication(sys.argv)
+
 # Create the main window (view)
 root_window = MainWindow()
 # Create the model

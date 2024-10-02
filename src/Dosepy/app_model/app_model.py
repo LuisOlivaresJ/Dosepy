@@ -1,12 +1,12 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load, load_images, ImageLike
+from Dosepy.image import _is_RGB, _is_image_file, load, load_images, ImageLike, TiffImage
 from Dosepy.tools.files_to_image import equate_array_size, merge, stack_images
 import imageio.v3 as iio
 import numpy as np
 from importlib import resources
 import pickle
-from Dosepy.config.io_settings import load_settings
+from Dosepy.config.io_settings import Settings, load_settings
 
 
 class Model:
@@ -17,12 +17,12 @@ class Model:
     save or load a lut.
     """
     def __init__(self):
-        self.calibration_img = None  # The image used to produce a calibration curve
-        self.tif_img = None  # The tif image to be analysed
+        self.calibration_img: TiffImage = None  # The image used to produce a calibration curve
+        self.tif_img: TiffImage = None  # The tif image to be analysed
         self.lut = None  # The calibration object used for tif to dose calculation
         self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
 
-        self.config = load_settings()  # The settings for the application (settings.toml file)
+        self.config: Settings = load_settings()  # The settings for the application.
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
