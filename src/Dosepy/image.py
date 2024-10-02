@@ -31,7 +31,7 @@ from .tools.files_to_image import equate_array_size
 
 import math
 
-from .calibration import polynomial_g3, rational_func, Calibration
+#from .calibration import polynomial_g3, rational_func, Calibration
 from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
@@ -297,12 +297,12 @@ class TiffImage(BaseImage):
         ----------
         path : str, file-object
             The path to the file or a data stream.
-        dpi : int, float
+        dpi : float
             The dots-per-inch of the image, defined at isocenter.
 
             .. note:: If a X and Y Resolution tag is found in the image, that
             value will override the parameter, otherwise this one will be used.
-        sid : int, float
+        sid : float
             The Source-to-Image distance in mm.
         label_img : numpy.adarray
             Label image regions.
@@ -618,7 +618,7 @@ class TiffImage(BaseImage):
         binary = erosion(gray_scale < thresh, square(erosion_pix))
         self.label_image, self.number_of_films = label(binary, return_num=True)
         
-
+## TODO Delete this class
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""
 
@@ -692,7 +692,7 @@ class CalibImage(TiffImage):
             x = mean_pixel/mean_pixel[0]
 
         return Calibration(y=doses, x=x, func=func, channel=channel)
-
+    
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""

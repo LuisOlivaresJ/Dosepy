@@ -11,6 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+from Dosepy.image import TiffImage
+
 
 """Functions used for film calibration."""
 
@@ -27,6 +29,55 @@ def rational_func(x, a, b, c):
     Rational function.
     """
     return -c + b/(x-a)
+
+class CalibrationLUT:
+    """
+    Class used to represent a calibration curve.
+
+    Attributes
+    ----------
+    film_response : list
+        The response of the film to the doses.
+    doses : list
+        The doses values used to expose the films for calibration.
+    dose_unit : str
+        The unit of the dose.
+    fit_function : str
+        The model function used for dose-film response relationship.
+        "P3": Polynomial function of degree 3.
+        "RF": Rational function.
+    channel : str
+        Color channel. "R": Red, "G": Green and "B": Blue.
+    """
+
+    def __init__(self):
+        self.film_response = []
+        self.doses = []
+        self.dose_unit = ""
+        self.fit_function = ""
+        self.channel = ""
+
+
+    def compute_lut(self, img: TiffImage, doses: list, rois: list, channel: str):
+        """
+        Compute the look-up table (LUT) for the calibration curve.
+
+        Parameters
+        ----------
+        img : TiffImage
+            The image used for calibration.
+        doses : list
+            The doses values used to expose the films for calibration.
+        rois : list
+            The response of the film to the doses.
+        channel : str
+            Color channel. "R": Red, "G": Green and "B": Blue.
+        """
+        pass
+
+    
+
+    pass
 
 
 class Calibration:
