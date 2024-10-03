@@ -20,6 +20,8 @@ class Settings(BaseModel):
     channel: str = "red"  # Channel to use for the dose calculation
     fit_function: str = "Rational"  # Fit function to use for the dose calculation
 
+    lateral_correction: bool = False  # If lateral correction is enabled
+
     def get_calib_roi_size(self) -> tuple:
         return (self.roi_size_h, self.roi_size_v)
     
@@ -28,6 +30,9 @@ class Settings(BaseModel):
     
     def get_fit_function(self) -> str:
         return self.fit_function
+    
+    def get_lateral_correction(self) -> bool:
+        return self.lateral_correction
     
     def set_calib_roi_size(self, roi_size: tuple) -> None:
         """ 
@@ -88,6 +93,23 @@ class Settings(BaseModel):
         with open(toml_file_path, mode="wt", encoding="utf-8") as fp:
             tomlkit.dump(seetings, fp)
 
+    def set_lateral_correction(self, lateral_correction: bool) -> None:
+        """ 
+        Set the lateral correction in the settings.toml file 
+        Parameters
+        ----------
+            lateral_correction : bool 
+            If lateral correction is enabled
+        """
+        # Update the lateral correction
+        self.lateral_correction = lateral_correction
+        seetings = _load_toml_file()
+        seetings["user"]["lateral_correction"] = lateral_correction
+        # Save to the settings.toml file
+        with open(toml_file_path, mode="wt", encoding="utf-8") as fp:
+            tomlkit.dump(seetings, fp)
+            
+
 def _load_toml_file() -> tomlkit.TOMLDocument:
     _create_toml_file_if_not_exists()
     with open(toml_file_path, mode="rt", encoding="utf-8") as fp:
@@ -136,6 +158,9 @@ def _create_default_settings(path) -> None:
     user.add(tomlkit.nl())
     user.add(tomlkit.comment("Fit function to use for the dose calculation"))
     user.add("fit_function", "Rational")
+    user.add(tomlkit.nl())
+    user.add(tomlkit.comment("If lateral correction is enabled"))
+    user.add("lateral_correction", False)
     
     settings.add("user", user)
 

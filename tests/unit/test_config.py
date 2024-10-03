@@ -72,3 +72,14 @@ class TestSettings(unittest.TestCase):
         settings = load_settings()
         settings.set_fit_function("Rational")
         self.assertEqual(settings.fit_function, "Rational")
+
+    # Test the get_lateral_correction method
+    def test_get_lateral_correction(self):
+        settings = load_settings()
+        self.assertEqual(settings.get_lateral_correction(), False)
+
+    # Test the set_lateral_correction method
+    def test_set_lateral_correction(self):
+        settings = load_settings()
+        settings.set_lateral_correction(True)
+        self.assertEqual(settings.lateral_correction, True)
