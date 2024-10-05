@@ -11,6 +11,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+from skimage.color import rgb2gray
+from skimage.filters import threshold_otsu
+from skimage.morphology import square, erosion
+from skimage.measure import label, regionprops
+from skimage.filters.rank import mean
+from skimage.transform import rotate
+
 from Dosepy.image import TiffImage
 
 
@@ -78,6 +85,158 @@ class CalibrationLUT:
     
 
     pass
+
+class CalibrationLUT:
+    """
+    Class used to store data used for film calibration.
+    
+    Attributes
+    ----------
+    tiff_image : TiffImage
+        The image used for calibration.
+    lut : dict
+        The look-up table (LUT) used to store data as a nested dictionary.
+        At every milimeter in the lateral direction, the lut stores the corrected dose, the mean pixel value, 
+        and the standard deviation of the pixel values for each color channel. A new calibration curve will
+        be computed at every lateral position.
+        The LUT is organized as follows:
+        {
+            'author' : str,
+            'film_lote' : str,
+            'scanner' : str,
+            'date_exposed' : str,
+            'date_read' : str,
+            'wait_time' : str,
+            'nominal:doses' : list,
+            'resolution' : float,  # The resolution of the image in DPI.
+            'lateral_limits' : list[float, float],
+            (lateral_position : float, nominal_dose : float) : {
+                'corrected_dose' : float,
+                'I_red' : float,  # Mean pixel value of the red channel.
+                'S_red' : float,  # Standard deviation of the red channel.
+                'I_green' : float,
+                'S_green' : float,
+                'I_blue' : float,
+                'S_blue' : float
+                'I_mean' : float
+                'S_mean' : float
+                },
+            ...
+        }
+    """
+    
+    def __init__(self, tiff_image: TiffImage = None):
+        self.tiff_image = tiff_image
+        self.lut = {
+            'author' : '',
+            'film_lote' : '',
+            'scanner' : '',
+            'date_exposed' : '',
+            'date_read' : '',
+            'wait_time' : '',
+            'resolution' : 0,
+            'nominal_doses' : [],
+            'lateral_limits' : [],
+        }
+
+    def create_central_rois(self, size : tuple) -> list:
+        """
+        Create a list of ROIs for the central region of the image.
+
+        Parameters
+        ----------
+        size : tuple[int, int]
+            The size of the ROIs in milimeters, width x height.
+
+        Returns
+        -------
+        list
+            A list of ROIs. 
+            
+            [
+                (x0, y0, x1, y1),
+                ...
+            ]
+
+            where:
+            x0 and y0 are the coordinates of the top-left corner
+            x1 and y1 are the coordinates of the bottom-right corner
+            
+        """
+        # Check if the image is loaded.
+        if self.tiff_image is None:
+            raise Exception("No image loaded.")
+
+        # Get the image size in mm.
+        width, height = self.tiff_image.physical_shape
+
+        # Get the image size in pixels.
+        width_px, height_px = self.tiff_image.shape
+
+        # Get the image resolution in mm.
+        dpmm = self.tiff_image.dpmm
+
+        # Calculate the size of the ROIs in pixels.
+        width_roi = size[0] * dpmm
+        height_roi = size[1] * dpmm
+
+        # Get labeled image
+        label_image, num_films_detected = self._get_labeled_image()
+
+
+    def _get_labeled_image(self, thereshold: float = None) -> (ndarray, int):
+        """
+        Get the labeled image of the films.
+
+        Parameters
+        ----------
+        threshold : float
+            The threshold value used to detect film. Pixel values below the threshold are considered films.
+             If None, the Otsu method is used to define a threshold.
+        
+        Returns
+        -------
+        ndarray : 
+            The labeled image, where all connceted regions are assigned the same integer value.
+        num : int
+            The number of films detected.
+        """
+
+        gray_scale = rgb2gray(self.tiff_img.array)
+
+        if not threshold:
+            thresh = threshold_otsu(gray_scale)  # Used for films identification.
+        else:
+            thresh = threshold * np.amax(gray_scale)
+
+        # Number of pixels used for erosion. 
+        # Used to remove the irregular borders of the films.
+        # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
+
+        erosion_pix = int(6*self.tiff_img.dpmm)
+        binary = erosion(gray_scale < thresh, square(erosion_pix))
+
+        labeled_image, number_of_films = label(binary, return_num=True)
+
+        return labeled_image, number_of_films
+
+
+    def compute_lut(self, doses: list, rois: list, channel: str):
+        """
+        Compute the look-up table (LUT) for the calibration curve.
+
+        Parameters
+        ----------
+        doses : list
+            The doses values used to expose the films for calibration.
+        rois : list
+            The response of the film to the doses.
+        channel : str
+            Color channel. "R": Red, "G": Green and "B": Blue.
+        """
+        pass
+    
+
 
 
 class Calibration:

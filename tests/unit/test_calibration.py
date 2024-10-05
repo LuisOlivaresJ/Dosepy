@@ -1,4 +1,4 @@
-# Test Driven Development
+# This file contains the unit tests for the calibration.py file.
 
 import unittest
 from Dosepy.calibration import CalibrationLUT
@@ -10,6 +10,8 @@ class TestCalibration(unittest.TestCase):
     def test_instance(self):
         self.assertIsInstance(CalibrationLUT(), CalibrationLUT)
 
+
+    # TODO: Test the create_central_rois method
 
     # Test the compute_lut method
     ## TODO: Implement the test_compute_lut method and delete the CalibImage class
