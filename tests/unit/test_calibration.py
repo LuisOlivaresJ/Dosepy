@@ -24,6 +24,8 @@ class TestCalibration(unittest.TestCase):
                              doses = [0, 2, 4, 6, 8, 10],
                              lateral_correction = True,
                              beam_profile = profile,
+                             filter = 3,
+                             metadata = {}  # TODO
                             )
         self.assertIsInstance(cal, CalibrationLUT)
 

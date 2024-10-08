@@ -133,8 +133,10 @@ class CalibrationLUT:
             self,
             tiff_image: TiffImage,
             doses : list,
-            lateral_correction : bool,
-            beam_profile : ndarray,
+            lateral_correction : bool = False,
+            beam_profile : ndarray = None,
+            filter : int = None,
+            metadata : dict = None,
             ):
         """
         Parameters
@@ -160,7 +162,22 @@ class CalibrationLUT:
             Corrected doses are defined as dose_corrected(position) = dose * profile(position),
             where profile(y) is the beam profile, normalized to 100% at beam center
             axis, which is assumed to be aligned with scanner center.
-
+        filter : int
+            If filt > 0, a median filter of size (filt, filt) is applied to 
+            each channel of the scanned image prior to LUT creation.            
+            This feature might affect the automatic detection of film strips if
+            they are not separated by a large enough gap (~ 5 mm). In this case, you can
+            either use manual ROIs selection, or apply filtering to the LUT during
+            the conversion to dose (see tiff2dose module).
+        metadata : dict
+            Dictionary with metadata information about the calibration.
+            The following keys are required:
+            'author' : str,
+            'film_lote' : str,
+            'scanner' : str,
+            'date_exposed' : str,
+            'date_read' : str,
+            'wait_time' : str,
         """
         self.tiff_image = tiff_image
         self.lut = {}
