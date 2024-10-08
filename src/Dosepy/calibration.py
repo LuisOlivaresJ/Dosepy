@@ -90,6 +90,8 @@ class CalibrationLUT:
 class CalibrationLUT:
     """
     Class used to store data used for film calibration.
+    This class is hevily inspired by the LUT class from OMG Dosimetry package
+    (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     
     Attributes
     ----------
@@ -127,7 +129,39 @@ class CalibrationLUT:
         }
     """
     
-    def __init__(self, tiff_image: TiffImage = None):
+    def __init__(
+            self,
+            tiff_image: TiffImage,
+            doses : list,
+            lateral_correction : bool,
+            beam_profile : ndarray,
+            ):
+        """
+        Parameters
+        ----------
+        tiff_image : TiffImage
+            The image used for calibration.
+        doses : list of floats
+            List of nominal doses values that were delivered on the films.
+        lateral_correction : bool
+            True: A LUT is computed for every milimeter in the scanner lateral direction
+            False: A single LUT is computed for the scanner.
+            As currently implemented, lateral correction is performed by exposing
+            long strips of calibration films with a large uniform field (30 cm x 30 cm).
+            By scanning the strips perpendicular to the scanner direction, a LUT is computed
+            for each milímeter in the scanner lateral direction. If this method is
+            used, it is recommended that beam profile correction be applied also,
+            so as to remove the contribution of beam inhomogeneity.
+        beam_profile : ndarray of size (n, 2)
+            Beam profile  that will be used to correct the doses at each milimeter position.
+            The array must contain the position and relative profile value.
+            First column should be a position, given in mm, with 0 being at center.
+            Second column should be the measured profile relative value [%], normalised to 100 in the center.
+            Corrected doses are defined as dose_corrected(position) = dose * profile(position),
+            where profile(y) is the beam profile, normalized to 100% at beam center
+            axis, which is assumed to be aligned with scanner center.
+
+        """
         self.tiff_image = tiff_image
         self.lut = {}
 
