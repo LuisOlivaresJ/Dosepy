@@ -8,6 +8,7 @@ DESCRIPTION
 """
 
 import numpy as np
+from numpy import ndarray
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
@@ -94,6 +95,7 @@ class CalibrationLUT:
     ----------
     tiff_image : TiffImage
         The image used for calibration.
+
     lut : dict
         The look-up table (LUT) used to store data as a nested dictionary.
         At every milimeter in the lateral direction, the lut stores the corrected dose, the mean pixel value, 
@@ -107,11 +109,11 @@ class CalibrationLUT:
             'date_exposed' : str,
             'date_read' : str,
             'wait_time' : str,
-            'nominal:doses' : list,
+            'nominal_doses' : list,
             'resolution' : float,  # The resolution of the image in DPI.
             'lateral_limits' : list[float, float],
             (lateral_position : float, nominal_dose : float) : {
-                'corrected_dose' : float,
+                'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
                 'S_red' : float,  # Standard deviation of the red channel.
                 'I_green' : float,
@@ -127,17 +129,7 @@ class CalibrationLUT:
     
     def __init__(self, tiff_image: TiffImage = None):
         self.tiff_image = tiff_image
-        self.lut = {
-            'author' : '',
-            'film_lote' : '',
-            'scanner' : '',
-            'date_exposed' : '',
-            'date_read' : '',
-            'wait_time' : '',
-            'resolution' : 0,
-            'nominal_doses' : [],
-            'lateral_limits' : [],
-        }
+        self.lut = {}
 
     def create_central_rois(self, size : tuple) -> list:
         """
@@ -184,7 +176,7 @@ class CalibrationLUT:
         label_image, num_films_detected = self._get_labeled_image()
 
 
-    def _get_labeled_image(self, thereshold: float = None) -> (ndarray, int):
+    def _get_labeled_image(self, threshold: float = None) -> tuple[ndarray, int]:
         """
         Get the labeled image of the films.
 
