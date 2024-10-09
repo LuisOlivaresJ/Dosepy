@@ -109,11 +109,11 @@ class CalibrationLUT:
             'film_lote' : str,
             'scanner' : str,
             'date_exposed' : str,
-            'date_read' : str,
+            'date_scanned' : str,
             'wait_time' : str,
             'nominal_doses' : list,
-            'resolution' : float,  # The resolution of the image in DPI.
-            'lateral_limits' : list[float, float],
+            'resolution' : float,  # The resolution of the image in dots per milimeter.
+            'lateral_limits' : list[int, int],  # Left and rigth lateral limits of the scanner from half the image, in milimeters.
             (lateral_position : float, nominal_dose : float) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
@@ -176,11 +176,25 @@ class CalibrationLUT:
             'film_lote' : str,
             'scanner' : str,
             'date_exposed' : str,
-            'date_read' : str,
-            'wait_time' : str,
+            'date_scanned' : str,
+            'wait_time' : int,
         """
         self.tiff_image = tiff_image
         self.lut = {}
+
+        self.lut['author'] = metadata.get('author')
+        self.lut['film_lote'] = metadata.get('film_lote')
+        self.lut['scanner'] = metadata.get('scanner')
+        self.lut['date_exposed'] = metadata.get('date_exposed')
+        self.lut['date_scanned'] = metadata.get('date_scanned')
+        self.lut['wait_time'] = metadata.get('wait_time')
+        self.lut['nominal_doses'] = doses
+        self.lut['resolution'] = tiff_image.dpmm
+        self.lut['lateral_limits'] = [
+            int(-tiff_image.physical_shape[0]/2),
+            int(tiff_image.physical_shape[0]/2)
+            ]
+        
 
     def create_central_rois(self, size : tuple) -> list:
         """
