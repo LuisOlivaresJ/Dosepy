@@ -40,4 +40,4 @@ find . -type d -name __pycache__ -exec rm -rf {} +
 # Testing the application
 python3 -m pip install pytest
 cd ..
-python3 -m pytest
+python3 -m pytest -v

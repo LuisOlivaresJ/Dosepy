@@ -112,7 +112,13 @@ class CalibrationLUT:
             'date_scanned' : str,
             'wait_time' : str,
             'nominal_doses' : list,
-            'resolution' : float,  # The resolution of the image in dots per milimeter.
+            'rois' : list[{  # List of ROIs used to compute the calibration curve.
+                "x" : int,  # The x coordinate (row) of the top-left corner of the ROI.
+                "y" : int,  # The y coordinate (column) of the top-left corner of the ROI.
+                "width" : int,  # The width of the ROI in pixels.
+                "height" : int,  # The height of the ROI in pixels.
+                }],  
+            'resolution' : float,  # The resolution of the image in dots per inch.
             'lateral_limits' : list[int, int],  # Left and rigth lateral limits of the scanner from half the image, in milimeters.
             (lateral_position : float, nominal_dose : float) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
@@ -132,11 +138,11 @@ class CalibrationLUT:
     def __init__(
             self,
             tiff_image: TiffImage,
-            doses : list,
+            doses : list = None,
             lateral_correction : bool = False,
             beam_profile : ndarray = None,
             filter : int = None,
-            metadata : dict = None,
+            metadata : dict = {},
             ):
         """
         Parameters
@@ -188,13 +194,29 @@ class CalibrationLUT:
         self.lut['date_exposed'] = metadata.get('date_exposed')
         self.lut['date_scanned'] = metadata.get('date_scanned')
         self.lut['wait_time'] = metadata.get('wait_time')
-        self.lut['nominal_doses'] = doses
-        self.lut['resolution'] = tiff_image.dpmm
+        self.lut['resolution'] = tiff_image.dpi
         self.lut['lateral_limits'] = [
             int(-tiff_image.physical_shape[0]/2),
             int(tiff_image.physical_shape[0]/2)
             ]
         
+
+    def set_doses(self, doses: list):
+        """
+        Set the nominal doses values that were delivered on the films.
+        """
+        # Check if the doses are numeric.
+        if not all(isinstance(dose, (int, float)) for dose in doses):
+            raise Exception("Doses must be numeric.")
+        # Check if doses are positive.
+        if not all(dose >= 0 for dose in doses):
+            raise Exception("Doses must be positive.")
+        # Check if doses are unique.
+        if len(doses) != len(set(doses)):
+            raise Exception("Doses must be unique.")
+
+        self.lut['nominal_doses'] = sorted(doses)
+
 
     def create_central_rois(self, size : tuple) -> list:
         """
@@ -208,16 +230,21 @@ class CalibrationLUT:
         Returns
         -------
         list
-            A list of ROIs. 
+            A list of ROIs as dictionaries. 
             
             [
-                (x0, y0, x1, y1),
+                {
+                    'x': int,
+                    'y': int,
+                    'width': int,
+                    'height': int,
+                }
                 ...
             ]
 
             where:
-            x0 and y0 are the coordinates of the top-left corner
-            x1 and y1 are the coordinates of the bottom-right corner
+            x and y are the coordinates of the top-left corner (x for row and y for column),
+            and width and height are the size of the ROI in pixels.
             
         """
         # Check if the image is loaded.
@@ -228,7 +255,11 @@ class CalibrationLUT:
         width, height = self.tiff_image.physical_shape
 
         # Get the image size in pixels.
-        width_px, height_px = self.tiff_image.shape
+        width_px, height_px, _ = self.tiff_image.shape
+
+        # Check if the size of the ROIs is valid.
+        if size[0] > width or size[1] > height:
+            raise Exception("Invalid ROI size. The size of the ROIs must be smaller than the image.")
 
         # Get the image resolution in mm.
         dpmm = self.tiff_image.dpmm
@@ -240,6 +271,52 @@ class CalibrationLUT:
         # Get labeled image
         label_image, num_films_detected = self._get_labeled_image()
 
+        rois = []
+
+        # Get the central region of the image.
+        for region in regionprops(label_image):
+            if region.area > 0.5*width_roi*height_roi:
+                rois.append(
+                    {
+                        'x': int(region.centroid[0] - height_roi/2),
+                        'y': int(region.centroid[1] - width_roi/2),
+                        'width': int(width_roi),
+                        'height': int(height_roi),
+                    }
+                )
+        self.lut["rois"] = rois
+        #self._plot_rois()  # Plot for visualization testing purposes.
+
+        # TODO: Set new lateral limits based on the ROIs.
+
+        # Find minimum y values.
+        y_min = min([roi['y'] for roi in rois])
+
+        # Find maximum y values.
+        y_max = max([roi['y'] + roi["width"] for roi in rois])
+
+
+
+
+    def _plot_rois(self):
+        """
+        Plot the ROIs on the image.
+        """
+        fig, ax = plt.subplots()
+        ax.imshow(self.tiff_image.array/np.max(self.tiff_image.array))
+        for roi in self.lut["rois"]:
+            rect = plt.Rectangle(
+                (roi['y'], roi['x']),
+                roi['width'],
+                roi['height'],
+                edgecolor = 'r',
+                fill = False,
+                linestyle = '--',
+            )
+            ax.add_patch(rect)
+            print(roi["x"], roi["y"], roi["width"], roi["height"])
+        
+        plt.show()
 
     def _get_labeled_image(self, threshold: float = None) -> tuple[ndarray, int]:
         """
@@ -259,7 +336,7 @@ class CalibrationLUT:
             The number of films detected.
         """
 
-        gray_scale = rgb2gray(self.tiff_img.array)
+        gray_scale = rgb2gray(self.tiff_image.array)
 
         if not threshold:
             thresh = threshold_otsu(gray_scale)  # Used for films identification.
@@ -270,7 +347,7 @@ class CalibrationLUT:
         # Used to remove the irregular borders of the films.
         # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
 
-        erosion_pix = int(6*self.tiff_img.dpmm)
+        erosion_pix = int(6*self.tiff_image.dpmm)  # 6 mlimiters.
         binary = erosion(gray_scale < thresh, square(erosion_pix))
 
         labeled_image, number_of_films = label(binary, return_num=True)
