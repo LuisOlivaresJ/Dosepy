@@ -221,7 +221,14 @@ class BaseImage(ABC):
     
     @property
     def physical_shape(self) -> tuple[float, float]:
-        """The physical size of the image in mm."""
+        """
+        The physical size of the image in mm.
+
+        Returns
+        -------
+        tuple[float, float]
+            The physical size in mm. The first element is the height, the second the width.
+        """
         return self.shape[0] / self.dpmm, self.shape[1] / self.dpmm
     
 

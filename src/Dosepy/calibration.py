@@ -196,7 +196,7 @@ class CalibrationLUT:
             raise Exception("No image loaded.")
 
         # Get the image size in mm.
-        width, height = self.tiff_image.physical_shape
+        height, width = self.tiff_image.physical_shape
 
         # Check if the size of the ROIs is valid.
         if size[0] > width or size[1] > height:
@@ -253,12 +253,13 @@ class CalibrationLUT:
         bin_buffer_blue = []
 
         # Create a list with the lateral positions in milimeters
-        origin = self.tiff_image.physical_shape[1]/2
-        lateral_positions = np.linspace(
+        origin_side2half = self.tiff_image.physical_shape[1]/2
+
+        lateral_positions_half = np.linspace(
             start = 0,
             stop = self.tiff_image.physical_shape[1],
             num = self.tiff_image.array.shape[1]
-            ) - origin
+            ) - origin_side2half
 
 
         for roin_num, roi in enumerate(self.lut["rois"]):
@@ -268,14 +269,14 @@ class CalibrationLUT:
 
             for column_pixel in range(self.tiff_image.array.shape[1]):
 
-                rounded_position = int(lateral_positions[column_pixel])
+                rounded_position = int(lateral_positions_half[column_pixel])
 
                 # Populate the LUT with None if the pixel is outside the lateral limits.
-                if lateral_positions[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions[column_pixel] > self.lut["lateral_limits"]["right"]:
+                if lateral_positions_half[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions_half[column_pixel] > self.lut["lateral_limits"]["right"]:
                     self.lut[(rounded_position, roin_num)] = None
 
                 # Append pixel values in bin_width into a band buffer.
-                elif lateral_positions[column_pixel] <= bin_limit:
+                elif lateral_positions_half[column_pixel] <= bin_limit:
                     bin_buffer_red.append(
                         np.median(
                             self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]))
@@ -287,27 +288,30 @@ class CalibrationLUT:
                             self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]))
                 
                 else:
-                    print(rounded_position, roin_num)
+                    #print(rounded_position, roin_num)
                     # Populate the LUT with the mean pixel value and standard deviation of the band.
                     self.lut[(rounded_position, roin_num)] = {
-                        'I_red': np.mean(bin_buffer_red),
-                        'S_red': np.std(bin_buffer_red),
-                        'I_green': np.mean(bin_buffer_green),
-                        'S_green': np.std(bin_buffer_green),
-                        'I_blue': np.mean(bin_buffer_blue),
-                        'S_blue': np.std(bin_buffer_blue),
+                        'I_red': int(np.mean(bin_buffer_red)),
+                        'S_red': int(np.std(bin_buffer_red)),
+                        'I_green': int(np.mean(bin_buffer_green)),
+                        'S_green': int(np.std(bin_buffer_green)),
+                        'I_blue': int(np.mean(bin_buffer_blue)),
+                        'S_blue': int(np.std(bin_buffer_blue)),
                     }
-                    self.lut[(rounded_position, roin_num)]["I_mean"] = (
-                        self.lut[(rounded_position, roin_num)]["I_red"] +
-                        self.lut[(rounded_position, roin_num)]["I_green"] +
-                        self.lut[(rounded_position, roin_num)]["I_blue"]
-                        )/3
-                    self.lut[(rounded_position, roin_num)]["S_mean"] = (
-                        self.lut[(rounded_position, roin_num)]["S_red"]**2 +
-                        self.lut[(rounded_position, roin_num)]["S_green"]**2 +
-                        self.lut[(rounded_position, roin_num)]["S_blue"]**2
-                        )**0.5 / 3
-
+                    self.lut[(rounded_position, roin_num)]["I_mean"] = int(
+                        (
+                            self.lut[(rounded_position, roin_num)]["I_red"] +
+                            self.lut[(rounded_position, roin_num)]["I_green"] +
+                            self.lut[(rounded_position, roin_num)]["I_blue"]
+                            ) / 3
+                        )
+                    self.lut[(rounded_position, roin_num)]["S_mean"] = int(
+                        (
+                            self.lut[(rounded_position, roin_num)]["S_red"]**2 +
+                            self.lut[(rounded_position, roin_num)]["S_green"]**2 +
+                            self.lut[(rounded_position, roin_num)]["S_blue"]**2
+                            )**0.5 / 3
+                        )
                     # Update bin_step and bin_buffer.
 
                     bin_limit += BIN_WIDTH
@@ -337,7 +341,7 @@ class CalibrationLUT:
                             2]
                             )
                         )
-        self._plot_rois(dpmm=self.tiff_image.dpmm, origin=self.tiff_image.physical_shape[1]/2)
+        #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
 
     def _plot_rois(self, dpmm: float, origin: float):
         """
