@@ -140,6 +140,20 @@ def test_create_central_rois(example_image):
     assert cal.lut["lateral_limits"]["left"] == 20
     assert cal.lut["lateral_limits"]["right"] == 46
 
+# Test the compute_lateral_lut method
+def test_compute_lateral_lut(example_image):
+        
+        cal = CalibrationLUT(example_image)
+    
+        cal.create_central_rois(size = (180, 8))
+    
+        cal.compute_lateral_lut()
+    
+        assert cal.lut[(0, 0)] == {
+            "I_red": 5,
+            "S_red": 2,
+        }
+
 # Test the set_doses method of the CalibrationLUT class, with unordered doses
 def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
     
