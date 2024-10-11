@@ -21,6 +21,7 @@ from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
 
+BAND_WIDTH = 1  # Width of the band in mm. Used to compute the LUT.
 
 """Functions used for film calibration."""
 
@@ -151,6 +152,7 @@ class CalibrationLUT:
             'left': None,
             'right': None,
         }
+        self.lut['rois'] = None
         
 
     def set_doses(self, doses: list):
@@ -235,7 +237,7 @@ class CalibrationLUT:
         #self._plot_rois(dpmm = dpmm, origin = -width/2)
 
 
-    def compute_lut(lateral_correction: bool = True):
+    def compute_lut(self, lateral_correction: bool = True):
         """
         Compute the look-up table (LUT) for the calibration curve.
 
@@ -245,9 +247,70 @@ class CalibrationLUT:
             True: A LUT is computed for every milimeter in the scanner lateral direction
             False: A single LUT is computed for the scanner.
         """
+        # Check if the image is loaded.
+        if self.tiff_image is None:
+            raise Exception("No image loaded.")
+        # Check if rois are created.
+        if not self.lut.get("rois"):
+            raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
 
-        pass
+        band_buffer_red = []
+        band_buffer_green = []
+        band_buffer_blue = []
+        band_buffer_mean = []
 
+        if lateral_correction:
+
+            # Create a list with the lateral positions in milimeters
+            origin = -self.tiff_image.physical_shape[1]/2
+            lateral_positions = origin - np.linspace(
+                start = 0,
+                stop = self.tiff_image.physical_shape[1],
+                num = self.tiff_image.array.shape[1]
+                )
+
+
+            for roin_num, roi in enumerate(self.lut["rois"]):
+                for column_pixel in range(self.tiff_image.array.shape[1]):
+
+                    # Define a step as a limit to append pixels in a band of size BAND_WIDTH.
+                    band_step = self.lut["lateral_limits"]["left"] + BAND_WIDTH
+
+                    # Populate the LUT with None if the pixel is outside the lateral limits.
+                    if lateral_positions[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions[column_pixel] > self.lut["lateral_limits"]["right"]:
+                        self.lut[(lateral_positions[column_pixel], roin_num)] = None
+
+                    # Append pixel values in band_width into a band buffer.
+                    elif lateral_positions[column_pixel] < band_step:
+                        band_buffer_red.append(
+                            np.median(
+                                self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]))
+                        band_buffer_green.append(
+                            np.median(
+                                self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]))
+                        band_buffer_blue.append(
+                            np.median(
+                                self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]))
+                    
+                    else:
+                        # Pupulate the LUT with the mean pixel value and standard deviation of the band.
+                        self.lut[(lateral_positions[column_pixel], roin_num)] = {
+                            'I_red': np.mean(band_buffer_red),
+                            'S_red': np.std(band_buffer_red),
+                            'I_green': np.mean(band_buffer_green),
+                            'S_green': np.std(band_buffer_green),
+                            'I_blue': np.mean(band_buffer_blue),
+                            'S_blue': np.std(band_buffer_blue),
+                            'I_mean': np.mean(band_buffer_mean),
+                            'S_mean': np.std(band_buffer_mean),
+                        }
+
+                        # Update band_step and band_buffer.
+                        band_step += BAND_WIDTH
+                        band_buffer_red = []
+                        band_buffer_green = []
+                        band_buffer_blue = []
+                        band_buffer_mean = []
 
     def _plot_rois(self, dpmm: float, origin: float):
         """
