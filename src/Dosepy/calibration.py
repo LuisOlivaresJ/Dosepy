@@ -38,54 +38,6 @@ def rational_func(x, a, b, c):
     """
     return -c + b/(x-a)
 
-class CalibrationLUT:
-    """
-    Class used to represent a calibration curve.
-
-    Attributes
-    ----------
-    film_response : list
-        The response of the film to the doses.
-    doses : list
-        The doses values used to expose the films for calibration.
-    dose_unit : str
-        The unit of the dose.
-    fit_function : str
-        The model function used for dose-film response relationship.
-        "P3": Polynomial function of degree 3.
-        "RF": Rational function.
-    channel : str
-        Color channel. "R": Red, "G": Green and "B": Blue.
-    """
-
-    def __init__(self):
-        self.film_response = []
-        self.doses = []
-        self.dose_unit = ""
-        self.fit_function = ""
-        self.channel = ""
-
-
-    def compute_lut(self, img: TiffImage, doses: list, rois: list, channel: str):
-        """
-        Compute the look-up table (LUT) for the calibration curve.
-
-        Parameters
-        ----------
-        img : TiffImage
-            The image used for calibration.
-        doses : list
-            The doses values used to expose the films for calibration.
-        rois : list
-            The response of the film to the doses.
-        channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue.
-        """
-        pass
-
-    
-
-    pass
 
 class CalibrationLUT:
     """
@@ -119,7 +71,7 @@ class CalibrationLUT:
                 "height" : int,  # The height of the ROI in pixels.
                 }],  
             'resolution' : float,  # The resolution of the image in dots per inch.
-            'lateral_limits' : list[int, int],  # Left and rigth lateral limits of the scanner from half the image, in milimeters.
+            'lateral_limits' : {"left": int, "right": int},  # Left and rigth lateral limits of the scanner where calibration is valid, in milimeters from the center of the image.
             (lateral_position : float, nominal_dose : float) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
@@ -195,10 +147,10 @@ class CalibrationLUT:
         self.lut['date_scanned'] = metadata.get('date_scanned')
         self.lut['wait_time'] = metadata.get('wait_time')
         self.lut['resolution'] = tiff_image.dpi
-        self.lut['lateral_limits'] = [
-            int(-tiff_image.physical_shape[0]/2),
-            int(tiff_image.physical_shape[0]/2)
-            ]
+        self.lut['lateral_limits'] = {
+            'left': None,
+            'right': None,
+        }
         
 
     def set_doses(self, doses: list):
@@ -230,20 +182,10 @@ class CalibrationLUT:
         Returns
         -------
         list
-            A list of ROIs as dictionaries. 
-            
-            [
-                {
-                    'x': int,
-                    'y': int,
-                    'width': int,
-                    'height': int,
-                }
-                ...
-            ]
-
-            where:
-            x and y are the coordinates of the top-left corner (x for row and y for column),
+            A list of ROIs as dictionaries.     
+            [{'x': int, 'y': int, 'width': int, 'height': int}, ...]
+            where: x and y are the coordinates of the top-left corner 
+            (x for row and y for column),
             and width and height are the size of the ROI in pixels.
             
         """
@@ -253,9 +195,6 @@ class CalibrationLUT:
 
         # Get the image size in mm.
         width, height = self.tiff_image.physical_shape
-
-        # Get the image size in pixels.
-        width_px, height_px, _ = self.tiff_image.shape
 
         # Check if the size of the ROIs is valid.
         if size[0] > width or size[1] > height:
@@ -285,20 +224,32 @@ class CalibrationLUT:
                     }
                 )
         self.lut["rois"] = rois
-        #self._plot_rois()  # Plot for visualization testing purposes.
 
-        # TODO: Set new lateral limits based on the ROIs.
+        # Find maximum y values in milimeters.
+        self.lut["lateral_limits"]["left"] = int(max([roi['y'] for roi in rois])/dpmm - width/2)
 
-        # Find minimum y values.
-        y_min = min([roi['y'] for roi in rois])
+        # Find minimum y + width values in milimeters.
+        self.lut["lateral_limits"]["right"] = int(min([roi['y'] + roi["width"] for roi in rois])/dpmm - width/2)
 
-        # Find maximum y values.
-        y_max = max([roi['y'] + roi["width"] for roi in rois])
-
-
+        # Plot for visualization testing purposes.
+        #self._plot_rois(dpmm = dpmm, origin = -width/2)
 
 
-    def _plot_rois(self):
+    def compute_lut(lateral_correction: bool = True):
+        """
+        Compute the look-up table (LUT) for the calibration curve.
+
+        Parameters
+        ----------
+        lateral_correction : bool
+            True: A LUT is computed for every milimeter in the scanner lateral direction
+            False: A single LUT is computed for the scanner.
+        """
+
+        pass
+
+
+    def _plot_rois(self, dpmm: float, origin: float):
         """
         Plot the ROIs on the image.
         """
@@ -314,9 +265,16 @@ class CalibrationLUT:
                 linestyle = '--',
             )
             ax.add_patch(rect)
-            print(roi["x"], roi["y"], roi["width"], roi["height"])
         
+        # r0' = r0 - r00', change of origin.
+        #print(self.lut["lateral_limits"])
+        y_left_limit_pix =int((self.lut["lateral_limits"]["left"] - origin)*dpmm)
+        y_right_limit_pix = int((self.lut["lateral_limits"]["right"] - origin)*dpmm)
+
+        ax.axvline(y_left_limit_pix)
+        ax.axvline(y_right_limit_pix)
         plt.show()
+
 
     def _get_labeled_image(self, threshold: float = None) -> tuple[ndarray, int]:
         """
@@ -353,24 +311,6 @@ class CalibrationLUT:
         labeled_image, number_of_films = label(binary, return_num=True)
 
         return labeled_image, number_of_films
-
-
-    def compute_lut(self, doses: list, rois: list, channel: str):
-        """
-        Compute the look-up table (LUT) for the calibration curve.
-
-        Parameters
-        ----------
-        doses : list
-            The doses values used to expose the films for calibration.
-        rois : list
-            The response of the film to the doses.
-        channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue.
-        """
-        pass
-    
-
 
 
 class Calibration:

@@ -32,7 +32,7 @@ python3 -m build
 # Install the package from the source distribution
 cd dist
 #python3 -m pip install *.tar.gz
-python3 -m uv pip install *.tar.gz
+python3 -m pip install *.tar.gz
 
 # Delete __pycache__ directories
 find . -type d -name __pycache__ -exec rm -rf {} +

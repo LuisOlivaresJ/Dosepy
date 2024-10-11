@@ -66,7 +66,6 @@ def test_initialization(example_image, example_profile, example_metadata):
     assert cal.lut["date_scanned"] == "2024-06-21"
     assert cal.lut["wait_time"] == 24
     assert cal.lut["resolution"] == 75
-    assert cal.lut["lateral_limits"] == [-115, 115]
 
 
 # Test CalibrationLUT initialization with default values
@@ -138,6 +137,8 @@ def test_create_central_rois(example_image):
             "height": 23,
         },
     ]
+    assert cal.lut["lateral_limits"]["left"] == 20
+    assert cal.lut["lateral_limits"]["right"] == 46
 
 # Test the set_doses method of the CalibrationLUT class, with unordered doses
 def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
