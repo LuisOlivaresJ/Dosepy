@@ -3,8 +3,13 @@ NAME
     Calibration module
 
 DESCRIPTION
-    Module for the management of the calibration curve. Here are the functions
-    to be used for fitting. See Calibration class for details.
+    Module for the management of the calibration curve. 
+    See CalibrationLUT class for details.
+    The CalibrationLUT class is an addaptation of the LUT class from 
+    OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
+    to create a calibration curve every milimeter in the lateral direction of the scanner instead of a 
+    calibration curve for every pixel.
+
 """
 
 import numpy as np
@@ -21,7 +26,7 @@ from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
 
-BIN_WIDTH = 3  # Width of the bin in milimeters. Used to compute the LUT.
+BIN_WIDTH = 2  # Width of the bin in milimeters. Used to compute the LUT.
 
 """Functions used for film calibration."""
 
@@ -73,7 +78,7 @@ class CalibrationLUT:
                 }],  
             'resolution' : float,  # The resolution of the image in dots per inch.
             'lateral_limits' : {"left": int, "right": int},  # Left and rigth lateral limits of the scanner where calibration is valid, in milimeters from the center of the image.
-            (lateral_position : float, nominal_dose : float) : {
+            (lateral_position : int, roi_number : int) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
                 'S_red' : float,  # Standard deviation of the red channel.
@@ -344,38 +349,50 @@ class CalibrationLUT:
         #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
 
 
-    def plot_lateral_response(self, ax: plt.Axes = None):
+    def plot_lateral_response(self):
         """
-        Plot the lateral response of the scanner for each film.
+        Plot the lateral response of the scanner for each ROI (film).
         """
         # Get positions from lut
         positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
         positions = sorted(set(positions))
 
-        # Get the pixel values for each roi.
-        for roi_counter in range(len(self.lut["rois"])):
-            I_red = [
+        # Number of ROIs
+        num_rois = len(self.lut["rois"])
+
+        # Set up the figure.
+        fig, axes = plt.subplots(num_rois, 1, sharex=True)
+        fig.suptitle("Lateral response [%] of the scanner.")
+        axes[-1].set_xlabel("Lateral position [mm]")
+
+        for ax in axes:
+            ax.set_ylim(-10, 5)
+            #ax.set_ylabel("[%]")
+            ax.grid(True)
+
+        # Get the lateral pixel values and coordinate, for each roi.
+        for roi_counter in range(num_rois):
+
+            I_red = np.array([
                 self.lut[(position, roi_counter)]["I_red"]
                 for position in positions
                 if self.lut[(position, roi_counter)]
-                ]
-            coordinate = [
+                ])
+
+            coordinate = np.array([
                 position
                 for position in positions
                 if self.lut[(position, roi_counter)]
-            ]
+            ])
 
-            if ax is None:
-                fig, axes = plt.subplots(6, 1)
-                for i in range(6):
-                    I_relative = I_red / np.mean(I_red) * 100 - 100
-                    axes[i].plot(coordinate, I_relative, label = f"ROI {roi_counter}", color = 'red', marker = '.')
-        
-            else:
-                ax.plot(coordinate, I_red, label = f"ROI {roi_counter}", color = 'red', marker = '')
+            # Normalize the pixel values to the central pixel value.
+            I_central = I_red[int(len(I_red)/2)]
+            I_relative = I_red / I_central * 100 - 100
 
-        #plt.show()
-        #print(positions)
+            # Plot the lateral response.
+            line, =axes[roi_counter].plot(coordinate, I_relative, color = 'red', marker = '.')
+            line.set_label(f"ROI: {roi_counter + 1}")
+            axes[roi_counter].legend()
 
 
     def _plot_rois(self, ax: plt.Axes = None):
