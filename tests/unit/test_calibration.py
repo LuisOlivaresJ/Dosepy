@@ -46,6 +46,14 @@ def test_instance(example_image, example_profile, example_metadata):
                             )
         assert isinstance(cal, CalibrationLUT)
 
+# Test a correct orientation of the image 
+# #TODO Implement the test_correct_orientation method
+def test_correct_orientation(example_image):
+    
+    cal = CalibrationLUT(example_image)
+
+    assert cal.tiff_image.orientation == "portrait"
+
 # Test the initialization of the CalibrationLUT class
 def test_initialization(example_image, example_profile, example_metadata):
     

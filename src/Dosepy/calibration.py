@@ -21,7 +21,7 @@ from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
 
-BIN_WIDTH = 5  # Width of the bin in milimeters. Used to compute the LUT.
+BIN_WIDTH = 3  # Width of the bin in milimeters. Used to compute the LUT.
 
 """Functions used for film calibration."""
 
@@ -248,9 +248,6 @@ class CalibrationLUT:
         if not self.lut.get("rois"):
             raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
 
-        bin_buffer_red = []
-        bin_buffer_green = []
-        bin_buffer_blue = []
 
         # Create a list with the lateral positions in milimeters
         origin_side2half = self.tiff_image.physical_shape[1]/2
@@ -266,6 +263,9 @@ class CalibrationLUT:
 
             # Define a bin_step limit to append pixels in a bin of size BAND_WIDTH.
             bin_limit = int(self.lut["lateral_limits"]["left"]) + BIN_WIDTH
+            bin_buffer_red = []
+            bin_buffer_green = []
+            bin_buffer_blue = []
 
             for column_pixel in range(self.tiff_image.array.shape[1]):
 
@@ -343,11 +343,51 @@ class CalibrationLUT:
                         )
         #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
 
-    def _plot_rois(self, dpmm: float, origin: float):
+
+    def plot_lateral_response(self, ax: plt.Axes = None):
+        """
+        Plot the lateral response of the scanner for each film.
+        """
+        # Get positions from lut
+        positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
+        positions = sorted(set(positions))
+
+        # Get the pixel values for each roi.
+        for roi_counter in range(len(self.lut["rois"])):
+            I_red = [
+                self.lut[(position, roi_counter)]["I_red"]
+                for position in positions
+                if self.lut[(position, roi_counter)]
+                ]
+            coordinate = [
+                position
+                for position in positions
+                if self.lut[(position, roi_counter)]
+            ]
+
+            if ax is None:
+                fig, axes = plt.subplots(6, 1)
+                for i in range(6):
+                    I_relative = I_red / np.mean(I_red) * 100 - 100
+                    axes[i].plot(coordinate, I_relative, label = f"ROI {roi_counter}", color = 'red', marker = '.')
+        
+            else:
+                ax.plot(coordinate, I_red, label = f"ROI {roi_counter}", color = 'red', marker = '')
+
+        #plt.show()
+        #print(positions)
+
+
+    def _plot_rois(self, ax: plt.Axes = None):
         """
         Plot the ROIs on the image.
         """
-        fig, ax = plt.subplots()
+        dpmm = self.tiff_image.dpmm
+        origin = -self.tiff_image.physical_shape[1]/2
+
+        if ax is None:
+            fig, ax = plt.subplots()
+
         ax.imshow(self.tiff_image.array/np.max(self.tiff_image.array))
         for roi in self.lut["rois"]:
             rect = plt.Rectangle(
@@ -367,7 +407,7 @@ class CalibrationLUT:
 
         ax.axvline(y_left_limit_pix)
         ax.axvline(y_right_limit_pix)
-        plt.show()
+        #plt.show()
 
 
     def _get_labeled_image(self, threshold: float = None) -> tuple[ndarray, int]:
