@@ -370,6 +370,14 @@ class CalibrationLUT:
         ----------
         channel : str
             The color channel to plot. "red", "green", "blue" or "mean".
+
+        Examples
+        --------
+        >>> cal = CalibrationLUT(tiff_image)
+        >>> cal.create_central_rois((180, 8))
+        >>> cal.compute_lateral_lut()
+        >>> cal.plot_lateral_response(channel = "red")
+        >>> plt.show()
         """
         if channel.lower() in ["red", "r"]:
             channel = "I_red"
@@ -522,6 +530,35 @@ class CalibrationLUT:
         """
         positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
         return sorted(set(positions))
+    
+
+    def _get_intensities(self, lateral_position: float, channel: str) -> list:
+        """
+        Get the pixel values of the channel at a given lateral position, for each film.
+
+        Parameters
+        ----------
+        lateral_position : float
+            The lateral position in milimeters.
+
+        channel : str
+            The color channel. "red", "green", "blue" or "mean".
+
+        Returns
+        -------
+        list
+            A list of pixel values, sorted in descending order.
+        """
+        if channel.lower() not in ["red", "green", "blue", "mean"]:
+            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
+        
+        position = int(lateral_position)
+        intensities = []
+
+        for roi in range(len(self.lut["rois"])):
+            intensities.append(self.lut[(position, roi)][channel])
+
+        return sorted(intensities, reverse=True)
 
 
 class Calibration:
