@@ -26,7 +26,7 @@ from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
 
-BIN_WIDTH = 2  # Width of the bin in milimeters. Used to compute the LUT.
+BIN_WIDTH = 1  # Width of the bin in milimeters. Used to compute the LUT.
 
 """Functions used for film calibration."""
 
@@ -268,9 +268,9 @@ class CalibrationLUT:
 
             # Define a bin_step limit to append pixels in a bin of size BAND_WIDTH.
             bin_limit = int(self.lut["lateral_limits"]["left"]) + BIN_WIDTH
-            bin_buffer_red = []
-            bin_buffer_green = []
-            bin_buffer_blue = []
+            bin_buffer_red = np.array([])
+            bin_buffer_green = np.array([])
+            bin_buffer_blue = np.array([])
 
             for column_pixel in range(self.tiff_image.array.shape[1]):
 
@@ -280,17 +280,29 @@ class CalibrationLUT:
                 if lateral_positions_half[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions_half[column_pixel] > self.lut["lateral_limits"]["right"]:
                     self.lut[(rounded_position, roin_num)] = None
 
-                # Append pixel values in bin_width into a band buffer.
+                # Join pixel values in bin_width into a band buffer.
                 elif lateral_positions_half[column_pixel] <= bin_limit:
-                    bin_buffer_red.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]))
-                    bin_buffer_green.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]))
-                    bin_buffer_blue.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]))
+                    bin_buffer_red = np.concatenate(
+                        (
+                            bin_buffer_red,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
+                        ),
+                        axis=None,
+                    )
+                    bin_buffer_green = np.concatenate(
+                        (
+                            bin_buffer_green,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
+                        ),
+                        axis=None,
+                    )
+                    bin_buffer_blue = np.concatenate(
+                        (
+                            bin_buffer_blue,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
+                        ),
+                        axis=None,
+                    )
                 
                 else:
                     #print(rounded_position, roin_num)
@@ -321,41 +333,59 @@ class CalibrationLUT:
 
                     bin_limit += BIN_WIDTH
 
-                    bin_buffer_red = []
-                    bin_buffer_red.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'],
-                            column_pixel,
-                            0]
-                            )
-                        )
-                    bin_buffer_green = []
-                    bin_buffer_green.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'],
-                            column_pixel,
-                            1]
-                            )
-                        )
+                    bin_buffer_red = np.array([])
+                    np.concatenate(
+                        (
+                            bin_buffer_red,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
+                        ),
+                        axis=None,
+                    )
 
-                    bin_buffer_blue = []
-                    bin_buffer_blue.append(
-                        np.median(
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'],
-                            column_pixel,
-                            2]
-                            )
-                        )
+                    bin_buffer_green = np.array([])
+                    np.concatenate(
+                        (
+                            bin_buffer_green,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
+                        ),
+                        axis=None,
+                    )
+
+                    bin_buffer_blue = np.array([])
+                    np.concatenate(
+                        (
+                            bin_buffer_blue,
+                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
+                        ),
+                        axis=None,
+                    )
         #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
 
 
-    def plot_lateral_response(self):
+    def plot_lateral_response(self, channel: str = "red"):
         """
         Plot the lateral response of the scanner for each ROI (film).
+
+        Parameters
+        ----------
+        channel : str
+            The color channel to plot. "red", "green", "blue" or "mean".
         """
+        if channel.lower() in ["red", "r"]:
+            channel = "I_red"
+            color = "red"
+        elif channel.lower() in ["green", "g"]:
+            channel = "I_green"
+            color = "green"
+        elif channel.lower() in ["blue", "b"]:
+            channel = "I_blue"
+            color = "blue"
+        elif channel.lower() in ["mean", "m"]:
+            channel = "I_mean"
+            color = "black"
+
         # Get positions from lut
-        positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
-        positions = sorted(set(positions))
+        positions = self._get_calibration_positions()
 
         # Number of ROIs
         num_rois = len(self.lut["rois"])
@@ -363,6 +393,11 @@ class CalibrationLUT:
         # Set up the figure.
         fig, axes = plt.subplots(num_rois, 1, sharex=True)
         fig.suptitle("Lateral response [%] of the scanner.")
+        #fig.suptitle("Another title", fontsize=10)
+        axes[0].set_title(
+            f"Error bars represent the standard deviation of the pixel values in the ROI.",
+            fontsize = 9,
+            )
         axes[-1].set_xlabel("Lateral position [mm]")
 
         for ax in axes:
@@ -373,11 +408,17 @@ class CalibrationLUT:
         # Get the lateral pixel values and coordinate, for each roi.
         for roi_counter in range(num_rois):
 
-            I_red = np.array([
-                self.lut[(position, roi_counter)]["I_red"]
+            intensity = np.array([
+                self.lut[(position, roi_counter)][channel]
                 for position in positions
                 if self.lut[(position, roi_counter)]
                 ])
+
+            std = np.array([
+                self.lut[(position, roi_counter)][channel.replace("I", "S")]
+                for position in positions
+                if self.lut[(position, roi_counter)]
+            ])
 
             coordinate = np.array([
                 position
@@ -386,12 +427,23 @@ class CalibrationLUT:
             ])
 
             # Normalize the pixel values to the central pixel value.
-            I_central = I_red[int(len(I_red)/2)]
-            I_relative = I_red / I_central * 100 - 100
+            I_central = intensity[int(len(intensity)/2)]
+            I_relative = intensity / I_central * 100 - 100
+
+            # Standar deviation of the pixel values.
+            std_Ir = std / I_central * 100
 
             # Plot the lateral response.
-            line, =axes[roi_counter].plot(coordinate, I_relative, color = 'red', marker = '.')
-            line.set_label(f"ROI: {roi_counter + 1}")
+            #line, = axes[roi_counter].plot(coordinate, I_relative, color = color, marker = '.')
+            #line, = axes[roi_counter].errorbar(coordinate, I_relative, yerr = std_Ir)
+            axes[roi_counter].errorbar(
+                coordinate, I_relative,
+                yerr = std_Ir,
+                color = color,
+                ecolor = color,
+                label = f"ROI: {roi_counter + 1}",
+                )
+            #line.set_label(f"ROI: {roi_counter + 1}")
             axes[roi_counter].legend()
 
 
@@ -462,6 +514,14 @@ class CalibrationLUT:
         labeled_image, number_of_films = label(binary, return_num=True)
 
         return labeled_image, number_of_films
+
+
+    def _get_calibration_positions(self) -> list:
+        """
+        Get the calibration positions in milimeters.
+        """
+        positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
+        return sorted(set(positions))
 
 
 class Calibration:
