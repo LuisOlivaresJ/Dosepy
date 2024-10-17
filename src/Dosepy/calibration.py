@@ -45,6 +45,13 @@ def rational_func(x, a, b, c):
     return -c + b/(x-a)
 
 
+def _get_dose_from_fit(xdata, ydata, x, fit_function):
+    if fit_function == "rational":
+
+        popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500])
+        return rational_func(x, *popt)
+
+
 class CalibrationLUT:
     """
     Class used to store data used for film calibration.
@@ -455,6 +462,65 @@ class CalibrationLUT:
             axes[roi_counter].legend()
 
 
+    def plot_fit(
+        self,
+        fit_type: str = 'rational',
+        channel: str = 'red',
+        position: float = 0,
+        ax: plt.Axes = None,
+        ):
+        """
+        Plot the fit of the calibration curve.
+
+        Parameters
+        ----------
+        fit_type : str
+            The type of fit to use. "rational" or "polynomial".
+        channel : str
+            The color channel to plot. "red", "green", "blue" or "mean".
+        position : float
+            The lateral position in milimeters.
+        ax : plt.Axes
+            The axis to plot the image to. If None, creates a new figure.
+        """
+        if fit_type.lower() not in ["rational", "polynomial"]:
+            raise Exception("Invalid fit type. Choose between 'rational' or 'polynomial'.")
+        
+        if channel.lower() not in ["red", "green", "blue", "mean"]:
+            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
+
+        if position < self.lut["lateral_limits"]["left"] or position > self.lut["lateral_limits"]["right"]:
+            raise Exception("Position out of lateral limits.")
+
+        # Round the position to the nearest integer.
+        position = round(position)
+
+        # Get the pixel values of the channel at the given lateral position.
+        intensities = self._get_intensities(position, channel)
+
+        if fit_type == "rational":
+            responses = np.array(intensities) / intensities[0]
+        elif fit_type == "polynomial":
+            #TODO: Create responses.
+            pass
+
+        # Get the doses values that were used to expose the films for calibration
+        # at a given position.
+        doses = self._get_lateral_doses(position)
+
+        # Create the calibration curve.
+        response_curve = np.linspace(responses[0], responses[-1], 100)
+        dose_curve = _get_dose_from_fit(responses, doses, response_curve, fit_type)
+
+        if ax is None:
+            fig, axe = plt.subplots()
+        else: 
+            axe = ax
+
+        axe.plot(responses, doses, marker = '*')
+        axe.plot(response_curve, dose_curve)
+
+
     def _plot_rois(self, ax: plt.Axes = None):
         """
         Plot the ROIs on the image.
@@ -556,9 +622,29 @@ class CalibrationLUT:
         intensities = []
 
         for roi in range(len(self.lut["rois"])):
-            intensities.append(self.lut[(position, roi)][channel])
+            intensities.append(self.lut[(position, roi)]["I_" + channel])
 
         return sorted(intensities, reverse=True)
+
+    
+    def _get_lateral_doses(self, position: float) -> list:
+        """
+        Get lateral doses at a given position for each film.
+
+        Parameters
+        ----------
+        position : float
+            The lateral position in milimeters.
+        
+        Returns
+        -------
+        list
+            A list of doses for each film.
+        """
+
+        # Round the position to the nearest integer.
+        position = round(position)
+        pass
 
 
 class Calibration:

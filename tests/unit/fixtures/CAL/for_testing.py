@@ -26,7 +26,13 @@ print(cal.lut[(position, 0)]["S_mean"])
 #print(cal.lut["lateral_limits"])
 #fig, ax = plt.subplots(1, 1, figsize=(8, 5))
 #cal._plot_rois(ax)
-cal.plot_lateral_response(channel = "red")
+#cal.plot_lateral_response(channel = "red")
 #cal.plot_lateral_response(channel = "green")
 #cal.plot_lateral_response(channel = "blue")
+
+cal.plot_fit(
+    fit_type="rational",
+    position=0,
+    channel="red",
+    )
 plt.show()
