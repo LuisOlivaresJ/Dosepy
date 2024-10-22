@@ -7,8 +7,11 @@ DESCRIPTION
     See CalibrationLUT class for details.
     The CalibrationLUT class is an addaptation of the LUT class from 
     OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
-    to create a calibration curve every milimeter in the lateral direction of the scanner instead of a 
-    calibration curve for every pixel.
+    Main differences:
+    - The data structure (LUT) to store intensites from pixels is a nested dictionary.
+    - The data is created for every milimeter in the lateral direction of the scanner, instead of each pixel.
+    - The data contains the standard deviation of the pixel values.
+    - Automatic roi detection is implemented with scikit-image.regionprops() function.
 
 """
 
@@ -25,6 +28,8 @@ from skimage.filters.rank import mean
 from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
+from Dosepy.i_o import load_beam_profile
+
 
 BIN_WIDTH = 1  # Width of the bin in milimeters. Used to compute the LUT.
 
@@ -49,6 +54,7 @@ def _get_dose_from_fit(xdata, ydata, x, fit_function):
     if fit_function == "rational":
 
         popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500])
+        #popt, pcov = curve_fit(rational_func, xdata, ydata)
         return rational_func(x, *popt)
 
 
@@ -105,8 +111,8 @@ class CalibrationLUT:
             tiff_image: TiffImage,
             doses : list = None,
             lateral_correction : bool = False,
-            beam_profile : ndarray = None,
-            filter : int = None,
+            #beam_profile : ndarray = None,
+            #filter : int = None,
             metadata : dict = {},
             ):
         """
@@ -125,14 +131,6 @@ class CalibrationLUT:
             for each milímeter in the scanner lateral direction. If this method is
             used, it is recommended that beam profile correction be applied also,
             so as to remove the contribution of beam inhomogeneity.
-        beam_profile : ndarray of size (n, 2)
-            Beam profile  that will be used to correct the doses at each milimeter position.
-            The array must contain the position and relative profile value.
-            First column should be a position, given in mm, with 0 being at center.
-            Second column should be the measured profile relative value [%], normalised to 100 in the center.
-            Corrected doses are defined as dose_corrected(position) = dose * profile(position),
-            where profile(y) is the beam profile, normalized to 100% at beam center
-            axis, which is assumed to be aligned with scanner center.
         filter : int
             If filt > 0, a median filter of size (filt, filt) is applied to 
             each channel of the scanned image prior to LUT creation.            
@@ -165,6 +163,11 @@ class CalibrationLUT:
             'right': None,
         }
         self.lut['rois'] = None
+
+        # Check if the doses are provided.
+        if doses:
+            self.set_doses(doses)
+        #self.set_beam_profile(beam_profile)
         
 
     def set_doses(self, doses: list):
@@ -182,6 +185,39 @@ class CalibrationLUT:
             raise Exception("Doses must be unique.")
 
         self.lut['nominal_doses'] = sorted(doses)
+
+    
+    def set_beam_profile(self, beam_profile: str):
+        """
+        Beam profile  that will be used to correct the doses at each milimeter in lateral position.
+
+        Parameters
+        ----------
+        beam_profile : str
+            The path to the file containing the beam profile.
+
+        Returns
+        -------
+        ndarray of size (n, 2)
+        
+        The array must contain the position and relative profile value.
+        First column should be a position, given in mm, with 0 being at center.
+        Second column should be the measured profile relative value [%], normalised to 100 in the center.
+        Corrected doses are defined as dose_corrected(position) = dose * profile(position),
+        where profile(y) is the beam profile, normalized to 100% at beam center
+        axis, which is assumed to be aligned with scanner center.
+        """
+
+        # Check if the beam profile is a string.
+        if not isinstance(beam_profile, str):
+            raise Exception("Beam profile must be a string.")
+
+        # Load the beam profile.
+        self.lut['beam_profile'] = load_beam_profile(beam_profile)
+
+        # Print the beam profile.
+        #print(self.lut['beam_profile'])
+        #type(self.lut['beam_profile'])
 
 
     def create_central_rois(self, size : tuple) -> list:
@@ -629,7 +665,7 @@ class CalibrationLUT:
     
     def _get_lateral_doses(self, position: float) -> list:
         """
-        Get lateral doses at a given position for each film.
+        Get lateral doses at a given position for each film corrected by beam profile.
 
         Parameters
         ----------
@@ -641,10 +677,22 @@ class CalibrationLUT:
         list
             A list of doses for each film.
         """
+        # Check if the beam profile is loaded.
+        #if self.lut.get("beam_profile"):
+        #    raise Exception("No beam profile loaded.")
 
-        # Round the position to the nearest integer.
-        position = round(position)
-        pass
+        # Check if the doses are set.
+        #if not self.lut.get("nominal_doses"):
+        #    raise Exception("No doses set.")
+        
+        profile = np.interp(
+            position,
+            self.lut['beam_profile'][:, 0],
+            self.lut['beam_profile'][:, 1]) / 100
+
+        lateral_doses = sorted([dose * profile for dose in self.lut["nominal_doses"]])
+
+        return lateral_doses
 
 
 class Calibration:

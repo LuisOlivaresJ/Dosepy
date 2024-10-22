@@ -11,6 +11,8 @@ from tqdm import tqdm
 from urllib.request import urlopen, urlretrieve
 from urllib.error import HTTPError, URLError
 
+import numpy as np
+
 
 def get_url(
     url: str, destination: str | Path | None = None, progress_bar: bool = True
@@ -130,3 +132,21 @@ def is_dicom_image(file: str | Path) -> bool:
         pass
 
     return result
+
+
+def load_beam_profile(file: str | Path) -> np.ndarray:
+    """Load a beam profile. The beam profile is a CSV file with the following columns:
+    - Position
+    - Normalized dose to the center.
+
+    Parameters
+    ----------
+    file : str
+        The path to the file.
+    """
+
+    # Check if the file exists.
+    if not os.path.exists(file):
+        raise Exception("Beam profile file does not exist.")
+
+    return np.genfromtxt(file, delimiter=",")

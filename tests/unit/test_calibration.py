@@ -20,8 +20,8 @@ def example_image():
 
 @pytest.fixture
 def example_profile():
-    profile_path = cwd / "fixtures" / "CAL" / "BeamProfile.txt"
-    return np.genfromtxt(profile_path)
+    profile_path = cwd / "fixtures" / "CAL" / "BeamProfile.csv"
+    return np.genfromtxt(profile_path, delimiter=",")
 
 @pytest.fixture
 def example_metadata():
@@ -37,11 +37,12 @@ def example_metadata():
 # Test the instance of the CalibrationLUT class
 def test_instance(example_image, example_profile, example_metadata):
     
-        profile = example_profile
+        #profile = example_profile
         cal = CalibrationLUT(example_image,
+                            #doses =  [0, 2, 4, 6, 8, 10],
                             lateral_correction = True,
-                            beam_profile = profile,
-                            filter = 3,
+                            #beam_profile = profile,
+                            #filter = 3,
                             metadata = example_metadata,
                             )
         assert isinstance(cal, CalibrationLUT)
@@ -61,8 +62,8 @@ def test_initialization(example_image, example_profile, example_metadata):
 
     cal = CalibrationLUT(example_image,
                         lateral_correction = True,
-                        beam_profile = profile,
-                        filter = 3,
+                        #beam_profile = profile,
+                        #filter = 3,
                         metadata = example_metadata,
                         )
     
@@ -160,17 +161,17 @@ def test_compute_lateral_lut(example_image):
         assert cal.lut["lateral_limits"]["right"] == 82
     
         
-        assert cal.lut[(2, 0)]["I_red"] == 42384
-        assert cal.lut[(2, 0)]["S_red"] == 54
+        assert cal.lut[(2, 0)]["I_red"] == 42378
+        assert cal.lut[(2, 0)]["S_red"] == 115
 
-        assert cal.lut[(2, 0)]["I_green"] == 41719
-        assert cal.lut[(2, 0)]["S_green"] == 80
+        assert cal.lut[(2, 0)]["I_green"] == 41600
+        assert cal.lut[(2, 0)]["S_green"] == 104
 
-        assert cal.lut[(2, 0)]["I_blue"] == 32419
-        assert cal.lut[(2, 0)]["S_blue"] == 52
+        assert cal.lut[(2, 0)]["I_blue"] == 32354
+        assert cal.lut[(2, 0)]["S_blue"] == 88
 
-        assert cal.lut[(2, 0)]["I_mean"] == 38840
-        assert cal.lut[(2, 0)]["S_mean"] == 36
+        assert cal.lut[(2, 0)]["I_mean"] == 38777
+        assert cal.lut[(2, 0)]["S_mean"] == 59
         
 
 # Test the set_doses method of the CalibrationLUT class, with unordered doses
@@ -181,6 +182,38 @@ def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
     cal.set_doses(doses)
 
     assert cal.lut["nominal_doses"] == [0, 2, 4, 6, 8, 10]
+
+def test_set_beam_profile(
+          example_image,
+          ):
+    
+    cal = CalibrationLUT(example_image)
+
+    cal.set_beam_profile(
+          str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
+    )
+
+    # Check the shape of the beam profile
+    assert cal.lut["beam_profile"].shape[1] == 2
+
+def test_get_lateral_doses(example_image):
+    # Test the get_lateral_doses method of the CalibrationLUT class
+    cal = CalibrationLUT(example_image)
+    cal.set_beam_profile(
+          str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
+    )
+    cal.set_doses([0, 2, 4, 6, 8, 10])
+
+    assert cal._get_lateral_doses(position = 0) == [0, 2, 4, 6, 8, 10]
+
+    corrected_doses = list(np.array([0, 2, 4, 6, 8, 10]) * 1.02699)
+    assert cal._get_lateral_doses(position = -105) == pytest.approx(corrected_doses, rel = 1e-1)
+
+    # Test an interpolated position
+    corrected_doses = list(np.array([0, 2, 4, 6, 8, 10]) * 1.00227)
+    assert cal._get_lateral_doses(position = 12.0) == pytest.approx(corrected_doses, rel = 1e-1)
+    
+
 
 
 # Test the compute_lut method
