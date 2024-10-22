@@ -7,6 +7,8 @@ path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
 cal.create_central_rois((180,8))
+cal.set_doses([0, 2, 4, 6, 8, 10])
+cal.set_beam_profile(beam_profile="BeamProfile.csv")
 cal.compute_lateral_lut()
 
 position = 0
@@ -30,9 +32,19 @@ print(cal.lut[(position, 0)]["S_mean"])
 #cal.plot_lateral_response(channel = "green")
 #cal.plot_lateral_response(channel = "blue")
 
+#print(cal._get_lateral_doses(position = -105))
+
+"""
 cal.plot_fit(
     fit_type="rational",
     position=0,
     channel="red",
     )
+"""
+cal.plot_fit(
+    fit_type="rational",
+    position=0,
+    channel="green",
+    )
+
 plt.show()
