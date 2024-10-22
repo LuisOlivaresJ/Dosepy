@@ -58,30 +58,16 @@ def _get_dose_from_fit(film_response, dose, x, fit_function):
 
         xdata = sorted(film_response, reverse=True)
         ydata = sorted(dose)
-        logging.debug("Inside _get_dose_from_fit(xdata, ydata, x, fit_function):")
-        logging.debug(f"Film response: {list(xdata)}")
-        logging.debug(f"Dose: {list(ydata)}")
+
         popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500], maxfev=1500)
-        #popt, pcov = curve_fit(rational_func, xdata, ydata)
+        print("Inside _get_dose_from_fit")
+        print("Coefficients")
+        print(popt)
+        print("Covariance")
+        print(np.sqrt(np.diag(pcov)))
+        
         return rational_func(x, *popt)
 
-
-def _get_film_response_uncertainty(intensity, std_intensity, fit_function):
-    
-    if fit_function == "rational":
-
-        fr = intensity/intensity[0]
-        
-        # Uncertainty propagation of film .
-        u_fr = fr * np.sqrt( 
-            (std_intensity/intensity)**2 +
-            (std_intensity[0]/fr[0])**2
-        )
-    return u_fr
-
-
-def _get_dose_fit_uncertainty():
-    pass
 
 class CalibrationLUT:
     """
@@ -342,7 +328,7 @@ class CalibrationLUT:
 
             for column_pixel in range(self.tiff_image.array.shape[1]):
 
-                rounded_position = int(lateral_positions_half[column_pixel])
+                rounded_position = round(lateral_positions_half[column_pixel])
 
                 # Populate the LUT with None if the pixel is outside the lateral limits.
                 if lateral_positions_half[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions_half[column_pixel] > self.lut["lateral_limits"]["right"]:
@@ -560,11 +546,11 @@ class CalibrationLUT:
         intensities, std = self._get_intensities(position, channel)
 
         if fit_type == "rational":
-            responses = intensities / intensities[0]
+            response = intensities / intensities[0]
             # Uncertainty propagation.
-            std_response = responses * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
+            std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
         elif fit_type == "polynomial":
-            #TODO: Create responses.
+            #TODO: Create response.
             pass
 
         # Get the corrected doses used to expose the films for calibration
@@ -572,16 +558,16 @@ class CalibrationLUT:
         doses = self._get_lateral_doses(position)
 
         # Create the calibration curve.
-        response_curve = np.linspace(responses[0], responses[-1], 100)
-        dose_curve = _get_dose_from_fit(responses, doses, response_curve, fit_type)
+        response_curve = np.linspace(response[0], response[-1], 100)
+        dose_curve = _get_dose_from_fit(response, doses, response_curve, fit_type)
 
         if ax is None:
             fig, axe = plt.subplots()
         else: 
             axe = ax
 
-        #axe.plot(responses, doses, marker = '*', linestyle="None", color = channel)
-        axe.errorbar(responses, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
+        #axe.plot(response, doses, marker = '*', linestyle="None", color = channel)
+        axe.errorbar(response, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
         axe.plot(response_curve, dose_curve, color = channel)
 
 
@@ -600,12 +586,15 @@ class CalibrationLUT:
         """
         doses = self._get_lateral_doses(position)
         intensities, std = self._get_intensities(position, channel)
-        uncertainty = _get_dose_uncertainty(intensities, doses, std, fit_function)
+        uncertainty = self._get_dose_uncertainty(intensities, std, doses, fit_function)
+        u_percent = uncertainty[1:] / doses[1:] * 100
         
         if ax is None:
             fig, ax = plt.subplots()
         
-        ax.plot(doses, uncertainty, marker = '*', linestyle = '--', color = channel)
+        ax.plot(doses[1:], u_percent, marker = '*', linestyle = '--', color = channel)
+        ax.set_xlabel("Dose [Gy]")
+        ax.set_ylabel("Dose uncertainty [%]")
 
 
     def _plot_rois(self, ax: plt.Axes = None):
@@ -687,7 +676,8 @@ class CalibrationLUT:
 
     def _get_intensities(self, lateral_position: float, channel: str) -> ndarray:
         """
-        Get the pixel values and standar deviation of the channel at a given lateral position, for each film.
+        Get the pixel values and standar deviation of the channel at a given lateral position,
+        for each film, in descending order. 
 
         Parameters
         ----------
@@ -758,6 +748,50 @@ class CalibrationLUT:
 
         return lateral_doses
 
+
+    def _get_dose_uncertainty(self, intensities: ndarray, std: ndarray, doses: list, fit_function: str) -> ndarray:
+        """
+        Get the uncertainty of the dose fit at a given lateral position and channel.
+
+        Parameters
+        ----------
+        intensities : ndarray
+            The pixel values at a given lateral position.
+        std : ndarray
+            The standard deviation of the pixel values at a given lateral position.
+        doses : list
+            The corrected doses used to expose the films for calibration at a given lateral position.
+        fit_function : str
+            The type of fit to use. "rational" or "polynomial".
+
+        Returns
+        -------
+        ndarray
+            The uncertainty of the dose fit.
+        """
+        if fit_function == "rational":
+
+            response = intensities / intensities[0]
+            # Uncertainty propagation.
+            std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
+
+            popt, pcov = curve_fit(rational_func, response, doses, p0=[0.2, 1.0, 1.0], maxfev=1500)
+            print("Inside _get_dose_uncertainty")
+            print("Coefficients")
+            print(popt)
+            print("Covariance")
+            print(np.sqrt(np.diag(pcov)))
+
+            a = popt[0]
+            b = popt[1]
+            ua = np.sqrt(np.diag(pcov))[0]
+            ub = np.sqrt(np.diag(pcov))[1]
+
+            u_exp = b*std_response/(response-a)**2
+            u_fit = np.sqrt( (b*ua/(response-a)**2)**2 + (ub/(response-a))**2 )
+            u_d = np.sqrt( u_exp**2 + u_fit**2 )
+
+        return u_d
 
 class Calibration:
     """Class used to represent a calibration curve.

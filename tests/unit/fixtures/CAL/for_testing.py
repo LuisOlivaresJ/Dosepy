@@ -37,6 +37,9 @@ print(cal.lut[(position, 0)]["S_blue"])
 print(cal.lut[(position, 0)]["I_mean"])
 print(cal.lut[(position, 0)]["S_mean"])
 
+
+cal.plot_lateral_response(channel = "red")
+
 #print(cal.lut["lateral_limits"])
 #fig, ax = plt.subplots(1, 1, figsize=(8, 5))
 #cal._plot_rois(ax)
@@ -54,9 +57,10 @@ cal.plot_fit(
     )
 
 """
-position = -80
+position = 5
 print(f"Lateral position: {position}")
-channel = "green"
+
+channel = "red"
 print("Channel: {channel}")
 
 #print(cal._get_calibration_positions())
@@ -75,16 +79,23 @@ print("Intensities")
 print(intensities)
 logging.debug(f"Intensities: {intensities}")
 
+print("Standard deviation")
+print(std)
+
+fig, axes = plt.subplots(1, 2)
+
 cal.plot_fit(
     fit_type="rational",
     position=position,
     channel=channel,
+    ax=axes[0],
     )
-"""
+
 cal.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
     fit_function="rational",
+    ax=axes[1],
 )
-"""
+
 plt.show()
