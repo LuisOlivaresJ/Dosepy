@@ -10,7 +10,7 @@ DESCRIPTION
     Main differences:
     - The data structure (LUT) to store intensites from pixels is a nested dictionary.
     - The data is created for every milimeter in the lateral direction of the scanner, instead of each pixel.
-    - The data contains the standard deviation of the pixel values.
+    - The data contains the standard deviation of the pixel values for uncertainty analysis.
     - Automatic roi detection is implemented with scikit-image.regionprops() function.
 
 """
@@ -30,8 +30,10 @@ from skimage.transform import rotate
 from Dosepy.image import TiffImage
 from Dosepy.i_o import load_beam_profile
 
+import logging
 
-BIN_WIDTH = 1  # Width of the bin in milimeters. Used to compute the LUT.
+
+BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
 
 """Functions used for film calibration."""
 
@@ -50,13 +52,36 @@ def rational_func(x, a, b, c):
     return -c + b/(x-a)
 
 
-def _get_dose_from_fit(xdata, ydata, x, fit_function):
+def _get_dose_from_fit(film_response, dose, x, fit_function):
+
     if fit_function == "rational":
 
-        popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500])
+        xdata = sorted(film_response, reverse=True)
+        ydata = sorted(dose)
+        logging.debug("Inside _get_dose_from_fit(xdata, ydata, x, fit_function):")
+        logging.debug(f"Film response: {list(xdata)}")
+        logging.debug(f"Dose: {list(ydata)}")
+        popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500], maxfev=1500)
         #popt, pcov = curve_fit(rational_func, xdata, ydata)
         return rational_func(x, *popt)
 
+
+def _get_film_response_uncertainty(intensity, std_intensity, fit_function):
+    
+    if fit_function == "rational":
+
+        fr = intensity/intensity[0]
+        
+        # Uncertainty propagation of film .
+        u_fr = fr * np.sqrt( 
+            (std_intensity/intensity)**2 +
+            (std_intensity[0]/fr[0])**2
+        )
+    return u_fr
+
+
+def _get_dose_fit_uncertainty():
+    pass
 
 class CalibrationLUT:
     """
@@ -506,7 +531,7 @@ class CalibrationLUT:
         ax: plt.Axes = None,
         ):
         """
-        Plot the fit of the calibration curve.
+        Plot the fit function of the calibration curve at a given lateral position.
 
         Parameters
         ----------
@@ -528,19 +553,21 @@ class CalibrationLUT:
         if position < self.lut["lateral_limits"]["left"] or position > self.lut["lateral_limits"]["right"]:
             raise Exception("Position out of lateral limits.")
 
-        # Round the position to the nearest integer.
-        position = round(position)
+        # Round the position.
+        position = int(position)
 
         # Get the pixel values of the channel at the given lateral position.
-        intensities = self._get_intensities(position, channel)
+        intensities, std = self._get_intensities(position, channel)
 
         if fit_type == "rational":
-            responses = np.array(intensities) / intensities[0]
+            responses = intensities / intensities[0]
+            # Uncertainty propagation.
+            std_response = responses * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
         elif fit_type == "polynomial":
             #TODO: Create responses.
             pass
 
-        # Get the doses values that were used to expose the films for calibration
+        # Get the corrected doses used to expose the films for calibration
         # at a given position.
         doses = self._get_lateral_doses(position)
 
@@ -553,8 +580,32 @@ class CalibrationLUT:
         else: 
             axe = ax
 
-        axe.plot(responses, doses, marker = '*')
-        axe.plot(response_curve, dose_curve)
+        #axe.plot(responses, doses, marker = '*', linestyle="None", color = channel)
+        axe.errorbar(responses, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
+        axe.plot(response_curve, dose_curve, color = channel)
+
+
+    def plot_dose_fit_uncertainty(self, position: float, channel: str, fit_function: str, ax: plt.Axes = None):
+        """
+        Plot the dose fit uncertainty at a given lateral position and channel.
+
+        Parameters
+        ----------
+        position : float
+            The lateral position in milimeters.
+        channel : str
+            The color channel to plot. "red", "green", "blue" or "mean".
+        fit_function : str
+            The type of fit to use. "rational" or "polynomial".
+        """
+        doses = self._get_lateral_doses(position)
+        intensities, std = self._get_intensities(position, channel)
+        uncertainty = _get_dose_uncertainty(intensities, doses, std, fit_function)
+        
+        if ax is None:
+            fig, ax = plt.subplots()
+        
+        ax.plot(doses, uncertainty, marker = '*', linestyle = '--', color = channel)
 
 
     def _plot_rois(self, ax: plt.Axes = None):
@@ -634,9 +685,9 @@ class CalibrationLUT:
         return sorted(set(positions))
     
 
-    def _get_intensities(self, lateral_position: float, channel: str) -> list:
+    def _get_intensities(self, lateral_position: float, channel: str) -> ndarray:
         """
-        Get the pixel values of the channel at a given lateral position, for each film.
+        Get the pixel values and standar deviation of the channel at a given lateral position, for each film.
 
         Parameters
         ----------
@@ -648,19 +699,32 @@ class CalibrationLUT:
 
         Returns
         -------
-        list
-            A list of pixel values, sorted in descending order.
+        ndarray
+            Arrays with the pixel values and standar deaviation of the channel at the given lateral position.
         """
+        # Check if the channel is valid.
         if channel.lower() not in ["red", "green", "blue", "mean"]:
             raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
         
-        position = int(lateral_position)
+        # Check if position is between the lateral limits.
+        if lateral_position < self.lut["lateral_limits"]["left"] or lateral_position > self.lut["lateral_limits"]["right"]:
+            raise Exception("Position out of lateral limits.")
+        
+        position = round(lateral_position)
         intensities = []
+        std = []
 
         for roi in range(len(self.lut["rois"])):
             intensities.append(self.lut[(position, roi)]["I_" + channel])
+            std.append(self.lut[(position, roi)]["S_" + channel])
 
-        return sorted(intensities, reverse=True)
+        data = zip(intensities, std)
+        # Sort by intensities in descending order.
+        sorted_data = sorted(data, reverse=True)
+
+        intensities, std = zip(*sorted_data)
+
+        return np.array(intensities), np.array(std)
 
     
     def _get_lateral_doses(self, position: float) -> list:
@@ -690,7 +754,7 @@ class CalibrationLUT:
             self.lut['beam_profile'][:, 0],
             self.lut['beam_profile'][:, 1]) / 100
 
-        lateral_doses = sorted([dose * profile for dose in self.lut["nominal_doses"]])
+        lateral_doses = sorted([float(dose * profile) for dose in self.lut["nominal_doses"]])
 
         return lateral_doses
 

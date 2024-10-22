@@ -1,13 +1,25 @@
+import logging
+
+logging.basicConfig(
+    filename="calibration.log",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+    level=logging.DEBUG,
+    encoding="utf-8",
+    filemode="w",
+    )
+
 from Dosepy.calibration import CalibrationLUT
 from Dosepy.image import load, TiffImage
 
+import numpy as np
 import matplotlib.pyplot as plt
 
 path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
 cal.create_central_rois((180,8))
-cal.set_doses([0, 2, 4, 6, 8, 10])
+cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile(beam_profile="BeamProfile.csv")
 cal.compute_lateral_lut()
 
@@ -40,11 +52,39 @@ cal.plot_fit(
     position=0,
     channel="red",
     )
+
 """
-cal.plot_fit(
-    fit_type="rational",
-    position=0,
-    channel="green",
+position = -80
+print(f"Lateral position: {position}")
+channel = "green"
+print("Channel: {channel}")
+
+#print(cal._get_calibration_positions())
+intensities, std = cal._get_intensities(
+    lateral_position = position,
+    channel = channel,
     )
 
+print(f"Lateral doses at position: {position}")
+print(cal._get_lateral_doses(position = position))
+
+print("Intensities normalized")
+print(intensities/intensities[0])
+
+print("Intensities")
+print(intensities)
+logging.debug(f"Intensities: {intensities}")
+
+cal.plot_fit(
+    fit_type="rational",
+    position=position,
+    channel=channel,
+    )
+"""
+cal.plot_dose_fit_uncertainty(
+    position=position,
+    channel=channel,
+    fit_function="rational",
+)
+"""
 plt.show()

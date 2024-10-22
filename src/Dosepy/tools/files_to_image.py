@@ -115,6 +115,7 @@ def equate_array_size(
         ) -> list:
     """
     Equate TIFF files to have the same array size with respect of the smallest one.
+    Pixels are cropped equally from both sides.
 
     Parameters
     ----------
