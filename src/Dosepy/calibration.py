@@ -24,7 +24,7 @@ from skimage.color import rgb2gray
 from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
-from skimage.filters.rank import mean
+from skimage.filters.rank import mean, median
 from skimage.transform import rotate
 
 from Dosepy.image import TiffImage
@@ -94,6 +94,7 @@ class CalibrationLUT:
             'date_scanned' : str,
             'wait_time' : str,
             'nominal_doses' : list,
+            'filter' : int,  # The size in pixels of the median filter applied to the image.
             'rois' : list[{  # List of ROIs used to compute the calibration curve.
                 "x" : int,  # The x coordinate (row) of the top-left corner of the ROI.
                 "y" : int,  # The y coordinate (column) of the top-left corner of the ROI.
@@ -123,7 +124,6 @@ class CalibrationLUT:
             doses : list = None,
             lateral_correction : bool = False,
             #beam_profile : ndarray = None,
-            #filter : int = None,
             metadata : dict = {},
             ):
         """
@@ -142,13 +142,7 @@ class CalibrationLUT:
             for each milímeter in the scanner lateral direction. If this method is
             used, it is recommended that beam profile correction be applied also,
             so as to remove the contribution of beam inhomogeneity.
-        filter : int
-            If filt > 0, a median filter of size (filt, filt) is applied to 
-            each channel of the scanned image prior to LUT creation.            
-            This feature might affect the automatic detection of film strips if
-            they are not separated by a large enough gap (~ 5 mm). In this case, you can
-            either use manual ROIs selection, or apply filtering to the LUT during
-            the conversion to dose (see tiff2dose module).
+
         metadata : dict
             Dictionary with metadata information about the calibration.
             The following keys are required:
@@ -174,6 +168,7 @@ class CalibrationLUT:
             'right': None,
         }
         self.lut['rois'] = None
+        self.filter = None
 
         # Check if the doses are provided.
         if doses:
@@ -296,9 +291,16 @@ class CalibrationLUT:
         #self._plot_rois(dpmm = dpmm, origin = -width/2)
 
 
-    def compute_lateral_lut(self):
+    def compute_lateral_lut(self, filter: int = None):
         """
         Compute the look-up table (LUT) in lateral positions at every bin of size BIN_WIDTH.
+
+        Parameters
+        ----------
+        filter : int
+            If filter > 0, a median filter of size (filter, filter) is applied to 
+            each channel of the scanned image prior to LUT creation.            
+
         """
         # Check if the image is loaded.
         if self.tiff_image is None:
@@ -306,7 +308,38 @@ class CalibrationLUT:
         # Check if rois are created.
         if not self.lut.get("rois"):
             raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
+        # Check if filter is valid.
+        if filter and filter < 0:
+            raise Exception("Filter must be a positive integer.")
+        # Check if filter is a integer.
+        if filter and not isinstance(filter, int):
+            raise Exception("Filter must be an integer.")
 
+
+        # Apply filter to the image.
+        if filter:
+            self.filter = filter
+            # Labeled area of the films.
+            mask, _ = self._get_labeled_image()
+            # Array buffer to store the filtered image.
+            array_img = np.empty(
+                shape = (
+                    self.tiff_image.array.shape[0],
+                    self.tiff_image.array.shape[1],
+                    self.tiff_image.array.shape[2]
+                    ),
+                dtype = np.uint16
+                )
+            for i in range(3):
+                
+                array_img[:,:,i] = median(
+                    self.tiff_image.array[:,:,i],
+                    footprint = square(filter),
+                    mask = mask,
+                    )
+        else:
+            # Unfiltered image.
+            array_img = self.tiff_image.array
 
         # Create a list with the lateral positions in milimeters
         origin_side2half = self.tiff_image.physical_shape[1]/2
@@ -339,21 +372,21 @@ class CalibrationLUT:
                     bin_buffer_red = np.concatenate(
                         (
                             bin_buffer_red,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
                         ),
                         axis=None,
                     )
                     bin_buffer_green = np.concatenate(
                         (
                             bin_buffer_green,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
                         ),
                         axis=None,
                     )
                     bin_buffer_blue = np.concatenate(
                         (
                             bin_buffer_blue,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
                         ),
                         axis=None,
                     )
@@ -391,7 +424,7 @@ class CalibrationLUT:
                     np.concatenate(
                         (
                             bin_buffer_red,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
                         ),
                         axis=None,
                     )
@@ -400,7 +433,7 @@ class CalibrationLUT:
                     np.concatenate(
                         (
                             bin_buffer_green,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
                         ),
                         axis=None,
                     )
@@ -409,7 +442,7 @@ class CalibrationLUT:
                     np.concatenate(
                         (
                             bin_buffer_blue,
-                            self.tiff_image.array[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
+                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
                         ),
                         axis=None,
                     )

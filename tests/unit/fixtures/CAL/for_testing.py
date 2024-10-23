@@ -69,18 +69,20 @@ intensities, std = cal._get_intensities(
     channel = channel,
     )
 
-print(f"Lateral doses at position: {position}")
-print(cal._get_lateral_doses(position = position))
+#print(f"Lateral doses at position: {position}")
+#print(cal._get_lateral_doses(position = position))
 
-print("Intensities normalized")
+#print("Intensities normalized")
 print(intensities/intensities[0])
 
-print("Intensities")
-print(intensities)
+#print("Intensities")
+#print(intensities)
 logging.debug(f"Intensities: {intensities}")
 
-print("Standard deviation")
+print("Standard deviation without filter")
 print(std)
+
+# Without filter
 
 fig, axes = plt.subplots(1, 2)
 
@@ -97,5 +99,39 @@ cal.plot_dose_fit_uncertainty(
     fit_function="rational",
     ax=axes[1],
 )
+
+# With filter
+
+fig_filter, axes_filter = plt.subplots(1, 2)
+
+cal_filter = CalibrationLUT(img)
+cal_filter.create_central_rois((180,8))
+cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
+cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
+cal_filter.compute_lateral_lut(filter = 3)
+
+cal_filter.plot_fit(
+    fit_type="rational",
+    position=position,
+    channel=channel,
+    ax=axes_filter[0],
+    )
+
+cal_filter.plot_dose_fit_uncertainty(
+    position=position,
+    channel=channel,
+    fit_function="rational",
+    ax=axes_filter[1],
+)
+
+cal_filter.plot_lateral_response(channel = "red")
+
+intensities_filter, std_filter = cal_filter._get_intensities(
+    lateral_position = position,
+    channel = channel,
+    )
+
+print("Standard deviation with filter")
+print(std_filter)
 
 plt.show()
