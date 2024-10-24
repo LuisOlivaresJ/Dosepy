@@ -342,110 +342,58 @@ class CalibrationLUT:
             array_img = self.tiff_image.array
 
         # Create a list with the lateral positions in milimeters
-        origin_side2half = self.tiff_image.physical_shape[1]/2
-
-        lateral_positions_half = np.linspace(
+        origin = self.tiff_image.physical_shape[1]/2
+        pixel_position = np.linspace(
             start = 0,
             stop = self.tiff_image.physical_shape[1],
             num = self.tiff_image.array.shape[1]
-            ) - origin_side2half
+            ) - origin
 
 
-        for roin_num, roi in enumerate(self.lut["rois"]):
-
-            # Define a bin_step limit to append pixels in a bin of size BAND_WIDTH.
-            bin_limit = int(self.lut["lateral_limits"]["left"]) + BIN_WIDTH
-            bin_buffer_red = np.array([])
-            bin_buffer_green = np.array([])
-            bin_buffer_blue = np.array([])
+        for roi_num, roi in enumerate(self.lut["rois"]):
+            
+            target_position = int(self.lut["lateral_limits"]["left"])
 
             for column_pixel in range(self.tiff_image.array.shape[1]):
 
-                rounded_position = round(lateral_positions_half[column_pixel])
-
                 # Populate the LUT with None if the pixel is outside the lateral limits.
-                if lateral_positions_half[column_pixel] < self.lut["lateral_limits"]["left"] or lateral_positions_half[column_pixel] > self.lut["lateral_limits"]["right"]:
-                    self.lut[(rounded_position, roin_num)] = None
+                if pixel_position[column_pixel] < self.lut["lateral_limits"]["left"] or pixel_position[column_pixel] > self.lut["lateral_limits"]["right"]:
+                    rounded_position = round(pixel_position[column_pixel])
+                    self.lut[(rounded_position, roi_num)] = None
 
-                # Join pixel values in bin_width into a band buffer.
-                elif lateral_positions_half[column_pixel] <= bin_limit:
-                    bin_buffer_red = np.concatenate(
-                        (
-                            bin_buffer_red,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
-                        ),
-                        axis=None,
-                    )
-                    bin_buffer_green = np.concatenate(
-                        (
-                            bin_buffer_green,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
-                        ),
-                        axis=None,
-                    )
-                    bin_buffer_blue = np.concatenate(
-                        (
-                            bin_buffer_blue,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
-                        ),
-                        axis=None,
-                    )
-                
+                # Populate the LUT with the pixel values.
                 else:
-                    #print(rounded_position, roin_num)
-                    # Populate the LUT with the mean pixel value and standard deviation of the band.
-                    self.lut[(rounded_position, roin_num)] = {
-                        'I_red': int(np.mean(bin_buffer_red)),
-                        'S_red': int(np.std(bin_buffer_red)),
-                        'I_green': int(np.mean(bin_buffer_green)),
-                        'S_green': int(np.std(bin_buffer_green)),
-                        'I_blue': int(np.mean(bin_buffer_blue)),
-                        'S_blue': int(np.std(bin_buffer_blue)),
-                    }
-                    self.lut[(rounded_position, roin_num)]["I_mean"] = int(
-                        (
-                            self.lut[(rounded_position, roin_num)]["I_red"] +
-                            self.lut[(rounded_position, roin_num)]["I_green"] +
-                            self.lut[(rounded_position, roin_num)]["I_blue"]
-                            ) / 3
-                        )
-                    self.lut[(rounded_position, roin_num)]["S_mean"] = int(
-                        (
-                            self.lut[(rounded_position, roin_num)]["S_red"]**2 +
-                            self.lut[(rounded_position, roin_num)]["S_green"]**2 +
-                            self.lut[(rounded_position, roin_num)]["S_blue"]**2
-                            )**0.5 / 3
-                        )
-                    # Update bin_step and bin_buffer.
+                    diff = abs(pixel_position[column_pixel] - target_position)
+                    #print(diff)
+                    #print(self.tiff_image.dpmm)
+                    if diff <= 1/self.tiff_image.dpmm:
+                        #print(f"Target position: {target_position}")
+                        self.lut[(target_position, roi_num)] = {
+                            'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0])),
+                            'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0])),
+                            'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1])),
+                            'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1])),
+                            'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2])),
+                            'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2])),
+                        }
+                            
+                        self.lut[(target_position, roi_num)]["I_mean"] = int(
+                            (
+                                self.lut[(target_position, roi_num)]["I_red"] +
+                                self.lut[(target_position, roi_num)]["I_green"] +
+                                self.lut[(target_position, roi_num)]["I_blue"]
+                                ) / 3
+                            )
+                        self.lut[(target_position, roi_num)]["S_mean"] = int(
+                            (
+                                self.lut[(target_position, roi_num)]["S_red"]**2 +
+                                self.lut[(target_position, roi_num)]["S_green"]**2 +
+                                self.lut[(target_position, roi_num)]["S_blue"]**2
+                                )**0.5 / 3
+                            )
+                        # Update target position.
+                        target_position += 1
 
-                    bin_limit += BIN_WIDTH
-
-                    bin_buffer_red = np.array([])
-                    np.concatenate(
-                        (
-                            bin_buffer_red,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0]
-                        ),
-                        axis=None,
-                    )
-
-                    bin_buffer_green = np.array([])
-                    np.concatenate(
-                        (
-                            bin_buffer_green,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1]
-                        ),
-                        axis=None,
-                    )
-
-                    bin_buffer_blue = np.array([])
-                    np.concatenate(
-                        (
-                            bin_buffer_blue,
-                            array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2]
-                        ),
-                        axis=None,
-                    )
         #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
 
 
@@ -604,7 +552,14 @@ class CalibrationLUT:
         axe.plot(response_curve, dose_curve, color = channel)
 
 
-    def plot_dose_fit_uncertainty(self, position: float, channel: str, fit_function: str, ax: plt.Axes = None):
+    def plot_dose_fit_uncertainty(
+        self,
+        position: float,
+        channel: str,
+        fit_function: str,
+        ax: plt.Axes = None,
+        **kwargs
+        ):
         """
         Plot the dose fit uncertainty at a given lateral position and channel.
 
@@ -625,7 +580,7 @@ class CalibrationLUT:
         if ax is None:
             fig, ax = plt.subplots()
         
-        ax.plot(doses[1:], u_percent, marker = '*', linestyle = '--', color = channel)
+        ax.plot(doses[1:], u_percent, marker = '*', linestyle = '--', color = channel, **kwargs)
         ax.set_xlabel("Dose [Gy]")
         ax.set_ylabel("Dose uncertainty [%]")
 

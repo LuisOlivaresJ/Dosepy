@@ -23,6 +23,8 @@ cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile(beam_profile="BeamProfile.csv")
 cal.compute_lateral_lut()
 
+#print(cal.lut)
+
 position = 0
 
 print(cal.lut[(position, 0)]["I_red"])
@@ -57,7 +59,7 @@ cal.plot_fit(
     )
 
 """
-position = 5
+position = 0
 print(f"Lateral position: {position}")
 
 channel = "red"
@@ -69,8 +71,8 @@ intensities, std = cal._get_intensities(
     channel = channel,
     )
 
-#print(f"Lateral doses at position: {position}")
-#print(cal._get_lateral_doses(position = position))
+print(f"Lateral doses at position: {position}")
+print(cal._get_lateral_doses(position = position))
 
 #print("Intensities normalized")
 print(intensities/intensities[0])
@@ -85,14 +87,14 @@ print(std)
 # Without filter
 
 fig, axes = plt.subplots(1, 2)
-
+"""
 cal.plot_fit(
     fit_type="rational",
     position=position,
     channel=channel,
     ax=axes[0],
     )
-
+"""
 cal.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
@@ -110,28 +112,36 @@ cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
 cal_filter.compute_lateral_lut(filter = 3)
 
+"""
 cal_filter.plot_fit(
     fit_type="rational",
     position=position,
     channel=channel,
     ax=axes_filter[0],
     )
-
+"""
 cal_filter.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
     fit_function="rational",
-    ax=axes_filter[1],
+    ax=axes[1],
+    alpha = 0.5,
 )
 
-cal_filter.plot_lateral_response(channel = "red")
+#cal_filter.plot_lateral_response(channel = "red")
 
 intensities_filter, std_filter = cal_filter._get_intensities(
     lateral_position = position,
     channel = channel,
     )
 
-print("Standard deviation with filter")
+print("Filter")
+
+print("Intensities")
+print(intensities)
+print(intensities_filter)
+print("Standard deviation ")
+print(std)
 print(std_filter)
 
 plt.show()
