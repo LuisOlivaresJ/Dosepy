@@ -45,7 +45,7 @@ def polynomial_g3(x, a, b, c, d):
     return a + b*x + c*x**2 + d*x**3
 
 
-def polynomial_g_n(x, a, b, n):
+def polynomial_n(x, a, b, n):
     """
     Polynomial function of degree n.
     """
@@ -81,6 +81,27 @@ def _get_dose_from_fit(film_response, dose, x, fit_function):
         #print(np.sqrt(np.diag(pcov)))
         
         return rational_func(x, *popt)
+
+    elif fit_function == "polynomial":
+        
+        xdata = sorted(film_response)
+        ydata = sorted(dose)
+
+        popt, pcov = curve_fit(
+            polynomial_n,
+            xdata,
+            ydata,
+            #p0=[0.1, 4, 4],
+            maxfev=1500,
+            method='trf',
+            )
+        #print("Inside _get_dose_from_fit")
+        #print("Coefficients")
+        #print(popt)
+        #print("Covariance")
+        #print(np.sqrt(np.diag(pcov)))
+
+        return polynomial_n(x, *popt)
 
 
 class CalibrationLUT:
@@ -542,11 +563,16 @@ class CalibrationLUT:
 
         if fit_type == "rational":
             response = intensities / intensities[0]
+            print(response)
+            #response_curve = np.linspace(response[0], response[-1], 100)
             # Uncertainty propagation.
             std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
         elif fit_type == "polynomial":
             #TODO: Create response.
-            pass
+            response = -np.log10(intensities/intensities[0])
+            print(response)
+            # Uncertainty propagation.
+            std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
 
         # Get the corrected doses used to expose the films for calibration
         # at a given position.
@@ -811,7 +837,7 @@ class CalibrationLUT:
             std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
 
             popt, pcov = curve_fit(
-                polynomial_g_n,
+                polynomial_n,
                 response,
                 doses,
                 #p0=[0.1, 4.0, 4.0, 4.0],

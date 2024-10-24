@@ -89,14 +89,14 @@ print(std)
 # Without filter
 
 fig, axes = plt.subplots(1, 2)
-"""
+
 cal.plot_fit(
-    fit_type="rational",
+    fit_type=fit_function,
     position=position,
     channel=channel,
     ax=axes[0],
     )
-"""
+
 cal.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
@@ -114,14 +114,14 @@ cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
 cal_filter.compute_lateral_lut(filter = 3)
 
-"""
+
 cal_filter.plot_fit(
-    fit_type="rational",
+    fit_type=fit_function,
     position=position,
     channel=channel,
     ax=axes_filter[0],
     )
-"""
+
 cal_filter.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
