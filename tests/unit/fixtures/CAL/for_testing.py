@@ -59,11 +59,13 @@ cal.plot_fit(
     )
 
 """
-position = 0
+position = 5
 print(f"Lateral position: {position}")
 
 channel = "red"
 print("Channel: {channel}")
+
+fit_function = "polynomial"
 
 #print(cal._get_calibration_positions())
 intensities, std = cal._get_intensities(
@@ -75,7 +77,7 @@ print(f"Lateral doses at position: {position}")
 print(cal._get_lateral_doses(position = position))
 
 #print("Intensities normalized")
-print(intensities/intensities[0])
+#print(intensities/intensities[0])
 
 #print("Intensities")
 #print(intensities)
@@ -98,7 +100,7 @@ cal.plot_fit(
 cal.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
-    fit_function="rational",
+    fit_function=fit_function,
     ax=axes[1],
 )
 
@@ -123,7 +125,7 @@ cal_filter.plot_fit(
 cal_filter.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
-    fit_function="rational",
+    fit_function=fit_function,
     ax=axes[1],
     alpha = 0.5,
 )

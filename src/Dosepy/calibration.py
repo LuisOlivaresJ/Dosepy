@@ -45,6 +45,13 @@ def polynomial_g3(x, a, b, c, d):
     return a + b*x + c*x**2 + d*x**3
 
 
+def polynomial_g_n(x, a, b, n):
+    """
+    Polynomial function of degree n.
+    """
+    return a*x + b*x**n
+
+
 def rational_func(x, a, b, c):
     """
     Rational function.
@@ -59,12 +66,19 @@ def _get_dose_from_fit(film_response, dose, x, fit_function):
         xdata = sorted(film_response, reverse=True)
         ydata = sorted(dose)
 
-        popt, pcov = curve_fit(rational_func, xdata, ydata, p0=[0.1, 200, 500], maxfev=1500)
-        print("Inside _get_dose_from_fit")
-        print("Coefficients")
-        print(popt)
-        print("Covariance")
-        print(np.sqrt(np.diag(pcov)))
+        popt, pcov = curve_fit(
+            rational_func,
+            xdata,
+            ydata,
+            #p0=[0.1, 4, 4],
+            maxfev=1500,
+            method='trf',
+            )
+        #print("Inside _get_dose_from_fit")
+        #print("Coefficients")
+        #print(popt)
+        #print("Covariance")
+        #print(np.sqrt(np.diag(pcov)))
         
         return rational_func(x, *popt)
 
@@ -763,8 +777,19 @@ class CalibrationLUT:
             # Uncertainty propagation.
             std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
 
-            popt, pcov = curve_fit(rational_func, response, doses, p0=[0.2, 1.0, 1.0], maxfev=1500)
-            print("Inside _get_dose_uncertainty")
+            popt, pcov = curve_fit(
+                rational_func,
+                response,
+                doses,
+                p0=[0.1, 4.0, 4.0],
+                maxfev=1500,
+                #method='trf',
+                )
+            print("\nInside _get_dose_uncertainty\n")
+            print("response:")
+            print(response)
+            print("doses:")
+            print(doses)
             print("Coefficients")
             print(popt)
             print("Covariance")
@@ -777,6 +802,31 @@ class CalibrationLUT:
 
             u_exp = b*std_response/(response-a)**2
             u_fit = np.sqrt( (b*ua/(response-a)**2)**2 + (ub/(response-a))**2 )
+            u_d = np.sqrt( u_exp**2 + u_fit**2 )
+
+        
+        elif fit_function == "polynomial":
+            response = -np.log10(intensities/intensities[0])
+            # Uncertainty propagation.
+            std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
+
+            popt, pcov = curve_fit(
+                polynomial_g_n,
+                response,
+                doses,
+                #p0=[0.1, 4.0, 4.0, 4.0],
+                maxfev=1500,
+                #method='trf',
+                )
+
+            a = popt[0]
+            b = popt[1]
+            n = popt[2]
+            ua = np.sqrt(np.diag(pcov))[0]
+            ub = np.sqrt(np.diag(pcov))[1]
+
+            u_exp = (a + n*b*response**(n-1))*std_response
+            u_fit = np.sqrt( response**2*ua**2 + response**(2*n)*ub**2 )
             u_d = np.sqrt( u_exp**2 + u_fit**2 )
 
         return u_d
