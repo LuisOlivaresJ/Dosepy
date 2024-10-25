@@ -449,21 +449,10 @@ class CalibrationLUT:
         >>> cal.plot_lateral_response(channel = "red")
         >>> plt.show()
         """
-        if channel.lower() in ["red", "r"]:
-            channel = "I_red"
-            color = "red"
-        elif channel.lower() in ["green", "g"]:
-            channel = "I_green"
-            color = "green"
-        elif channel.lower() in ["blue", "b"]:
-            channel = "I_blue"
-            color = "blue"
-        elif channel.lower() in ["mean", "m"]:
-            channel = "I_mean"
-            color = "black"
 
-        # Get positions from lut
-        positions = self._get_calibration_positions()
+        if channel == "mean":
+            color = "black"
+        color = channel
 
         # Number of ROIs
         num_rois = len(self.lut["rois"])
@@ -471,7 +460,6 @@ class CalibrationLUT:
         # Set up the figure.
         fig, axes = plt.subplots(num_rois, 1, sharex=True)
         fig.suptitle("Lateral response [%] of the scanner.")
-        #fig.suptitle("Another title", fontsize=10)
         axes[0].set_title(
             f"Error bars represent the standard deviation of the pixel values in the ROI.",
             fontsize = 9,
@@ -480,29 +468,12 @@ class CalibrationLUT:
 
         for ax in axes:
             ax.set_ylim(-10, 5)
-            #ax.set_ylabel("[%]")
             ax.grid(True)
 
-        # Get the lateral pixel values and coordinate, for each roi.
+        # Get the lateral pixel values, standar deviation and coordinate, for each roi.
         for roi_counter in range(num_rois):
 
-            intensity = np.array([
-                self.lut[(position, roi_counter)][channel]
-                for position in positions
-                if self.lut[(position, roi_counter)]
-                ])
-
-            std = np.array([
-                self.lut[(position, roi_counter)][channel.replace("I", "S")]
-                for position in positions
-                if self.lut[(position, roi_counter)]
-            ])
-
-            coordinate = np.array([
-                position
-                for position in positions
-                if self.lut[(position, roi_counter)]
-            ])
+            intensity, std, coordinate = self.get_lateral_respose(roi_counter, channel)
 
             # Normalize the pixel values to the central pixel value.
             I_central = intensity[int(len(intensity)/2)]
@@ -512,8 +483,6 @@ class CalibrationLUT:
             std_Ir = std / I_central * 100
 
             # Plot the lateral response.
-            #line, = axes[roi_counter].plot(coordinate, I_relative, color = color, marker = '.')
-            #line, = axes[roi_counter].errorbar(coordinate, I_relative, yerr = std_Ir)
             axes[roi_counter].errorbar(
                 coordinate, I_relative,
                 yerr = std_Ir,
@@ -623,6 +592,68 @@ class CalibrationLUT:
         ax.plot(doses[1:], u_percent, marker = '*', linestyle = '--', color = channel, **kwargs)
         ax.set_xlabel("Dose [Gy]")
         ax.set_ylabel("Dose uncertainty [%]")
+
+
+    def get_lateral_respose(self, roi: int, channel: str) -> tuple[ndarray, ndarray, ndarray]:
+        """
+        Get the lateral response of the scanner for a given ROI and channel.
+
+        Parameters
+        ----------
+        roi_number : int
+            The number of the ROI (or film).
+        channel : str
+            The color channel to plot. "red", "green", "blue" or "mean".
+
+        Returns
+        -------
+        tuple[ndarray, ndarray, ndarray]
+            A tuple with the pixel values, standar deviation and coordinates.
+        """
+        # Check if the channel is valid.
+        if channel.lower() not in ["red", "green", "blue", "mean"]:
+            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
+        
+        # Check if there is ROIs in the lut.
+        if not self.lut["rois"]:
+            raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
+        
+        # Check if the roi is a valid number for the lut.
+        if roi < 0 or roi >= len(self.lut["rois"]):
+            raise Exception("Invalid ROI number.")
+        
+        if channel.lower() in ["red", "r"]:
+            channel = "I_red"
+        elif channel.lower() in ["green", "g"]:
+            channel = "I_green"
+        elif channel.lower() in ["blue", "b"]:
+            channel = "I_blue"
+        elif channel.lower() in ["mean", "m"]:
+            channel = "I_mean"
+
+        # Get the calibration positions.
+        positions = self._get_calibration_positions()
+
+        # Get the pixel values, standar and coordinate for a valid calibration region.
+        intensity = np.array([
+            self.lut[(position, roi)][channel]
+            for position in positions
+            if self.lut[(position, roi)]
+            ])
+
+        std = np.array([
+            self.lut[(position, roi)][channel.replace("I", "S")]
+            for position in positions
+            if self.lut[(position, roi)]
+        ])
+
+        coordinate = np.array([
+            position
+            for position in positions
+            if self.lut[(position, roi)]
+        ])
+
+        return np.array(intensity), np.array(std), np.array(coordinate)
 
 
     def _plot_rois(self, ax: plt.Axes = None):

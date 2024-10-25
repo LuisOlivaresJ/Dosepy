@@ -134,19 +134,36 @@ def is_dicom_image(file: str | Path) -> bool:
     return result
 
 
-def load_beam_profile(file: str | Path) -> np.ndarray:
-    """Load a beam profile. The beam profile is a CSV file with the following columns:
-    - Position
-    - Normalized dose to the center.
+def load_beam_profile(file: str | Path, **kwargs) -> np.ndarray:
+    """
+    Load a beam profile. The beam profile is a comma-separated
+    values (CSV) file with the following columns:
+    - Position [mm]
+    - Normalized dose to the center of the field [0 - 100]
 
     Parameters
     ----------
     file : str
         The path to the file.
+
+    kwargs
+        Arbitrary keyword arguments used by numpy.genfromtxt.
+
+    Returns
+    -------
+    profile : numpy.ndarray
+
+    Notes
+    -----
+    This is a grapper function that uses numpy.genfromtxt to load the beam profile.
+    You can use keyword arguments used by numpy.genfromtxt, 
+    for example: comments="#", skip_header=1, etc.
+    https://numpy.org/doc/stable/reference/generated/numpy.genfromtxt.html
+
     """
 
     # Check if the file exists.
     if not os.path.exists(file):
         raise Exception("Beam profile file does not exist.")
 
-    return np.genfromtxt(file, delimiter=",")
+    return np.genfromtxt(file, delimiter=",", **kwargs)

@@ -183,7 +183,7 @@ def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
 
     assert cal.lut["nominal_doses"] == [0, 2, 4, 6, 8, 10]
 
-def test_set_beam_profile(
+def test_set_beam_profile_two_columns(
           example_image,
           ):
     
