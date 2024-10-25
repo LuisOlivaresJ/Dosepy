@@ -59,12 +59,12 @@ def rational_func(x, a, b, c):
     return -c + b/(x-a)
 
 
-def _get_dose_from_fit(film_response, dose, x, fit_function):
+def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
 
     if fit_function == "rational":
 
-        xdata = sorted(film_response, reverse=True)
-        ydata = sorted(dose)
+        xdata = sorted(calib_film_response, reverse=True)
+        ydata = sorted(calib_dose)
 
         popt, pcov = curve_fit(
             rational_func,
@@ -72,20 +72,14 @@ def _get_dose_from_fit(film_response, dose, x, fit_function):
             ydata,
             #p0=[0.1, 4, 4],
             maxfev=1500,
-            method='trf',
             )
-        #print("Inside _get_dose_from_fit")
-        #print("Coefficients")
-        #print(popt)
-        #print("Covariance")
-        #print(np.sqrt(np.diag(pcov)))
         
         return rational_func(x, *popt)
 
     elif fit_function == "polynomial":
         
-        xdata = sorted(film_response)
-        ydata = sorted(dose)
+        xdata = sorted(calib_film_response)
+        ydata = sorted(calib_dose)
 
         popt, pcov = curve_fit(
             polynomial_n,
@@ -93,15 +87,9 @@ def _get_dose_from_fit(film_response, dose, x, fit_function):
             ydata,
             #p0=[0.1, 4, 4],
             maxfev=1500,
-            method='trf',
             )
-        #print("Inside _get_dose_from_fit")
-        #print("Coefficients")
-        #print(popt)
-        #print("Covariance")
-        #print(np.sqrt(np.diag(pcov)))
 
-        return polynomial_n(x, *popt)
+        return polynomial_n(response, *popt)
 
 
 class CalibrationLUT:

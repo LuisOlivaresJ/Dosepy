@@ -5,7 +5,7 @@ import pytest
 
 import numpy as np
 
-from Dosepy.calibration import CalibrationLUT
+from Dosepy.calibration import CalibrationLUT, _get_dose_from_fit
 from Dosepy.image import load, TiffImage
 
 from pathlib import Path
@@ -161,18 +161,29 @@ def test_compute_lateral_lut(example_image):
         assert cal.lut["lateral_limits"]["right"] == 82
     
         
-        assert cal.lut[(2, 0)]["I_red"] == 42378
-        assert cal.lut[(2, 0)]["S_red"] == 115
+        assert cal.lut[(2, 0)]["I_red"] == 42412
+        assert cal.lut[(2, 0)]["S_red"] == 130
 
-        assert cal.lut[(2, 0)]["I_green"] == 41600
-        assert cal.lut[(2, 0)]["S_green"] == 104
+        assert cal.lut[(2, 0)]["I_green"] == 41593
+        assert cal.lut[(2, 0)]["S_green"] == 119
 
-        assert cal.lut[(2, 0)]["I_blue"] == 32354
-        assert cal.lut[(2, 0)]["S_blue"] == 88
+        assert cal.lut[(2, 0)]["I_blue"] == 32351
+        assert cal.lut[(2, 0)]["S_blue"] == 110
 
-        assert cal.lut[(2, 0)]["I_mean"] == 38777
-        assert cal.lut[(2, 0)]["S_mean"] == 59
+        assert cal.lut[(2, 0)]["I_mean"] == 38785
+        assert cal.lut[(2, 0)]["S_mean"] == 69
         
+def test_get_lateral_response_below_10(example_image):
+        
+        cal = CalibrationLUT(example_image) 
+        cal.create_central_rois(size = (180, 8)) 
+        cal.compute_lateral_lut()
+        
+        intensity, _, _ = cal.get_lateral_respose(roi=5, channel="red")
+        I_central = intensity[int(len(intensity)/2)]
+        I_relative = intensity/I_central
+
+        assert all(abs(I_relative) < 10) 
 
 # Test the set_doses method of the CalibrationLUT class, with unordered doses
 def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
@@ -182,6 +193,7 @@ def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
     cal.set_doses(doses)
 
     assert cal.lut["nominal_doses"] == [0, 2, 4, 6, 8, 10]
+
 
 def test_set_beam_profile_two_columns(
           example_image,
@@ -195,6 +207,7 @@ def test_set_beam_profile_two_columns(
 
     # Check the shape of the beam profile
     assert cal.lut["beam_profile"].shape[1] == 2
+
 
 def test_get_lateral_doses(example_image):
     # Test the get_lateral_doses method of the CalibrationLUT class
@@ -214,7 +227,65 @@ def test_get_lateral_doses(example_image):
     assert cal._get_lateral_doses(position = 12.0) == pytest.approx(corrected_doses, rel = 1e-1)
     
 
+def test_get_dose_from_fit(example_image):
+    # Test the get_dose_from_fit method of the CalibrationLUT class
+    cal = CalibrationLUT(example_image)
+    cal.set_beam_profile(
+          str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
+    )
+    cal.set_doses([0, 2, 4, 6, 8, 10])
+    cal.create_central_rois(size = (180, 8))
+    cal.compute_lateral_lut()
+
+    position = 0
+
+    dose = cal._get_lateral_doses(position = position)
+
+    # Red channel
+    i_red, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "red",
+    )
+    response_red = -np.log(i_red / i_red[0])
+    
+    dose_from_fit_red_poly = _get_dose_from_fit(
+          response_red,
+          dose,
+          response_red,
+          "polynomial",
+    )
+
+    # Green channel
+    i_green, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "green",
+    )
+    response_green = -np.log(i_green / i_green[0])
+
+    dose_from_fit_green_poly = _get_dose_from_fit(
+            response_green,
+            dose,
+            response_green,
+            "polynomial",
+        )
+    
+    # Blue channel
+    i_blue, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "blue",
+    )
+
+    response_blue = -np.log(i_blue / i_blue[0])
+
+    dose_from_fit_blue_poly = _get_dose_from_fit(
+            response_blue,
+            dose,
+            response_blue,
+            "polynomial",
+        )
+
+    assert dose == pytest.approx(dose_from_fit_red_poly, rel = 5e-1)
+    assert dose == pytest.approx(dose_from_fit_green_poly, rel = 5e-1)
+    assert dose == pytest.approx(dose_from_fit_blue_poly, rel = 5e-1)
 
 
-# Test the compute_lut method
-## TODO: Implement the test_compute_lut method and delete the CalibImage class

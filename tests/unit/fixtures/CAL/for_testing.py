@@ -9,7 +9,7 @@ logging.basicConfig(
     filemode="w",
     )
 
-from Dosepy.calibration import CalibrationLUT
+from Dosepy.calibration import CalibrationLUT, _get_dose_from_fit
 from Dosepy.image import load, TiffImage
 
 import numpy as np
@@ -145,5 +145,16 @@ print(intensities_filter)
 print("Standard deviation ")
 print(std)
 print(std_filter)
+
+print("\n Dose from fit")
+response = -np.log(intensities / intensities[0])
+dose = cal._get_lateral_doses(position = position)
+dose_from_fit = _get_dose_from_fit(
+          response,
+          dose,
+          response,
+          "polynomial",
+    )
+print(dose_from_fit)
 
 plt.show()
