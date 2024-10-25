@@ -157,4 +157,6 @@ dose_from_fit = _get_dose_from_fit(
     )
 print(dose_from_fit)
 
+cal.to_yaml_file("calibration.yaml")
+
 plt.show()

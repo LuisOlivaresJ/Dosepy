@@ -31,6 +31,7 @@ from Dosepy.image import TiffImage
 from Dosepy.i_o import load_beam_profile
 
 import logging
+import yaml
 
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
@@ -640,6 +641,18 @@ class CalibrationLUT:
 
         return np.array(intensity), np.array(std), np.array(coordinate)
 
+
+    def to_yaml_file(self, path: str):
+        """
+        Save the calibration data to a YAML file.
+
+        Parameters
+        ----------
+        path : str
+            The path to the file.
+        """
+        with open(path, mode = "wt", encoding = "utf-8") as file:
+            yaml.dump(self.lut, file)
 
     def _plot_rois(self, ax: plt.Axes = None):
         """
