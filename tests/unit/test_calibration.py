@@ -227,13 +227,13 @@ def test_get_lateral_doses(example_image):
     assert cal._get_lateral_doses(position = 12.0) == pytest.approx(corrected_doses, rel = 1e-1)
     
 
-def test_get_dose_from_fit(example_image):
+def test_get_dose_from_fit_polynomial(example_image):
     # Test the get_dose_from_fit method of the CalibrationLUT class
     cal = CalibrationLUT(example_image)
     cal.set_beam_profile(
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
-    cal.set_doses([0, 2, 4, 6, 8, 10])
+    cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
     cal.create_central_rois(size = (180, 8))
     cal.compute_lateral_lut()
 
@@ -246,7 +246,7 @@ def test_get_dose_from_fit(example_image):
           lateral_position = position,
           channel = "red",
     )
-    response_red = -np.log(i_red / i_red[0])
+    response_red = -np.log10(i_red / i_red[0])
     
     dose_from_fit_red_poly = _get_dose_from_fit(
           response_red,
@@ -260,7 +260,7 @@ def test_get_dose_from_fit(example_image):
           lateral_position = position,
           channel = "green",
     )
-    response_green = -np.log(i_green / i_green[0])
+    response_green = -np.log10(i_green / i_green[0])
 
     dose_from_fit_green_poly = _get_dose_from_fit(
             response_green,
@@ -275,7 +275,7 @@ def test_get_dose_from_fit(example_image):
           channel = "blue",
     )
 
-    response_blue = -np.log(i_blue / i_blue[0])
+    response_blue = -np.log10(i_blue / i_blue[0])
 
     dose_from_fit_blue_poly = _get_dose_from_fit(
             response_blue,
@@ -289,3 +289,63 @@ def test_get_dose_from_fit(example_image):
     assert dose == pytest.approx(dose_from_fit_blue_poly, rel = 5e-1)
 
 
+def test_get_dose_from_fit_rational(example_image):
+    # Test the get_dose_from_fit method of the CalibrationLUT class
+    cal = CalibrationLUT(example_image)
+    cal.set_beam_profile(
+          str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
+    )
+    cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
+    cal.create_central_rois(size = (180, 8))
+    cal.compute_lateral_lut()
+
+    position = 0
+
+    dose = cal._get_lateral_doses(position = position)
+
+    # Red channel
+    i_red, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "red",
+    )
+    response_red = i_red / i_red[0]
+    
+    dose_from_fit_red_rat = _get_dose_from_fit(
+          response_red,
+          dose,
+          response_red,
+          "rational",
+    )
+
+    # Green channel
+    i_green, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "green",
+    )
+    response_green = i_green / i_green[0]
+
+    dose_from_fit_green_rat = _get_dose_from_fit(
+            response_green,
+            dose,
+            response_green,
+            "rational",
+        )
+    
+    # Blue channel
+    i_blue, _ = cal._get_intensities(
+          lateral_position = position,
+          channel = "blue",
+    )
+
+    response_blue = i_blue / i_blue[0]
+
+    dose_from_fit_blue_rat = _get_dose_from_fit(
+            response_blue,
+            dose,
+            response_blue,
+            "rational",
+        )
+
+    assert dose[1:] == pytest.approx(dose_from_fit_red_rat[1:], rel = 5e-1)
+    assert dose[1:] == pytest.approx(dose_from_fit_green_rat[1:], rel = 5e-1)
+    assert dose[1:] == pytest.approx(dose_from_fit_blue_rat[1:], rel = 5e-1)

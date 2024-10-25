@@ -70,11 +70,11 @@ def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
             rational_func,
             xdata,
             ydata,
-            #p0=[0.1, 4, 4],
+            p0=[0.1, 4, 4],
             maxfev=1500,
             )
         
-        return rational_func(x, *popt)
+        return rational_func(response, *popt)
 
     elif fit_function == "polynomial":
         
@@ -85,7 +85,6 @@ def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
             polynomial_n,
             xdata,
             ydata,
-            #p0=[0.1, 4, 4],
             maxfev=1500,
             )
 
@@ -520,14 +519,12 @@ class CalibrationLUT:
 
         if fit_type == "rational":
             response = intensities / intensities[0]
-            print(response)
-            #response_curve = np.linspace(response[0], response[-1], 100)
+            #print(response)
             # Uncertainty propagation.
             std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
         elif fit_type == "polynomial":
-            #TODO: Create response.
             response = -np.log10(intensities/intensities[0])
-            print(response)
+            #print(response)
             # Uncertainty propagation.
             std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
 
