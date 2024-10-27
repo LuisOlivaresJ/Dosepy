@@ -15,6 +15,8 @@ DESCRIPTION
 
 """
 
+from __future__ import annotations
+
 import numpy as np
 from numpy import ndarray
 import matplotlib.pyplot as plt
@@ -27,7 +29,7 @@ from skimage.measure import label, regionprops
 from skimage.filters.rank import mean, median
 from skimage.transform import rotate
 
-from Dosepy.image import TiffImage
+from Dosepy.image import TiffImage, MM_PER_INCH
 from Dosepy.i_o import load_beam_profile
 
 import logging
@@ -36,8 +38,8 @@ import yaml
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
 
-"""Functions used for film calibration."""
 
+"""Functions used for film calibration."""
 
 def polynomial_g3(x, a, b, c, d):
     """
@@ -143,10 +145,8 @@ class CalibrationLUT:
     
     def __init__(
             self,
-            tiff_image: TiffImage,
+            tiff_image: TiffImage = None,
             doses : list = None,
-            lateral_correction : bool = False,
-            #beam_profile : ndarray = None,
             metadata : dict = {},
             ):
         """
@@ -176,8 +176,19 @@ class CalibrationLUT:
             'date_scanned' : str,
             'wait_time' : int,
         """
-        self.tiff_image = tiff_image
+
         self.lut = {}
+
+        if tiff_image is not None and not isinstance(tiff_image, TiffImage):
+            raise Exception("Image must be a TiffImage object.")
+
+        if tiff_image is not None:
+            self.tiff_image = tiff_image
+            self.lut['resolution'] = tiff_image.dpi
+
+        else:
+            self.tiff_image = None
+            self.lut['resolution'] = None
 
         self.lut['author'] = metadata.get('author')
         self.lut['film_lote'] = metadata.get('film_lote')
@@ -185,13 +196,13 @@ class CalibrationLUT:
         self.lut['date_exposed'] = metadata.get('date_exposed')
         self.lut['date_scanned'] = metadata.get('date_scanned')
         self.lut['wait_time'] = metadata.get('wait_time')
-        self.lut['resolution'] = tiff_image.dpi
         self.lut['lateral_limits'] = {
             'left': None,
             'right': None,
         }
         self.lut['rois'] = None
-        self.filter = None
+
+        self.lut['filter'] = None
 
         # Check if the doses are provided.
         if doses:
@@ -280,7 +291,7 @@ class CalibrationLUT:
             raise Exception("Invalid ROI size. The size of the ROIs must be smaller than the image.")
 
         # Get the image resolution in mm.
-        dpmm = self.tiff_image.dpmm
+        dpmm = self.lut["resolution"]/MM_PER_INCH
 
         # Calculate the size of the ROIs in pixels.
         width_roi = size[0] * dpmm
@@ -341,7 +352,7 @@ class CalibrationLUT:
 
         # Apply filter to the image.
         if filter:
-            self.filter = filter
+            self.lut['filter'] = filter
             # Labeled area of the films.
             mask, _ = self._get_labeled_image()
             # Array buffer to store the filtered image.
@@ -388,8 +399,8 @@ class CalibrationLUT:
                 else:
                     diff = abs(pixel_position[column_pixel] - target_position)
                     #print(diff)
-                    #print(self.tiff_image.dpmm)
-                    if diff <= 1/self.tiff_image.dpmm:
+                    #print(self.lut["resolution"]/MM_PER_INCH)
+                    if diff <= 1/(self.lut["resolution"]/MM_PER_INCH):
                         #print(f"Target position: {target_position}")
                         self.lut[(target_position, roi_num)] = {
                             'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0])),
@@ -417,7 +428,7 @@ class CalibrationLUT:
                         # Update target position.
                         target_position += 1
 
-        #self._plot_rois(dpmm=self.tiff_image.dpmm, origin=-self.tiff_image.physical_shape[1]/2)
+        #self._plot_rois(dpmm=self.lut["resolution"]/MM_PER_INCH, origin=-self.tiff_image.physical_shape[1]/2)
 
 
     def plot_lateral_response(self, channel: str = "red"):
@@ -654,11 +665,27 @@ class CalibrationLUT:
         with open(path, mode = "wt", encoding = "utf-8") as file:
             yaml.dump(self.lut, file)
 
+    @classmethod
+    def from_yaml_file(cls, path: str) -> CalibrationLUT:
+        """
+        Load the calibration data from a YAML file.
+
+        Parameters
+        ----------
+        path : str
+            The path to the file.
+        """
+        with open(path, mode = "r", encoding = "utf-8") as file:
+            cal = CalibrationLUT()
+            cal.lut = yaml.full_load(file)
+        return cal
+
+
     def _plot_rois(self, ax: plt.Axes = None):
         """
         Plot the ROIs on the image.
         """
-        dpmm = self.tiff_image.dpmm
+        dpmm = self.lut["resolution"]/MM_PER_INCH
         origin = -self.tiff_image.physical_shape[1]/2
 
         if ax is None:
@@ -715,7 +742,7 @@ class CalibrationLUT:
         # Used to remove the irregular borders of the films.
         # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
 
-        erosion_pix = int(6*self.tiff_image.dpmm)  # 6 mlimiters.
+        erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)  # 6 mlimiters.
         binary = erosion(gray_scale < thresh, square(erosion_pix))
 
         labeled_image, number_of_films = label(binary, return_num=True)
@@ -795,11 +822,12 @@ class CalibrationLUT:
         # Check if the doses are set.
         #if not self.lut.get("nominal_doses"):
         #    raise Exception("No doses set.")
-        
+
         profile = np.interp(
             position,
-            self.lut['beam_profile'][:, 0],
-            self.lut['beam_profile'][:, 1]) / 100
+            np.array(self.lut['beam_profile']['positions']),
+            np.array(self.lut['beam_profile']['doses']) / 100,
+            )
 
         lateral_doses = sorted([float(dose * profile) for dose in self.lut["nominal_doses"]])
 

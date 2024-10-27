@@ -23,7 +23,7 @@ cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile(beam_profile="BeamProfile.csv")
 cal.compute_lateral_lut()
 
-#print(cal.lut)
+print(cal.lut)
 
 position = 0
 

@@ -134,7 +134,7 @@ def is_dicom_image(file: str | Path) -> bool:
     return result
 
 
-def load_beam_profile(file: str | Path, **kwargs) -> np.ndarray:
+def load_beam_profile(file: str | Path, **kwargs) -> dict:
     """
     Load a beam profile. The beam profile is a comma-separated
     values (CSV) file with the following columns:
@@ -151,7 +151,10 @@ def load_beam_profile(file: str | Path, **kwargs) -> np.ndarray:
 
     Returns
     -------
-    profile : numpy.ndarray
+    dict
+        A dictionary with the following keys:
+        - positions [mm].
+        - doses [0 - 100].
 
     Notes
     -----
@@ -165,5 +168,13 @@ def load_beam_profile(file: str | Path, **kwargs) -> np.ndarray:
     # Check if the file exists.
     if not os.path.exists(file):
         raise Exception("Beam profile file does not exist.")
+    
+    profile = {
+        "positions": [],
+        "doses": [],
+    }
+    data = np.genfromtxt(file, delimiter=",", **kwargs)
+    profile["positions"] = [float(p) for p in data[:, 0]]
+    profile["doses"] = [float(d) for d in data[:, 1]]
 
-    return np.genfromtxt(file, delimiter=",", **kwargs)
+    return profile
