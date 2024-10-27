@@ -1,6 +1,5 @@
 # This file contains the unit tests for the calibration.py file.
 
-import unittest
 import pytest
 
 import numpy as np
@@ -39,10 +38,6 @@ def test_instance(example_image, example_metadata):
     
         #profile = example_profile
         cal = CalibrationLUT(example_image,
-                            #doses =  [0, 2, 4, 6, 8, 10],
-                            lateral_correction = True,
-                            #beam_profile = profile,
-                            #filter = 3,
                             metadata = example_metadata,
                             )
         assert isinstance(cal, CalibrationLUT)
@@ -61,7 +56,7 @@ def test_initialization(example_image, example_profile, example_metadata):
     profile = example_profile
 
     cal = CalibrationLUT(example_image,
-                        lateral_correction = True,
+                        #lateral_correction = True,
                         #beam_profile = profile,
                         #filter = 3,
                         metadata = example_metadata,
@@ -90,23 +85,23 @@ def test_initialization_default(example_image):
     assert cal.lut["wait_time"] is None
 
 
-# Test the create_central_rois method, 6 rois should be created
-def test_create_central_rois_with_known_number_of_rois(example_image):
+# Test the set_central_rois method, 6 rois should be created
+def test_set_central_rois_with_known_number_of_rois(example_image):
     
     cal = CalibrationLUT(example_image)
 
-    cal.create_central_rois(size = (10, 10))
+    cal.set_central_rois(size = (10, 10))
 
     assert len(cal.lut["rois"]) == 6
 
 
-# Test the create_central_rois method
-def test_create_central_rois(example_image):
+# Test the set_central_rois method
+def test_set_central_rois(example_image):
     
     cal = CalibrationLUT(example_image)
 
     # Create rectangular rois, 5 mm width and 10 mm height
-    cal.create_central_rois(size = (30, 8))
+    cal.set_central_rois(size = (30, 8))
 
     assert cal.lut["rois"] == [
         {
@@ -153,7 +148,7 @@ def test_compute_lateral_lut(example_image):
         
         cal = CalibrationLUT(example_image)
     
-        cal.create_central_rois(size = (180, 8))
+        cal.set_central_rois(size = (180, 8))
     
         cal.compute_lateral_lut()
 
@@ -161,22 +156,22 @@ def test_compute_lateral_lut(example_image):
         assert cal.lut["lateral_limits"]["right"] == 82
     
         
-        assert cal.lut[(2, 0)]["I_red"] == 42412
-        assert cal.lut[(2, 0)]["S_red"] == 130
+        assert cal.lut[(2, 0)]["I_red"] == 42353
+        assert cal.lut[(2, 0)]["S_red"] == 110
 
-        assert cal.lut[(2, 0)]["I_green"] == 41593
-        assert cal.lut[(2, 0)]["S_green"] == 119
+        assert cal.lut[(2, 0)]["I_green"] == 41625
+        assert cal.lut[(2, 0)]["S_green"] == 108
 
-        assert cal.lut[(2, 0)]["I_blue"] == 32351
-        assert cal.lut[(2, 0)]["S_blue"] == 110
+        assert cal.lut[(2, 0)]["I_blue"] == 32326
+        assert cal.lut[(2, 0)]["S_blue"] == 95
 
-        assert cal.lut[(2, 0)]["I_mean"] == 38785
-        assert cal.lut[(2, 0)]["S_mean"] == 69
+        assert cal.lut[(2, 0)]["I_mean"] == 38768
+        assert cal.lut[(2, 0)]["S_mean"] == 60
         
 def test_get_lateral_response_below_10(example_image):
         
         cal = CalibrationLUT(example_image) 
-        cal.create_central_rois(size = (180, 8)) 
+        cal.set_central_rois(size = (180, 8)) 
         cal.compute_lateral_lut()
         
         intensity, _, _ = cal.get_lateral_respose(roi=5, channel="red")
@@ -234,7 +229,7 @@ def test_get_dose_from_fit_polynomial(example_image):
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
     cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
-    cal.create_central_rois(size = (180, 8))
+    cal.set_central_rois(size = (180, 8))
     cal.compute_lateral_lut()
 
     position = 0
@@ -296,7 +291,7 @@ def test_get_dose_from_fit_rational(example_image):
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
     cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
-    cal.create_central_rois(size = (180, 8))
+    cal.set_central_rois(size = (180, 8))
     cal.compute_lateral_lut()
 
     position = 0
@@ -349,3 +344,18 @@ def test_get_dose_from_fit_rational(example_image):
     assert dose[1:] == pytest.approx(dose_from_fit_red_rat[1:], rel = 5e-1)
     assert dose[1:] == pytest.approx(dose_from_fit_green_rat[1:], rel = 5e-1)
     assert dose[1:] == pytest.approx(dose_from_fit_blue_rat[1:], rel = 5e-1)
+
+
+def test_compute_central_lut(example_image):
+    # Test the compute_central_lut method of the CalibrationLUT class
+    cal = CalibrationLUT(example_image)
+    cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
+    cal.set_central_rois(size = (8, 8))
+
+    cal.compute_central_lut()
+
+    intensities, std = cal._get_intensities(channel = "red")
+    
+    # Assert first roi
+    assert int(intensities[0]) == 42544
+    assert int(std[0]) == 137

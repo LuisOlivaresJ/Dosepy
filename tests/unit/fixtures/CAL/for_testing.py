@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
-cal.create_central_rois((180,8))
+cal.set_central_rois((180, 8))
 cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
-cal.set_beam_profile(beam_profile="BeamProfile.csv")
+cal.set_beam_profile("BeamProfile.csv")
 cal.compute_lateral_lut()
 
 print(cal.lut)
@@ -79,9 +79,9 @@ print(cal._get_lateral_doses(position = position))
 #print("Intensities normalized")
 #print(intensities/intensities[0])
 
-#print("Intensities")
-#print(intensities)
-logging.debug(f"Intensities: {intensities}")
+print("Intensities")
+print(intensities)
+#logging.debug(f"Intensities: {intensities}")
 
 print("Standard deviation without filter")
 print(std)
@@ -109,7 +109,7 @@ cal.plot_dose_fit_uncertainty(
 fig_filter, axes_filter = plt.subplots(1, 2)
 
 cal_filter = CalibrationLUT(img)
-cal_filter.create_central_rois((180,8))
+cal_filter.set_central_rois((180,8))
 cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
 cal_filter.compute_lateral_lut(filter = 3)

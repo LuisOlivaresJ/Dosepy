@@ -5,10 +5,10 @@ NAME
 DESCRIPTION
     Module for the management of the calibration curve. 
     See CalibrationLUT class for details.
-    The CalibrationLUT class is an addaptation of the LUT class from 
+    The CalibrationLUT class is an adoption of the LUT class from 
     OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     Main differences:
-    - The data structure (LUT) to store intensites from pixels is a nested dictionary.
+    - The data structure (LUT) to store intensites from pixels is a dictionary object.
     - The data is created for every milimeter in the lateral direction of the scanner, instead of each pixel.
     - The data contains the standard deviation of the pixel values for uncertainty analysis.
     - Automatic roi detection is implemented with scikit-image.regionprops() function.
@@ -32,7 +32,6 @@ from skimage.transform import rotate
 from Dosepy.image import TiffImage, MM_PER_INCH
 from Dosepy.i_o import load_beam_profile
 
-import logging
 import yaml
 
 
@@ -88,6 +87,7 @@ def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
             polynomial_n,
             xdata,
             ydata,
+            p0=[1, 1, 3],
             maxfev=1500,
             )
 
@@ -96,8 +96,8 @@ def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
 
 class CalibrationLUT:
     """
-    Class used to store data used for film calibration.
-    This class is hevily inspired by the LUT class from OMG Dosimetry package
+    Class to store data for film calibration.
+    This class is an adoption of the LUT class from OMG Dosimetry package 
     (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     
     Attributes
@@ -128,6 +128,7 @@ class CalibrationLUT:
                 }],  
             'resolution' : float,  # The resolution of the image in dots per inch.
             'lateral_limits' : {"left": int, "right": int},  # Left and rigth lateral limits of the scanner where calibration is valid, in milimeters from the center of the image.
+            'lateral_correction' : bool,  # True if a LUT is computed for every milimeter in the scanner lateral direction.
             (lateral_position : int, roi_number : int) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
@@ -200,6 +201,7 @@ class CalibrationLUT:
             'left': None,
             'right': None,
         }
+        self.lut['lateral_correction'] = False
         self.lut['rois'] = None
 
         self.lut['filter'] = None
@@ -260,23 +262,22 @@ class CalibrationLUT:
         #type(self.lut['beam_profile'])
 
 
-    def create_central_rois(self, size : tuple) -> list:
+    def set_central_rois(self, size : tuple) -> None:
         """
-        Create a list of ROIs for the central region of the image.
+        Setup the ROIs and lateral limits at the center of each film.
 
         Parameters
         ----------
-        size : tuple[int, int]
+        size : tuple[width: int, height int]
             The size of the ROIs in milimeters, width x height.
 
-        Returns
+        Note
         -------
-        list
-            A list of ROIs as dictionaries.     
-            [{'x': int, 'y': int, 'width': int, 'height': int}, ...]
-            where: x and y are the coordinates of the top-left corner 
-            (x for row and y for column),
-            and width and height are the size of the ROI in pixels.
+        lut.["rois"] is created with the following structure:    
+        [{'x': int, 'y': int, 'width': int, 'height': int}, {...}, ...]
+        where: x and y are the coordinates of the top-left corner 
+        (x for row and y for column),
+        and width and height are the size of the ROI in pixels.
             
         """
         # Check if the image is loaded.
@@ -336,19 +337,8 @@ class CalibrationLUT:
             each channel of the scanned image prior to LUT creation.            
 
         """
-        # Check if the image is loaded.
-        if self.tiff_image is None:
-            raise Exception("No image loaded.")
-        # Check if rois are created.
-        if not self.lut.get("rois"):
-            raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
-        # Check if filter is valid.
-        if filter and filter < 0:
-            raise Exception("Filter must be a positive integer.")
-        # Check if filter is a integer.
-        if filter and not isinstance(filter, int):
-            raise Exception("Filter must be an integer.")
-
+        self._check_before_compute_lut(filter)
+        self.lut['lateral_correction'] = True
 
         # Apply filter to the image.
         if filter:
@@ -403,12 +393,12 @@ class CalibrationLUT:
                     if diff <= 1/(self.lut["resolution"]/MM_PER_INCH):
                         #print(f"Target position: {target_position}")
                         self.lut[(target_position, roi_num)] = {
-                            'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0])),
-                            'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 0])),
-                            'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1])),
-                            'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 1])),
-                            'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2])),
-                            'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel, 2])),
+                            'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 0])),
+                            'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 0])),
+                            'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 1])),
+                            'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 1])),
+                            'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 2])),
+                            'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 2])),
                         }
                             
                         self.lut[(target_position, roi_num)]["I_mean"] = int(
@@ -431,6 +421,76 @@ class CalibrationLUT:
         #self._plot_rois(dpmm=self.lut["resolution"]/MM_PER_INCH, origin=-self.tiff_image.physical_shape[1]/2)
 
 
+    def compute_central_lut(self, filter: int = None):
+        """
+        Compute the look-up table (LUT) for the central region of the scanner.
+
+        Parameters
+        ----------
+        filter : int
+            If filter > 0, a median filter of size (filter, filter) is applied to 
+            each channel of the scanned image prior to LUT creation.            
+        """
+
+        self._check_before_compute_lut(filter)
+        self.lut['lateral_limits']['left'] = -self.tiff_image.physical_shape[1]/2
+        self.lut['lateral_limits']['right'] = self.tiff_image.physical_shape[1]/2
+
+        self.lut['lateral_correction'] = False
+        # Apply filter to the image.
+        if filter:
+            self.lut['filter'] = filter
+            # Labeled area of the films.
+            mask, _ = self._get_labeled_image()
+            # Array buffer to store the filtered image.
+            array_img = np.empty(
+                shape = (
+                    self.tiff_image.array.shape[0],
+                    self.tiff_image.array.shape[1],
+                    self.tiff_image.array.shape[2]
+                    ),
+                dtype = np.uint16
+                )
+            for i in range(3):
+                
+                array_img[:,:,i] = median(
+                    self.tiff_image.array[:,:,i],
+                    footprint = square(filter),
+                    mask = mask,
+                    )
+        else:
+            # Unfiltered image.
+            array_img = self.tiff_image.array
+
+        for roi_num, roi in enumerate(self.lut["rois"]):
+            
+            position = 0
+
+            self.lut[(position, roi_num)] = {
+                'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 0])),
+                'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 0])),
+                'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 1])),
+                'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 1])),
+                'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 2])),
+                'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], roi['y'] : roi['y'] + roi['width'], 2])),
+            }
+
+            self.lut[(position, roi_num)]["I_mean"] = int(
+                (
+                    self.lut[(position, roi_num)]["I_red"] +
+                    self.lut[(position, roi_num)]["I_green"] +
+                    self.lut[(position, roi_num)]["I_blue"]
+                    ) / 3
+                )
+            self.lut[(position, roi_num)]["S_mean"] = int(
+                (
+                    self.lut[(position, roi_num)]["S_red"]**2 +
+                    self.lut[(position, roi_num)]["S_green"]**2 +
+                    self.lut[(position, roi_num)]["S_blue"]**2
+                    )**0.5 / 3
+                )
+
+
     def plot_lateral_response(self, channel: str = "red"):
         """
         Plot the lateral response of the scanner for each ROI (film).
@@ -443,11 +503,15 @@ class CalibrationLUT:
         Examples
         --------
         >>> cal = CalibrationLUT(tiff_image)
-        >>> cal.create_central_rois((180, 8))
+        >>> cal.set_central_rois((180, 8))
         >>> cal.compute_lateral_lut()
         >>> cal.plot_lateral_response(channel = "red")
         >>> plt.show()
         """
+
+        # Check if lateral limits are set.
+        if not self.lut["lateral_limits"]["left"]:
+            raise Exception("Plotting lateral response requieres a lateral LUT. Use the compute_lateral_lut method.")
 
         if channel == "mean":
             color = "black"
@@ -542,7 +606,10 @@ class CalibrationLUT:
 
         # Get the corrected doses used to expose the films for calibration
         # at a given position.
-        doses = self._get_lateral_doses(position)
+        if self.lut["lateral_correction"]:
+            doses = self._get_lateral_doses(position)
+        else:
+            doses = self.lut.get("nominal_doses")
 
         # Create the calibration curve.
         response_curve = np.linspace(response[0], response[-1], 100)
@@ -578,7 +645,11 @@ class CalibrationLUT:
         fit_function : str
             The type of fit to use. "rational" or "polynomial".
         """
-        doses = self._get_lateral_doses(position)
+        if self.lut["lateral_correction"]:
+            doses = self._get_lateral_doses(position)
+        else:
+            doses = self.lut.get("nominal_doses")
+            
         intensities, std = self._get_intensities(position, channel)
         uncertainty = self._get_dose_uncertainty(intensities, std, doses, fit_function)
         u_percent = uncertainty[1:] / doses[1:] * 100
@@ -613,7 +684,7 @@ class CalibrationLUT:
         
         # Check if there is ROIs in the lut.
         if not self.lut["rois"]:
-            raise Exception("No ROIs created. Use the create_central_rois method to set the ROIs.")
+            raise Exception("No ROIs created. Use the set_central_rois method to set the ROIs.")
         
         # Check if the roi is a valid number for the lut.
         if roi < 0 or roi >= len(self.lut["rois"]):
@@ -665,6 +736,7 @@ class CalibrationLUT:
         with open(path, mode = "wt", encoding = "utf-8") as file:
             yaml.dump(self.lut, file)
 
+
     @classmethod
     def from_yaml_file(cls, path: str) -> CalibrationLUT:
         """
@@ -679,6 +751,25 @@ class CalibrationLUT:
             cal = CalibrationLUT()
             cal.lut = yaml.full_load(file)
         return cal
+
+
+    def _check_before_compute_lut(self, filter: int) -> None:
+        """
+        Check if the conditions are met before computing the LUT.
+        """
+        # Check if the image is loaded.
+        if self.tiff_image is None:
+            raise Exception("No image loaded.")
+        # Check if rois are created.
+        if not self.lut.get("rois"):
+            raise Exception("No ROIs created. Use the set_central_rois method to set the ROIs.")
+        # Check if filter is valid.
+        if filter and filter < 0:
+            raise Exception("Filter must be a positive integer.")
+        # Check if filter is a integer.
+        if filter and not isinstance(filter, int):
+            raise Exception("Filter must be an integer.")
+        # Check if the doses are set.
 
 
     def _plot_rois(self, ax: plt.Axes = None):
@@ -758,7 +849,7 @@ class CalibrationLUT:
         return sorted(set(positions))
     
 
-    def _get_intensities(self, lateral_position: float, channel: str) -> ndarray:
+    def _get_intensities(self, lateral_position: float = 0, channel: str = "red") -> ndarray:
         """
         Get the pixel values and standar deviation of the channel at a given lateral position,
         for each film, in descending order. 
@@ -913,6 +1004,7 @@ class CalibrationLUT:
             u_d = np.sqrt( u_exp**2 + u_fit**2 )
 
         return u_d
+
 
 class Calibration:
     """Class used to represent a calibration curve.
