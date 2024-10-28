@@ -9,7 +9,7 @@ logging.basicConfig(
     filemode="w",
     )
 
-from Dosepy.calibration import CalibrationLUT, _get_dose_from_fit
+from Dosepy.calibration import CalibrationLUT
 from Dosepy.image import load, TiffImage
 
 import numpy as np
@@ -65,7 +65,7 @@ print(f"Lateral position: {position}")
 channel = "red"
 print("Channel: {channel}")
 
-fit_function = "polynomial"
+fit_function = "rational"
 
 #print(cal._get_calibration_positions())
 intensities, std = cal._get_intensities(
@@ -147,13 +147,13 @@ print(std)
 print(std_filter)
 
 print("\n Dose from fit")
-response = -np.log(intensities / intensities[0])
+#response = -np.log(intensities / intensities[0])
 dose = cal._get_lateral_doses(position = position)
-dose_from_fit = _get_dose_from_fit(
-          response,
-          dose,
-          response,
-          "polynomial",
+dose_from_fit = cal._get_dose_from_fit(
+        calib_film_intensities = intensities_filter,
+        calib_dose = dose,
+        fit_function = "polynomial",
+        intensities = intensities_filter,  
     )
 print(dose_from_fit)
 
