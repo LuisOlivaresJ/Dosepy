@@ -167,7 +167,8 @@ def test_compute_lateral_lut(example_image):
 
         assert cal.lut[(2, 0)]["I_mean"] == 38768
         assert cal.lut[(2, 0)]["S_mean"] == 60
-        
+
+# Test lateral response below to 10 % of the central response        
 def test_get_lateral_response_below_10(example_image):
         
         cal = CalibrationLUT(example_image) 
@@ -237,46 +238,45 @@ def test_get_dose_from_fit_polynomial(example_image):
     dose = cal._get_lateral_doses(position = position)
 
     # Red channel
-    i_red, _ = cal._get_intensities(
+    i_red, u_r = cal._get_intensities(
           lateral_position = position,
           channel = "red",
     )
-    response_red = -np.log10(i_red / i_red[0])
     
-    dose_from_fit_red_poly = cal._get_dose_from_fit(
-          response_red,
-          dose,
-          response_red,
-          "polynomial",
+    dose_from_fit_red_poly, p, u_p = cal._get_dose_from_fit(
+          calib_film_intensities = i_red,
+          calib_dose = dose,
+          fit_function = "polynomial",
+          intensities = i_red,
     )
 
     # Green channel
-    i_green, _ = cal._get_intensities(
+    i_green, u_g = cal._get_intensities(
           lateral_position = position,
           channel = "green",
     )
-    response_green = -np.log10(i_green / i_green[0])
+    #response_green = -np.log10(i_green / i_green[0])
 
-    dose_from_fit_green_poly = cal._get_dose_from_fit(
-            response_green,
-            dose,
-            response_green,
-            "polynomial",
+    dose_from_fit_green_poly, p, u_p = cal._get_dose_from_fit(
+            calib_film_intensities = i_green,
+            calib_dose = dose,
+            fit_function = "polynomial",
+            intensities = i_green,
         )
     
     # Blue channel
-    i_blue, _ = cal._get_intensities(
+    i_blue, u_b = cal._get_intensities(
           lateral_position = position,
           channel = "blue",
     )
 
-    response_blue = -np.log10(i_blue / i_blue[0])
+    #response_blue = -np.log10(i_blue / i_blue[0])
 
-    dose_from_fit_blue_poly = cal._get_dose_from_fit(
-            response_blue,
-            dose,
-            response_blue,
-            "polynomial",
+    dose_from_fit_blue_poly, p, u_p = cal._get_dose_from_fit(
+            calib_film_intensities = i_blue,
+            calib_dose = dose,
+            fit_function = "polynomial",
+            intensities = i_blue,
         )
 
     assert dose == pytest.approx(dose_from_fit_red_poly, rel = 5e-1)
@@ -299,46 +299,42 @@ def test_get_dose_from_fit_rational(example_image):
     dose = cal._get_lateral_doses(position = position)
 
     # Red channel
-    i_red, _ = cal._get_intensities(
+    i_red, u_r = cal._get_intensities(
           lateral_position = position,
           channel = "red",
     )
-    response_red = i_red / i_red[0]
     
-    dose_from_fit_red_rat = cal._get_dose_from_fit(
-          response_red,
-          dose,
-          response_red,
-          "rational",
+    dose_from_fit_red_rat, p, up = cal._get_dose_from_fit(
+        calib_film_intensities = i_red,
+        calib_dose = dose,
+        intensities = i_red,
+        fit_function = "rational",
     )
 
     # Green channel
-    i_green, _ = cal._get_intensities(
+    i_green, u_g = cal._get_intensities(
           lateral_position = position,
           channel = "green",
     )
-    response_green = i_green / i_green[0]
 
-    dose_from_fit_green_rat = cal._get_dose_from_fit(
-            response_green,
-            dose,
-            response_green,
-            "rational",
+    dose_from_fit_green_rat, p, up = cal._get_dose_from_fit(
+            calib_film_intensities = i_green,
+            calib_dose = dose,
+            intensities = i_green,
+            fit_function = "rational",
         )
     
     # Blue channel
-    i_blue, _ = cal._get_intensities(
+    i_blue, u_b = cal._get_intensities(
           lateral_position = position,
           channel = "blue",
     )
 
-    response_blue = i_blue / i_blue[0]
-
-    dose_from_fit_blue_rat = cal._get_dose_from_fit(
-            response_blue,
-            dose,
-            response_blue,
-            "rational",
+    dose_from_fit_blue_rat, p, up = cal._get_dose_from_fit(
+            calib_film_intensities = i_blue,
+            calib_dose = dose,
+            intensities = i_blue,
+            fit_function = "rational",
         )
 
     assert dose[1:] == pytest.approx(dose_from_fit_red_rat[1:], rel = 5e-1)
