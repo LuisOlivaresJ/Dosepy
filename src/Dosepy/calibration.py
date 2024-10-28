@@ -37,9 +37,7 @@ import yaml
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
 
-
 """Functions used for film calibration."""
-
 def polynomial_g3(x, a, b, c, d):
     """
     Polynomial function of degree 3.
@@ -61,37 +59,21 @@ def rational_func(x, a, b, c):
     return -c + b/(x-a)
 
 
-def _get_dose_from_fit(calib_film_response, calib_dose, response, fit_function):
+"""Functions used for film response"""
+def optical_density(intensity):
+    """
+    Compute the optical density of the film.
+    """
+    I = sorted(intensity, reverse = True)
 
-    if fit_function == "rational":
+    return -np.log10(I/I0)
 
-        xdata = sorted(calib_film_response, reverse=True)
-        ydata = sorted(calib_dose)
 
-        popt, pcov = curve_fit(
-            rational_func,
-            xdata,
-            ydata,
-            p0=[0.1, 4, 4],
-            maxfev=1500,
-            )
-        
-        return rational_func(response, *popt)
-
-    elif fit_function == "polynomial":
-        
-        xdata = sorted(calib_film_response)
-        ydata = sorted(calib_dose)
-
-        popt, pcov = curve_fit(
-            polynomial_n,
-            xdata,
-            ydata,
-            p0=[1, 1, 3],
-            maxfev=1500,
-            )
-
-        return polynomial_n(response, *popt)
+def ratio(I, I0):
+    """
+    Compute the ratio of the pixel values.
+    """
+    return I/I0
 
 
 class CalibrationLUT:
@@ -262,7 +244,7 @@ class CalibrationLUT:
         #type(self.lut['beam_profile'])
 
 
-    def set_central_rois(self, size : tuple) -> None:
+    def set_central_rois(self, size : tuple, show = False) -> None:
         """
         Setup the ROIs and lateral limits at the center of each film.
 
@@ -322,8 +304,9 @@ class CalibrationLUT:
         # Find minimum y + width values in milimeters.
         self.lut["lateral_limits"]["right"] = int(min([roi['y'] + roi["width"] for roi in rois])/dpmm - width/2)
 
-        # Plot for visualization testing purposes.
-        #self._plot_rois(dpmm = dpmm, origin = -width/2)
+        # Plot rois.
+        if show:
+            self._plot_rois()
 
 
     def compute_lateral_lut(self, filter: int = None):
@@ -613,7 +596,7 @@ class CalibrationLUT:
 
         # Create the calibration curve.
         response_curve = np.linspace(response[0], response[-1], 100)
-        dose_curve = _get_dose_from_fit(response, doses, response_curve, fit_type)
+        dose_curve = self._get_dose_from_fit(response, doses, response_curve, fit_type)
 
         if ax is None:
             fig, axe = plt.subplots()
@@ -649,7 +632,7 @@ class CalibrationLUT:
             doses = self._get_lateral_doses(position)
         else:
             doses = self.lut.get("nominal_doses")
-            
+
         intensities, std = self._get_intensities(position, channel)
         uncertainty = self._get_dose_uncertainty(intensities, std, doses, fit_function)
         u_percent = uncertainty[1:] / doses[1:] * 100
@@ -794,13 +777,15 @@ class CalibrationLUT:
             )
             ax.add_patch(rect)
         
-        # r0' = r0 - r00', change of origin.
-        #print(self.lut["lateral_limits"])
-        y_left_limit_pix =int((self.lut["lateral_limits"]["left"] - origin)*dpmm)
-        y_right_limit_pix = int((self.lut["lateral_limits"]["right"] - origin)*dpmm)
+        if self.lut["lateral_correction"]:
+            
+            # r0' = r0 - r00', change of origin.
+            #print(self.lut["lateral_limits"])
+            y_left_limit_pix =int((self.lut["lateral_limits"]["left"] - origin)*dpmm)
+            y_right_limit_pix = int((self.lut["lateral_limits"]["right"] - origin)*dpmm)
 
-        ax.axvline(y_left_limit_pix)
-        ax.axvline(y_right_limit_pix)
+            ax.axvline(y_left_limit_pix)
+            ax.axvline(y_right_limit_pix)
         #plt.show()
 
 
@@ -925,7 +910,8 @@ class CalibrationLUT:
         return lateral_doses
 
 
-    def _get_dose_uncertainty(self, intensities: ndarray, std: ndarray, doses: list, fit_function: str) -> ndarray:
+    @staticmethod
+    def _get_dose_uncertainty(intensities: ndarray, std: ndarray, doses: list, fit_function: str) -> ndarray:
         """
         Get the uncertainty of the dose fit at a given lateral position and channel.
 
@@ -980,7 +966,7 @@ class CalibrationLUT:
 
         
         elif fit_function == "polynomial":
-            response = -np.log10(intensities/intensities[0])
+            response = optical_density(intensities/intensities[0])
             # Uncertainty propagation.
             std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
 
@@ -988,9 +974,8 @@ class CalibrationLUT:
                 polynomial_n,
                 response,
                 doses,
-                #p0=[0.1, 4.0, 4.0, 4.0],
+                p0=[1, 1, 3],
                 maxfev=1500,
-                #method='trf',
                 )
 
             a = popt[0]
@@ -1004,6 +989,45 @@ class CalibrationLUT:
             u_d = np.sqrt( u_exp**2 + u_fit**2 )
 
         return u_d
+
+
+    @staticmethod
+    def _get_dose_from_fit(
+        calib_film_response,
+        calib_dose,
+        response,
+        fit_function,
+        ) -> ndarray:
+
+        if fit_function == "rational":
+
+            xdata = sorted(calib_film_response, reverse=True)
+            ydata = sorted(calib_dose)
+
+            popt, pcov = curve_fit(
+                rational_func,
+                xdata,
+                ydata,
+                p0=[0.1, 4, 4],
+                maxfev=1500,
+                )
+            
+            return rational_func(response, *popt)
+
+        elif fit_function == "polynomial":
+            
+            xdata = sorted(calib_film_response)
+            ydata = sorted(calib_dose)
+
+            popt, pcov = curve_fit(
+                polynomial_n,
+                xdata,
+                ydata,
+                p0=[1, 1, 3],
+                maxfev=1500,
+                )
+
+            return polynomial_n(response, *popt)
 
 
 class Calibration:
@@ -1053,6 +1077,7 @@ class Calibration:
         else:
             raise Exception("Invalid fit function.")
         self.channel = channel
+
 
     def plot(self, ax: plt.Axes = None, show: bool = True, **kwargs) -> plt.Axes:
         """Plot the calibration curve.

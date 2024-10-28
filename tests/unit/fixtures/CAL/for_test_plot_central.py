@@ -7,7 +7,7 @@ from Dosepy.image import load
 path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
-cal.set_central_rois((8, 8))
+cal.set_central_rois((8, 8), show = True)
 cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 #cal.compute_central_lut(filter = 3)
 cal.compute_central_lut()

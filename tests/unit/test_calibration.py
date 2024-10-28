@@ -4,7 +4,7 @@ import pytest
 
 import numpy as np
 
-from Dosepy.calibration import CalibrationLUT, _get_dose_from_fit
+from Dosepy.calibration import CalibrationLUT#, _get_dose_from_fit
 from Dosepy.image import load, TiffImage
 
 from pathlib import Path
@@ -243,7 +243,7 @@ def test_get_dose_from_fit_polynomial(example_image):
     )
     response_red = -np.log10(i_red / i_red[0])
     
-    dose_from_fit_red_poly = _get_dose_from_fit(
+    dose_from_fit_red_poly = cal._get_dose_from_fit(
           response_red,
           dose,
           response_red,
@@ -257,7 +257,7 @@ def test_get_dose_from_fit_polynomial(example_image):
     )
     response_green = -np.log10(i_green / i_green[0])
 
-    dose_from_fit_green_poly = _get_dose_from_fit(
+    dose_from_fit_green_poly = cal._get_dose_from_fit(
             response_green,
             dose,
             response_green,
@@ -272,7 +272,7 @@ def test_get_dose_from_fit_polynomial(example_image):
 
     response_blue = -np.log10(i_blue / i_blue[0])
 
-    dose_from_fit_blue_poly = _get_dose_from_fit(
+    dose_from_fit_blue_poly = cal._get_dose_from_fit(
             response_blue,
             dose,
             response_blue,
@@ -305,7 +305,7 @@ def test_get_dose_from_fit_rational(example_image):
     )
     response_red = i_red / i_red[0]
     
-    dose_from_fit_red_rat = _get_dose_from_fit(
+    dose_from_fit_red_rat = cal._get_dose_from_fit(
           response_red,
           dose,
           response_red,
@@ -319,7 +319,7 @@ def test_get_dose_from_fit_rational(example_image):
     )
     response_green = i_green / i_green[0]
 
-    dose_from_fit_green_rat = _get_dose_from_fit(
+    dose_from_fit_green_rat = cal._get_dose_from_fit(
             response_green,
             dose,
             response_green,
@@ -334,7 +334,7 @@ def test_get_dose_from_fit_rational(example_image):
 
     response_blue = i_blue / i_blue[0]
 
-    dose_from_fit_blue_rat = _get_dose_from_fit(
+    dose_from_fit_blue_rat = cal._get_dose_from_fit(
             response_blue,
             dose,
             response_blue,
