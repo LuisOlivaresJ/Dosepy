@@ -65,7 +65,8 @@ print(f"Lateral position: {position}")
 channel = "red"
 print("Channel: {channel}")
 
-fit_function = "rational"
+#fit_function = "rational"
+fit_function = "polynomial"
 
 #print(cal._get_calibration_positions())
 intensities, std = cal._get_intensities(
@@ -91,9 +92,9 @@ print(std)
 fig, axes = plt.subplots(1, 2)
 
 cal.plot_fit(
-    fit_type=fit_function,
-    position=position,
-    channel=channel,
+    fit_type = fit_function,
+    position = position,
+    channel = channel,
     ax=axes[0],
     )
 
