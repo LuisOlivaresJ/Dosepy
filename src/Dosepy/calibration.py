@@ -12,6 +12,7 @@ DESCRIPTION
     - The data is created for every milimeter in the lateral direction of the scanner, instead of each pixel.
     - The data contains the standard deviation of the pixel values for uncertainty analysis.
     - Automatic roi detection is implemented with scikit-image.regionprops() function.
+    - Plot function for fit and scanner uncertainty.
 
 """
 
@@ -36,70 +37,6 @@ import yaml
 
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
-
-"""Functions used for film calibration."""
-def polynomial_g3(x, a, b, c, d):
-    """
-    Polynomial function of degree 3.
-    """
-    return a + b*x + c*x**2 + d*x**3
-
-
-def polynomial_n(x, a, b, n):
-    """
-    Polynomial function of degree n.
-    """
-    return a*x + b*x**n
-
-
-def rational_func(x, a, b, c):
-    """
-    Rational function.
-    """
-    return -c + b/(x-a)
-
-
-"""Functions used for film response"""
-def optical_density(I):
-    """
-    Compute the optical density of the film.
-
-    Parameters
-    ----------
-    intensity : ndarray
-        Sorted pixel values of the film, in descending order.
-    """
-
-    return -np.log10(I/I[0])
-
-
-def uncertainty_optical_density(I, std):
-    """
-    Compute the uncertainty of the optical density of the film.
-
-    Parameters
-    ----------
-    intensity : ndarray
-        Sorted pixel values of the film, in descending order.
-    std : ndarray
-        The standard deviation of the pixel values.
-    """
-
-    return (1/np.log(10))*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
-
-
-def ratio(I):
-    """
-    Compute the ratio of the pixel values.
-    """
-    return I/I[0]
-
-
-def uncertainty_ratio(I, std):
-    """
-    Compute the uncertainty of the ratio of the pixel values.
-    """
-    return (I/I[0])*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
 
 
 class CalibrationLUT:
@@ -592,39 +529,32 @@ class CalibrationLUT:
         position = int(position)
 
         # Get the pixel values of the channel at the given lateral position.
-        intensities, std = self._get_intensities(position, channel)
+        calib_intensities, std = self._get_intensities(position, channel)
+        calib_intensities_curve = np.linspace(calib_intensities[0], calib_intensities[-1], endpoint=True, num=100)
 
         if fit_type == "rational":
             #response = intensities / intensities[0]
-            response = ratio(intensities)
-            #print(response)
-            # Uncertainty propagation.
-            #std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
-            std_response = uncertainty_ratio(intensities, std)
+            response = CalibrationLUT.ratio(calib_intensities)
+            response_curve = CalibrationLUT.ratio(calib_intensities_curve)
+            std_response = CalibrationLUT.uncertainty_ratio(calib_intensities, std)
+
         elif fit_type == "polynomial":
             #response = -np.log10(intensities/intensities[0])
-            response = optical_density(intensities)
-            #print(response)
-            # Uncertainty propagation.
-            #std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
-            std_response = uncertainty_optical_density(intensities, std)
+            response = CalibrationLUT.optical_density(calib_intensities)
+            response_curve = CalibrationLUT.optical_density(calib_intensities_curve)
+            std_response = CalibrationLUT.uncertainty_optical_density(calib_intensities, std)
 
-        # Get the corrected doses used to expose the films for calibration
-        # at a given position.
+        # Get the corrected doses at a given position.
         if self.lut["lateral_correction"]:
             doses = self._get_lateral_doses(position)
         else:
             doses = self.lut.get("nominal_doses")
 
-        # Create the calibration curve.
-        response_curve = np.linspace(response[0], response[-1], 100)
-        #dose_curve = self._get_dose_from_fit(response, doses, response_curve, fit_type)
-        dose_curve, ud, p, up = self._get_dose_and_uncertainty(
-            intensities,
-            std,
-            doses,
-            fit_type,
-            response_curve,
+        dose_curve, _, _ = self._get_dose_from_fit(
+            calib_film_intensities = calib_intensities,
+            calib_dose = doses,
+            fit_function = fit_type,
+            intensities = calib_intensities_curve,
         )
 
         if ax is None:
@@ -632,7 +562,6 @@ class CalibrationLUT:
         else: 
             axe = ax
 
-        #axe.plot(response, doses, marker = '*', linestyle="None", color = channel)
         axe.errorbar(response, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
         axe.plot(response_curve, dose_curve, color = channel)
 
@@ -663,7 +592,7 @@ class CalibrationLUT:
             doses = self.lut.get("nominal_doses")
 
         intensities, std = self._get_intensities(position, channel)
-        uncertainty = self._get_dose_uncertainty(intensities, std, doses, fit_function)
+        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit_function)
         u_percent = uncertainty[1:] / doses[1:] * 100
         
         if ax is None:
@@ -949,35 +878,36 @@ class CalibrationLUT:
 
         if fit_function == "rational":
 
-            calib_response = ratio(calib_film_intensities)
+            calib_response = CalibrationLUT.ratio(calib_film_intensities)
 
             popt, pcov = curve_fit(
-                rational_func,
+                CalibrationLUT.rational_func,
                 calib_response,
                 calib_dose,
                 p0=[0.1, 4, 4],
                 maxfev=1500,
                 )
             
-            response = ratio(intensities)
-            dose = rational_func(response, *popt)
+            response = CalibrationLUT.ratio(intensities)
+            dose = CalibrationLUT.rational_func(response, *popt)
 
         elif fit_function == "polynomial":
             
-            #xdata = sorted(calib_film_response)
-            calib_response = optical_density(calib_film_intensities)
-            #ydata = sorted(calib_dose)
+            calib_response = CalibrationLUT.optical_density(calib_film_intensities)
+            print("_get_dose_from_fit")
+            print("calib_response")
+            print(calib_response)
 
             popt, pcov = curve_fit(
-                polynomial_n,
+                CalibrationLUT.polynomial_n,
                 calib_response,
                 calib_dose,
-                p0=[1, 1, 3],
+                p0=[10, 35, 2.5],
                 maxfev=1500,
                 )
             
-            response = optical_density(intensities)
-            dose = polynomial_n(response, *popt)
+            response = CalibrationLUT.optical_density(intensities)
+            dose = CalibrationLUT.polynomial_n(response, *popt)
 
         return dose, popt, np.sqrt(np.diag(pcov))
 
@@ -1011,10 +941,10 @@ class CalibrationLUT:
         #intensities_calibration, std = self._get_intensities(position, channel)
         if fit_function == "rational":
 
-            response_cal = ratio(calib_film_intensities)
+            response_cal = CalibrationLUT.ratio(calib_film_intensities)
 
             popt, pcov = curve_fit(
-                rational_func,
+                CalibrationLUT.rational_func,
                 response_cal,
                 calib_doses,
                 p0=[0.1, 4.0, 4.0],
@@ -1026,7 +956,7 @@ class CalibrationLUT:
             ua = np.sqrt(np.diag(pcov))[0]
             ub = np.sqrt(np.diag(pcov))[1]
 
-            std_response = uncertainty_ratio(calib_film_intensities, std_calib_film_intensities)
+            std_response = CalibrationLUT.uncertainty_ratio(calib_film_intensities, std_calib_film_intensities)
             u_exp = b*std_response/(response_cal-a)**2
             u_fit = np.sqrt( (b*ua/(response_cal-a)**2)**2 + (ub/(response_cal-a))**2 )
             u_dose = np.sqrt( u_exp**2 + u_fit**2 )
@@ -1034,13 +964,13 @@ class CalibrationLUT:
 
         elif fit_function == "polynomial":
 
-            response_cal = optical_density(calib_film_intensities)
+            response_cal = CalibrationLUT.optical_density(calib_film_intensities)
 
             popt, pcov = curve_fit(
-                polynomial_n,
+                CalibrationLUT.polynomial_n,
                 response_cal,
                 calib_doses,
-                p0=[1, 1, 3],
+                p0=[10, 35, 2.5],
                 maxfev=1500,
                 )
 
@@ -1050,13 +980,82 @@ class CalibrationLUT:
             ua = np.sqrt(np.diag(pcov))[0]
             ub = np.sqrt(np.diag(pcov))[1]
 
-            std_response = uncertainty_optical_density(calib_film_intensities, std_calib_film_intensities)
+            std_response = CalibrationLUT.uncertainty_optical_density(calib_film_intensities, std_calib_film_intensities)
             u_exp = (a + n*b*response_cal**(n-1))*std_response
             u_fit = np.sqrt( response_cal**2*ua**2 + response_cal**(2*n)*ub**2 )
             u_dose = np.sqrt( u_exp**2 + u_fit**2 )
 
 
         return u_dose
+
+
+    """Functions used for film calibration."""
+    @staticmethod
+    def polynomial_g3(x, a, b, c, d):
+        """
+        Polynomial function of degree 3.
+        """
+        return a + b*x + c*x**2 + d*x**3
+
+    @staticmethod
+    def polynomial_n(x, a, b, n):
+        """
+        Polynomial function of degree n.
+        """
+        return a*x + b*x**n
+
+    @staticmethod
+    def rational_func(x, a, b, c):
+        """
+        Rational function.
+        """
+        return -c + b/(x-a)
+
+
+    """Functions used for film response"""
+    @staticmethod
+    def optical_density(I):
+        """
+        Compute the optical density of the film.
+
+        Parameters
+        ----------
+        intensity : ndarray
+            Sorted pixel values of the film, in descending order.
+        """
+
+        return -np.log10(I/I[0])
+
+
+    @staticmethod
+    def uncertainty_optical_density(I, std):
+        """
+        Compute the uncertainty of the optical density of the film.
+
+        Parameters
+        ----------
+        intensity : ndarray
+            Sorted pixel values of the film, in descending order.
+        std : ndarray
+            The standard deviation of the pixel values.
+        """
+
+        return (1/np.log(10))*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
+
+    @staticmethod
+    def ratio(I):
+        """
+        Compute the ratio of the pixel values.
+        """
+        return I/I[0]
+
+    @staticmethod
+    def uncertainty_ratio(I, std):
+        """
+        Compute the uncertainty of the ratio of the pixel values.
+        """
+        return (I/I[0])*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
+
 
 class Calibration:
     """Class used to represent a calibration curve.
@@ -1094,10 +1093,10 @@ class Calibration:
         self.func = func
 
         if self.func in ["P3", "Polynomial"]:
-            self.popt, self.pcov = curve_fit(polynomial_g3, self.x, self.doses)
+            self.popt, self.pcov = curve_fit(CalibrationLUT.polynomial_g3, self.x, self.doses)
         elif self.func in ["RF", "Rational"]:
             self.popt, self.pcov = curve_fit(
-                                            rational_func,
+                                            CalibrationLUT.rational_func,
                                             self.x,
                                             self.doses,
                                             p0=[0.1, 200, 500]
@@ -1125,10 +1124,10 @@ class Calibration:
 
         x = np.linspace(self.x[0], self.x[-1], 100)
         if self.func in ["P3", "Polynomial"]:
-            y = polynomial_g3(x, *self.popt)
+            y = CalibrationLUT.polynomial_g3(x, *self.popt)
             ax.set_xlabel("Optical density")
         elif self.func in ["RF", "Rational"]:
-            y = rational_func(x, *self.popt)
+            y = CalibrationLUT.rational_func(x, *self.popt)
             ax.set_xlabel("Normalized pixel value")
 
         if self.channel in ["R", "Red", "r", "red"]:
