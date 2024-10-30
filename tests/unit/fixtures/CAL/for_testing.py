@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
-cal.set_central_rois((180, 8))
+cal.set_central_rois((180, 8), show=True)
 cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile("BeamProfile.csv")
 cal.compute_lateral_lut()
