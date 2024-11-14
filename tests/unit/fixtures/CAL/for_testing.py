@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 path_file = "film20240620_002.tif"
 img = load(path_file)
 cal = CalibrationLUT(img)
-cal.set_central_rois((180, 8))
+cal.set_central_rois((180, 8), show=True)
 cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile("BeamProfile.csv")
 cal.compute_lateral_lut()
@@ -66,7 +66,7 @@ channel = "red"
 print("Channel: {channel}")
 
 #fit_function = "rational"
-fit_function = "polynomial"
+fit_function = "rational"
 
 #print(cal._get_calibration_positions())
 intensities, std = cal._get_intensities(
@@ -150,13 +150,16 @@ print(std_filter)
 print("\n Dose from fit")
 #response = -np.log(intensities / intensities[0])
 dose = cal._get_lateral_doses(position = position)
-dose_from_fit = cal._get_dose_from_fit(
+dose_from_fit, p, up = cal._get_dose_from_fit(
         calib_film_intensities = intensities_filter,
         calib_dose = dose,
         fit_function = "polynomial",
         intensities = intensities_filter,  
     )
+print("\nFor testing")
 print(dose_from_fit)
+print(p)
+print(up)
 
 cal.to_yaml_file("calibration.yaml")
 
