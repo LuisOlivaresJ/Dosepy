@@ -595,18 +595,11 @@ class CalibrationLUT:
         intensities, std = self._get_intensities(position, channel)
 
         if fit_type == "rational":
-            #response = intensities / intensities[0]
             response = ratio(intensities)
-            #print(response)
-            # Uncertainty propagation.
-            #std_response = response * np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
             std_response = uncertainty_ratio(intensities, std)
+
         elif fit_type == "polynomial":
-            #response = -np.log10(intensities/intensities[0])
             response = optical_density(intensities)
-            #print(response)
-            # Uncertainty propagation.
-            #std_response = (1/np.log(10))*np.sqrt( (std/intensities)**2 + (std[0]/intensities[0])**2 )
             std_response = uncertainty_optical_density(intensities, std)
 
         # Get the corrected doses used to expose the films for calibration
@@ -619,12 +612,11 @@ class CalibrationLUT:
         # Create the calibration curve.
         response_curve = np.linspace(response[0], response[-1], 100)
         #dose_curve = self._get_dose_from_fit(response, doses, response_curve, fit_type)
-        dose_curve, ud, p, up = self._get_dose_and_uncertainty(
-            intensities,
-            std,
-            doses,
-            fit_type,
-            response_curve,
+        dose_curve, p, up = self._get_dose_from_fit(
+            calib_film_intensities = intensities,
+            calib_dose = doses,
+            fit_function = fit_type,
+            intensities = response_curve,
         )
 
         if ax is None:
@@ -632,7 +624,6 @@ class CalibrationLUT:
         else: 
             axe = ax
 
-        #axe.plot(response, doses, marker = '*', linestyle="None", color = channel)
         axe.errorbar(response, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
         axe.plot(response_curve, dose_curve, color = channel)
 
@@ -644,7 +635,7 @@ class CalibrationLUT:
         fit_function: str,
         ax: plt.Axes = None,
         **kwargs
-        ):
+        ) -> None:
         """
         Plot the dose fit uncertainty at a given lateral position and channel.
 
@@ -657,13 +648,15 @@ class CalibrationLUT:
         fit_function : str
             The type of fit to use. "rational" or "polynomial".
         """
+
         if self.lut["lateral_correction"]:
             doses = self._get_lateral_doses(position)
+
         else:
             doses = self.lut.get("nominal_doses")
 
         intensities, std = self._get_intensities(position, channel)
-        uncertainty = self._get_dose_uncertainty(intensities, std, doses, fit_function)
+        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit_function)
         u_percent = uncertainty[1:] / doses[1:] * 100
         
         if ax is None:
