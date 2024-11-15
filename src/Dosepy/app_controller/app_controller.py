@@ -48,6 +48,15 @@ class ToolbarController(BaseController):
         else:
             self._view.conf_window.show()
 
+    
+    def _open_ct_viewer(self):
+        print("CT Viewer")
+        if self._view.ct_viewer.isVisible():
+            self._view.ct_viewer.hide()
+        else:
+            self._view.ct_viewer.show()
+            
+
     def _save_settings(self):
         print("Save settings")
         roi_size_h = self._view.conf_window.roi_size_h.text()
@@ -76,6 +85,7 @@ class ToolbarController(BaseController):
 
     def _connectSignalsAndSlots(self):
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
+        self._view.ct_viewer_action.triggered.connect(self._open_ct_viewer)
         self._view.conf_window.save_button.clicked.connect(self._save_settings)
 
 

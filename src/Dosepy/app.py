@@ -16,6 +16,7 @@ from Dosepy.app_components.calibration_widget import CalibrationWidget
 from Dosepy.app_components.tiff2dose_widget import Tiff2DoseWidget
 from Dosepy.app_components.tif_widget import TifWidget
 from Dosepy.app_components.config_window import ConfigWindow
+from Dosepy.app_components.ct_viewer import CTViewer
 
 # Import app controllers
 from Dosepy.app_controller.app_controller import CalibrationController, Tiff2DoseController, ToolbarController
@@ -40,13 +41,17 @@ class MainWindow(QMainWindow):
 
     def _create_actions(self):
         self.calib_setings_action = QAction("Settings", self)
+        self.ct_viewer_action = QAction("CT Viewer", self)
 
 
     def _create_toolbar(self):
         toolbar = self.addToolBar("Settings")
         toolbar.addAction(self.calib_setings_action)
+        toolbar_ct_viewer = self.addToolBar("CT viewer")
+        toolbar_ct_viewer.addAction(self.ct_viewer_action)
         toolbar.setOrientation(Qt.Orientation.Horizontal)
         self.conf_window = ConfigWindow()
+        self.ct_viewer = CTViewer()
 
 
     def _create_body(self):
