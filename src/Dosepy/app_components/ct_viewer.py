@@ -85,8 +85,16 @@ class CTWidget(QWidget):
 
 
     def _show_img(self, img: ndarray, aspect: float, **kwargs):
+
         self.ax.imshow(img, cmap="gray", **kwargs)
         self.ax.set_aspect(aspect)
+        self.view.draw()
+
+
+    def _show_crosshair(self, row: int, column: int):
+
+        self.hline = self.ax.axhline(row, color="red", lw=1)
+        self.vline = self.ax.axvline(column, color="red", lw=1)
         self.view.draw()
 
 

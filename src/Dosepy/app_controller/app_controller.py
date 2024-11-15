@@ -154,6 +154,7 @@ class ToolbarController(BaseController):
             img = img3d[:, :, img_shape[2] // 2],
             aspect = ax_aspect,
             )
+        #axial._show_crosshair()
 
         coronal = self._view.ct_viewer.ct_coronal_widget
         coronal._show_img(
