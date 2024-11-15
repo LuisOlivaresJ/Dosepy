@@ -8,6 +8,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT
 
+from numpy import ndarray
+
 
 class CTViewer(QWidget):
     def __init__(self, parent=None):
@@ -77,9 +79,14 @@ class CTWidget(QWidget):
 
     def _create_body(self, title):
         self.view = FigureCanvas(Figure())
-        self.axes = self.view.figure.add_subplot(111)
-        self.axes.set_title(title)
-        #self.toolbar = NavigationToolbar2QT(self.view, self)
-        #self.main_layout.addWidget(self.toolbar)
+        self.ax = self.view.figure.add_subplot(111)
+        self.ax.set_title(title)
         self.main_layout.addWidget(self.view)
+
+
+    def _show_img(self, img: ndarray, aspect: float, **kwargs):
+        self.ax.imshow(img, cmap="gray", **kwargs)
+        self.ax.set_aspect(aspect)
+        self.view.draw()
+
 

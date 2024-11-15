@@ -9,6 +9,9 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 import os
 import numpy as np
+import pydicom
+from os import listdir
+from os.path import isfile, join
 
 from Dosepy.app_components.file_dialog import (
     open_files_dialog,
@@ -55,7 +58,7 @@ class ToolbarController(BaseController):
             self._view.ct_viewer.hide()
         else:
             self._view.ct_viewer.show()
-            
+
 
     def _save_settings(self):
         print("Save settings")
@@ -83,10 +86,96 @@ class ToolbarController(BaseController):
             )
 
 
+    def _open_ct(self):
+
+        slices = self._open_ct_slices()
+        if slices:
+            array = self._create_array_from_dicom(slices)
+            self._plot_array(array, slices)
+
+    
+    def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
+        files = open_files_dialog(filter="DICOM (*.dcm)") 
+
+        if files:
+
+            ct_files = [pydicom.dcmread(f) for f in files if isfile(f)]
+
+            # skip files with no SliceLocation (eg scout views)
+            slices = []
+            skipcount = 0
+            for f in ct_files:
+                if hasattr(f, "SliceLocation"):
+                    slices.append(f)
+                else:
+                    skipcount = skipcount + 1
+
+            print(f"skipped, no SliceLocation: {skipcount}")
+    
+            return slices
+        
+        else:
+            return None
+    
+
+    def _create_array_from_dicom(self, slices: list) -> np.ndarray:
+            # ensure they are in the correct order
+            slices = sorted(slices, key=lambda s: s.SliceLocation)
+
+            # create 3D array
+            img_shape = list(slices[0].pixel_array.shape)
+            img_shape.append(len(slices))
+            img3d = np.zeros(img_shape)
+
+            # fill 3D array with the images from the files
+            for i, s in enumerate(slices):
+                img2d = s.pixel_array
+                img3d[:, :, i] = img2d
+
+            return img3d
+    
+
+    def _plot_array(self, img3d: np.ndarray, slices: list):
+
+        # Shape of the 3D array
+        img_shape = list(slices[0].pixel_array.shape)
+        img_shape.append(len(slices))
+
+        # pixel aspects, assuming all slices are the same
+        ps = slices[0].PixelSpacing
+        ss = slices[0].SliceThickness
+        ax_aspect = ps[1] / ps[0]
+        sag_aspect = ps[1] / ss
+        cor_aspect = ss / ps[0]
+
+        # plot 3 orthogonal slices
+        axial = self._view.ct_viewer.ct_axial_widget
+        axial._show_img(
+            img = img3d[:, :, img_shape[2] // 2],
+            aspect = ax_aspect,
+            )
+
+        coronal = self._view.ct_viewer.ct_coronal_widget
+        coronal._show_img(
+            img = img3d[img_shape[0] // 2, :, :].T,
+            aspect = cor_aspect,
+            origin='lower',
+            )
+
+        sagittal = self._view.ct_viewer.ct_sagittal_widget
+        sagittal._show_img(
+            img = img3d[:, img_shape[1] // 2, :],
+            aspect = sag_aspect,
+            )
+
+
     def _connectSignalsAndSlots(self):
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
         self._view.ct_viewer_action.triggered.connect(self._open_ct_viewer)
         self._view.conf_window.save_button.clicked.connect(self._save_settings)
+
+        # CT Viewer
+        self._view.ct_viewer.load_button.clicked.connect(self._open_ct)
 
 
 class CalibrationController(BaseController):
