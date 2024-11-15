@@ -22,6 +22,7 @@ import numpy as np
 from numpy import ndarray
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+import math
 
 from skimage.color import rgb2gray
 from skimage.filters import threshold_otsu
@@ -236,7 +237,10 @@ class CalibrationLUT:
         height_roi = size[1] * dpmm
 
         # Get labeled image
-        label_image, num_films_detected = self._get_labeled_image()
+        #label_image, num_films_detected = self.get_labeled_image()
+        label_image, num_films_detected = self.tiff_image.get_labeled_image(
+            erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
+            )
 
         rois = []
 
@@ -282,7 +286,9 @@ class CalibrationLUT:
         if filter:
             self.lut['filter'] = filter
             # Labeled area of the films.
-            mask, _ = self._get_labeled_image()
+            mask, _ = self.tiff_image.get_labeled_image(
+                erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
+            )
             # Array buffer to store the filtered image.
             array_img = np.empty(
                 shape = (
@@ -379,7 +385,9 @@ class CalibrationLUT:
         if filter:
             self.lut['filter'] = filter
             # Labeled area of the films.
-            mask, _ = self._get_labeled_image()
+            mask, _ = self.tiff_image.get_labeled_image(
+                erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
+            )
             # Array buffer to store the filtered image.
             array_img = np.empty(
                 shape = (
@@ -745,43 +753,6 @@ class CalibrationLUT:
             ax.axvline(y_left_limit_pix)
             ax.axvline(y_right_limit_pix)
         #plt.show()
-
-
-    def _get_labeled_image(self, threshold: float = None) -> tuple[ndarray, int]:
-        """
-        Get the labeled image of the films.
-
-        Parameters
-        ----------
-        threshold : float
-            The threshold value used to detect film. Pixel values below the threshold are considered films.
-             If None, the Otsu method is used to define a threshold.
-        
-        Returns
-        -------
-        ndarray : 
-            The labeled image, where all connceted regions are assigned the same integer value.
-        num : int
-            The number of films detected.
-        """
-
-        gray_scale = rgb2gray(self.tiff_image.array)
-
-        if not threshold:
-            thresh = threshold_otsu(gray_scale)  # Used for films identification.
-        else:
-            thresh = threshold * np.amax(gray_scale)
-
-        # Number of pixels used for erosion. 
-        # Used to remove the irregular borders of the films.
-        # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
-
-        erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)  # 6 mlimiters.
-        binary = erosion(gray_scale < thresh, square(erosion_pix))
-
-        labeled_image, number_of_films = label(binary, return_num=True)
-
-        return labeled_image, number_of_films
 
 
     def _get_calibration_positions(self) -> list:
@@ -1156,3 +1127,110 @@ class Calibration:
         if show:
             plt.show()
         return ax
+
+
+class Tiff2Dose:
+    def __init__(self, img: TiffImage, cal: CalibrationLUT):
+        self.img = img
+        self.cal = cal
+
+
+    def from_red(self, fit_function: str):
+
+        #high_pixels = self.img.shape[0]
+        width_pixels = self.img.shape[1]
+
+        mask, num_films = self.img.get_labeled_image(
+            erosion_pix=int(6*self.cal.lut["resolution"]/MM_PER_INCH)
+            )
+
+        if self.cal.lut["filter"]:
+            img_array = median(
+                self.img.array[:, :, 0],
+                footprint = square(self.cal.lut["filter"]),
+                mask = mask,
+                )
+        else:
+            img_array = self.img.array[:, :, 0]
+
+        # Buffer array to store dose from img
+        dose = np.empty((self.img.shape()))
+
+        # Create a list with the lateral positions in milimeters
+        origin = self.img.physical_shape[1]/2
+        pixel_positions_mm = np.linspace(
+            start = 0,
+            stop = self.img.physical_shape[1],
+            num = self.img.array.shape[1]
+            ) - origin
+
+        # Convert image to dose one column at a time
+        for column in range(0, width_pixels):
+
+            # Get pixel position
+            pix_position = pixel_positions_mm[column]
+            position_ceil = math.ceil(pix_position)
+            position_floor = math.floor(pix_position)
+
+            # Get calibration intensities and calibration doses at pixel positions
+            ## Get ceil and floor values to interpolate
+            cal_intensities_ceil = self.cal._get_intensities(
+                lateral_position=position_ceil,
+                channel = "red",
+            )
+            cal_intensities_floor = self.cal._get_intensities(
+                lateral_position=position_floor
+            )
+            cal_doses_ceil = self.cal._get_lateral_doses(position=position_ceil)
+            cal_doses_floor = self.cal._get_lateral_doses(position=position_floor)
+
+            ## Interpolate values
+            interp_intensities = [
+                np.interp(
+                    pix_position,
+                    cal_intensities_floor[i],
+                    cal_intensities_ceil[i])
+                for i in range(len(cal_intensities_floor))]
+            
+            interp_doses = [
+                np.interp(
+                    pix_position,
+                    cal_doses_floor[i],
+                    cal_doses_ceil[i],
+                )
+                for i in range(len(cal_intensities_floor))
+            ]
+
+            # Compute dose
+
+            ## _get_dose_from_fit uses the first element of the array to normalize
+            dose[:, column] = self.cal._get_dose_from_fit(
+                calib_film_intensities = interp_intensities,
+                calib_dose = interp_doses,
+                intensities = img_array[:, column],
+                fit_function = fit_function
+            )
+
+        return dose
+    
+
+    def plot(dose, ax: plt.Axes = None, show: bool = True, **kwargs) -> None:
+        """Plot the dose map.
+
+        Parameters
+        ----------
+        ax : matplotlib.Axes instance
+            The axis to plot the image to. If None, creates a new figure.
+        show : bool
+            Whether to actually show the image. Set to false when plotting
+            multiple items.
+        kwargs
+            kwargs passed to plt.plot()
+        """
+        if ax is None:
+            fig, ax = plt.subplots()
+
+        ax.imshow(dose)
+        if show:
+            plt.show()
+

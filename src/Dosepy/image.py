@@ -281,6 +281,49 @@ class BaseImage(ABC):
         self.array = rotate(self.array, angle, mode=mode, *args, **kwargs)
 
 
+    def get_labeled_image(
+            self,
+            threshold: float = None,
+            erosion_pix: int = 3,
+            ) -> tuple[np.ndarray, int]:
+        """
+        Get the labeled image of the films.
+        Function used to identify the films in the image using skimage.measure.label.
+
+        Parameters
+        ----------
+        threshold : float
+            The threshold value used to detect film. Pixel values below the threshold are considered films.
+             If None, the Otsu method is used to define a threshold.
+        
+        Returns
+        -------
+        ndarray : 
+            The labeled image, where all connceted regions are assigned the same integer value.
+        num : int
+            The number of films detected.
+        """
+
+        gray_scale = rgb2gray(self.array)
+
+        if not threshold:
+            thresh = threshold_otsu(gray_scale)  # Used for films identification.
+
+        else:
+            thresh = threshold * np.amax(gray_scale)
+
+        # Number of pixels used for erosion. 
+        # Used to remove the irregular borders of the films.
+        # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
+
+        #erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)  # 6 mlimiters.
+        binary = erosion(gray_scale < thresh, square(erosion_pix))
+
+        labeled_image, number_of_films = label(binary, return_num=True)
+
+        return labeled_image, number_of_films
+
+
 class TiffImage(BaseImage):
     """An image from a tiff file.
 
