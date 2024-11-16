@@ -62,7 +62,7 @@ Dosepy is currently **under development** to meet quality standards. To achieve 
 ## Contributing
 
 Dosepy uses GitHub as a plataform to store and develop the software.
-* To report software bugs create a issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
+* To report software bugs create an issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
 * To commit changes, create an issue, [fork](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) the respository, make your changes and make a new pull request.
 
 ## Discussion
