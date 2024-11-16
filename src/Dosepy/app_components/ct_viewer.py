@@ -1,7 +1,7 @@
 # Qtwidget to display CT images
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-from PySide6.QtWidgets import QGridLayout, QPushButton
+from PySide6.QtWidgets import QGridLayout, QPushButton, QSlider
 from PySide6.QtCore import Qt
 
 from matplotlib.figure import Figure
@@ -47,16 +47,29 @@ class CTViewer(QWidget):
         # Create a text box to display instructions for the user
         self.instructions = QLabel()
         self.instructions.setText(
-            "Use scroll wheel to navigate through the slices\n"
+            "Navigate through the slices to set a reference position\n"
             )
         
-        # Create a text widget to display the current slice number
-        self.slice_number = QLabel()
-        self.slice_number.setText("X: 0, Y: 0, Z: 0")
+        # Sliders to navigate through the slices
+        self.axial_slider = QSlider()
+        self.axial_slider.setOrientation(Qt.Orientation.Horizontal)
+        self.axial_label = QLabel(f"Axial: {self.axial_slider.value()}")
+
+        self.coronal_slider = QSlider()
+        self.coronal_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.sagittal_slider = QSlider()
+        self.sagittal_slider.setOrientation(Qt.Orientation.Horizontal)
+
 
         v_layout_instructions.addWidget(self.load_button)
         v_layout_instructions.addWidget(self.instructions)
-        v_layout_instructions.addWidget(self.slice_number)
+        v_layout_instructions.addWidget(self.axial_label)
+        v_layout_instructions.addWidget(self.axial_slider)
+        v_layout_instructions.addWidget(QLabel("Coronal: "))
+        v_layout_instructions.addWidget(self.coronal_slider)
+        v_layout_instructions.addWidget(QLabel("Sagittal: "))
+        v_layout_instructions.addWidget(self.sagittal_slider)
         
         grid_layout.addLayout(v_layout_instructions, 0, 1)
 
