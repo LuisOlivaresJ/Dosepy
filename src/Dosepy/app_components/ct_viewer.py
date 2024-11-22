@@ -28,10 +28,10 @@ class CTViewer(QWidget):
         # Create a gird layout to display the CT images
         grid_layout = QGridLayout()
 
-        # Create three matplotlib widgets to display the CT images
-        self.ct_axial_widget = CTWidget(title = "Axial")
-        self.ct_coronal_widget = CTWidget(title="Coronal")
-        self.ct_sagittal_widget = CTWidget(title = "Sagittal")
+        # Create three matplotlib figure widgets to display the CT images
+        self.ct_axial_widget = CTFigureWidget(title = "Axial")
+        self.ct_coronal_widget = CTFigureWidget(title="Coronal")
+        self.ct_sagittal_widget = CTFigureWidget(title = "Sagittal")
 
         grid_layout.addWidget(self.ct_axial_widget, 0, 0)
         grid_layout.addWidget(self.ct_coronal_widget, 1, 0)
@@ -52,8 +52,8 @@ class CTViewer(QWidget):
         
         # Sliders to navigate through the slices
         self.axial_slider = QSlider()
-        self.axial_slider.setOrientation(Qt.Orientation.Horizontal)
         self.axial_label = QLabel(f"Axial: {self.axial_slider.value()}")
+        self.axial_slider.setOrientation(Qt.Orientation.Horizontal)
 
         self.coronal_slider = QSlider()
         self.coronal_slider.setOrientation(Qt.Orientation.Horizontal)
@@ -78,7 +78,7 @@ class CTViewer(QWidget):
         self.main_layout.addWidget(self.accept_button, alignment=Qt.AlignmentFlag.AlignRight)
 
 
-class CTWidget(QWidget):
+class CTFigureWidget(QWidget):
     """Matplotlib widget to display CT images"""
     def __init__(self, title, parent=None):
         super().__init__()

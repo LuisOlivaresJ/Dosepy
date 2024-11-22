@@ -21,6 +21,7 @@ from Dosepy.app_components.file_dialog import (
 )
 from Dosepy.image import load
 from Dosepy.config.io_settings import load_settings
+from Dosepy.i_o import is_dicom_image
 
 
 class BaseController(ABC):
@@ -86,7 +87,7 @@ class ToolbarController(BaseController):
             )
 
 
-    def _open_ct(self):
+    def _open_ct_button(self):
 
         slices = self._open_ct_slices()
         if slices:
@@ -95,11 +96,13 @@ class ToolbarController(BaseController):
 
     
     def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
-        files = open_files_dialog(filter="DICOM (*.dcm)") 
-
+        files = open_files_dialog(filter="DICOM (*.dcm)")
+        
         if files:
 
-            ct_files = [pydicom.dcmread(f) for f in files if isfile(f)]
+            #TODO check if files are valid dicom files
+
+            ct_files = [pydicom.dcmread(f) for f in files if isfile(f) and is_dicom_image(f)]
 
             # skip files with no SliceLocation (eg scout views)
             slices = []
@@ -176,7 +179,7 @@ class ToolbarController(BaseController):
         self._view.conf_window.save_button.clicked.connect(self._save_settings)
 
         # CT Viewer
-        self._view.ct_viewer.load_button.clicked.connect(self._open_ct)
+        self._view.ct_viewer.load_button.clicked.connect(self._open_ct_button)
 
 
 class CalibrationController(BaseController):
