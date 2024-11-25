@@ -56,9 +56,11 @@ class CTViewer(QWidget):
         self.axial_slider.setOrientation(Qt.Orientation.Horizontal)
 
         self.coronal_slider = QSlider()
+        self.coronal_label = QLabel(f"Coronal: {self.coronal_slider.value()}")
         self.coronal_slider.setOrientation(Qt.Orientation.Horizontal)
 
         self.sagittal_slider = QSlider()
+        self.sagittal_label = QLabel(f"Sagittal: {self.sagittal_slider.value()}")
         self.sagittal_slider.setOrientation(Qt.Orientation.Horizontal)
 
 
@@ -66,9 +68,9 @@ class CTViewer(QWidget):
         v_layout_instructions.addWidget(self.instructions)
         v_layout_instructions.addWidget(self.axial_label)
         v_layout_instructions.addWidget(self.axial_slider)
-        v_layout_instructions.addWidget(QLabel("Coronal: "))
+        v_layout_instructions.addWidget(self.coronal_label)
         v_layout_instructions.addWidget(self.coronal_slider)
-        v_layout_instructions.addWidget(QLabel("Sagittal: "))
+        v_layout_instructions.addWidget(self.sagittal_label)
         v_layout_instructions.addWidget(self.sagittal_slider)
         
         grid_layout.addLayout(v_layout_instructions, 0, 1)

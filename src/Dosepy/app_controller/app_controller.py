@@ -91,8 +91,23 @@ class ToolbarController(BaseController):
 
         slices = self._open_ct_slices()
         if slices:
-            array = self._create_array_from_dicom(slices)
-            self._plot_array(array, slices)
+            # Save the ct image in the model
+            self._model.ct_array_img = self._create_array_from_dicom(slices)
+
+            # Compute aspect ratio and initial index
+            self._compute_aspect_ratio(slices)
+            self._compute_initial_index(slices)
+
+            # Update sliders and labels
+            self._update_sliders()
+            self._update_labels()
+
+            # Plot the ct image
+            self._plot_ct(
+                self._model.ct_array_img,
+                self._model.ct_index,
+                self._model.ct_aspect
+                )
 
     
     def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
@@ -138,38 +153,81 @@ class ToolbarController(BaseController):
             return img3d
     
 
-    def _plot_array(self, img3d: np.ndarray, slices: list):
-
-        # Shape of the 3D array
-        img_shape = list(slices[0].pixel_array.shape)
-        img_shape.append(len(slices))
-
-        # pixel aspects, assuming all slices are the same
+    def _compute_aspect_ratio(self, slices: list):
+        # Assume all slices are the same
         ps = slices[0].PixelSpacing
         ss = slices[0].SliceThickness
         ax_aspect = ps[1] / ps[0]
         sag_aspect = ps[1] / ss
         cor_aspect = ss / ps[0]
 
+        self._model.ct_aspect = {
+            "axial": ax_aspect,
+            "sagittal": sag_aspect,
+            "coronal": cor_aspect,
+        }
+
+
+    def _compute_initial_index(self, slices: list):
+        # Assume all slices are the same
+        self._model.ct_index = [
+            slices[0].Rows // 2,
+            slices[0].Columns // 2,
+            len(slices) // 2,
+        ]
+        print("Inside _compute_initial_index method")
+        print(f"Initial index: {self._model.ct_index}")
+
+
+    def _update_sliders(self):
+        # Set sliders
+        self._view.ct_viewer.axial_slider.setMinimum(0)
+        self._view.ct_viewer.coronal_slider.setMinimum(0)
+        self._view.ct_viewer.sagittal_slider.setMinimum(0)
+
+        self._view.ct_viewer.axial_slider.setMaximum(self._model.ct_array_img.shape[2] - 1)
+        self._view.ct_viewer.coronal_slider.setMaximum(self._model.ct_array_img.shape[0] - 1)
+        self._view.ct_viewer.sagittal_slider.setMaximum(self._model.ct_array_img.shape[1] - 1)
+
+        self._view.ct_viewer.axial_slider.setValue(self._model.ct_index[2])
+        self._view.ct_viewer.coronal_slider.setValue(self._model.ct_index[0])
+        self._view.ct_viewer.sagittal_slider.setValue(self._model.ct_index[1])
+
+
+    def _update_labels(self):
+        # Update labels
+        self._view.ct_viewer.axial_label.setText(f"Axial: {self._model.ct_index[2]}")
+        self._view.ct_viewer.coronal_label.setText(f"Coronal: {self._model.ct_index[0]}")
+        self._view.ct_viewer.sagittal_label.setText(f"Sagittal: {self._model.ct_index[1]}")
+
+
+    def _plot_ct(self, img3d: np.ndarray, index: list, ct_aspect: dict):
+
         # plot 3 orthogonal slices
+        # Axial
         axial = self._view.ct_viewer.ct_axial_widget
+        z_index = index[2]
         axial._show_img(
-            img = img3d[:, :, img_shape[2] // 2],
-            aspect = ax_aspect,
+            img = img3d[:, :, z_index],
+            aspect = ct_aspect["axial"],
             )
         #axial._show_crosshair()
 
+        # Coronal
         coronal = self._view.ct_viewer.ct_coronal_widget
+        row_index = index[0]
         coronal._show_img(
-            img = img3d[img_shape[0] // 2, :, :].T,
-            aspect = cor_aspect,
+            img = img3d[row_index, :, :].T,
+            aspect = ct_aspect["coronal"],
             origin='lower',
             )
 
+        # Sagittal
         sagittal = self._view.ct_viewer.ct_sagittal_widget
+        col_index = index[1]
         sagittal._show_img(
-            img = img3d[:, img_shape[1] // 2, :],
-            aspect = sag_aspect,
+            img = img3d[:, col_index, :],
+            aspect = ct_aspect["sagittal"],
             )
 
 
