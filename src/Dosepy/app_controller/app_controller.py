@@ -99,15 +99,13 @@ class ToolbarController(BaseController):
             self._compute_initial_index(slices)
 
             # Update sliders and labels
-            self._update_sliders()
+            self._setup_sliders()
             self._update_labels()
 
-            # Plot the ct image
-            self._plot_ct(
-                self._model.ct_array_img,
-                self._model.ct_index,
-                self._model.ct_aspect
-                )
+            #Update the plot
+            self._update_ct_axial_plot()
+            self._update_ct_coronal_plot()
+            self._update_ct_sagittal_plot()
 
     
     def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
@@ -179,7 +177,7 @@ class ToolbarController(BaseController):
         print(f"Initial index: {self._model.ct_index}")
 
 
-    def _update_sliders(self):
+    def _setup_sliders(self):
         # Set sliders
         self._view.ct_viewer.axial_slider.setMinimum(0)
         self._view.ct_viewer.coronal_slider.setMinimum(0)
@@ -201,34 +199,39 @@ class ToolbarController(BaseController):
         self._view.ct_viewer.sagittal_label.setText(f"Sagittal: {self._model.ct_index[1]}")
 
 
-    def _plot_ct(self, img3d: np.ndarray, index: list, ct_aspect: dict):
-
-        # plot 3 orthogonal slices
-        # Axial
+    def _update_ct_axial_plot(self):
         axial = self._view.ct_viewer.ct_axial_widget
-        z_index = index[2]
+        index = self._model.ct_index[2]
         axial._show_img(
-            img = img3d[:, :, z_index],
-            aspect = ct_aspect["axial"],
+            img = self._model.ct_array_img[:, :, index],
+            aspect = self._model.ct_aspect["axial"],
             )
-        #axial._show_crosshair()
-
-        # Coronal
+        
+    def _update_ct_coronal_plot(self):
         coronal = self._view.ct_viewer.ct_coronal_widget
-        row_index = index[0]
+        index = self._model.ct_index[0]
         coronal._show_img(
-            img = img3d[row_index, :, :].T,
-            aspect = ct_aspect["coronal"],
+            img = self._model.ct_array_img[index, :, :].T,
+            aspect = self._model.ct_aspect["coronal"],
             origin='lower',
             )
-
-        # Sagittal
+        
+    def _update_ct_sagittal_plot(self):
         sagittal = self._view.ct_viewer.ct_sagittal_widget
-        col_index = index[1]
+        index = self._model.ct_index[1]
         sagittal._show_img(
-            img = img3d[:, col_index, :],
-            aspect = ct_aspect["sagittal"],
+            img = self._model.ct_array_img[:, index, :],
+            aspect = self._model.ct_aspect["sagittal"],
             )
+
+
+    def _event_handler_axial_slider(self):
+        print(f"Inside axial slider event handler")
+        self._model.ct_index[2] = self._view.ct_viewer.axial_slider.value()
+        self._update_labels()
+        self._update_ct_axial_plot()
+        self._update_ct_coronal_crosshair()
+        self._update_ct_sagittal_crosshair()
 
 
     def _connectSignalsAndSlots(self):
@@ -238,6 +241,7 @@ class ToolbarController(BaseController):
 
         # CT Viewer
         self._view.ct_viewer.load_button.clicked.connect(self._open_ct_button)
+        self._view.ct_viewer.axial_slider.sliderReleased.connect(self._event_handler_axial_slider)
 
 
 class CalibrationController(BaseController):

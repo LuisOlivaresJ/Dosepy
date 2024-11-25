@@ -47,7 +47,7 @@ class CTViewer(QWidget):
         # Create a text box to display instructions for the user
         self.instructions = QLabel()
         self.instructions.setText(
-            "Navigate through the slices to set a reference position\n"
+            "Click and release to navigate through the slices to set a reference position\n"
             )
         
         # Sliders to navigate through the slices
@@ -108,8 +108,8 @@ class CTFigureWidget(QWidget):
 
     def _show_crosshair(self, row: int, column: int):
 
-        self.hline = self.ax.axhline(row, color="red", lw=1)
-        self.vline = self.ax.axvline(column, color="red", lw=1)
+        self.hline = self.ax.axhline(row, color="red", lw=1, alpha=0.5)
+        self.vline = self.ax.axvline(column, color="red", lw=1, alpha=0.5)
         self.view.draw()
 
 
