@@ -53,7 +53,7 @@ class ToolbarController(BaseController):
             self._view.conf_window.show()
 
     
-    def _open_ct_viewer(self):
+    def _event_handler_ct_viewer(self):
         print("CT Viewer")
         if self._view.ct_viewer.isVisible():
             self._view.ct_viewer.hide()
@@ -87,7 +87,7 @@ class ToolbarController(BaseController):
             )
 
 
-    def _open_ct_button(self):
+    def _event_handler_open_ct_button(self):
 
         slices = self._open_ct_slices()
         if slices:
@@ -102,12 +102,17 @@ class ToolbarController(BaseController):
             self._setup_sliders()
             self._update_labels()
 
-            #Update the plot
+            # Update the plot
             self._update_ct_axial_plot()
             self._update_ct_coronal_plot()
             self._update_ct_sagittal_plot()
 
-    
+            # Update crosshair
+            self._update_ct_axial_crosshair()
+            self._update_ct_coronal_crosshair()
+            self._update_ct_sagittal_crosshair()
+
+
     def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
         files = open_files_dialog(filter="DICOM (*.dcm)")
         
@@ -207,6 +212,7 @@ class ToolbarController(BaseController):
             aspect = self._model.ct_aspect["axial"],
             )
         
+
     def _update_ct_coronal_plot(self):
         coronal = self._view.ct_viewer.ct_coronal_widget
         index = self._model.ct_index[0]
@@ -215,7 +221,8 @@ class ToolbarController(BaseController):
             aspect = self._model.ct_aspect["coronal"],
             origin='lower',
             )
-        
+
+
     def _update_ct_sagittal_plot(self):
         sagittal = self._view.ct_viewer.ct_sagittal_widget
         index = self._model.ct_index[1]
@@ -226,22 +233,64 @@ class ToolbarController(BaseController):
 
 
     def _event_handler_axial_slider(self):
-        print(f"Inside axial slider event handler")
+        #print(f"Inside axial slider event handler")
         self._model.ct_index[2] = self._view.ct_viewer.axial_slider.value()
         self._update_labels()
         self._update_ct_axial_plot()
         self._update_ct_coronal_crosshair()
         self._update_ct_sagittal_crosshair()
 
+    
+    def _event_handler_coronal_slider(self):
+        #print(f"Inside coronal slider event handler")
+        self._model.ct_index[0] = self._view.ct_viewer.coronal_slider.value()
+        self._update_labels()
+        self._update_ct_coronal_plot()
+        self._update_ct_axial_crosshair()
+        self._update_ct_sagittal_crosshair()
+
+
+    def _event_handler_sagittal_slider(self):
+        #print(f"Inside sagittal slider event handler")
+        self._model.ct_index[1] = self._view.ct_viewer.sagittal_slider.value()
+        self._update_labels()
+        self._update_ct_sagittal_plot()
+        self._update_ct_axial_crosshair()
+        self._update_ct_coronal_crosshair()
+
+    
+    def _update_ct_axial_crosshair(self):
+        self._view.ct_viewer.ct_axial_widget._show_crosshair(
+            row = self._model.ct_index[0],
+            column = self._model.ct_index[1],
+            )
+
+
+    def _update_ct_coronal_crosshair(self):
+        self._view.ct_viewer.ct_coronal_widget._show_crosshair(
+            row = self._model.ct_index[2],
+            column = self._model.ct_index[1],
+            )
+    
+
+    def _update_ct_sagittal_crosshair(self):
+        self._view.ct_viewer.ct_sagittal_widget._show_crosshair(
+            row = self._model.ct_index[0],
+            column = self._model.ct_index[2],
+            )
+
 
     def _connectSignalsAndSlots(self):
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
-        self._view.ct_viewer_action.triggered.connect(self._open_ct_viewer)
+        self._view.ct_viewer_action.triggered.connect(self._event_handler_ct_viewer)
         self._view.conf_window.save_button.clicked.connect(self._save_settings)
-
+        
         # CT Viewer
-        self._view.ct_viewer.load_button.clicked.connect(self._open_ct_button)
+        self._view.ct_viewer.load_button.clicked.connect(self._event_handler_open_ct_button)
         self._view.ct_viewer.axial_slider.sliderReleased.connect(self._event_handler_axial_slider)
+        self._view.ct_viewer.coronal_slider.sliderReleased.connect(self._event_handler_coronal_slider)
+        self._view.ct_viewer.sagittal_slider.sliderReleased.connect(self._event_handler_sagittal_slider)
+        self._view.ct_viewer.accept_button.clicked.connect(self._event_handler_ct_viewer)
 
 
 class CalibrationController(BaseController):

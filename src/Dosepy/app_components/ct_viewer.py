@@ -96,6 +96,10 @@ class CTFigureWidget(QWidget):
         self.view = FigureCanvas(Figure())
         self.ax = self.view.figure.add_subplot(111)
         self.ax.set_title(title)
+        row = self.ax.get_xlim()[1] // 2
+        column = self.ax.get_ylim()[1] // 2
+        self.hline = self.ax.axhline(row, color="red", lw=1, ls="--", alpha=0.5)
+        self.vline = self.ax.axvline(column, color="red", lw=1, ls="--", alpha=0.5)
         self.main_layout.addWidget(self.view)
 
 
@@ -108,8 +112,8 @@ class CTFigureWidget(QWidget):
 
     def _show_crosshair(self, row: int, column: int):
 
-        self.hline = self.ax.axhline(row, color="red", lw=1, alpha=0.5)
-        self.vline = self.ax.axvline(column, color="red", lw=1, alpha=0.5)
+        self.hline.set_ydata([row])
+        self.vline.set_xdata([column])
         self.view.draw()
 
 
