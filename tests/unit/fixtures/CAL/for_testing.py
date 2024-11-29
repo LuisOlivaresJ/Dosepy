@@ -23,7 +23,8 @@ cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile("BeamProfile.csv")
 cal.compute_lateral_lut()
 
-print(cal.lut)
+print("lut resolution")
+print(cal.lut["resolution"])
 
 position = 0
 
@@ -63,7 +64,7 @@ position = 5
 print(f"Lateral position: {position}")
 
 channel = "red"
-print("Channel: {channel}")
+print(f"Channel: {channel}")
 
 #fit_function = "rational"
 fit_function = "rational"
@@ -110,7 +111,7 @@ cal.plot_dose_fit_uncertainty(
 fig_filter, axes_filter = plt.subplots(1, 2)
 
 cal_filter = CalibrationLUT(img)
-cal_filter.set_central_rois((180,8))
+cal_filter.set_central_rois((180, 8))
 cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
 cal_filter.compute_lateral_lut(filter = 3)
