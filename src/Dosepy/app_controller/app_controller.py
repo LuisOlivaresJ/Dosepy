@@ -9,6 +9,9 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 import os
 import numpy as np
+import pydicom
+from os import listdir
+from os.path import isfile, join
 
 from Dosepy.app_components.file_dialog import (
     open_files_dialog,
@@ -18,6 +21,7 @@ from Dosepy.app_components.file_dialog import (
 )
 from Dosepy.image import load
 from Dosepy.config.io_settings import load_settings
+from Dosepy.i_o import is_dicom_image
 
 
 class BaseController(ABC):
@@ -48,6 +52,15 @@ class ToolbarController(BaseController):
         else:
             self._view.conf_window.show()
 
+    
+    def _event_handler_ct_viewer(self):
+        print("CT Viewer")
+        if self._view.ct_viewer.isVisible():
+            self._view.ct_viewer.hide()
+        else:
+            self._view.ct_viewer.show()
+
+
     def _save_settings(self):
         print("Save settings")
         roi_size_h = self._view.conf_window.roi_size_h.text()
@@ -74,9 +87,210 @@ class ToolbarController(BaseController):
             )
 
 
+    def _event_handler_open_ct_button(self):
+
+        slices = self._open_ct_slices()
+        if slices:
+            # Save the ct image in the model
+            self._model.ct_array_img = self._create_array_from_dicom(slices)
+
+            # Compute aspect ratio and initial index
+            self._compute_aspect_ratio(slices)
+            self._compute_initial_index(slices)
+
+            # Update sliders and labels
+            self._setup_sliders()
+            self._update_labels()
+
+            # Update the plot
+            self._update_ct_axial_plot()
+            self._update_ct_coronal_plot()
+            self._update_ct_sagittal_plot()
+
+            # Update crosshair
+            self._update_ct_axial_crosshair()
+            self._update_ct_coronal_crosshair()
+            self._update_ct_sagittal_crosshair()
+
+
+    def _open_ct_slices(self) -> list[pydicom.dataset.FileDataset]:
+        files = open_files_dialog(filter="DICOM (*.dcm)")
+        
+        if files:
+
+            #TODO check if files are valid dicom files
+
+            ct_files = [pydicom.dcmread(f) for f in files if isfile(f) and is_dicom_image(f)]
+
+            # skip files with no SliceLocation (eg scout views)
+            slices = []
+            skipcount = 0
+            for f in ct_files:
+                if hasattr(f, "SliceLocation"):
+                    slices.append(f)
+                else:
+                    skipcount = skipcount + 1
+
+            print(f"skipped, no SliceLocation: {skipcount}")
+    
+            return slices
+        
+        else:
+            return None
+    
+
+    def _create_array_from_dicom(self, slices: list) -> np.ndarray:
+            # ensure they are in the correct order
+            slices = sorted(slices, key=lambda s: s.SliceLocation)
+
+            # create 3D array
+            img_shape = list(slices[0].pixel_array.shape)
+            img_shape.append(len(slices))
+            img3d = np.zeros(img_shape)
+
+            # fill 3D array with the images from the files
+            for i, s in enumerate(slices):
+                img2d = s.pixel_array
+                img3d[:, :, i] = img2d
+
+            return img3d
+    
+
+    def _compute_aspect_ratio(self, slices: list):
+        # Assume all slices are the same
+        ps = slices[0].PixelSpacing
+        ss = slices[0].SliceThickness
+        ax_aspect = ps[1] / ps[0]
+        sag_aspect = ps[1] / ss
+        cor_aspect = ss / ps[0]
+
+        self._model.ct_aspect = {
+            "axial": ax_aspect,
+            "sagittal": sag_aspect,
+            "coronal": cor_aspect,
+        }
+
+
+    def _compute_initial_index(self, slices: list):
+        # Assume all slices are the same
+        self._model.ct_index = [
+            slices[0].Rows // 2,
+            slices[0].Columns // 2,
+            len(slices) // 2,
+        ]
+        print("Inside _compute_initial_index method")
+        print(f"Initial index: {self._model.ct_index}")
+
+
+    def _setup_sliders(self):
+        # Set sliders
+        self._view.ct_viewer.axial_slider.setMinimum(0)
+        self._view.ct_viewer.coronal_slider.setMinimum(0)
+        self._view.ct_viewer.sagittal_slider.setMinimum(0)
+
+        self._view.ct_viewer.axial_slider.setMaximum(self._model.ct_array_img.shape[2] - 1)
+        self._view.ct_viewer.coronal_slider.setMaximum(self._model.ct_array_img.shape[0] - 1)
+        self._view.ct_viewer.sagittal_slider.setMaximum(self._model.ct_array_img.shape[1] - 1)
+
+        self._view.ct_viewer.axial_slider.setValue(self._model.ct_index[2])
+        self._view.ct_viewer.coronal_slider.setValue(self._model.ct_index[0])
+        self._view.ct_viewer.sagittal_slider.setValue(self._model.ct_index[1])
+
+
+    def _update_labels(self):
+        # Update labels
+        self._view.ct_viewer.axial_label.setText(f"Axial: {self._model.ct_index[2]}")
+        self._view.ct_viewer.coronal_label.setText(f"Coronal: {self._model.ct_index[0]}")
+        self._view.ct_viewer.sagittal_label.setText(f"Sagittal: {self._model.ct_index[1]}")
+
+
+    def _update_ct_axial_plot(self):
+        axial = self._view.ct_viewer.ct_axial_widget
+        index = self._model.ct_index[2]
+        axial._show_img(
+            img = self._model.ct_array_img[:, :, index],
+            aspect = self._model.ct_aspect["axial"],
+            )
+        
+
+    def _update_ct_coronal_plot(self):
+        coronal = self._view.ct_viewer.ct_coronal_widget
+        index = self._model.ct_index[0]
+        coronal._show_img(
+            img = self._model.ct_array_img[index, :, :].T,
+            aspect = self._model.ct_aspect["coronal"],
+            origin='lower',
+            )
+
+
+    def _update_ct_sagittal_plot(self):
+        sagittal = self._view.ct_viewer.ct_sagittal_widget
+        index = self._model.ct_index[1]
+        sagittal._show_img(
+            img = self._model.ct_array_img[:, index, :],
+            aspect = self._model.ct_aspect["sagittal"],
+            )
+
+
+    def _event_handler_axial_slider(self):
+        #print(f"Inside axial slider event handler")
+        self._model.ct_index[2] = self._view.ct_viewer.axial_slider.value()
+        self._update_labels()
+        self._update_ct_axial_plot()
+        self._update_ct_coronal_crosshair()
+        self._update_ct_sagittal_crosshair()
+
+    
+    def _event_handler_coronal_slider(self):
+        #print(f"Inside coronal slider event handler")
+        self._model.ct_index[0] = self._view.ct_viewer.coronal_slider.value()
+        self._update_labels()
+        self._update_ct_coronal_plot()
+        self._update_ct_axial_crosshair()
+        self._update_ct_sagittal_crosshair()
+
+
+    def _event_handler_sagittal_slider(self):
+        #print(f"Inside sagittal slider event handler")
+        self._model.ct_index[1] = self._view.ct_viewer.sagittal_slider.value()
+        self._update_labels()
+        self._update_ct_sagittal_plot()
+        self._update_ct_axial_crosshair()
+        self._update_ct_coronal_crosshair()
+
+    
+    def _update_ct_axial_crosshair(self):
+        self._view.ct_viewer.ct_axial_widget._show_crosshair(
+            row = self._model.ct_index[0],
+            column = self._model.ct_index[1],
+            )
+
+
+    def _update_ct_coronal_crosshair(self):
+        self._view.ct_viewer.ct_coronal_widget._show_crosshair(
+            row = self._model.ct_index[2],
+            column = self._model.ct_index[1],
+            )
+    
+
+    def _update_ct_sagittal_crosshair(self):
+        self._view.ct_viewer.ct_sagittal_widget._show_crosshair(
+            row = self._model.ct_index[0],
+            column = self._model.ct_index[2],
+            )
+
+
     def _connectSignalsAndSlots(self):
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
+        self._view.ct_viewer_action.triggered.connect(self._event_handler_ct_viewer)
         self._view.conf_window.save_button.clicked.connect(self._save_settings)
+        
+        # CT Viewer
+        self._view.ct_viewer.load_button.clicked.connect(self._event_handler_open_ct_button)
+        self._view.ct_viewer.axial_slider.sliderReleased.connect(self._event_handler_axial_slider)
+        self._view.ct_viewer.coronal_slider.sliderReleased.connect(self._event_handler_coronal_slider)
+        self._view.ct_viewer.sagittal_slider.sliderReleased.connect(self._event_handler_sagittal_slider)
+        self._view.ct_viewer.accept_button.clicked.connect(self._event_handler_ct_viewer)
 
 
 class CalibrationController(BaseController):

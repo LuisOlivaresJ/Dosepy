@@ -4,6 +4,7 @@ from Dosepy.image import _is_RGB, _is_image_file, load, load_images, ImageLike, 
 from Dosepy.tools.files_to_image import equate_array_size, merge, stack_images
 import imageio.v3 as iio
 import numpy as np
+from numpy import ndarray
 from importlib import resources
 import pickle
 from Dosepy.config.io_settings import Settings, load_settings
@@ -23,6 +24,14 @@ class Model:
         self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
 
         self.config: Settings = load_settings()  # The settings for the application.
+        
+        self.ct_array_img: ndarray = None  # The CT image to be used for user mark localization
+        # The index slice of the user mark in the CT image.
+        # Row as +y, column as +x, slice as +z. The same as DICOM convention.
+        self.ct_index: list[int, int, int] = None
+        # Aspect ratio of the CT image.
+        self.ct_aspect: dict[str, float] = None
+
 
     def are_valid_tif_files(self, files: list) -> bool:
         return all([_is_image_file(file) and _is_RGB(file) for file in files])
