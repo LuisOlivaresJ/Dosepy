@@ -53,9 +53,9 @@ class CalibrationLUT:
 
     lut : dict
         The look-up table (LUT) used to store data as a nested dictionary.
-        At every milimeter in the lateral direction, the lut stores the corrected dose, the mean pixel value, 
-        and the standard deviation of the pixel values for each color channel. A new calibration curve will
-        be computed at every lateral position.
+        At every milimeter (BIN_WIDTH constant) in the lateral direction
+        (perpendicular to the scanning direction), the lut stores the corrected dose,
+        the mean pixel value, and the standard deviation of the pixel values for each color channel.
         The LUT is organized as follows:
         {
             'author' : str,
@@ -64,7 +64,7 @@ class CalibrationLUT:
             'date_exposed' : str,
             'date_scanned' : str,
             'wait_time' : str,
-            'nominal_doses' : list,
+            'nominal_doses' : list, # List of sorted doses that were delivered on the films.
             'filter' : int,  # The size in pixels of the median filter applied to the image.
             'rois' : list[{  # List of ROIs used to compute the calibration curve.
                 "x" : int,  # The x coordinate (row) of the top-left corner of the ROI.
@@ -150,7 +150,7 @@ class CalibrationLUT:
         #self.set_beam_profile(beam_profile)
         
 
-    def set_doses(self, doses: list):
+    def set_doses(self, doses: list) -> None:
         """
         Set the nominal doses values that were delivered on the films.
         """
@@ -167,9 +167,10 @@ class CalibrationLUT:
         self.lut['nominal_doses'] = sorted(doses)
 
     
-    def set_beam_profile(self, beam_profile: str):
+    def set_beam_profile(self, beam_profile: str) -> None:
         """
-        Beam profile  that will be used to correct the doses at each milimeter in lateral position.
+        Beam profile that will be used to correct the doses at each milimeter in lateral position
+        due to beam horns.
 
         Parameters
         ----------
@@ -190,7 +191,7 @@ class CalibrationLUT:
 
         # Check if the beam profile is a string.
         if not isinstance(beam_profile, str):
-            raise Exception("Beam profile must be a string.")
+            raise Exception("Beam profile must be a string that has the path to the file.")
 
         # Load the beam profile.
         self.lut['beam_profile'] = load_beam_profile(beam_profile)
@@ -207,7 +208,7 @@ class CalibrationLUT:
         Parameters
         ----------
         size : tuple[width: int, height int]
-            The size of the ROIs in milimeters, width x height.
+            The size of the ROIs in milimeters.
 
         Note
         -------
@@ -215,7 +216,7 @@ class CalibrationLUT:
         [{'x': int, 'y': int, 'width': int, 'height': int}, {...}, ...]
         where: x and y are the coordinates of the top-left corner 
         (x for row and y for column),
-        and width and height are the size of the ROI in pixels.
+        width and height are the size of the ROI in pixels.
             
         """
         # Check if the image is loaded.
@@ -237,14 +238,14 @@ class CalibrationLUT:
         height_roi = size[1] * dpmm
 
         # Get labeled image
-        #label_image, num_films_detected = self.get_labeled_image()
+        # The erosion_pix parameter is set to 6 times the resolution in mm.
         label_image, num_films_detected = self.tiff_image.get_labeled_image(
-            erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
+            erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)
             )
 
         rois = []
 
-        # Get the central region of the image.
+        # Get the central region of each film.
         for region in regionprops(label_image):
             if region.area > 0.5*width_roi*height_roi:
                 rois.append(
@@ -268,7 +269,7 @@ class CalibrationLUT:
             self._plot_rois()
 
 
-    def compute_lateral_lut(self, filter: int = None):
+    def compute_lateral_lut(self, filter: int = None) -> None:
         """
         Compute the look-up table (LUT) in lateral positions at every bin of size BIN_WIDTH.
 
@@ -287,7 +288,8 @@ class CalibrationLUT:
             self.lut['filter'] = filter
             # Labeled area of the films.
             mask, _ = self.tiff_image.get_labeled_image(
-                erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
+                erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH
+                )
             )
             # Array buffer to store the filtered image.
             array_img = np.empty(
@@ -301,23 +303,22 @@ class CalibrationLUT:
             for i in range(3):
                 
                 array_img[:,:,i] = median(
-                    self.tiff_image.array[:,:,i],
+                    self.tiff_image.array[:, :, i],
                     footprint = square(filter),
                     mask = mask,
                     )
-        else:
-            # Unfiltered image.
+        else: # Unfiltered image.
             array_img = self.tiff_image.array
 
         # Create a list with the lateral positions in milimeters
-        origin = self.tiff_image.physical_shape[1]/2
+        origin = self.tiff_image.physical_shape[1]/2  # Origin in the middle of the image.
         pixel_position = np.linspace(
             start = 0,
             stop = self.tiff_image.physical_shape[1],
             num = self.tiff_image.array.shape[1]
             ) - origin
 
-
+        # Iterate over rois and columns to populate the LUT.
         for roi_num, roi in enumerate(self.lut["rois"]):
             
             target_position = int(self.lut["lateral_limits"]["left"])
@@ -331,6 +332,7 @@ class CalibrationLUT:
 
                 # Populate the LUT with the pixel values.
                 else:
+                    # Used to check if the target position is reached.
                     diff = abs(pixel_position[column_pixel] - target_position)
                     #print(diff)
                     #print(self.lut["resolution"]/MM_PER_INCH)
@@ -365,7 +367,7 @@ class CalibrationLUT:
         #self._plot_rois(dpmm=self.lut["resolution"]/MM_PER_INCH, origin=-self.tiff_image.physical_shape[1]/2)
 
 
-    def compute_central_lut(self, filter: int = None):
+    def compute_central_lut(self, filter: int = None) -> None:
         """
         Compute the look-up table (LUT) for the central region of the scanner.
 
