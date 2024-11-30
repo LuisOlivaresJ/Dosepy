@@ -4,7 +4,7 @@ import pytest
 
 import numpy as np
 
-from Dosepy.calibration import CalibrationLUT#, _get_dose_from_fit
+from Dosepy.calibration import LUT#, _get_dose_from_fit
 from Dosepy.image import load, TiffImage
 
 from pathlib import Path
@@ -33,29 +33,29 @@ def example_metadata():
         "wait_time": 24,
     }
 
-# Test the instance of the CalibrationLUT class
+# Test the instance of the LUT class
 def test_instance(example_image, example_metadata):
     
         #profile = example_profile
-        cal = CalibrationLUT(example_image,
+        cal = LUT(example_image,
                             metadata = example_metadata,
                             )
-        assert isinstance(cal, CalibrationLUT)
+        assert isinstance(cal, LUT)
 
 # Test a correct orientation of the image 
 # #TODO Implement the test_correct_orientation method
 def test_correct_orientation(example_image):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     assert cal.tiff_image.orientation == "portrait"
 
-# Test the initialization of the CalibrationLUT class
+# Test the initialization of the LUT class
 def test_initialization(example_image, example_profile, example_metadata):
     
     profile = example_profile
 
-    cal = CalibrationLUT(example_image,
+    cal = LUT(example_image,
                         #lateral_correction = True,
                         #beam_profile = profile,
                         #filter = 3,
@@ -72,10 +72,10 @@ def test_initialization(example_image, example_profile, example_metadata):
     assert cal.lut["resolution"] == 75
 
 
-# Test CalibrationLUT initialization with default values
+# Test LUT initialization with default values
 def test_initialization_default(example_image):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     assert cal.lut["author"] is None
     assert cal.lut["film_lote"] is None
@@ -88,7 +88,7 @@ def test_initialization_default(example_image):
 # Test the set_central_rois method, 6 rois should be created
 def test_set_central_rois_with_known_number_of_rois(example_image):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     cal.set_central_rois(size = (10, 10))
 
@@ -98,7 +98,7 @@ def test_set_central_rois_with_known_number_of_rois(example_image):
 # Test the set_central_rois method
 def test_set_central_rois(example_image):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     # Create rectangular rois, 5 mm width and 10 mm height
     cal.set_central_rois(size = (30, 8))
@@ -146,7 +146,7 @@ def test_set_central_rois(example_image):
 # Test the compute_lateral_lut method
 def test_compute_lateral_lut(example_image):
         
-        cal = CalibrationLUT(example_image)
+        cal = LUT(example_image)
     
         cal.set_central_rois(size = (180, 8))
     
@@ -171,7 +171,7 @@ def test_compute_lateral_lut(example_image):
 # Test lateral response below to 10 % of the central response        
 def test_get_lateral_response_below_10(example_image):
         
-        cal = CalibrationLUT(example_image) 
+        cal = LUT(example_image) 
         cal.set_central_rois(size = (180, 8)) 
         cal.compute_lateral_lut()
         
@@ -181,10 +181,10 @@ def test_get_lateral_response_below_10(example_image):
 
         assert all(abs(I_relative) < 10) 
 
-# Test the set_doses method of the CalibrationLUT class, with unordered doses
+# Test the set_doses method of the LUT class, with unordered doses
 def test_set_doses(example_image, doses = [2, 0, 4, 10, 8, 6]):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     cal.set_doses(doses)
 
@@ -195,7 +195,7 @@ def test_set_beam_profile_two_columns(
           example_image,
           ):
     
-    cal = CalibrationLUT(example_image)
+    cal = LUT(example_image)
 
     cal.set_beam_profile(
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
@@ -206,8 +206,8 @@ def test_set_beam_profile_two_columns(
     
 
 def test_get_lateral_doses(example_image):
-    # Test the get_lateral_doses method of the CalibrationLUT class
-    cal = CalibrationLUT(example_image)
+    # Test the get_lateral_doses method of the LUT class
+    cal = LUT(example_image)
     cal.set_beam_profile(
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
@@ -224,8 +224,8 @@ def test_get_lateral_doses(example_image):
     
 
 def test_get_dose_from_fit_polynomial(example_image):
-    # Test the get_dose_from_fit method of the CalibrationLUT class
-    cal = CalibrationLUT(example_image)
+    # Test the get_dose_from_fit method of the LUT class
+    cal = LUT(example_image)
     cal.set_beam_profile(
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
@@ -285,8 +285,8 @@ def test_get_dose_from_fit_polynomial(example_image):
 
 
 def test_get_dose_from_fit_rational(example_image):
-    # Test the get_dose_from_fit method of the CalibrationLUT class
-    cal = CalibrationLUT(example_image)
+    # Test the get_dose_from_fit method of the LUT class
+    cal = LUT(example_image)
     cal.set_beam_profile(
           str(cwd / "fixtures" / "CAL" / "BeamProfile.csv"),
     )
@@ -343,8 +343,8 @@ def test_get_dose_from_fit_rational(example_image):
 
 
 def test_compute_central_lut(example_image):
-    # Test the compute_central_lut method of the CalibrationLUT class
-    cal = CalibrationLUT(example_image)
+    # Test the compute_central_lut method of the LUT class
+    cal = LUT(example_image)
     cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
     cal.set_central_rois(size = (8, 8))
 

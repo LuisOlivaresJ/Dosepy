@@ -4,8 +4,8 @@ NAME
 
 DESCRIPTION
     Module for the management of the calibration curve. 
-    See CalibrationLUT class for details.
-    The CalibrationLUT class is an adoption of the LUT class from 
+    See LUT class for details.
+    The LUT class is an adoption of the LUT class from 
     OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     Main differences:
     - The data structure (LUT) to store intensites from pixels is a dictionary object.
@@ -22,17 +22,18 @@ import numpy as np
 from numpy import ndarray
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-import math
 
 from skimage.color import rgb2gray
 from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
-from skimage.filters.rank import mean, median
+from skimage.filters.rank import median
 from skimage.transform import rotate
 
 from Dosepy.image import TiffImage, MM_PER_INCH
 from Dosepy.i_o import load_beam_profile
+from Dosepy.tools.functions import optical_density, uncertainty_optical_density, ratio, uncertainty_ratio
+from Dosepy.tools.functions import polynomial_g3, rational_function, polynomial_n
 
 import yaml
 
@@ -40,7 +41,7 @@ import yaml
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
 
 
-class CalibrationLUT:
+class LUT:
     """
     Class to store data for film calibration.
     This class is an adoption of the LUT class from OMG Dosimetry package 
@@ -450,7 +451,7 @@ class CalibrationLUT:
 
         Examples
         --------
-        >>> cal = CalibrationLUT(tiff_image)
+        >>> cal = LUT(tiff_image)
         >>> cal.set_central_rois((180, 8))
         >>> cal.compute_lateral_lut()
         >>> cal.plot_lateral_response(channel = "red")
@@ -544,15 +545,15 @@ class CalibrationLUT:
 
         if fit_type == "rational":
             #response = intensities / intensities[0]
-            response = CalibrationLUT.ratio(calib_intensities)
-            response_curve = CalibrationLUT.ratio(calib_intensities_curve)
-            std_response = CalibrationLUT.uncertainty_ratio(calib_intensities, std)
+            response = ratio(calib_intensities, calib_intensities[0])
+            response_curve = ratio(calib_intensities_curve, calib_intensities_curve[0])
+            std_response = uncertainty_ratio(calib_intensities, std, calib_intensities[0], std[0])
 
         elif fit_type == "polynomial":
             #response = -np.log10(intensities/intensities[0])
-            response = CalibrationLUT.optical_density(calib_intensities)
-            response_curve = CalibrationLUT.optical_density(calib_intensities_curve)
-            std_response = CalibrationLUT.uncertainty_optical_density(calib_intensities, std)
+            response = optical_density(calib_intensities, calib_intensities[0])
+            response_curve = optical_density(calib_intensities_curve, calib_intensities_curve[0])
+            std_response = uncertainty_optical_density(calib_intensities, std, calib_intensities[0], std[0])
 
         # Get the corrected doses at a given position.
         if self.lut["lateral_correction"]:
@@ -689,7 +690,7 @@ class CalibrationLUT:
 
 
     @classmethod
-    def from_yaml_file(cls, path: str) -> CalibrationLUT:
+    def from_yaml_file(cls, path: str) -> LUT:
         """
         Load the calibration data from a YAML file.
 
@@ -699,7 +700,7 @@ class CalibrationLUT:
             The path to the file.
         """
         with open(path, mode = "r", encoding = "utf-8") as file:
-            cal = CalibrationLUT()
+            cal = LUT()
             cal.lut = yaml.full_load(file)
         return cal
 
@@ -851,36 +852,36 @@ class CalibrationLUT:
 
         if fit_function == "rational":
 
-            calib_response = CalibrationLUT.ratio(calib_film_intensities)
+            calib_response = ratio(calib_film_intensities, calib_film_intensities[0])
 
             popt, pcov = curve_fit(
-                CalibrationLUT.rational_func,
+                rational_function,
                 calib_response,
                 calib_dose,
                 p0=[0.1, 4, 4],
                 maxfev=1500,
                 )
             
-            response = CalibrationLUT.ratio(intensities)
-            dose = CalibrationLUT.rational_func(response, *popt)
+            response = ratio(intensities, intensities[0])
+            dose = rational_function(response, *popt)
 
         elif fit_function == "polynomial":
             
-            calib_response = CalibrationLUT.optical_density(calib_film_intensities)
+            calib_response = optical_density(calib_film_intensities, calib_film_intensities[0])
             print("_get_dose_from_fit")
             print("calib_response")
             print(calib_response)
 
             popt, pcov = curve_fit(
-                CalibrationLUT.polynomial_n,
+                polynomial_n,
                 calib_response,
                 calib_dose,
                 p0=[10, 35, 2.5],
                 maxfev=1500,
                 )
             
-            response = CalibrationLUT.optical_density(intensities)
-            dose = CalibrationLUT.polynomial_n(response, *popt)
+            response = optical_density(intensities, intensities[0])
+            dose = polynomial_n(response, *popt)
 
         return dose, popt, np.sqrt(np.diag(pcov))
 
@@ -914,10 +915,10 @@ class CalibrationLUT:
         #intensities_calibration, std = self._get_intensities(position, channel)
         if fit_function == "rational":
 
-            response_cal = CalibrationLUT.ratio(calib_film_intensities)
+            response_cal = ratio(calib_film_intensities, calib_film_intensities[0])
 
             popt, pcov = curve_fit(
-                CalibrationLUT.rational_func,
+                rational_function,
                 response_cal,
                 calib_doses,
                 p0=[0.1, 4.0, 4.0],
@@ -929,7 +930,12 @@ class CalibrationLUT:
             ua = np.sqrt(np.diag(pcov))[0]
             ub = np.sqrt(np.diag(pcov))[1]
 
-            std_response = CalibrationLUT.uncertainty_ratio(calib_film_intensities, std_calib_film_intensities)
+            std_response = uncertainty_ratio(
+                calib_film_intensities,
+                std_calib_film_intensities,
+                calib_film_intensities[0],
+                std_calib_film_intensities[0]
+                )
             u_exp = b*std_response/(response_cal-a)**2
             u_fit = np.sqrt( (b*ua/(response_cal-a)**2)**2 + (ub/(response_cal-a))**2 )
             u_dose = np.sqrt( u_exp**2 + u_fit**2 )
@@ -937,10 +943,10 @@ class CalibrationLUT:
 
         elif fit_function == "polynomial":
 
-            response_cal = CalibrationLUT.optical_density(calib_film_intensities)
+            response_cal = optical_density(calib_film_intensities, calib_film_intensities[0])
 
             popt, pcov = curve_fit(
-                CalibrationLUT.polynomial_n,
+                polynomial_n,
                 response_cal,
                 calib_doses,
                 p0=[10, 35, 2.5],
@@ -953,7 +959,12 @@ class CalibrationLUT:
             ua = np.sqrt(np.diag(pcov))[0]
             ub = np.sqrt(np.diag(pcov))[1]
 
-            std_response = CalibrationLUT.uncertainty_optical_density(calib_film_intensities, std_calib_film_intensities)
+            std_response = uncertainty_optical_density(
+                calib_film_intensities,
+                std_calib_film_intensities,
+                calib_film_intensities[0],
+                std_calib_film_intensities[0]
+                )
             u_exp = (a + n*b*response_cal**(n-1))*std_response
             u_fit = np.sqrt( response_cal**2*ua**2 + response_cal**(2*n)*ub**2 )
             u_dose = np.sqrt( u_exp**2 + u_fit**2 )
@@ -961,73 +972,6 @@ class CalibrationLUT:
 
         return u_dose
 
-
-    """Functions used for film calibration."""
-    @staticmethod
-    def polynomial_g3(x, a, b, c, d):
-        """
-        Polynomial function of degree 3.
-        """
-        return a + b*x + c*x**2 + d*x**3
-
-    @staticmethod
-    def polynomial_n(x, a, b, n):
-        """
-        Polynomial function of degree n.
-        """
-        return a*x + b*x**n
-
-    @staticmethod
-    def rational_func(x, a, b, c):
-        """
-        Rational function.
-        """
-        return -c + b/(x-a)
-
-
-    """Functions used for film response"""
-    @staticmethod
-    def optical_density(I):
-        """
-        Compute the optical density of the film.
-
-        Parameters
-        ----------
-        intensity : ndarray
-            Sorted pixel values of the film, in descending order.
-        """
-
-        return -np.log10(I/I[0])
-
-
-    @staticmethod
-    def uncertainty_optical_density(I, std):
-        """
-        Compute the uncertainty of the optical density of the film.
-
-        Parameters
-        ----------
-        intensity : ndarray
-            Sorted pixel values of the film, in descending order.
-        std : ndarray
-            The standard deviation of the pixel values.
-        """
-
-        return (1/np.log(10))*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
-
-    @staticmethod
-    def ratio(I):
-        """
-        Compute the ratio of the pixel values.
-        """
-        return I/I[0]
-
-    @staticmethod
-    def uncertainty_ratio(I, std):
-        """
-        Compute the uncertainty of the ratio of the pixel values.
-        """
-        return (I/I[0])*np.sqrt( (std/I)**2 + (std[0]/I[0])**2 )
 
 
 class Calibration:
@@ -1066,10 +1010,10 @@ class Calibration:
         self.func = func
 
         if self.func in ["P3", "Polynomial"]:
-            self.popt, self.pcov = curve_fit(CalibrationLUT.polynomial_g3, self.x, self.doses)
+            self.popt, self.pcov = curve_fit(LUT.polynomial_g3, self.x, self.doses)
         elif self.func in ["RF", "Rational"]:
             self.popt, self.pcov = curve_fit(
-                                            CalibrationLUT.rational_func,
+                                            LUT.rational_func,
                                             self.x,
                                             self.doses,
                                             p0=[0.1, 200, 500]
@@ -1097,10 +1041,10 @@ class Calibration:
 
         x = np.linspace(self.x[0], self.x[-1], 100)
         if self.func in ["P3", "Polynomial"]:
-            y = CalibrationLUT.polynomial_g3(x, *self.popt)
+            y = LUT.polynomial_g3(x, *self.popt)
             ax.set_xlabel("Optical density")
         elif self.func in ["RF", "Rational"]:
-            y = CalibrationLUT.rational_func(x, *self.popt)
+            y = LUT.rational_func(x, *self.popt)
             ax.set_xlabel("Normalized pixel value")
 
         if self.channel in ["R", "Red", "r", "red"]:
@@ -1130,109 +1074,4 @@ class Calibration:
             plt.show()
         return ax
 
-
-class Tiff2Dose:
-    def __init__(self, img: TiffImage, cal: CalibrationLUT):
-        self.img = img
-        self.cal = cal
-
-
-    def from_red(self, fit_function: str):
-
-        #high_pixels = self.img.shape[0]
-        width_pixels = self.img.shape[1]
-
-        mask, num_films = self.img.get_labeled_image(
-            erosion_pix=int(6*self.cal.lut["resolution"]/MM_PER_INCH)
-            )
-
-        if self.cal.lut["filter"]:
-            img_array = median(
-                self.img.array[:, :, 0],
-                footprint = square(self.cal.lut["filter"]),
-                mask = mask,
-                )
-        else:
-            img_array = self.img.array[:, :, 0]
-
-        # Buffer array to store dose from img
-        dose = np.empty((self.img.shape()))
-
-        # Create a list with the lateral positions in milimeters
-        origin = self.img.physical_shape[1]/2
-        pixel_positions_mm = np.linspace(
-            start = 0,
-            stop = self.img.physical_shape[1],
-            num = self.img.array.shape[1]
-            ) - origin
-
-        # Convert image to dose one column at a time
-        for column in range(0, width_pixels):
-
-            # Get pixel position
-            pix_position = pixel_positions_mm[column]
-            position_ceil = math.ceil(pix_position)
-            position_floor = math.floor(pix_position)
-
-            # Get calibration intensities and calibration doses at pixel positions
-            ## Get ceil and floor values to interpolate
-            cal_intensities_ceil = self.cal._get_intensities(
-                lateral_position=position_ceil,
-                channel = "red",
-            )
-            cal_intensities_floor = self.cal._get_intensities(
-                lateral_position=position_floor
-            )
-            cal_doses_ceil = self.cal._get_lateral_doses(position=position_ceil)
-            cal_doses_floor = self.cal._get_lateral_doses(position=position_floor)
-
-            ## Interpolate values
-            interp_intensities = [
-                np.interp(
-                    pix_position,
-                    cal_intensities_floor[i],
-                    cal_intensities_ceil[i])
-                for i in range(len(cal_intensities_floor))]
-            
-            interp_doses = [
-                np.interp(
-                    pix_position,
-                    cal_doses_floor[i],
-                    cal_doses_ceil[i],
-                )
-                for i in range(len(cal_intensities_floor))
-            ]
-
-            # Compute dose
-
-            ## _get_dose_from_fit uses the first element of the array to normalize
-            dose[:, column] = self.cal._get_dose_from_fit(
-                calib_film_intensities = interp_intensities,
-                calib_dose = interp_doses,
-                intensities = img_array[:, column],
-                fit_function = fit_function
-            )
-
-        return dose
-    
-
-    def plot(dose, ax: plt.Axes = None, show: bool = True, **kwargs) -> None:
-        """Plot the dose map.
-
-        Parameters
-        ----------
-        ax : matplotlib.Axes instance
-            The axis to plot the image to. If None, creates a new figure.
-        show : bool
-            Whether to actually show the image. Set to false when plotting
-            multiple items.
-        kwargs
-            kwargs passed to plt.plot()
-        """
-        if ax is None:
-            fig, ax = plt.subplots()
-
-        ax.imshow(dose)
-        if show:
-            plt.show()
 

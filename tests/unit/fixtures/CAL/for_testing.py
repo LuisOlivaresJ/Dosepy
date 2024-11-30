@@ -9,7 +9,7 @@ logging.basicConfig(
     filemode="w",
     )
 
-from Dosepy.calibration import CalibrationLUT
+from Dosepy.calibration import LUT
 from Dosepy.image import load, TiffImage
 
 import numpy as np
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 path_file = "film20240620_002.tif"
 img = load(path_file)
-cal = CalibrationLUT(img)
+cal = LUT(img)
 cal.set_central_rois((180, 8), show=True)
 cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal.set_beam_profile("BeamProfile.csv")
@@ -110,7 +110,7 @@ cal.plot_dose_fit_uncertainty(
 
 fig_filter, axes_filter = plt.subplots(1, 2)
 
-cal_filter = CalibrationLUT(img)
+cal_filter = LUT(img)
 cal_filter.set_central_rois((180, 8))
 cal_filter.set_doses([0, 1, 2, 4, 6.5, 9.5])
 cal_filter.set_beam_profile(beam_profile="BeamProfile.csv")
