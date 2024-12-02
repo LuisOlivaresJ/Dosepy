@@ -1,0 +1,15123 @@
+resolution: 75.0
+author: null
+film_lote: null
+scanner: null
+date_exposed: null
+date_scanned: null
+wait_time: null
+lateral_limits:
+  left: -93
+  right: 82
+lateral_correction: true
+rois:
+- height: 23
+  width: 531
+  x: 81
+  y: 169
+- height: 23
+  width: 531
+  x: 174
+  y: 178
+- height: 23
+  width: 531
+  x: 271
+  y: 170
+- height: 23
+  width: 531
+  x: 365
+  y: 181
+- height: 23
+  width: 531
+  x: 457
+  y: 177
+- height: 23
+  width: 531
+  x: 559
+  y: 179
+filter: null
+nominal_doses:
+- 0
+- 1
+- 2
+- 4
+- 6.5
+- 9.5
+beam_profile:
+  doses:
+  - 5.704
+  - 6.121
+  - 6.611
+  - 7.076
+  - 7.635
+  - 8.152
+  - 8.787
+  - 9.59
+  - 10.442
+  - 11.546
+  - 13.069
+  - 14.273
+  - 18.594
+  - 38.261
+  - 72.58
+  - 92.318
+  - 96.661
+  - 98.009
+  - 98.65
+  - 99.376
+  - 100.186
+  - 100.473
+  - 100.985
+  - 101.442
+  - 101.881
+  - 101.868
+  - 102.148
+  - 102.321
+  - 102.354
+  - 102.513
+  - 102.627
+  - 102.699
+  - 102.866
+  - 102.711
+  - 102.809
+  - 102.788
+  - 103.031
+  - 103.005
+  - 102.916
+  - 103.093
+  - 102.984
+  - 103.005
+  - 103.005
+  - 102.959
+  - 103.046
+  - 103.046
+  - 102.819
+  - 102.639
+  - 102.679
+  - 102.447
+  - 102.294
+  - 101.868
+  - 101.734
+  - 101.476
+  - 101.32
+  - 101.279
+  - 101.198
+  - 101.125
+  - 101.163
+  - 100.97
+  - 100.698
+  - 100.511
+  - 100.214
+  - 100.008
+  - 99.888
+  - 100.0
+  - 99.823
+  - 99.916
+  - 100.121
+  - 100.214
+  - 100.241
+  - 100.334
+  - 100.409
+  - 100.624
+  - 100.593
+  - 100.771
+  - 100.671
+  - 100.756
+  - 101.055
+  - 101.039
+  - 101.437
+  - 101.496
+  - 101.722
+  - 101.842
+  - 102.048
+  - 101.981
+  - 101.988
+  - 101.875
+  - 101.967
+  - 101.962
+  - 101.962
+  - 101.908
+  - 101.962
+  - 102.021
+  - 101.888
+  - 101.749
+  - 101.543
+  - 101.643
+  - 101.636
+  - 101.682
+  - 101.437
+  - 101.469
+  - 101.323
+  - 101.256
+  - 100.985
+  - 100.733
+  - 100.493
+  - 100.279
+  - 99.953
+  - 99.544
+  - 98.975
+  - 98.417
+  - 97.503
+  - 96.957
+  - 95.391
+  - 89.99
+  - 66.949
+  - 33.218
+  - 17.447
+  - 13.902
+  - 12.824
+  - 11.413
+  - 10.382
+  - 9.497
+  - 8.694
+  - 8.049
+  - 7.547
+  - 6.988
+  - 6.53
+  - 6.056
+  - 5.695
+  positions:
+  - -210.0
+  - -205.8
+  - -201.6
+  - -197.4
+  - -193.2
+  - -189.0
+  - -184.8
+  - -180.6
+  - -176.4
+  - -172.2
+  - -168.0
+  - -165.9
+  - -162.75
+  - -159.6
+  - -156.45
+  - -153.3
+  - -150.15
+  - -147.0
+  - -145.95
+  - -142.8
+  - -139.65
+  - -136.5
+  - -133.35
+  - -130.2
+  - -127.05
+  - -123.9
+  - -120.75
+  - -117.6
+  - -114.45
+  - -111.3
+  - -108.15
+  - -105.0
+  - -101.85
+  - -98.7
+  - -95.55
+  - -92.4
+  - -89.25
+  - -86.1
+  - -82.95
+  - -79.8
+  - -76.65
+  - -73.5
+  - -70.35
+  - -67.2
+  - -64.05
+  - -60.9
+  - -57.75
+  - -54.6
+  - -51.45
+  - -48.3
+  - -45.15
+  - -42.0
+  - -38.85
+  - -35.7
+  - -32.55
+  - -29.4
+  - -26.25
+  - -23.1
+  - -19.95
+  - -16.8
+  - -13.65
+  - -10.5
+  - -7.35
+  - -4.2
+  - -1.05
+  - 0.0
+  - 1.05
+  - 4.2
+  - 7.35
+  - 10.5
+  - 13.65
+  - 16.8
+  - 19.95
+  - 23.1
+  - 26.25
+  - 29.4
+  - 32.55
+  - 35.7
+  - 38.85
+  - 42.0
+  - 45.15
+  - 48.3
+  - 51.45
+  - 54.6
+  - 57.75
+  - 60.9
+  - 64.05
+  - 67.2
+  - 70.35
+  - 73.5
+  - 76.65
+  - 79.8
+  - 82.95
+  - 86.1
+  - 89.25
+  - 92.4
+  - 95.55
+  - 98.7
+  - 101.85
+  - 105.0
+  - 108.15
+  - 111.3
+  - 114.45
+  - 117.6
+  - 120.75
+  - 123.9
+  - 127.05
+  - 130.2
+  - 133.35
+  - 136.5
+  - 139.65
+  - 142.8
+  - 145.95
+  - 147.0
+  - 150.15
+  - 153.3
+  - 156.45
+  - 159.6
+  - 162.75
+  - 165.9
+  - 168.0
+  - 172.2
+  - 176.4
+  - 180.6
+  - 184.8
+  - 189.0
+  - 193.2
+  - 197.4
+  - 201.6
+  - 205.8
+  - 210.0
+? !!python/tuple
+- -155
+- 0
+: null
+? !!python/tuple
+- -154
+- 0
+: null
+? !!python/tuple
+- -153
+- 0
+: null
+? !!python/tuple
+- -152
+- 0
+: null
+? !!python/tuple
+- -151
+- 0
+: null
+? !!python/tuple
+- -150
+- 0
+: null
+? !!python/tuple
+- -149
+- 0
+: null
+? !!python/tuple
+- -148
+- 0
+: null
+? !!python/tuple
+- -147
+- 0
+: null
+? !!python/tuple
+- -146
+- 0
+: null
+? !!python/tuple
+- -145
+- 0
+: null
+? !!python/tuple
+- -144
+- 0
+: null
+? !!python/tuple
+- -143
+- 0
+: null
+? !!python/tuple
+- -142
+- 0
+: null
+? !!python/tuple
+- -141
+- 0
+: null
+? !!python/tuple
+- -140
+- 0
+: null
+? !!python/tuple
+- -139
+- 0
+: null
+? !!python/tuple
+- -138
+- 0
+: null
+? !!python/tuple
+- -137
+- 0
+: null
+? !!python/tuple
+- -136
+- 0
+: null
+? !!python/tuple
+- -135
+- 0
+: null
+? !!python/tuple
+- -134
+- 0
+: null
+? !!python/tuple
+- -133
+- 0
+: null
+? !!python/tuple
+- -132
+- 0
+: null
+? !!python/tuple
+- -131
+- 0
+: null
+? !!python/tuple
+- -130
+- 0
+: null
+? !!python/tuple
+- -129
+- 0
+: null
+? !!python/tuple
+- -128
+- 0
+: null
+? !!python/tuple
+- -127
+- 0
+: null
+? !!python/tuple
+- -126
+- 0
+: null
+? !!python/tuple
+- -125
+- 0
+: null
+? !!python/tuple
+- -124
+- 0
+: null
+? !!python/tuple
+- -123
+- 0
+: null
+? !!python/tuple
+- -122
+- 0
+: null
+? !!python/tuple
+- -121
+- 0
+: null
+? !!python/tuple
+- -120
+- 0
+: null
+? !!python/tuple
+- -119
+- 0
+: null
+? !!python/tuple
+- -118
+- 0
+: null
+? !!python/tuple
+- -117
+- 0
+: null
+? !!python/tuple
+- -116
+- 0
+: null
+? !!python/tuple
+- -115
+- 0
+: null
+? !!python/tuple
+- -114
+- 0
+: null
+? !!python/tuple
+- -113
+- 0
+: null
+? !!python/tuple
+- -112
+- 0
+: null
+? !!python/tuple
+- -111
+- 0
+: null
+? !!python/tuple
+- -110
+- 0
+: null
+? !!python/tuple
+- -109
+- 0
+: null
+? !!python/tuple
+- -108
+- 0
+: null
+? !!python/tuple
+- -107
+- 0
+: null
+? !!python/tuple
+- -106
+- 0
+: null
+? !!python/tuple
+- -105
+- 0
+: null
+? !!python/tuple
+- -104
+- 0
+: null
+? !!python/tuple
+- -103
+- 0
+: null
+? !!python/tuple
+- -102
+- 0
+: null
+? !!python/tuple
+- -101
+- 0
+: null
+? !!python/tuple
+- -100
+- 0
+: null
+? !!python/tuple
+- -99
+- 0
+: null
+? !!python/tuple
+- -98
+- 0
+: null
+? !!python/tuple
+- -97
+- 0
+: null
+? !!python/tuple
+- -96
+- 0
+: null
+? !!python/tuple
+- -95
+- 0
+: null
+? !!python/tuple
+- -94
+- 0
+: null
+? !!python/tuple
+- -93
+- 0
+: I_blue: 32155
+  I_green: 42167
+  I_mean: 39163
+  I_red: 43167
+  S_blue: 114
+  S_green: 119
+  S_mean: 67
+  S_red: 120
+? !!python/tuple
+- -92
+- 0
+: I_blue: 32087
+  I_green: 42136
+  I_mean: 39142
+  I_red: 43204
+  S_blue: 104
+  S_green: 119
+  S_mean: 70
+  S_red: 141
+? !!python/tuple
+- -91
+- 0
+: I_blue: 32112
+  I_green: 42134
+  I_mean: 39138
+  I_red: 43170
+  S_blue: 79
+  S_green: 94
+  S_mean: 52
+  S_red: 99
+? !!python/tuple
+- -90
+- 0
+: I_blue: 32037
+  I_green: 42061
+  I_mean: 39063
+  I_red: 43092
+  S_blue: 105
+  S_green: 118
+  S_mean: 66
+  S_red: 123
+? !!python/tuple
+- -89
+- 0
+: I_blue: 31999
+  I_green: 42055
+  I_mean: 39043
+  I_red: 43076
+  S_blue: 93
+  S_green: 106
+  S_mean: 64
+  S_red: 133
+? !!python/tuple
+- -88
+- 0
+: I_blue: 31999
+  I_green: 42026
+  I_mean: 39036
+  I_red: 43084
+  S_blue: 83
+  S_green: 96
+  S_mean: 58
+  S_red: 120
+? !!python/tuple
+- -87
+- 0
+: I_blue: 31869
+  I_green: 41885
+  I_mean: 38909
+  I_red: 42975
+  S_blue: 548
+  S_green: 639
+  S_mean: 347
+  S_red: 615
+? !!python/tuple
+- -86
+- 0
+: I_blue: 32018
+  I_green: 42047
+  I_mean: 39054
+  I_red: 43098
+  S_blue: 124
+  S_green: 100
+  S_mean: 65
+  S_red: 116
+? !!python/tuple
+- -85
+- 0
+: I_blue: 32037
+  I_green: 42062
+  I_mean: 39096
+  I_red: 43191
+  S_blue: 106
+  S_green: 113
+  S_mean: 66
+  S_red: 124
+? !!python/tuple
+- -84
+- 0
+: I_blue: 32089
+  I_green: 42088
+  I_mean: 39095
+  I_red: 43109
+  S_blue: 105
+  S_green: 101
+  S_mean: 59
+  S_red: 103
+? !!python/tuple
+- -83
+- 0
+: I_blue: 32128
+  I_green: 42131
+  I_mean: 39131
+  I_red: 43135
+  S_blue: 119
+  S_green: 137
+  S_mean: 73
+  S_red: 125
+? !!python/tuple
+- -82
+- 0
+: I_blue: 32225
+  I_green: 42188
+  I_mean: 39190
+  I_red: 43158
+  S_blue: 92
+  S_green: 98
+  S_mean: 59
+  S_red: 118
+? !!python/tuple
+- -81
+- 0
+: I_blue: 32188
+  I_green: 42180
+  I_mean: 39137
+  I_red: 43045
+  S_blue: 94
+  S_green: 116
+  S_mean: 63
+  S_red: 116
+? !!python/tuple
+- -80
+- 0
+: I_blue: 32162
+  I_green: 42093
+  I_mean: 39105
+  I_red: 43060
+  S_blue: 87
+  S_green: 117
+  S_mean: 64
+  S_red: 127
+? !!python/tuple
+- -79
+- 0
+: I_blue: 32126
+  I_green: 42050
+  I_mean: 39073
+  I_red: 43044
+  S_blue: 91
+  S_green: 100
+  S_mean: 56
+  S_red: 103
+? !!python/tuple
+- -78
+- 0
+: I_blue: 32108
+  I_green: 42065
+  I_mean: 39047
+  I_red: 42970
+  S_blue: 104
+  S_green: 97
+  S_mean: 61
+  S_red: 116
+? !!python/tuple
+- -77
+- 0
+: I_blue: 32089
+  I_green: 41977
+  I_mean: 38989
+  I_red: 42903
+  S_blue: 127
+  S_green: 143
+  S_mean: 78
+  S_red: 139
+? !!python/tuple
+- -76
+- 0
+: I_blue: 32009
+  I_green: 41947
+  I_mean: 38949
+  I_red: 42893
+  S_blue: 117
+  S_green: 109
+  S_mean: 68
+  S_red: 127
+? !!python/tuple
+- -75
+- 0
+: I_blue: 31985
+  I_green: 41939
+  I_mean: 38923
+  I_red: 42846
+  S_blue: 115
+  S_green: 112
+  S_mean: 66
+  S_red: 116
+? !!python/tuple
+- -74
+- 0
+: I_blue: 31956
+  I_green: 41963
+  I_mean: 38916
+  I_red: 42829
+  S_blue: 100
+  S_green: 107
+  S_mean: 59
+  S_red: 102
+? !!python/tuple
+- -73
+- 0
+: I_blue: 31872
+  I_green: 41861
+  I_mean: 38838
+  I_red: 42782
+  S_blue: 111
+  S_green: 114
+  S_mean: 67
+  S_red: 124
+? !!python/tuple
+- -72
+- 0
+: I_blue: 31989
+  I_green: 41957
+  I_mean: 38948
+  I_red: 42900
+  S_blue: 93
+  S_green: 115
+  S_mean: 57
+  S_red: 90
+? !!python/tuple
+- -71
+- 0
+: I_blue: 31950
+  I_green: 41932
+  I_mean: 38900
+  I_red: 42818
+  S_blue: 113
+  S_green: 128
+  S_mean: 77
+  S_red: 156
+? !!python/tuple
+- -70
+- 0
+: I_blue: 32058
+  I_green: 42042
+  I_mean: 38991
+  I_red: 42874
+  S_blue: 112
+  S_green: 110
+  S_mean: 60
+  S_red: 91
+? !!python/tuple
+- -69
+- 0
+: I_blue: 32077
+  I_green: 42089
+  I_mean: 39024
+  I_red: 42907
+  S_blue: 106
+  S_green: 100
+  S_mean: 58
+  S_red: 99
+? !!python/tuple
+- -68
+- 0
+: I_blue: 32164
+  I_green: 42135
+  I_mean: 39072
+  I_red: 42917
+  S_blue: 122
+  S_green: 111
+  S_mean: 68
+  S_red: 122
+? !!python/tuple
+- -67
+- 0
+: I_blue: 32192
+  I_green: 42170
+  I_mean: 39113
+  I_red: 42978
+  S_blue: 122
+  S_green: 98
+  S_mean: 67
+  S_red: 127
+? !!python/tuple
+- -66
+- 0
+: I_blue: 32190
+  I_green: 42147
+  I_mean: 39098
+  I_red: 42957
+  S_blue: 112
+  S_green: 114
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -65
+- 0
+: I_blue: 32216
+  I_green: 42138
+  I_mean: 39110
+  I_red: 42976
+  S_blue: 126
+  S_green: 109
+  S_mean: 68
+  S_red: 120
+? !!python/tuple
+- -64
+- 0
+: I_blue: 32242
+  I_green: 42194
+  I_mean: 39129
+  I_red: 42952
+  S_blue: 101
+  S_green: 109
+  S_mean: 60
+  S_red: 102
+? !!python/tuple
+- -63
+- 0
+: I_blue: 32194
+  I_green: 42111
+  I_mean: 39095
+  I_red: 42982
+  S_blue: 106
+  S_green: 124
+  S_mean: 68
+  S_red: 127
+? !!python/tuple
+- -62
+- 0
+: I_blue: 32127
+  I_green: 42075
+  I_mean: 39039
+  I_red: 42917
+  S_blue: 97
+  S_green: 95
+  S_mean: 58
+  S_red: 109
+? !!python/tuple
+- -61
+- 0
+: I_blue: 32117
+  I_green: 42095
+  I_mean: 39026
+  I_red: 42867
+  S_blue: 115
+  S_green: 130
+  S_mean: 67
+  S_red: 107
+? !!python/tuple
+- -60
+- 0
+: I_blue: 32147
+  I_green: 42080
+  I_mean: 39023
+  I_red: 42844
+  S_blue: 135
+  S_green: 124
+  S_mean: 72
+  S_red: 118
+? !!python/tuple
+- -59
+- 0
+: I_blue: 32142
+  I_green: 42098
+  I_mean: 39040
+  I_red: 42882
+  S_blue: 114
+  S_green: 124
+  S_mean: 65
+  S_red: 104
+? !!python/tuple
+- -58
+- 0
+: I_blue: 32137
+  I_green: 42092
+  I_mean: 39030
+  I_red: 42863
+  S_blue: 102
+  S_green: 99
+  S_mean: 64
+  S_red: 133
+? !!python/tuple
+- -57
+- 0
+: I_blue: 32158
+  I_green: 42135
+  I_mean: 39053
+  I_red: 42868
+  S_blue: 102
+  S_green: 119
+  S_mean: 63
+  S_red: 107
+? !!python/tuple
+- -56
+- 0
+: I_blue: 32036
+  I_green: 42083
+  I_mean: 38963
+  I_red: 42771
+  S_blue: 88
+  S_green: 91
+  S_mean: 53
+  S_red: 101
+? !!python/tuple
+- -55
+- 0
+: I_blue: 32078
+  I_green: 42067
+  I_mean: 38962
+  I_red: 42743
+  S_blue: 93
+  S_green: 109
+  S_mean: 62
+  S_red: 122
+? !!python/tuple
+- -54
+- 0
+: I_blue: 32118
+  I_green: 42096
+  I_mean: 39019
+  I_red: 42843
+  S_blue: 111
+  S_green: 117
+  S_mean: 65
+  S_red: 110
+? !!python/tuple
+- -53
+- 0
+: I_blue: 32116
+  I_green: 42128
+  I_mean: 39060
+  I_red: 42936
+  S_blue: 101
+  S_green: 100
+  S_mean: 58
+  S_red: 105
+? !!python/tuple
+- -52
+- 0
+: I_blue: 32116
+  I_green: 42102
+  I_mean: 39008
+  I_red: 42806
+  S_blue: 107
+  S_green: 108
+  S_mean: 64
+  S_red: 121
+? !!python/tuple
+- -51
+- 0
+: I_blue: 32131
+  I_green: 42066
+  I_mean: 39000
+  I_red: 42804
+  S_blue: 108
+  S_green: 107
+  S_mean: 65
+  S_red: 123
+? !!python/tuple
+- -50
+- 0
+: I_blue: 32119
+  I_green: 42084
+  I_mean: 39005
+  I_red: 42814
+  S_blue: 99
+  S_green: 104
+  S_mean: 61
+  S_red: 117
+? !!python/tuple
+- -49
+- 0
+: I_blue: 32103
+  I_green: 42123
+  I_mean: 39031
+  I_red: 42867
+  S_blue: 93
+  S_green: 118
+  S_mean: 63
+  S_red: 115
+? !!python/tuple
+- -48
+- 0
+: I_blue: 32170
+  I_green: 42154
+  I_mean: 39077
+  I_red: 42909
+  S_blue: 107
+  S_green: 72
+  S_mean: 56
+  S_red: 109
+? !!python/tuple
+- -47
+- 0
+: I_blue: 32137
+  I_green: 42123
+  I_mean: 39036
+  I_red: 42850
+  S_blue: 111
+  S_green: 106
+  S_mean: 63
+  S_red: 115
+? !!python/tuple
+- -46
+- 0
+: I_blue: 32172
+  I_green: 42152
+  I_mean: 39083
+  I_red: 42927
+  S_blue: 95
+  S_green: 119
+  S_mean: 62
+  S_red: 110
+? !!python/tuple
+- -45
+- 0
+: I_blue: 32223
+  I_green: 42176
+  I_mean: 39119
+  I_red: 42958
+  S_blue: 119
+  S_green: 113
+  S_mean: 67
+  S_red: 119
+? !!python/tuple
+- -44
+- 0
+: I_blue: 32284
+  I_green: 42249
+  I_mean: 39178
+  I_red: 43001
+  S_blue: 98
+  S_green: 105
+  S_mean: 61
+  S_red: 115
+? !!python/tuple
+- -43
+- 0
+: I_blue: 32393
+  I_green: 42307
+  I_mean: 39253
+  I_red: 43061
+  S_blue: 94
+  S_green: 108
+  S_mean: 58
+  S_red: 103
+? !!python/tuple
+- -42
+- 0
+: I_blue: 32359
+  I_green: 42286
+  I_mean: 39207
+  I_red: 42977
+  S_blue: 111
+  S_green: 102
+  S_mean: 65
+  S_red: 125
+? !!python/tuple
+- -41
+- 0
+: I_blue: 32380
+  I_green: 42268
+  I_mean: 39214
+  I_red: 42995
+  S_blue: 97
+  S_green: 97
+  S_mean: 62
+  S_red: 127
+? !!python/tuple
+- -40
+- 0
+: I_blue: 32368
+  I_green: 42249
+  I_mean: 39205
+  I_red: 42999
+  S_blue: 85
+  S_green: 115
+  S_mean: 68
+  S_red: 148
+? !!python/tuple
+- -39
+- 0
+: I_blue: 32452
+  I_green: 42313
+  I_mean: 39263
+  I_red: 43025
+  S_blue: 128
+  S_green: 106
+  S_mean: 63
+  S_red: 94
+? !!python/tuple
+- -38
+- 0
+: I_blue: 32453
+  I_green: 42306
+  I_mean: 39254
+  I_red: 43003
+  S_blue: 117
+  S_green: 120
+  S_mean: 72
+  S_red: 137
+? !!python/tuple
+- -37
+- 0
+: I_blue: 32487
+  I_green: 42295
+  I_mean: 39282
+  I_red: 43066
+  S_blue: 113
+  S_green: 107
+  S_mean: 65
+  S_red: 120
+? !!python/tuple
+- -36
+- 0
+: I_blue: 32534
+  I_green: 42304
+  I_mean: 39288
+  I_red: 43027
+  S_blue: 118
+  S_green: 106
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -35
+- 0
+: I_blue: 32564
+  I_green: 42362
+  I_mean: 39328
+  I_red: 43060
+  S_blue: 97
+  S_green: 95
+  S_mean: 67
+  S_red: 151
+? !!python/tuple
+- -34
+- 0
+: I_blue: 32611
+  I_green: 42421
+  I_mean: 39358
+  I_red: 43042
+  S_blue: 119
+  S_green: 132
+  S_mean: 73
+  S_red: 130
+? !!python/tuple
+- -33
+- 0
+: I_blue: 32538
+  I_green: 42373
+  I_mean: 39318
+  I_red: 43044
+  S_blue: 100
+  S_green: 111
+  S_mean: 62
+  S_red: 112
+? !!python/tuple
+- -32
+- 0
+: I_blue: 32554
+  I_green: 42321
+  I_mean: 39313
+  I_red: 43064
+  S_blue: 107
+  S_green: 111
+  S_mean: 66
+  S_red: 125
+? !!python/tuple
+- -31
+- 0
+: I_blue: 32618
+  I_green: 42343
+  I_mean: 39338
+  I_red: 43055
+  S_blue: 101
+  S_green: 99
+  S_mean: 56
+  S_red: 96
+? !!python/tuple
+- -30
+- 0
+: I_blue: 32543
+  I_green: 42249
+  I_mean: 39229
+  I_red: 42896
+  S_blue: 183
+  S_green: 182
+  S_mean: 111
+  S_red: 211
+? !!python/tuple
+- -29
+- 0
+: I_blue: 32496
+  I_green: 42219
+  I_mean: 39201
+  I_red: 42889
+  S_blue: 304
+  S_green: 370
+  S_mean: 205
+  S_red: 387
+? !!python/tuple
+- -28
+- 0
+: I_blue: 32531
+  I_green: 42267
+  I_mean: 39250
+  I_red: 42952
+  S_blue: 197
+  S_green: 216
+  S_mean: 119
+  S_red: 208
+? !!python/tuple
+- -27
+- 0
+: I_blue: 32531
+  I_green: 42246
+  I_mean: 39224
+  I_red: 42895
+  S_blue: 111
+  S_green: 125
+  S_mean: 67
+  S_red: 116
+? !!python/tuple
+- -26
+- 0
+: I_blue: 32533
+  I_green: 42248
+  I_mean: 39240
+  I_red: 42940
+  S_blue: 90
+  S_green: 108
+  S_mean: 59
+  S_red: 108
+? !!python/tuple
+- -25
+- 0
+: I_blue: 32572
+  I_green: 42261
+  I_mean: 39240
+  I_red: 42887
+  S_blue: 121
+  S_green: 108
+  S_mean: 68
+  S_red: 124
+? !!python/tuple
+- -24
+- 0
+: I_blue: 32550
+  I_green: 42254
+  I_mean: 39226
+  I_red: 42875
+  S_blue: 112
+  S_green: 107
+  S_mean: 65
+  S_red: 120
+? !!python/tuple
+- -23
+- 0
+: I_blue: 32563
+  I_green: 42233
+  I_mean: 39215
+  I_red: 42850
+  S_blue: 123
+  S_green: 151
+  S_mean: 84
+  S_red: 160
+? !!python/tuple
+- -22
+- 0
+: I_blue: 32560
+  I_green: 42220
+  I_mean: 39211
+  I_red: 42855
+  S_blue: 107
+  S_green: 109
+  S_mean: 64
+  S_red: 118
+? !!python/tuple
+- -21
+- 0
+: I_blue: 32605
+  I_green: 42260
+  I_mean: 39231
+  I_red: 42829
+  S_blue: 120
+  S_green: 129
+  S_mean: 71
+  S_red: 121
+? !!python/tuple
+- -20
+- 0
+: I_blue: 32521
+  I_green: 42217
+  I_mean: 39181
+  I_red: 42806
+  S_blue: 116
+  S_green: 111
+  S_mean: 64
+  S_red: 109
+? !!python/tuple
+- -19
+- 0
+: I_blue: 32521
+  I_green: 42141
+  I_mean: 39158
+  I_red: 42814
+  S_blue: 99
+  S_green: 113
+  S_mean: 63
+  S_red: 119
+? !!python/tuple
+- -18
+- 0
+: I_blue: 32459
+  I_green: 42148
+  I_mean: 39121
+  I_red: 42756
+  S_blue: 92
+  S_green: 101
+  S_mean: 56
+  S_red: 100
+? !!python/tuple
+- -17
+- 0
+: I_blue: 32487
+  I_green: 42076
+  I_mean: 39083
+  I_red: 42687
+  S_blue: 98
+  S_green: 123
+  S_mean: 63
+  S_red: 108
+? !!python/tuple
+- -16
+- 0
+: I_blue: 32441
+  I_green: 42014
+  I_mean: 39034
+  I_red: 42648
+  S_blue: 101
+  S_green: 95
+  S_mean: 57
+  S_red: 105
+? !!python/tuple
+- -15
+- 0
+: I_blue: 32453
+  I_green: 42017
+  I_mean: 39033
+  I_red: 42631
+  S_blue: 94
+  S_green: 92
+  S_mean: 56
+  S_red: 106
+? !!python/tuple
+- -14
+- 0
+: I_blue: 32549
+  I_green: 42132
+  I_mean: 39098
+  I_red: 42615
+  S_blue: 107
+  S_green: 189
+  S_mean: 86
+  S_red: 142
+? !!python/tuple
+- -13
+- 0
+: I_blue: 32498
+  I_green: 42121
+  I_mean: 39118
+  I_red: 42737
+  S_blue: 112
+  S_green: 226
+  S_mean: 102
+  S_red: 177
+? !!python/tuple
+- -12
+- 0
+: I_blue: 32507
+  I_green: 41985
+  I_mean: 39034
+  I_red: 42611
+  S_blue: 112
+  S_green: 113
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -11
+- 0
+: I_blue: 32533
+  I_green: 41964
+  I_mean: 39049
+  I_red: 42650
+  S_blue: 106
+  S_green: 128
+  S_mean: 68
+  S_red: 119
+? !!python/tuple
+- -10
+- 0
+: I_blue: 32543
+  I_green: 41898
+  I_mean: 38993
+  I_red: 42540
+  S_blue: 83
+  S_green: 98
+  S_mean: 57
+  S_red: 114
+? !!python/tuple
+- -9
+- 0
+: I_blue: 32486
+  I_green: 41928
+  I_mean: 38989
+  I_red: 42554
+  S_blue: 105
+  S_green: 105
+  S_mean: 63
+  S_red: 118
+? !!python/tuple
+- -8
+- 0
+: I_blue: 32540
+  I_green: 41851
+  I_mean: 38982
+  I_red: 42556
+  S_blue: 130
+  S_green: 140
+  S_mean: 76
+  S_red: 129
+? !!python/tuple
+- -7
+- 0
+: I_blue: 32529
+  I_green: 41858
+  I_mean: 38977
+  I_red: 42545
+  S_blue: 125
+  S_green: 131
+  S_mean: 73
+  S_red: 127
+? !!python/tuple
+- -6
+- 0
+: I_blue: 32538
+  I_green: 41832
+  I_mean: 38961
+  I_red: 42515
+  S_blue: 135
+  S_green: 141
+  S_mean: 82
+  S_red: 150
+? !!python/tuple
+- -5
+- 0
+: I_blue: 32534
+  I_green: 41810
+  I_mean: 38954
+  I_red: 42520
+  S_blue: 101
+  S_green: 114
+  S_mean: 66
+  S_red: 129
+? !!python/tuple
+- -4
+- 0
+: I_blue: 32496
+  I_green: 41810
+  I_mean: 38922
+  I_red: 42461
+  S_blue: 103
+  S_green: 123
+  S_mean: 69
+  S_red: 131
+? !!python/tuple
+- -3
+- 0
+: I_blue: 32517
+  I_green: 41825
+  I_mean: 38934
+  I_red: 42461
+  S_blue: 90
+  S_green: 110
+  S_mean: 60
+  S_red: 112
+? !!python/tuple
+- -2
+- 0
+: I_blue: 32492
+  I_green: 41772
+  I_mean: 38891
+  I_red: 42409
+  S_blue: 97
+  S_green: 112
+  S_mean: 63
+  S_red: 122
+? !!python/tuple
+- -1
+- 0
+: I_blue: 32432
+  I_green: 41760
+  I_mean: 38866
+  I_red: 42408
+  S_blue: 101
+  S_green: 119
+  S_mean: 61
+  S_red: 101
+? !!python/tuple
+- 0
+- 0
+: I_blue: 32408
+  I_green: 41706
+  I_mean: 38836
+  I_red: 42395
+  S_blue: 86
+  S_green: 87
+  S_mean: 53
+  S_red: 106
+? !!python/tuple
+- 1
+- 0
+: I_blue: 32366
+  I_green: 41650
+  I_mean: 38775
+  I_red: 42311
+  S_blue: 86
+  S_green: 115
+  S_mean: 62
+  S_red: 121
+? !!python/tuple
+- 2
+- 0
+: I_blue: 32326
+  I_green: 41625
+  I_mean: 38768
+  I_red: 42353
+  S_blue: 95
+  S_green: 108
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- 3
+- 0
+: I_blue: 32270
+  I_green: 41546
+  I_mean: 38688
+  I_red: 42250
+  S_blue: 96
+  S_green: 108
+  S_mean: 59
+  S_red: 104
+? !!python/tuple
+- 4
+- 0
+: I_blue: 32246
+  I_green: 41562
+  I_mean: 38681
+  I_red: 42237
+  S_blue: 102
+  S_green: 114
+  S_mean: 59
+  S_red: 91
+? !!python/tuple
+- 5
+- 0
+: I_blue: 32196
+  I_green: 41473
+  I_mean: 38650
+  I_red: 42283
+  S_blue: 97
+  S_green: 103
+  S_mean: 69
+  S_red: 152
+? !!python/tuple
+- 6
+- 0
+: I_blue: 32140
+  I_green: 41417
+  I_mean: 38578
+  I_red: 42178
+  S_blue: 125
+  S_green: 150
+  S_mean: 83
+  S_red: 157
+? !!python/tuple
+- 7
+- 0
+: I_blue: 32119
+  I_green: 41422
+  I_mean: 38562
+  I_red: 42147
+  S_blue: 108
+  S_green: 110
+  S_mean: 64
+  S_red: 117
+? !!python/tuple
+- 8
+- 0
+: I_blue: 32126
+  I_green: 41377
+  I_mean: 38541
+  I_red: 42121
+  S_blue: 105
+  S_green: 109
+  S_mean: 63
+  S_red: 117
+? !!python/tuple
+- 9
+- 0
+: I_blue: 32177
+  I_green: 41449
+  I_mean: 38594
+  I_red: 42158
+  S_blue: 113
+  S_green: 123
+  S_mean: 67
+  S_red: 115
+? !!python/tuple
+- 10
+- 0
+: I_blue: 32174
+  I_green: 41414
+  I_mean: 38579
+  I_red: 42151
+  S_blue: 118
+  S_green: 117
+  S_mean: 74
+  S_red: 149
+? !!python/tuple
+- 11
+- 0
+: I_blue: 32122
+  I_green: 41419
+  I_mean: 38543
+  I_red: 42089
+  S_blue: 139
+  S_green: 126
+  S_mean: 74
+  S_red: 124
+? !!python/tuple
+- 12
+- 0
+: I_blue: 32125
+  I_green: 41415
+  I_mean: 38532
+  I_red: 42057
+  S_blue: 105
+  S_green: 116
+  S_mean: 64
+  S_red: 115
+? !!python/tuple
+- 13
+- 0
+: I_blue: 32009
+  I_green: 41323
+  I_mean: 38445
+  I_red: 42005
+  S_blue: 103
+  S_green: 114
+  S_mean: 65
+  S_red: 121
+? !!python/tuple
+- 14
+- 0
+: I_blue: 32008
+  I_green: 41295
+  I_mean: 38425
+  I_red: 41974
+  S_blue: 139
+  S_green: 155
+  S_mean: 86
+  S_red: 157
+? !!python/tuple
+- 15
+- 0
+: I_blue: 32062
+  I_green: 41389
+  I_mean: 38502
+  I_red: 42055
+  S_blue: 113
+  S_green: 106
+  S_mean: 63
+  S_red: 110
+? !!python/tuple
+- 16
+- 0
+: I_blue: 32054
+  I_green: 41272
+  I_mean: 38439
+  I_red: 41991
+  S_blue: 113
+  S_green: 126
+  S_mean: 72
+  S_red: 138
+? !!python/tuple
+- 17
+- 0
+: I_blue: 32054
+  I_green: 41332
+  I_mean: 38440
+  I_red: 41935
+  S_blue: 101
+  S_green: 107
+  S_mean: 62
+  S_red: 115
+? !!python/tuple
+- 18
+- 0
+: I_blue: 32065
+  I_green: 41249
+  I_mean: 38406
+  I_red: 41904
+  S_blue: 117
+  S_green: 108
+  S_mean: 66
+  S_red: 122
+? !!python/tuple
+- 19
+- 0
+: I_blue: 32130
+  I_green: 41288
+  I_mean: 38469
+  I_red: 41991
+  S_blue: 103
+  S_green: 106
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- 20
+- 0
+: I_blue: 32166
+  I_green: 41314
+  I_mean: 38486
+  I_red: 41979
+  S_blue: 107
+  S_green: 96
+  S_mean: 59
+  S_red: 106
+? !!python/tuple
+- 21
+- 0
+: I_blue: 32110
+  I_green: 41272
+  I_mean: 38460
+  I_red: 41999
+  S_blue: 91
+  S_green: 110
+  S_mean: 64
+  S_red: 129
+? !!python/tuple
+- 22
+- 0
+: I_blue: 32165
+  I_green: 41241
+  I_mean: 38461
+  I_red: 41979
+  S_blue: 108
+  S_green: 93
+  S_mean: 65
+  S_red: 137
+? !!python/tuple
+- 23
+- 0
+: I_blue: 32126
+  I_green: 41260
+  I_mean: 38450
+  I_red: 41965
+  S_blue: 92
+  S_green: 95
+  S_mean: 55
+  S_red: 100
+? !!python/tuple
+- 24
+- 0
+: I_blue: 32094
+  I_green: 41247
+  I_mean: 38410
+  I_red: 41890
+  S_blue: 104
+  S_green: 110
+  S_mean: 62
+  S_red: 111
+? !!python/tuple
+- 25
+- 0
+: I_blue: 32155
+  I_green: 41280
+  I_mean: 38465
+  I_red: 41960
+  S_blue: 79
+  S_green: 98
+  S_mean: 55
+  S_red: 109
+? !!python/tuple
+- 26
+- 0
+: I_blue: 32166
+  I_green: 41314
+  I_mean: 38466
+  I_red: 41920
+  S_blue: 124
+  S_green: 120
+  S_mean: 69
+  S_red: 116
+? !!python/tuple
+- 27
+- 0
+: I_blue: 32168
+  I_green: 41251
+  I_mean: 38474
+  I_red: 42003
+  S_blue: 103
+  S_green: 91
+  S_mean: 72
+  S_red: 170
+? !!python/tuple
+- 28
+- 0
+: I_blue: 32171
+  I_green: 41313
+  I_mean: 38487
+  I_red: 41979
+  S_blue: 121
+  S_green: 113
+  S_mean: 72
+  S_red: 142
+? !!python/tuple
+- 29
+- 0
+: I_blue: 32242
+  I_green: 41338
+  I_mean: 38520
+  I_red: 41980
+  S_blue: 97
+  S_green: 108
+  S_mean: 62
+  S_red: 117
+? !!python/tuple
+- 30
+- 0
+: I_blue: 32231
+  I_green: 41383
+  I_mean: 38554
+  I_red: 42048
+  S_blue: 98
+  S_green: 126
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- 31
+- 0
+: I_blue: 32157
+  I_green: 41354
+  I_mean: 38498
+  I_red: 41985
+  S_blue: 86
+  S_green: 110
+  S_mean: 57
+  S_red: 103
+? !!python/tuple
+- 32
+- 0
+: I_blue: 32178
+  I_green: 41329
+  I_mean: 38494
+  I_red: 41977
+  S_blue: 91
+  S_green: 88
+  S_mean: 53
+  S_red: 101
+? !!python/tuple
+- 33
+- 0
+: I_blue: 32132
+  I_green: 41278
+  I_mean: 38462
+  I_red: 41978
+  S_blue: 100
+  S_green: 103
+  S_mean: 61
+  S_red: 116
+? !!python/tuple
+- 34
+- 0
+: I_blue: 32145
+  I_green: 41315
+  I_mean: 38452
+  I_red: 41898
+  S_blue: 101
+  S_green: 105
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- 35
+- 0
+: I_blue: 32129
+  I_green: 41236
+  I_mean: 38442
+  I_red: 41962
+  S_blue: 93
+  S_green: 105
+  S_mean: 63
+  S_red: 131
+? !!python/tuple
+- 36
+- 0
+: I_blue: 32039
+  I_green: 41259
+  I_mean: 38396
+  I_red: 41892
+  S_blue: 111
+  S_green: 99
+  S_mean: 65
+  S_red: 127
+? !!python/tuple
+- 37
+- 0
+: I_blue: 32037
+  I_green: 41230
+  I_mean: 38410
+  I_red: 41963
+  S_blue: 105
+  S_green: 99
+  S_mean: 61
+  S_red: 116
+? !!python/tuple
+- 38
+- 0
+: I_blue: 32084
+  I_green: 41249
+  I_mean: 38433
+  I_red: 41966
+  S_blue: 96
+  S_green: 107
+  S_mean: 60
+  S_red: 113
+? !!python/tuple
+- 39
+- 0
+: I_blue: 32058
+  I_green: 41253
+  I_mean: 38410
+  I_red: 41919
+  S_blue: 104
+  S_green: 120
+  S_mean: 66
+  S_red: 120
+? !!python/tuple
+- 40
+- 0
+: I_blue: 32041
+  I_green: 41234
+  I_mean: 38391
+  I_red: 41899
+  S_blue: 134
+  S_green: 132
+  S_mean: 75
+  S_red: 125
+? !!python/tuple
+- 41
+- 0
+: I_blue: 32007
+  I_green: 41241
+  I_mean: 38381
+  I_red: 41896
+  S_blue: 113
+  S_green: 114
+  S_mean: 65
+  S_red: 113
+? !!python/tuple
+- 42
+- 0
+: I_blue: 32007
+  I_green: 41207
+  I_mean: 38347
+  I_red: 41829
+  S_blue: 103
+  S_green: 105
+  S_mean: 58
+  S_red: 98
+? !!python/tuple
+- 43
+- 0
+: I_blue: 32068
+  I_green: 41242
+  I_mean: 38396
+  I_red: 41879
+  S_blue: 113
+  S_green: 139
+  S_mean: 70
+  S_red: 114
+? !!python/tuple
+- 44
+- 0
+: I_blue: 32031
+  I_green: 41234
+  I_mean: 38370
+  I_red: 41847
+  S_blue: 112
+  S_green: 141
+  S_mean: 77
+  S_red: 145
+? !!python/tuple
+- 45
+- 0
+: I_blue: 32069
+  I_green: 41187
+  I_mean: 38369
+  I_red: 41851
+  S_blue: 124
+  S_green: 129
+  S_mean: 76
+  S_red: 143
+? !!python/tuple
+- 46
+- 0
+: I_blue: 32033
+  I_green: 41244
+  I_mean: 38378
+  I_red: 41857
+  S_blue: 111
+  S_green: 128
+  S_mean: 67
+  S_red: 110
+? !!python/tuple
+- 47
+- 0
+: I_blue: 31948
+  I_green: 41265
+  I_mean: 38352
+  I_red: 41844
+  S_blue: 103
+  S_green: 103
+  S_mean: 63
+  S_red: 123
+? !!python/tuple
+- 48
+- 0
+: I_blue: 32022
+  I_green: 41264
+  I_mean: 38378
+  I_red: 41848
+  S_blue: 110
+  S_green: 122
+  S_mean: 69
+  S_red: 127
+? !!python/tuple
+- 49
+- 0
+: I_blue: 32081
+  I_green: 41352
+  I_mean: 38429
+  I_red: 41855
+  S_blue: 101
+  S_green: 114
+  S_mean: 66
+  S_red: 131
+? !!python/tuple
+- 50
+- 0
+: I_blue: 32098
+  I_green: 41354
+  I_mean: 38449
+  I_red: 41896
+  S_blue: 93
+  S_green: 92
+  S_mean: 59
+  S_red: 123
+? !!python/tuple
+- 51
+- 0
+: I_blue: 32066
+  I_green: 41298
+  I_mean: 38401
+  I_red: 41839
+  S_blue: 125
+  S_green: 141
+  S_mean: 80
+  S_red: 152
+? !!python/tuple
+- 52
+- 0
+: I_blue: 32071
+  I_green: 41258
+  I_mean: 38405
+  I_red: 41886
+  S_blue: 104
+  S_green: 96
+  S_mean: 64
+  S_red: 130
+? !!python/tuple
+- 53
+- 0
+: I_blue: 32086
+  I_green: 41230
+  I_mean: 38386
+  I_red: 41842
+  S_blue: 88
+  S_green: 90
+  S_mean: 55
+  S_red: 111
+? !!python/tuple
+- 54
+- 0
+: I_blue: 32119
+  I_green: 41235
+  I_mean: 38379
+  I_red: 41784
+  S_blue: 91
+  S_green: 105
+  S_mean: 58
+  S_red: 105
+? !!python/tuple
+- 55
+- 0
+: I_blue: 32161
+  I_green: 41273
+  I_mean: 38433
+  I_red: 41865
+  S_blue: 101
+  S_green: 98
+  S_mean: 61
+  S_red: 117
+? !!python/tuple
+- 56
+- 0
+: I_blue: 32207
+  I_green: 41273
+  I_mean: 38463
+  I_red: 41911
+  S_blue: 87
+  S_green: 108
+  S_mean: 57
+  S_red: 102
+? !!python/tuple
+- 57
+- 0
+: I_blue: 32224
+  I_green: 41295
+  I_mean: 38466
+  I_red: 41881
+  S_blue: 105
+  S_green: 128
+  S_mean: 67
+  S_red: 115
+? !!python/tuple
+- 58
+- 0
+: I_blue: 32289
+  I_green: 41301
+  I_mean: 38500
+  I_red: 41912
+  S_blue: 98
+  S_green: 110
+  S_mean: 62
+  S_red: 116
+? !!python/tuple
+- 59
+- 0
+: I_blue: 32333
+  I_green: 41332
+  I_mean: 38520
+  I_red: 41895
+  S_blue: 97
+  S_green: 100
+  S_mean: 58
+  S_red: 108
+? !!python/tuple
+- 60
+- 0
+: I_blue: 32307
+  I_green: 41349
+  I_mean: 38535
+  I_red: 41949
+  S_blue: 115
+  S_green: 110
+  S_mean: 66
+  S_red: 119
+? !!python/tuple
+- 61
+- 0
+: I_blue: 32311
+  I_green: 41369
+  I_mean: 38540
+  I_red: 41940
+  S_blue: 97
+  S_green: 117
+  S_mean: 64
+  S_red: 119
+? !!python/tuple
+- 62
+- 0
+: I_blue: 32258
+  I_green: 41332
+  I_mean: 38472
+  I_red: 41827
+  S_blue: 118
+  S_green: 121
+  S_mean: 71
+  S_red: 133
+? !!python/tuple
+- 63
+- 0
+: I_blue: 32260
+  I_green: 41328
+  I_mean: 38477
+  I_red: 41844
+  S_blue: 119
+  S_green: 110
+  S_mean: 63
+  S_red: 100
+? !!python/tuple
+- 64
+- 0
+: I_blue: 32189
+  I_green: 41239
+  I_mean: 38431
+  I_red: 41866
+  S_blue: 107
+  S_green: 115
+  S_mean: 64
+  S_red: 114
+? !!python/tuple
+- 65
+- 0
+: I_blue: 32153
+  I_green: 41232
+  I_mean: 38384
+  I_red: 41769
+  S_blue: 109
+  S_green: 99
+  S_mean: 64
+  S_red: 124
+? !!python/tuple
+- 66
+- 0
+: I_blue: 32097
+  I_green: 41207
+  I_mean: 38404
+  I_red: 41908
+  S_blue: 83
+  S_green: 111
+  S_mean: 71
+  S_red: 162
+? !!python/tuple
+- 67
+- 0
+: I_blue: 32045
+  I_green: 41129
+  I_mean: 38276
+  I_red: 41656
+  S_blue: 98
+  S_green: 107
+  S_mean: 63
+  S_red: 123
+? !!python/tuple
+- 68
+- 0
+: I_blue: 32001
+  I_green: 41076
+  I_mean: 38226
+  I_red: 41602
+  S_blue: 125
+  S_green: 121
+  S_mean: 72
+  S_red: 132
+? !!python/tuple
+- 69
+- 0
+: I_blue: 31990
+  I_green: 41016
+  I_mean: 38203
+  I_red: 41605
+  S_blue: 113
+  S_green: 97
+  S_mean: 61
+  S_red: 107
+? !!python/tuple
+- 70
+- 0
+: I_blue: 31956
+  I_green: 41006
+  I_mean: 38193
+  I_red: 41618
+  S_blue: 117
+  S_green: 98
+  S_mean: 62
+  S_red: 108
+? !!python/tuple
+- 71
+- 0
+: I_blue: 31913
+  I_green: 40943
+  I_mean: 38154
+  I_red: 41607
+  S_blue: 94
+  S_green: 94
+  S_mean: 59
+  S_red: 117
+? !!python/tuple
+- 72
+- 0
+: I_blue: 31899
+  I_green: 40933
+  I_mean: 38116
+  I_red: 41516
+  S_blue: 94
+  S_green: 101
+  S_mean: 59
+  S_red: 112
+? !!python/tuple
+- 73
+- 0
+: I_blue: 31881
+  I_green: 40967
+  I_mean: 38126
+  I_red: 41530
+  S_blue: 98
+  S_green: 89
+  S_mean: 57
+  S_red: 109
+? !!python/tuple
+- 74
+- 0
+: I_blue: 31867
+  I_green: 40911
+  I_mean: 38088
+  I_red: 41488
+  S_blue: 126
+  S_green: 104
+  S_mean: 66
+  S_red: 116
+? !!python/tuple
+- 75
+- 0
+: I_blue: 31841
+  I_green: 40841
+  I_mean: 38048
+  I_red: 41464
+  S_blue: 111
+  S_green: 108
+  S_mean: 70
+  S_red: 145
+? !!python/tuple
+- 76
+- 0
+: I_blue: 31836
+  I_green: 40879
+  I_mean: 38053
+  I_red: 41444
+  S_blue: 99
+  S_green: 97
+  S_mean: 60
+  S_red: 119
+? !!python/tuple
+- 77
+- 0
+: I_blue: 31874
+  I_green: 40914
+  I_mean: 38086
+  I_red: 41472
+  S_blue: 109
+  S_green: 96
+  S_mean: 64
+  S_red: 128
+? !!python/tuple
+- 78
+- 0
+: I_blue: 31849
+  I_green: 40808
+  I_mean: 38017
+  I_red: 41395
+  S_blue: 96
+  S_green: 106
+  S_mean: 60
+  S_red: 113
+? !!python/tuple
+- 79
+- 0
+: I_blue: 31742
+  I_green: 40756
+  I_mean: 37947
+  I_red: 41343
+  S_blue: 136
+  S_green: 119
+  S_mean: 76
+  S_red: 143
+? !!python/tuple
+- 80
+- 0
+: I_blue: 31735
+  I_green: 40708
+  I_mean: 37928
+  I_red: 41341
+  S_blue: 121
+  S_green: 113
+  S_mean: 69
+  S_red: 127
+? !!python/tuple
+- 81
+- 0
+: I_blue: 31757
+  I_green: 40948
+  I_mean: 38017
+  I_red: 41347
+  S_blue: 111
+  S_green: 174
+  S_mean: 78
+  S_red: 116
+? !!python/tuple
+- 82
+- 0
+: null
+? !!python/tuple
+- 83
+- 0
+: null
+? !!python/tuple
+- 84
+- 0
+: null
+? !!python/tuple
+- 85
+- 0
+: null
+? !!python/tuple
+- 86
+- 0
+: null
+? !!python/tuple
+- 87
+- 0
+: null
+? !!python/tuple
+- 88
+- 0
+: null
+? !!python/tuple
+- 89
+- 0
+: null
+? !!python/tuple
+- 90
+- 0
+: null
+? !!python/tuple
+- 91
+- 0
+: null
+? !!python/tuple
+- 92
+- 0
+: null
+? !!python/tuple
+- 93
+- 0
+: null
+? !!python/tuple
+- 94
+- 0
+: null
+? !!python/tuple
+- 95
+- 0
+: null
+? !!python/tuple
+- 96
+- 0
+: null
+? !!python/tuple
+- 97
+- 0
+: null
+? !!python/tuple
+- 98
+- 0
+: null
+? !!python/tuple
+- 99
+- 0
+: null
+? !!python/tuple
+- 100
+- 0
+: null
+? !!python/tuple
+- 101
+- 0
+: null
+? !!python/tuple
+- 102
+- 0
+: null
+? !!python/tuple
+- 103
+- 0
+: null
+? !!python/tuple
+- 104
+- 0
+: null
+? !!python/tuple
+- 105
+- 0
+: null
+? !!python/tuple
+- 106
+- 0
+: null
+? !!python/tuple
+- 107
+- 0
+: null
+? !!python/tuple
+- 108
+- 0
+: null
+? !!python/tuple
+- 109
+- 0
+: null
+? !!python/tuple
+- 110
+- 0
+: null
+? !!python/tuple
+- 111
+- 0
+: null
+? !!python/tuple
+- 112
+- 0
+: null
+? !!python/tuple
+- 113
+- 0
+: null
+? !!python/tuple
+- 114
+- 0
+: null
+? !!python/tuple
+- 115
+- 0
+: null
+? !!python/tuple
+- 116
+- 0
+: null
+? !!python/tuple
+- 117
+- 0
+: null
+? !!python/tuple
+- 118
+- 0
+: null
+? !!python/tuple
+- 119
+- 0
+: null
+? !!python/tuple
+- 120
+- 0
+: null
+? !!python/tuple
+- 121
+- 0
+: null
+? !!python/tuple
+- 122
+- 0
+: null
+? !!python/tuple
+- 123
+- 0
+: null
+? !!python/tuple
+- 124
+- 0
+: null
+? !!python/tuple
+- 125
+- 0
+: null
+? !!python/tuple
+- 126
+- 0
+: null
+? !!python/tuple
+- 127
+- 0
+: null
+? !!python/tuple
+- 128
+- 0
+: null
+? !!python/tuple
+- 129
+- 0
+: null
+? !!python/tuple
+- 130
+- 0
+: null
+? !!python/tuple
+- 131
+- 0
+: null
+? !!python/tuple
+- 132
+- 0
+: null
+? !!python/tuple
+- 133
+- 0
+: null
+? !!python/tuple
+- 134
+- 0
+: null
+? !!python/tuple
+- 135
+- 0
+: null
+? !!python/tuple
+- 136
+- 0
+: null
+? !!python/tuple
+- 137
+- 0
+: null
+? !!python/tuple
+- 138
+- 0
+: null
+? !!python/tuple
+- 139
+- 0
+: null
+? !!python/tuple
+- 140
+- 0
+: null
+? !!python/tuple
+- 141
+- 0
+: null
+? !!python/tuple
+- 142
+- 0
+: null
+? !!python/tuple
+- 143
+- 0
+: null
+? !!python/tuple
+- 144
+- 0
+: null
+? !!python/tuple
+- 145
+- 0
+: null
+? !!python/tuple
+- 146
+- 0
+: null
+? !!python/tuple
+- 147
+- 0
+: null
+? !!python/tuple
+- 148
+- 0
+: null
+? !!python/tuple
+- 149
+- 0
+: null
+? !!python/tuple
+- 150
+- 0
+: null
+? !!python/tuple
+- 151
+- 0
+: null
+? !!python/tuple
+- 152
+- 0
+: null
+? !!python/tuple
+- 153
+- 0
+: null
+? !!python/tuple
+- 154
+- 0
+: null
+? !!python/tuple
+- 155
+- 0
+: null
+? !!python/tuple
+- -155
+- 1
+: null
+? !!python/tuple
+- -154
+- 1
+: null
+? !!python/tuple
+- -153
+- 1
+: null
+? !!python/tuple
+- -152
+- 1
+: null
+? !!python/tuple
+- -151
+- 1
+: null
+? !!python/tuple
+- -150
+- 1
+: null
+? !!python/tuple
+- -149
+- 1
+: null
+? !!python/tuple
+- -148
+- 1
+: null
+? !!python/tuple
+- -147
+- 1
+: null
+? !!python/tuple
+- -146
+- 1
+: null
+? !!python/tuple
+- -145
+- 1
+: null
+? !!python/tuple
+- -144
+- 1
+: null
+? !!python/tuple
+- -143
+- 1
+: null
+? !!python/tuple
+- -142
+- 1
+: null
+? !!python/tuple
+- -141
+- 1
+: null
+? !!python/tuple
+- -140
+- 1
+: null
+? !!python/tuple
+- -139
+- 1
+: null
+? !!python/tuple
+- -138
+- 1
+: null
+? !!python/tuple
+- -137
+- 1
+: null
+? !!python/tuple
+- -136
+- 1
+: null
+? !!python/tuple
+- -135
+- 1
+: null
+? !!python/tuple
+- -134
+- 1
+: null
+? !!python/tuple
+- -133
+- 1
+: null
+? !!python/tuple
+- -132
+- 1
+: null
+? !!python/tuple
+- -131
+- 1
+: null
+? !!python/tuple
+- -130
+- 1
+: null
+? !!python/tuple
+- -129
+- 1
+: null
+? !!python/tuple
+- -128
+- 1
+: null
+? !!python/tuple
+- -127
+- 1
+: null
+? !!python/tuple
+- -126
+- 1
+: null
+? !!python/tuple
+- -125
+- 1
+: null
+? !!python/tuple
+- -124
+- 1
+: null
+? !!python/tuple
+- -123
+- 1
+: null
+? !!python/tuple
+- -122
+- 1
+: null
+? !!python/tuple
+- -121
+- 1
+: null
+? !!python/tuple
+- -120
+- 1
+: null
+? !!python/tuple
+- -119
+- 1
+: null
+? !!python/tuple
+- -118
+- 1
+: null
+? !!python/tuple
+- -117
+- 1
+: null
+? !!python/tuple
+- -116
+- 1
+: null
+? !!python/tuple
+- -115
+- 1
+: null
+? !!python/tuple
+- -114
+- 1
+: null
+? !!python/tuple
+- -113
+- 1
+: null
+? !!python/tuple
+- -112
+- 1
+: null
+? !!python/tuple
+- -111
+- 1
+: null
+? !!python/tuple
+- -110
+- 1
+: null
+? !!python/tuple
+- -109
+- 1
+: null
+? !!python/tuple
+- -108
+- 1
+: null
+? !!python/tuple
+- -107
+- 1
+: null
+? !!python/tuple
+- -106
+- 1
+: null
+? !!python/tuple
+- -105
+- 1
+: null
+? !!python/tuple
+- -104
+- 1
+: null
+? !!python/tuple
+- -103
+- 1
+: null
+? !!python/tuple
+- -102
+- 1
+: null
+? !!python/tuple
+- -101
+- 1
+: null
+? !!python/tuple
+- -100
+- 1
+: null
+? !!python/tuple
+- -99
+- 1
+: null
+? !!python/tuple
+- -98
+- 1
+: null
+? !!python/tuple
+- -97
+- 1
+: null
+? !!python/tuple
+- -96
+- 1
+: null
+? !!python/tuple
+- -95
+- 1
+: null
+? !!python/tuple
+- -94
+- 1
+: null
+? !!python/tuple
+- -93
+- 1
+: I_blue: 30913
+  I_green: 37849
+  I_mean: 34786
+  I_red: 35598
+  S_blue: 108
+  S_green: 124
+  S_mean: 66
+  S_red: 112
+? !!python/tuple
+- -92
+- 1
+: I_blue: 30835
+  I_green: 37815
+  I_mean: 34756
+  I_red: 35618
+  S_blue: 106
+  S_green: 102
+  S_mean: 61
+  S_red: 112
+? !!python/tuple
+- -91
+- 1
+: I_blue: 30834
+  I_green: 37815
+  I_mean: 34724
+  I_red: 35524
+  S_blue: 104
+  S_green: 132
+  S_mean: 66
+  S_red: 110
+? !!python/tuple
+- -90
+- 1
+: I_blue: 30771
+  I_green: 37718
+  I_mean: 34654
+  I_red: 35475
+  S_blue: 142
+  S_green: 121
+  S_mean: 75
+  S_red: 130
+? !!python/tuple
+- -89
+- 1
+: I_blue: 30716
+  I_green: 37674
+  I_mean: 34603
+  I_red: 35419
+  S_blue: 124
+  S_green: 127
+  S_mean: 73
+  S_red: 132
+? !!python/tuple
+- -88
+- 1
+: I_blue: 30613
+  I_green: 37579
+  I_mean: 34534
+  I_red: 35410
+  S_blue: 91
+  S_green: 119
+  S_mean: 63
+  S_red: 119
+? !!python/tuple
+- -87
+- 1
+: I_blue: 30692
+  I_green: 37651
+  I_mean: 34604
+  I_red: 35469
+  S_blue: 99
+  S_green: 116
+  S_mean: 61
+  S_red: 106
+? !!python/tuple
+- -86
+- 1
+: I_blue: 30702
+  I_green: 37626
+  I_mean: 34589
+  I_red: 35439
+  S_blue: 103
+  S_green: 101
+  S_mean: 67
+  S_red: 140
+? !!python/tuple
+- -85
+- 1
+: I_blue: 30652
+  I_green: 37585
+  I_mean: 34569
+  I_red: 35471
+  S_blue: 127
+  S_green: 127
+  S_mean: 76
+  S_red: 144
+? !!python/tuple
+- -84
+- 1
+: I_blue: 30624
+  I_green: 37562
+  I_mean: 34523
+  I_red: 35385
+  S_blue: 95
+  S_green: 110
+  S_mean: 60
+  S_red: 111
+? !!python/tuple
+- -83
+- 1
+: I_blue: 30693
+  I_green: 37634
+  I_mean: 34575
+  I_red: 35400
+  S_blue: 108
+  S_green: 118
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -82
+- 1
+: I_blue: 30778
+  I_green: 37716
+  I_mean: 34657
+  I_red: 35478
+  S_blue: 103
+  S_green: 104
+  S_mean: 58
+  S_red: 98
+? !!python/tuple
+- -81
+- 1
+: I_blue: 30790
+  I_green: 37708
+  I_mean: 34640
+  I_red: 35423
+  S_blue: 108
+  S_green: 140
+  S_mean: 77
+  S_red: 152
+? !!python/tuple
+- -80
+- 1
+: I_blue: 30774
+  I_green: 37640
+  I_mean: 34613
+  I_red: 35426
+  S_blue: 140
+  S_green: 155
+  S_mean: 84
+  S_red: 143
+? !!python/tuple
+- -79
+- 1
+: I_blue: 30752
+  I_green: 37649
+  I_mean: 34618
+  I_red: 35453
+  S_blue: 102
+  S_green: 104
+  S_mean: 67
+  S_red: 139
+? !!python/tuple
+- -78
+- 1
+: I_blue: 30786
+  I_green: 37682
+  I_mean: 34623
+  I_red: 35402
+  S_blue: 98
+  S_green: 114
+  S_mean: 66
+  S_red: 132
+? !!python/tuple
+- -77
+- 1
+: I_blue: 30742
+  I_green: 37622
+  I_mean: 34574
+  I_red: 35360
+  S_blue: 115
+  S_green: 125
+  S_mean: 70
+  S_red: 127
+? !!python/tuple
+- -76
+- 1
+: I_blue: 30710
+  I_green: 37555
+  I_mean: 34530
+  I_red: 35327
+  S_blue: 96
+  S_green: 128
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -75
+- 1
+: I_blue: 30607
+  I_green: 37508
+  I_mean: 34443
+  I_red: 35215
+  S_blue: 90
+  S_green: 104
+  S_mean: 58
+  S_red: 107
+? !!python/tuple
+- -74
+- 1
+: I_blue: 30625
+  I_green: 37523
+  I_mean: 34461
+  I_red: 35236
+  S_blue: 86
+  S_green: 91
+  S_mean: 54
+  S_red: 105
+? !!python/tuple
+- -73
+- 1
+: I_blue: 30537
+  I_green: 37442
+  I_mean: 34393
+  I_red: 35201
+  S_blue: 98
+  S_green: 120
+  S_mean: 64
+  S_red: 114
+? !!python/tuple
+- -72
+- 1
+: I_blue: 30591
+  I_green: 37476
+  I_mean: 34431
+  I_red: 35226
+  S_blue: 99
+  S_green: 115
+  S_mean: 64
+  S_red: 118
+? !!python/tuple
+- -71
+- 1
+: I_blue: 30564
+  I_green: 37478
+  I_mean: 34409
+  I_red: 35187
+  S_blue: 112
+  S_green: 123
+  S_mean: 72
+  S_red: 139
+? !!python/tuple
+- -70
+- 1
+: I_blue: 30711
+  I_green: 37591
+  I_mean: 34531
+  I_red: 35292
+  S_blue: 123
+  S_green: 121
+  S_mean: 69
+  S_red: 119
+? !!python/tuple
+- -69
+- 1
+: I_blue: 30727
+  I_green: 37658
+  I_mean: 34573
+  I_red: 35334
+  S_blue: 126
+  S_green: 95
+  S_mean: 67
+  S_red: 128
+? !!python/tuple
+- -68
+- 1
+: I_blue: 30781
+  I_green: 37693
+  I_mean: 34601
+  I_red: 35329
+  S_blue: 89
+  S_green: 116
+  S_mean: 61
+  S_red: 111
+? !!python/tuple
+- -67
+- 1
+: I_blue: 30802
+  I_green: 37659
+  I_mean: 34612
+  I_red: 35376
+  S_blue: 96
+  S_green: 125
+  S_mean: 65
+  S_red: 117
+? !!python/tuple
+- -66
+- 1
+: I_blue: 30788
+  I_green: 37666
+  I_mean: 34598
+  I_red: 35340
+  S_blue: 111
+  S_green: 109
+  S_mean: 61
+  S_red: 99
+? !!python/tuple
+- -65
+- 1
+: I_blue: 30815
+  I_green: 37652
+  I_mean: 34602
+  I_red: 35339
+  S_blue: 111
+  S_green: 123
+  S_mean: 67
+  S_red: 117
+? !!python/tuple
+- -64
+- 1
+: I_blue: 30840
+  I_green: 37677
+  I_mean: 34615
+  I_red: 35329
+  S_blue: 125
+  S_green: 119
+  S_mean: 71
+  S_red: 126
+? !!python/tuple
+- -63
+- 1
+: I_blue: 30874
+  I_green: 37670
+  I_mean: 34655
+  I_red: 35421
+  S_blue: 104
+  S_green: 113
+  S_mean: 63
+  S_red: 113
+? !!python/tuple
+- -62
+- 1
+: I_blue: 30788
+  I_green: 37651
+  I_mean: 34585
+  I_red: 35318
+  S_blue: 112
+  S_green: 121
+  S_mean: 68
+  S_red: 121
+? !!python/tuple
+- -61
+- 1
+: I_blue: 30705
+  I_green: 37584
+  I_mean: 34508
+  I_red: 35237
+  S_blue: 101
+  S_green: 101
+  S_mean: 57
+  S_red: 96
+? !!python/tuple
+- -60
+- 1
+: I_blue: 30688
+  I_green: 37545
+  I_mean: 34473
+  I_red: 35187
+  S_blue: 93
+  S_green: 116
+  S_mean: 62
+  S_red: 112
+? !!python/tuple
+- -59
+- 1
+: I_blue: 30626
+  I_green: 37503
+  I_mean: 34433
+  I_red: 35170
+  S_blue: 98
+  S_green: 112
+  S_mean: 58
+  S_red: 91
+? !!python/tuple
+- -58
+- 1
+: I_blue: 30680
+  I_green: 37537
+  I_mean: 34465
+  I_red: 35180
+  S_blue: 107
+  S_green: 120
+  S_mean: 66
+  S_red: 120
+? !!python/tuple
+- -57
+- 1
+: I_blue: 30701
+  I_green: 37580
+  I_mean: 34501
+  I_red: 35224
+  S_blue: 110
+  S_green: 107
+  S_mean: 65
+  S_red: 121
+? !!python/tuple
+- -56
+- 1
+: I_blue: 30674
+  I_green: 37615
+  I_mean: 34495
+  I_red: 35198
+  S_blue: 97
+  S_green: 111
+  S_mean: 60
+  S_red: 104
+? !!python/tuple
+- -55
+- 1
+: I_blue: 30724
+  I_green: 37593
+  I_mean: 34490
+  I_red: 35153
+  S_blue: 104
+  S_green: 125
+  S_mean: 68
+  S_red: 126
+? !!python/tuple
+- -54
+- 1
+: I_blue: 30741
+  I_green: 37589
+  I_mean: 34525
+  I_red: 35246
+  S_blue: 93
+  S_green: 97
+  S_mean: 58
+  S_red: 111
+? !!python/tuple
+- -53
+- 1
+: I_blue: 30742
+  I_green: 37649
+  I_mean: 34582
+  I_red: 35357
+  S_blue: 104
+  S_green: 103
+  S_mean: 58
+  S_red: 97
+? !!python/tuple
+- -52
+- 1
+: I_blue: 30712
+  I_green: 37584
+  I_mean: 34518
+  I_red: 35259
+  S_blue: 103
+  S_green: 111
+  S_mean: 61
+  S_red: 107
+? !!python/tuple
+- -51
+- 1
+: I_blue: 30711
+  I_green: 37532
+  I_mean: 34493
+  I_red: 35237
+  S_blue: 97
+  S_green: 115
+  S_mean: 61
+  S_red: 109
+? !!python/tuple
+- -50
+- 1
+: I_blue: 30688
+  I_green: 37530
+  I_mean: 34469
+  I_red: 35189
+  S_blue: 111
+  S_green: 117
+  S_mean: 67
+  S_red: 121
+? !!python/tuple
+- -49
+- 1
+: I_blue: 30723
+  I_green: 37629
+  I_mean: 34536
+  I_red: 35256
+  S_blue: 103
+  S_green: 137
+  S_mean: 71
+  S_red: 131
+? !!python/tuple
+- -48
+- 1
+: I_blue: 30798
+  I_green: 37672
+  I_mean: 34616
+  I_red: 35378
+  S_blue: 129
+  S_green: 105
+  S_mean: 68
+  S_red: 120
+? !!python/tuple
+- -47
+- 1
+: I_blue: 30807
+  I_green: 37703
+  I_mean: 34621
+  I_red: 35354
+  S_blue: 124
+  S_green: 120
+  S_mean: 67
+  S_red: 107
+? !!python/tuple
+- -46
+- 1
+: I_blue: 30802
+  I_green: 37677
+  I_mean: 34620
+  I_red: 35382
+  S_blue: 133
+  S_green: 121
+  S_mean: 71
+  S_red: 116
+? !!python/tuple
+- -45
+- 1
+: I_blue: 30866
+  I_green: 37727
+  I_mean: 34673
+  I_red: 35426
+  S_blue: 110
+  S_green: 125
+  S_mean: 70
+  S_red: 132
+? !!python/tuple
+- -44
+- 1
+: I_blue: 30883
+  I_green: 37745
+  I_mean: 34689
+  I_red: 35441
+  S_blue: 115
+  S_green: 83
+  S_mean: 60
+  S_red: 112
+? !!python/tuple
+- -43
+- 1
+: I_blue: 30965
+  I_green: 37785
+  I_mean: 34750
+  I_red: 35501
+  S_blue: 99
+  S_green: 96
+  S_mean: 58
+  S_red: 110
+? !!python/tuple
+- -42
+- 1
+: I_blue: 30928
+  I_green: 37787
+  I_mean: 34717
+  I_red: 35437
+  S_blue: 112
+  S_green: 96
+  S_mean: 60
+  S_red: 107
+? !!python/tuple
+- -41
+- 1
+: I_blue: 31000
+  I_green: 37770
+  I_mean: 34753
+  I_red: 35489
+  S_blue: 115
+  S_green: 93
+  S_mean: 65
+  S_red: 130
+? !!python/tuple
+- -40
+- 1
+: I_blue: 30966
+  I_green: 37745
+  I_mean: 34723
+  I_red: 35459
+  S_blue: 118
+  S_green: 126
+  S_mean: 77
+  S_red: 156
+? !!python/tuple
+- -39
+- 1
+: I_blue: 31032
+  I_green: 37797
+  I_mean: 34768
+  I_red: 35476
+  S_blue: 99
+  S_green: 107
+  S_mean: 62
+  S_red: 117
+? !!python/tuple
+- -38
+- 1
+: I_blue: 31028
+  I_green: 37821
+  I_mean: 34783
+  I_red: 35500
+  S_blue: 110
+  S_green: 117
+  S_mean: 67
+  S_red: 125
+? !!python/tuple
+- -37
+- 1
+: I_blue: 31040
+  I_green: 37786
+  I_mean: 34784
+  I_red: 35526
+  S_blue: 127
+  S_green: 115
+  S_mean: 69
+  S_red: 121
+? !!python/tuple
+- -36
+- 1
+: I_blue: 31078
+  I_green: 37816
+  I_mean: 34807
+  I_red: 35528
+  S_blue: 111
+  S_green: 110
+  S_mean: 66
+  S_red: 122
+? !!python/tuple
+- -35
+- 1
+: I_blue: 31174
+  I_green: 37901
+  I_mean: 34892
+  I_red: 35601
+  S_blue: 105
+  S_green: 124
+  S_mean: 72
+  S_red: 146
+? !!python/tuple
+- -34
+- 1
+: I_blue: 31210
+  I_green: 37968
+  I_mean: 34922
+  I_red: 35588
+  S_blue: 129
+  S_green: 122
+  S_mean: 68
+  S_red: 105
+? !!python/tuple
+- -33
+- 1
+: I_blue: 31173
+  I_green: 37920
+  I_mean: 34898
+  I_red: 35602
+  S_blue: 113
+  S_green: 95
+  S_mean: 59
+  S_red: 98
+? !!python/tuple
+- -32
+- 1
+: I_blue: 31134
+  I_green: 37881
+  I_mean: 34864
+  I_red: 35577
+  S_blue: 111
+  S_green: 142
+  S_mean: 79
+  S_red: 154
+? !!python/tuple
+- -31
+- 1
+: I_blue: 31193
+  I_green: 37866
+  I_mean: 34882
+  I_red: 35588
+  S_blue: 104
+  S_green: 87
+  S_mean: 57
+  S_red: 109
+? !!python/tuple
+- -30
+- 1
+: I_blue: 31169
+  I_green: 37802
+  I_mean: 34816
+  I_red: 35478
+  S_blue: 113
+  S_green: 96
+  S_mean: 64
+  S_red: 123
+? !!python/tuple
+- -29
+- 1
+: I_blue: 31188
+  I_green: 37869
+  I_mean: 34859
+  I_red: 35520
+  S_blue: 116
+  S_green: 120
+  S_mean: 73
+  S_red: 142
+? !!python/tuple
+- -28
+- 1
+: I_blue: 31224
+  I_green: 37902
+  I_mean: 34900
+  I_red: 35574
+  S_blue: 119
+  S_green: 91
+  S_mean: 66
+  S_red: 134
+? !!python/tuple
+- -27
+- 1
+: I_blue: 31213
+  I_green: 37871
+  I_mean: 34866
+  I_red: 35516
+  S_blue: 88
+  S_green: 101
+  S_mean: 57
+  S_red: 108
+? !!python/tuple
+- -26
+- 1
+: I_blue: 31157
+  I_green: 37797
+  I_mean: 34809
+  I_red: 35473
+  S_blue: 114
+  S_green: 114
+  S_mean: 67
+  S_red: 124
+? !!python/tuple
+- -25
+- 1
+: I_blue: 31176
+  I_green: 37810
+  I_mean: 34808
+  I_red: 35440
+  S_blue: 94
+  S_green: 97
+  S_mean: 58
+  S_red: 114
+? !!python/tuple
+- -24
+- 1
+: I_blue: 31108
+  I_green: 37782
+  I_mean: 34767
+  I_red: 35411
+  S_blue: 110
+  S_green: 125
+  S_mean: 67
+  S_red: 116
+? !!python/tuple
+- -23
+- 1
+: I_blue: 31141
+  I_green: 37788
+  I_mean: 34776
+  I_red: 35401
+  S_blue: 87
+  S_green: 116
+  S_mean: 64
+  S_red: 126
+? !!python/tuple
+- -22
+- 1
+: I_blue: 31189
+  I_green: 37826
+  I_mean: 34816
+  I_red: 35435
+  S_blue: 109
+  S_green: 92
+  S_mean: 61
+  S_red: 119
+? !!python/tuple
+- -21
+- 1
+: I_blue: 31200
+  I_green: 37841
+  I_mean: 34810
+  I_red: 35389
+  S_blue: 124
+  S_green: 126
+  S_mean: 68
+  S_red: 103
+? !!python/tuple
+- -20
+- 1
+: I_blue: 31122
+  I_green: 37809
+  I_mean: 34770
+  I_red: 35380
+  S_blue: 135
+  S_green: 116
+  S_mean: 73
+  S_red: 130
+? !!python/tuple
+- -19
+- 1
+: I_blue: 31179
+  I_green: 37788
+  I_mean: 34784
+  I_red: 35387
+  S_blue: 125
+  S_green: 121
+  S_mean: 67
+  S_red: 105
+? !!python/tuple
+- -18
+- 1
+: I_blue: 31182
+  I_green: 37813
+  I_mean: 34792
+  I_red: 35382
+  S_blue: 140
+  S_green: 126
+  S_mean: 72
+  S_red: 108
+? !!python/tuple
+- -17
+- 1
+: I_blue: 31218
+  I_green: 37753
+  I_mean: 34765
+  I_red: 35326
+  S_blue: 105
+  S_green: 137
+  S_mean: 66
+  S_red: 101
+? !!python/tuple
+- -16
+- 1
+: I_blue: 31211
+  I_green: 37754
+  I_mean: 34765
+  I_red: 35332
+  S_blue: 110
+  S_green: 116
+  S_mean: 68
+  S_red: 127
+? !!python/tuple
+- -15
+- 1
+: I_blue: 31197
+  I_green: 37719
+  I_mean: 34731
+  I_red: 35279
+  S_blue: 121
+  S_green: 126
+  S_mean: 73
+  S_red: 134
+? !!python/tuple
+- -14
+- 1
+: I_blue: 31185
+  I_green: 37707
+  I_mean: 34700
+  I_red: 35210
+  S_blue: 88
+  S_green: 191
+  S_mean: 79
+  S_red: 114
+? !!python/tuple
+- -13
+- 1
+: I_blue: 31142
+  I_green: 37710
+  I_mean: 34714
+  I_red: 35292
+  S_blue: 110
+  S_green: 187
+  S_mean: 88
+  S_red: 155
+? !!python/tuple
+- -12
+- 1
+: I_blue: 31145
+  I_green: 37610
+  I_mean: 34661
+  I_red: 35230
+  S_blue: 118
+  S_green: 123
+  S_mean: 72
+  S_red: 134
+? !!python/tuple
+- -11
+- 1
+: I_blue: 31147
+  I_green: 37549
+  I_mean: 34645
+  I_red: 35241
+  S_blue: 107
+  S_green: 110
+  S_mean: 65
+  S_red: 125
+? !!python/tuple
+- -10
+- 1
+: I_blue: 31177
+  I_green: 37552
+  I_mean: 34631
+  I_red: 35166
+  S_blue: 111
+  S_green: 102
+  S_mean: 64
+  S_red: 121
+? !!python/tuple
+- -9
+- 1
+: I_blue: 31179
+  I_green: 37594
+  I_mean: 34660
+  I_red: 35209
+  S_blue: 100
+  S_green: 110
+  S_mean: 64
+  S_red: 125
+? !!python/tuple
+- -8
+- 1
+: I_blue: 31184
+  I_green: 37524
+  I_mean: 34640
+  I_red: 35213
+  S_blue: 134
+  S_green: 114
+  S_mean: 68
+  S_red: 106
+? !!python/tuple
+- -7
+- 1
+: I_blue: 31204
+  I_green: 37570
+  I_mean: 34668
+  I_red: 35230
+  S_blue: 111
+  S_green: 98
+  S_mean: 59
+  S_red: 100
+? !!python/tuple
+- -6
+- 1
+: I_blue: 31198
+  I_green: 37531
+  I_mean: 34646
+  I_red: 35210
+  S_blue: 98
+  S_green: 115
+  S_mean: 65
+  S_red: 127
+? !!python/tuple
+- -5
+- 1
+: I_blue: 31164
+  I_green: 37471
+  I_mean: 34602
+  I_red: 35171
+  S_blue: 93
+  S_green: 112
+  S_mean: 62
+  S_red: 117
+? !!python/tuple
+- -4
+- 1
+: I_blue: 31146
+  I_green: 37472
+  I_mean: 34587
+  I_red: 35145
+  S_blue: 99
+  S_green: 118
+  S_mean: 63
+  S_red: 111
+? !!python/tuple
+- -3
+- 1
+: I_blue: 31161
+  I_green: 37481
+  I_mean: 34592
+  I_red: 35136
+  S_blue: 96
+  S_green: 112
+  S_mean: 58
+  S_red: 94
+? !!python/tuple
+- -2
+- 1
+: I_blue: 31147
+  I_green: 37441
+  I_mean: 34563
+  I_red: 35102
+  S_blue: 107
+  S_green: 120
+  S_mean: 63
+  S_red: 101
+? !!python/tuple
+- -1
+- 1
+: I_blue: 31090
+  I_green: 37449
+  I_mean: 34552
+  I_red: 35117
+  S_blue: 130
+  S_green: 138
+  S_mean: 74
+  S_red: 121
+? !!python/tuple
+- 0
+- 1
+: I_blue: 31049
+  I_green: 37365
+  I_mean: 34485
+  I_red: 35042
+  S_blue: 166
+  S_green: 192
+  S_mean: 103
+  S_red: 177
+? !!python/tuple
+- 1
+- 1
+: I_blue: 31047
+  I_green: 37348
+  I_mean: 34468
+  I_red: 35011
+  S_blue: 108
+  S_green: 116
+  S_mean: 63
+  S_red: 108
+? !!python/tuple
+- 2
+- 1
+: I_blue: 30968
+  I_green: 37291
+  I_mean: 34421
+  I_red: 35006
+  S_blue: 107
+  S_green: 105
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- 3
+- 1
+: I_blue: 30946
+  I_green: 37226
+  I_mean: 34362
+  I_red: 34916
+  S_blue: 120
+  S_green: 116
+  S_mean: 67
+  S_red: 117
+? !!python/tuple
+- 4
+- 1
+: I_blue: 30934
+  I_green: 37251
+  I_mean: 34363
+  I_red: 34905
+  S_blue: 101
+  S_green: 116
+  S_mean: 65
+  S_red: 120
+? !!python/tuple
+- 5
+- 1
+: I_blue: 30901
+  I_green: 37192
+  I_mean: 34364
+  I_red: 35001
+  S_blue: 99
+  S_green: 117
+  S_mean: 65
+  S_red: 123
+? !!python/tuple
+- 6
+- 1
+: I_blue: 30926
+  I_green: 37203
+  I_mean: 34348
+  I_red: 34915
+  S_blue: 103
+  S_green: 120
+  S_mean: 66
+  S_red: 121
+? !!python/tuple
+- 7
+- 1
+: I_blue: 30908
+  I_green: 37213
+  I_mean: 34336
+  I_red: 34887
+  S_blue: 94
+  S_green: 117
+  S_mean: 59
+  S_red: 99
+? !!python/tuple
+- 8
+- 1
+: I_blue: 30832
+  I_green: 37087
+  I_mean: 34242
+  I_red: 34807
+  S_blue: 85
+  S_green: 103
+  S_mean: 56
+  S_red: 102
+? !!python/tuple
+- 9
+- 1
+: I_blue: 30750
+  I_green: 36995
+  I_mean: 34159
+  I_red: 34733
+  S_blue: 106
+  S_green: 116
+  S_mean: 65
+  S_red: 120
+? !!python/tuple
+- 10
+- 1
+: I_blue: 30788
+  I_green: 36978
+  I_mean: 34178
+  I_red: 34769
+  S_blue: 105
+  S_green: 101
+  S_mean: 63
+  S_red: 122
+? !!python/tuple
+- 11
+- 1
+: I_blue: 30744
+  I_green: 37030
+  I_mean: 34171
+  I_red: 34740
+  S_blue: 98
+  S_green: 101
+  S_mean: 59
+  S_red: 109
+? !!python/tuple
+- 12
+- 1
+: I_blue: 30788
+  I_green: 37049
+  I_mean: 34175
+  I_red: 34690
+  S_blue: 86
+  S_green: 92
+  S_mean: 55
+  S_red: 110
+? !!python/tuple
+- 13
+- 1
+: I_blue: 30704
+  I_green: 36958
+  I_mean: 34108
+  I_red: 34663
+  S_blue: 102
+  S_green: 126
+  S_mean: 64
+  S_red: 107
+? !!python/tuple
+- 14
+- 1
+: I_blue: 30712
+  I_green: 36930
+  I_mean: 34096
+  I_red: 34646
+  S_blue: 127
+  S_green: 113
+  S_mean: 69
+  S_red: 123
+? !!python/tuple
+- 15
+- 1
+: I_blue: 30688
+  I_green: 37008
+  I_mean: 34126
+  I_red: 34683
+  S_blue: 94
+  S_green: 92
+  S_mean: 54
+  S_red: 96
+? !!python/tuple
+- 16
+- 1
+: I_blue: 30801
+  I_green: 36986
+  I_mean: 34171
+  I_red: 34727
+  S_blue: 116
+  S_green: 116
+  S_mean: 69
+  S_red: 131
+? !!python/tuple
+- 17
+- 1
+: I_blue: 30748
+  I_green: 36984
+  I_mean: 34134
+  I_red: 34670
+  S_blue: 93
+  S_green: 96
+  S_mean: 55
+  S_red: 100
+? !!python/tuple
+- 18
+- 1
+: I_blue: 30708
+  I_green: 36846
+  I_mean: 34043
+  I_red: 34576
+  S_blue: 96
+  S_green: 90
+  S_mean: 58
+  S_red: 114
+? !!python/tuple
+- 19
+- 1
+: I_blue: 30680
+  I_green: 36856
+  I_mean: 34037
+  I_red: 34577
+  S_blue: 104
+  S_green: 127
+  S_mean: 64
+  S_red: 101
+? !!python/tuple
+- 20
+- 1
+: I_blue: 30726
+  I_green: 36892
+  I_mean: 34068
+  I_red: 34586
+  S_blue: 122
+  S_green: 107
+  S_mean: 66
+  S_red: 114
+? !!python/tuple
+- 21
+- 1
+: I_blue: 30741
+  I_green: 36872
+  I_mean: 34088
+  I_red: 34651
+  S_blue: 141
+  S_green: 141
+  S_mean: 84
+  S_red: 155
+? !!python/tuple
+- 22
+- 1
+: I_blue: 30785
+  I_green: 36887
+  I_mean: 34102
+  I_red: 34636
+  S_blue: 117
+  S_green: 122
+  S_mean: 69
+  S_red: 121
+? !!python/tuple
+- 23
+- 1
+: I_blue: 30750
+  I_green: 36894
+  I_mean: 34095
+  I_red: 34641
+  S_blue: 120
+  S_green: 112
+  S_mean: 67
+  S_red: 121
+? !!python/tuple
+- 24
+- 1
+: I_blue: 30778
+  I_green: 36903
+  I_mean: 34098
+  I_red: 34614
+  S_blue: 105
+  S_green: 108
+  S_mean: 62
+  S_red: 113
+? !!python/tuple
+- 25
+- 1
+: I_blue: 30837
+  I_green: 36970
+  I_mean: 34175
+  I_red: 34719
+  S_blue: 111
+  S_green: 123
+  S_mean: 68
+  S_red: 122
+? !!python/tuple
+- 26
+- 1
+: I_blue: 30844
+  I_green: 36997
+  I_mean: 34178
+  I_red: 34693
+  S_blue: 121
+  S_green: 120
+  S_mean: 65
+  S_red: 95
+? !!python/tuple
+- 27
+- 1
+: I_blue: 30865
+  I_green: 36959
+  I_mean: 34186
+  I_red: 34736
+  S_blue: 110
+  S_green: 103
+  S_mean: 69
+  S_red: 142
+? !!python/tuple
+- 28
+- 1
+: I_blue: 30861
+  I_green: 37004
+  I_mean: 34191
+  I_red: 34709
+  S_blue: 127
+  S_green: 111
+  S_mean: 70
+  S_red: 127
+? !!python/tuple
+- 29
+- 1
+: I_blue: 30887
+  I_green: 36981
+  I_mean: 34186
+  I_red: 34691
+  S_blue: 137
+  S_green: 136
+  S_mean: 80
+  S_red: 144
+? !!python/tuple
+- 30
+- 1
+: I_blue: 30906
+  I_green: 37052
+  I_mean: 34248
+  I_red: 34787
+  S_blue: 126
+  S_green: 150
+  S_mean: 83
+  S_red: 154
+? !!python/tuple
+- 31
+- 1
+: I_blue: 30869
+  I_green: 37047
+  I_mean: 34215
+  I_red: 34730
+  S_blue: 110
+  S_green: 116
+  S_mean: 64
+  S_red: 107
+? !!python/tuple
+- 32
+- 1
+: I_blue: 30847
+  I_green: 36971
+  I_mean: 34164
+  I_red: 34674
+  S_blue: 102
+  S_green: 101
+  S_mean: 62
+  S_red: 119
+? !!python/tuple
+- 33
+- 1
+: I_blue: 30819
+  I_green: 36933
+  I_mean: 34145
+  I_red: 34685
+  S_blue: 133
+  S_green: 143
+  S_mean: 82
+  S_red: 154
+? !!python/tuple
+- 34
+- 1
+: I_blue: 30860
+  I_green: 36968
+  I_mean: 34157
+  I_red: 34643
+  S_blue: 187
+  S_green: 240
+  S_mean: 124
+  S_red: 216
+? !!python/tuple
+- 35
+- 1
+: I_blue: 30908
+  I_green: 36970
+  I_mean: 34188
+  I_red: 34687
+  S_blue: 109
+  S_green: 120
+  S_mean: 67
+  S_red: 121
+? !!python/tuple
+- 36
+- 1
+: I_blue: 30832
+  I_green: 36974
+  I_mean: 34141
+  I_red: 34618
+  S_blue: 122
+  S_green: 115
+  S_mean: 69
+  S_red: 123
+? !!python/tuple
+- 37
+- 1
+: I_blue: 30781
+  I_green: 36890
+  I_mean: 34092
+  I_red: 34605
+  S_blue: 118
+  S_green: 107
+  S_mean: 68
+  S_red: 129
+? !!python/tuple
+- 38
+- 1
+: I_blue: 30741
+  I_green: 36839
+  I_mean: 34046
+  I_red: 34558
+  S_blue: 127
+  S_green: 128
+  S_mean: 72
+  S_red: 124
+? !!python/tuple
+- 39
+- 1
+: I_blue: 30736
+  I_green: 36888
+  I_mean: 34045
+  I_red: 34511
+  S_blue: 102
+  S_green: 124
+  S_mean: 70
+  S_red: 137
+? !!python/tuple
+- 40
+- 1
+: I_blue: 30731
+  I_green: 36844
+  I_mean: 34021
+  I_red: 34489
+  S_blue: 126
+  S_green: 138
+  S_mean: 76
+  S_red: 131
+? !!python/tuple
+- 41
+- 1
+: I_blue: 30679
+  I_green: 36807
+  I_mean: 33980
+  I_red: 34455
+  S_blue: 108
+  S_green: 99
+  S_mean: 59
+  S_red: 104
+? !!python/tuple
+- 42
+- 1
+: I_blue: 30653
+  I_green: 36788
+  I_mean: 33947
+  I_red: 34401
+  S_blue: 95
+  S_green: 99
+  S_mean: 60
+  S_red: 121
+? !!python/tuple
+- 43
+- 1
+: I_blue: 30685
+  I_green: 36782
+  I_mean: 33967
+  I_red: 34434
+  S_blue: 107
+  S_green: 112
+  S_mean: 68
+  S_red: 133
+? !!python/tuple
+- 44
+- 1
+: I_blue: 30659
+  I_green: 36797
+  I_mean: 33951
+  I_red: 34398
+  S_blue: 104
+  S_green: 105
+  S_mean: 62
+  S_red: 114
+? !!python/tuple
+- 45
+- 1
+: I_blue: 30686
+  I_green: 36769
+  I_mean: 33960
+  I_red: 34427
+  S_blue: 100
+  S_green: 129
+  S_mean: 67
+  S_red: 122
+? !!python/tuple
+- 46
+- 1
+: I_blue: 30701
+  I_green: 36823
+  I_mean: 33977
+  I_red: 34409
+  S_blue: 83
+  S_green: 92
+  S_mean: 53
+  S_red: 101
+? !!python/tuple
+- 47
+- 1
+: I_blue: 30584
+  I_green: 36761
+  I_mean: 33897
+  I_red: 34346
+  S_blue: 139
+  S_green: 163
+  S_mean: 87
+  S_red: 150
+? !!python/tuple
+- 48
+- 1
+: I_blue: 30634
+  I_green: 36814
+  I_mean: 33946
+  I_red: 34391
+  S_blue: 150
+  S_green: 169
+  S_mean: 99
+  S_red: 193
+? !!python/tuple
+- 49
+- 1
+: I_blue: 30662
+  I_green: 36882
+  I_mean: 33972
+  I_red: 34373
+  S_blue: 120
+  S_green: 108
+  S_mean: 68
+  S_red: 128
+? !!python/tuple
+- 50
+- 1
+: I_blue: 30689
+  I_green: 36871
+  I_mean: 33983
+  I_red: 34389
+  S_blue: 124
+  S_green: 150
+  S_mean: 80
+  S_red: 143
+? !!python/tuple
+- 51
+- 1
+: I_blue: 30727
+  I_green: 36902
+  I_mean: 34016
+  I_red: 34419
+  S_blue: 136
+  S_green: 160
+  S_mean: 86
+  S_red: 154
+? !!python/tuple
+- 52
+- 1
+: I_blue: 30735
+  I_green: 36826
+  I_mean: 34003
+  I_red: 34448
+  S_blue: 121
+  S_green: 110
+  S_mean: 67
+  S_red: 121
+? !!python/tuple
+- 53
+- 1
+: I_blue: 30682
+  I_green: 36792
+  I_mean: 33956
+  I_red: 34394
+  S_blue: 101
+  S_green: 103
+  S_mean: 58
+  S_red: 101
+? !!python/tuple
+- 54
+- 1
+: I_blue: 30727
+  I_green: 36773
+  I_mean: 33954
+  I_red: 34363
+  S_blue: 116
+  S_green: 117
+  S_mean: 66
+  S_red: 110
+? !!python/tuple
+- 55
+- 1
+: I_blue: 30752
+  I_green: 36808
+  I_mean: 33985
+  I_red: 34395
+  S_blue: 96
+  S_green: 96
+  S_mean: 60
+  S_red: 122
+? !!python/tuple
+- 56
+- 1
+: I_blue: 30770
+  I_green: 36794
+  I_mean: 34001
+  I_red: 34440
+  S_blue: 99
+  S_green: 105
+  S_mean: 62
+  S_red: 122
+? !!python/tuple
+- 57
+- 1
+: I_blue: 30826
+  I_green: 36855
+  I_mean: 34046
+  I_red: 34457
+  S_blue: 91
+  S_green: 99
+  S_mean: 56
+  S_red: 103
+? !!python/tuple
+- 58
+- 1
+: I_blue: 30839
+  I_green: 36833
+  I_mean: 34040
+  I_red: 34448
+  S_blue: 102
+  S_green: 91
+  S_mean: 56
+  S_red: 99
+? !!python/tuple
+- 59
+- 1
+: I_blue: 30864
+  I_green: 36871
+  I_mean: 34064
+  I_red: 34459
+  S_blue: 119
+  S_green: 130
+  S_mean: 69
+  S_red: 114
+? !!python/tuple
+- 60
+- 1
+: I_blue: 30852
+  I_green: 36919
+  I_mean: 34090
+  I_red: 34500
+  S_blue: 115
+  S_green: 130
+  S_mean: 73
+  S_red: 136
+? !!python/tuple
+- 61
+- 1
+: I_blue: 30935
+  I_green: 36983
+  I_mean: 34148
+  I_red: 34527
+  S_blue: 120
+  S_green: 118
+  S_mean: 67
+  S_red: 112
+? !!python/tuple
+- 62
+- 1
+: I_blue: 30931
+  I_green: 36987
+  I_mean: 34136
+  I_red: 34492
+  S_blue: 89
+  S_green: 105
+  S_mean: 63
+  S_red: 133
+? !!python/tuple
+- 63
+- 1
+: I_blue: 30988
+  I_green: 37014
+  I_mean: 34178
+  I_red: 34533
+  S_blue: 99
+  S_green: 104
+  S_mean: 56
+  S_red: 92
+? !!python/tuple
+- 64
+- 1
+: I_blue: 30908
+  I_green: 36915
+  I_mean: 34113
+  I_red: 34516
+  S_blue: 110
+  S_green: 105
+  S_mean: 63
+  S_red: 116
+? !!python/tuple
+- 65
+- 1
+: I_blue: 30895
+  I_green: 36950
+  I_mean: 34107
+  I_red: 34476
+  S_blue: 101
+  S_green: 98
+  S_mean: 57
+  S_red: 102
+? !!python/tuple
+- 66
+- 1
+: I_blue: 30814
+  I_green: 36883
+  I_mean: 34077
+  I_red: 34535
+  S_blue: 98
+  S_green: 145
+  S_mean: 81
+  S_red: 169
+? !!python/tuple
+- 67
+- 1
+: I_blue: 30726
+  I_green: 36803
+  I_mean: 33952
+  I_red: 34329
+  S_blue: 123
+  S_green: 138
+  S_mean: 74
+  S_red: 123
+? !!python/tuple
+- 68
+- 1
+: I_blue: 30752
+  I_green: 36806
+  I_mean: 33959
+  I_red: 34320
+  S_blue: 103
+  S_green: 104
+  S_mean: 62
+  S_red: 118
+? !!python/tuple
+- 69
+- 1
+: I_blue: 30724
+  I_green: 36693
+  I_mean: 33902
+  I_red: 34291
+  S_blue: 129
+  S_green: 125
+  S_mean: 75
+  S_red: 138
+? !!python/tuple
+- 70
+- 1
+: I_blue: 30681
+  I_green: 36692
+  I_mean: 33875
+  I_red: 34253
+  S_blue: 135
+  S_green: 129
+  S_mean: 79
+  S_red: 149
+? !!python/tuple
+- 71
+- 1
+: I_blue: 30668
+  I_green: 36650
+  I_mean: 33860
+  I_red: 34264
+  S_blue: 145
+  S_green: 121
+  S_mean: 80
+  S_red: 151
+? !!python/tuple
+- 72
+- 1
+: I_blue: 30610
+  I_green: 36586
+  I_mean: 33782
+  I_red: 34151
+  S_blue: 120
+  S_green: 122
+  S_mean: 72
+  S_red: 136
+? !!python/tuple
+- 73
+- 1
+: I_blue: 30570
+  I_green: 36620
+  I_mean: 33763
+  I_red: 34100
+  S_blue: 119
+  S_green: 131
+  S_mean: 73
+  S_red: 129
+? !!python/tuple
+- 74
+- 1
+: I_blue: 30493
+  I_green: 36527
+  I_mean: 33691
+  I_red: 34055
+  S_blue: 121
+  S_green: 131
+  S_mean: 74
+  S_red: 137
+? !!python/tuple
+- 75
+- 1
+: I_blue: 30457
+  I_green: 36450
+  I_mean: 33642
+  I_red: 34021
+  S_blue: 84
+  S_green: 110
+  S_mean: 58
+  S_red: 108
+? !!python/tuple
+- 76
+- 1
+: I_blue: 30407
+  I_green: 36429
+  I_mean: 33599
+  I_red: 33963
+  S_blue: 101
+  S_green: 99
+  S_mean: 59
+  S_red: 111
+? !!python/tuple
+- 77
+- 1
+: I_blue: 30399
+  I_green: 36435
+  I_mean: 33598
+  I_red: 33960
+  S_blue: 128
+  S_green: 126
+  S_mean: 75
+  S_red: 137
+? !!python/tuple
+- 78
+- 1
+: I_blue: 30390
+  I_green: 36335
+  I_mean: 33544
+  I_red: 33907
+  S_blue: 113
+  S_green: 120
+  S_mean: 65
+  S_red: 107
+? !!python/tuple
+- 79
+- 1
+: I_blue: 30413
+  I_green: 36422
+  I_mean: 33600
+  I_red: 33966
+  S_blue: 105
+  S_green: 94
+  S_mean: 60
+  S_red: 114
+? !!python/tuple
+- 80
+- 1
+: I_blue: 30401
+  I_green: 36370
+  I_mean: 33577
+  I_red: 33962
+  S_blue: 96
+  S_green: 104
+  S_mean: 58
+  S_red: 105
+? !!python/tuple
+- 81
+- 1
+: I_blue: 30457
+  I_green: 36569
+  I_mean: 33644
+  I_red: 33908
+  S_blue: 118
+  S_green: 148
+  S_mean: 75
+  S_red: 124
+? !!python/tuple
+- 82
+- 1
+: null
+? !!python/tuple
+- 83
+- 1
+: null
+? !!python/tuple
+- 84
+- 1
+: null
+? !!python/tuple
+- 85
+- 1
+: null
+? !!python/tuple
+- 86
+- 1
+: null
+? !!python/tuple
+- 87
+- 1
+: null
+? !!python/tuple
+- 88
+- 1
+: null
+? !!python/tuple
+- 89
+- 1
+: null
+? !!python/tuple
+- 90
+- 1
+: null
+? !!python/tuple
+- 91
+- 1
+: null
+? !!python/tuple
+- 92
+- 1
+: null
+? !!python/tuple
+- 93
+- 1
+: null
+? !!python/tuple
+- 94
+- 1
+: null
+? !!python/tuple
+- 95
+- 1
+: null
+? !!python/tuple
+- 96
+- 1
+: null
+? !!python/tuple
+- 97
+- 1
+: null
+? !!python/tuple
+- 98
+- 1
+: null
+? !!python/tuple
+- 99
+- 1
+: null
+? !!python/tuple
+- 100
+- 1
+: null
+? !!python/tuple
+- 101
+- 1
+: null
+? !!python/tuple
+- 102
+- 1
+: null
+? !!python/tuple
+- 103
+- 1
+: null
+? !!python/tuple
+- 104
+- 1
+: null
+? !!python/tuple
+- 105
+- 1
+: null
+? !!python/tuple
+- 106
+- 1
+: null
+? !!python/tuple
+- 107
+- 1
+: null
+? !!python/tuple
+- 108
+- 1
+: null
+? !!python/tuple
+- 109
+- 1
+: null
+? !!python/tuple
+- 110
+- 1
+: null
+? !!python/tuple
+- 111
+- 1
+: null
+? !!python/tuple
+- 112
+- 1
+: null
+? !!python/tuple
+- 113
+- 1
+: null
+? !!python/tuple
+- 114
+- 1
+: null
+? !!python/tuple
+- 115
+- 1
+: null
+? !!python/tuple
+- 116
+- 1
+: null
+? !!python/tuple
+- 117
+- 1
+: null
+? !!python/tuple
+- 118
+- 1
+: null
+? !!python/tuple
+- 119
+- 1
+: null
+? !!python/tuple
+- 120
+- 1
+: null
+? !!python/tuple
+- 121
+- 1
+: null
+? !!python/tuple
+- 122
+- 1
+: null
+? !!python/tuple
+- 123
+- 1
+: null
+? !!python/tuple
+- 124
+- 1
+: null
+? !!python/tuple
+- 125
+- 1
+: null
+? !!python/tuple
+- 126
+- 1
+: null
+? !!python/tuple
+- 127
+- 1
+: null
+? !!python/tuple
+- 128
+- 1
+: null
+? !!python/tuple
+- 129
+- 1
+: null
+? !!python/tuple
+- 130
+- 1
+: null
+? !!python/tuple
+- 131
+- 1
+: null
+? !!python/tuple
+- 132
+- 1
+: null
+? !!python/tuple
+- 133
+- 1
+: null
+? !!python/tuple
+- 134
+- 1
+: null
+? !!python/tuple
+- 135
+- 1
+: null
+? !!python/tuple
+- 136
+- 1
+: null
+? !!python/tuple
+- 137
+- 1
+: null
+? !!python/tuple
+- 138
+- 1
+: null
+? !!python/tuple
+- 139
+- 1
+: null
+? !!python/tuple
+- 140
+- 1
+: null
+? !!python/tuple
+- 141
+- 1
+: null
+? !!python/tuple
+- 142
+- 1
+: null
+? !!python/tuple
+- 143
+- 1
+: null
+? !!python/tuple
+- 144
+- 1
+: null
+? !!python/tuple
+- 145
+- 1
+: null
+? !!python/tuple
+- 146
+- 1
+: null
+? !!python/tuple
+- 147
+- 1
+: null
+? !!python/tuple
+- 148
+- 1
+: null
+? !!python/tuple
+- 149
+- 1
+: null
+? !!python/tuple
+- 150
+- 1
+: null
+? !!python/tuple
+- 151
+- 1
+: null
+? !!python/tuple
+- 152
+- 1
+: null
+? !!python/tuple
+- 153
+- 1
+: null
+? !!python/tuple
+- 154
+- 1
+: null
+? !!python/tuple
+- 155
+- 1
+: null
+? !!python/tuple
+- -155
+- 2
+: null
+? !!python/tuple
+- -154
+- 2
+: null
+? !!python/tuple
+- -153
+- 2
+: null
+? !!python/tuple
+- -152
+- 2
+: null
+? !!python/tuple
+- -151
+- 2
+: null
+? !!python/tuple
+- -150
+- 2
+: null
+? !!python/tuple
+- -149
+- 2
+: null
+? !!python/tuple
+- -148
+- 2
+: null
+? !!python/tuple
+- -147
+- 2
+: null
+? !!python/tuple
+- -146
+- 2
+: null
+? !!python/tuple
+- -145
+- 2
+: null
+? !!python/tuple
+- -144
+- 2
+: null
+? !!python/tuple
+- -143
+- 2
+: null
+? !!python/tuple
+- -142
+- 2
+: null
+? !!python/tuple
+- -141
+- 2
+: null
+? !!python/tuple
+- -140
+- 2
+: null
+? !!python/tuple
+- -139
+- 2
+: null
+? !!python/tuple
+- -138
+- 2
+: null
+? !!python/tuple
+- -137
+- 2
+: null
+? !!python/tuple
+- -136
+- 2
+: null
+? !!python/tuple
+- -135
+- 2
+: null
+? !!python/tuple
+- -134
+- 2
+: null
+? !!python/tuple
+- -133
+- 2
+: null
+? !!python/tuple
+- -132
+- 2
+: null
+? !!python/tuple
+- -131
+- 2
+: null
+? !!python/tuple
+- -130
+- 2
+: null
+? !!python/tuple
+- -129
+- 2
+: null
+? !!python/tuple
+- -128
+- 2
+: null
+? !!python/tuple
+- -127
+- 2
+: null
+? !!python/tuple
+- -126
+- 2
+: null
+? !!python/tuple
+- -125
+- 2
+: null
+? !!python/tuple
+- -124
+- 2
+: null
+? !!python/tuple
+- -123
+- 2
+: null
+? !!python/tuple
+- -122
+- 2
+: null
+? !!python/tuple
+- -121
+- 2
+: null
+? !!python/tuple
+- -120
+- 2
+: null
+? !!python/tuple
+- -119
+- 2
+: null
+? !!python/tuple
+- -118
+- 2
+: null
+? !!python/tuple
+- -117
+- 2
+: null
+? !!python/tuple
+- -116
+- 2
+: null
+? !!python/tuple
+- -115
+- 2
+: null
+? !!python/tuple
+- -114
+- 2
+: null
+? !!python/tuple
+- -113
+- 2
+: null
+? !!python/tuple
+- -112
+- 2
+: null
+? !!python/tuple
+- -111
+- 2
+: null
+? !!python/tuple
+- -110
+- 2
+: null
+? !!python/tuple
+- -109
+- 2
+: null
+? !!python/tuple
+- -108
+- 2
+: null
+? !!python/tuple
+- -107
+- 2
+: null
+? !!python/tuple
+- -106
+- 2
+: null
+? !!python/tuple
+- -105
+- 2
+: null
+? !!python/tuple
+- -104
+- 2
+: null
+? !!python/tuple
+- -103
+- 2
+: null
+? !!python/tuple
+- -102
+- 2
+: null
+? !!python/tuple
+- -101
+- 2
+: null
+? !!python/tuple
+- -100
+- 2
+: null
+? !!python/tuple
+- -99
+- 2
+: null
+? !!python/tuple
+- -98
+- 2
+: null
+? !!python/tuple
+- -97
+- 2
+: null
+? !!python/tuple
+- -96
+- 2
+: null
+? !!python/tuple
+- -95
+- 2
+: null
+? !!python/tuple
+- -94
+- 2
+: null
+? !!python/tuple
+- -93
+- 2
+: I_blue: 29687
+  I_green: 34273
+  I_mean: 31470
+  I_red: 30450
+  S_blue: 90
+  S_green: 109
+  S_mean: 60
+  S_red: 112
+? !!python/tuple
+- -92
+- 2
+: I_blue: 29630
+  I_green: 34229
+  I_mean: 31434
+  I_red: 30443
+  S_blue: 102
+  S_green: 122
+  S_mean: 66
+  S_red: 119
+? !!python/tuple
+- -91
+- 2
+: I_blue: 29621
+  I_green: 34208
+  I_mean: 31400
+  I_red: 30371
+  S_blue: 104
+  S_green: 133
+  S_mean: 71
+  S_red: 130
+? !!python/tuple
+- -90
+- 2
+: I_blue: 29623
+  I_green: 34213
+  I_mean: 31404
+  I_red: 30376
+  S_blue: 117
+  S_green: 143
+  S_mean: 75
+  S_red: 132
+? !!python/tuple
+- -89
+- 2
+: I_blue: 29570
+  I_green: 34165
+  I_mean: 31358
+  I_red: 30339
+  S_blue: 115
+  S_green: 135
+  S_mean: 73
+  S_red: 132
+? !!python/tuple
+- -88
+- 2
+: I_blue: 29493
+  I_green: 34067
+  I_mean: 31286
+  I_red: 30300
+  S_blue: 110
+  S_green: 128
+  S_mean: 67
+  S_red: 113
+? !!python/tuple
+- -87
+- 2
+: I_blue: 29507
+  I_green: 34083
+  I_mean: 31306
+  I_red: 30329
+  S_blue: 94
+  S_green: 94
+  S_mean: 59
+  S_red: 120
+? !!python/tuple
+- -86
+- 2
+: I_blue: 29500
+  I_green: 34033
+  I_mean: 31271
+  I_red: 30282
+  S_blue: 111
+  S_green: 126
+  S_mean: 71
+  S_red: 132
+? !!python/tuple
+- -85
+- 2
+: I_blue: 29437
+  I_green: 33991
+  I_mean: 31236
+  I_red: 30282
+  S_blue: 106
+  S_green: 120
+  S_mean: 68
+  S_red: 127
+? !!python/tuple
+- -84
+- 2
+: I_blue: 29428
+  I_green: 33973
+  I_mean: 31205
+  I_red: 30214
+  S_blue: 89
+  S_green: 102
+  S_mean: 58
+  S_red: 112
+? !!python/tuple
+- -83
+- 2
+: I_blue: 29518
+  I_green: 34091
+  I_mean: 31297
+  I_red: 30282
+  S_blue: 120
+  S_green: 116
+  S_mean: 70
+  S_red: 129
+? !!python/tuple
+- -82
+- 2
+: I_blue: 29550
+  I_green: 34118
+  I_mean: 31328
+  I_red: 30316
+  S_blue: 118
+  S_green: 142
+  S_mean: 78
+  S_red: 148
+? !!python/tuple
+- -81
+- 2
+: I_blue: 29612
+  I_green: 34165
+  I_mean: 31363
+  I_red: 30313
+  S_blue: 102
+  S_green: 107
+  S_mean: 61
+  S_red: 112
+? !!python/tuple
+- -80
+- 2
+: I_blue: 29569
+  I_green: 34049
+  I_mean: 31302
+  I_red: 30289
+  S_blue: 244
+  S_green: 266
+  S_mean: 150
+  S_red: 273
+? !!python/tuple
+- -79
+- 2
+: I_blue: 29673
+  I_green: 34161
+  I_mean: 31418
+  I_red: 30420
+  S_blue: 106
+  S_green: 114
+  S_mean: 64
+  S_red: 114
+? !!python/tuple
+- -78
+- 2
+: I_blue: 29678
+  I_green: 34196
+  I_mean: 31419
+  I_red: 30383
+  S_blue: 107
+  S_green: 114
+  S_mean: 63
+  S_red: 109
+? !!python/tuple
+- -77
+- 2
+: I_blue: 29596
+  I_green: 34089
+  I_mean: 31326
+  I_red: 30295
+  S_blue: 109
+  S_green: 116
+  S_mean: 70
+  S_red: 139
+? !!python/tuple
+- -76
+- 2
+: I_blue: 29589
+  I_green: 34079
+  I_mean: 31333
+  I_red: 30332
+  S_blue: 103
+  S_green: 119
+  S_mean: 68
+  S_red: 130
+? !!python/tuple
+- -75
+- 2
+: I_blue: 29509
+  I_green: 34019
+  I_mean: 31248
+  I_red: 30217
+  S_blue: 110
+  S_green: 127
+  S_mean: 72
+  S_red: 140
+? !!python/tuple
+- -74
+- 2
+: I_blue: 29525
+  I_green: 34035
+  I_mean: 31269
+  I_red: 30247
+  S_blue: 147
+  S_green: 154
+  S_mean: 87
+  S_red: 151
+? !!python/tuple
+- -73
+- 2
+: I_blue: 29451
+  I_green: 33942
+  I_mean: 31191
+  I_red: 30180
+  S_blue: 117
+  S_green: 114
+  S_mean: 66
+  S_red: 117
+? !!python/tuple
+- -72
+- 2
+: I_blue: 29441
+  I_green: 33989
+  I_mean: 31208
+  I_red: 30196
+  S_blue: 140
+  S_green: 135
+  S_mean: 79
+  S_red: 138
+? !!python/tuple
+- -71
+- 2
+: I_blue: 29409
+  I_green: 33931
+  I_mean: 31163
+  I_red: 30151
+  S_blue: 115
+  S_green: 122
+  S_mean: 70
+  S_red: 127
+? !!python/tuple
+- -70
+- 2
+: I_blue: 29500
+  I_green: 34039
+  I_mean: 31238
+  I_red: 30177
+  S_blue: 96
+  S_green: 108
+  S_mean: 57
+  S_red: 95
+? !!python/tuple
+- -69
+- 2
+: I_blue: 29507
+  I_green: 34073
+  I_mean: 31260
+  I_red: 30200
+  S_blue: 113
+  S_green: 134
+  S_mean: 71
+  S_red: 126
+? !!python/tuple
+- -68
+- 2
+: I_blue: 29553
+  I_green: 34093
+  I_mean: 31285
+  I_red: 30211
+  S_blue: 131
+  S_green: 123
+  S_mean: 76
+  S_red: 142
+? !!python/tuple
+- -67
+- 2
+: I_blue: 29562
+  I_green: 34107
+  I_mean: 31303
+  I_red: 30242
+  S_blue: 99
+  S_green: 115
+  S_mean: 62
+  S_red: 108
+? !!python/tuple
+- -66
+- 2
+: I_blue: 29604
+  I_green: 34120
+  I_mean: 31324
+  I_red: 30250
+  S_blue: 103
+  S_green: 95
+  S_mean: 63
+  S_red: 130
+? !!python/tuple
+- -65
+- 2
+: I_blue: 29643
+  I_green: 34138
+  I_mean: 31347
+  I_red: 30261
+  S_blue: 215
+  S_green: 218
+  S_mean: 124
+  S_red: 215
+? !!python/tuple
+- -64
+- 2
+: I_blue: 29633
+  I_green: 34145
+  I_mean: 31341
+  I_red: 30246
+  S_blue: 97
+  S_green: 108
+  S_mean: 59
+  S_red: 106
+? !!python/tuple
+- -63
+- 2
+: I_blue: 29672
+  I_green: 34122
+  I_mean: 31359
+  I_red: 30284
+  S_blue: 97
+  S_green: 103
+  S_mean: 60
+  S_red: 113
+? !!python/tuple
+- -62
+- 2
+: I_blue: 29644
+  I_green: 34151
+  I_mean: 31359
+  I_red: 30283
+  S_blue: 94
+  S_green: 96
+  S_mean: 58
+  S_red: 114
+? !!python/tuple
+- -61
+- 2
+: I_blue: 29600
+  I_green: 34135
+  I_mean: 31323
+  I_red: 30236
+  S_blue: 93
+  S_green: 93
+  S_mean: 60
+  S_red: 127
+? !!python/tuple
+- -60
+- 2
+: I_blue: 29566
+  I_green: 34064
+  I_mean: 31265
+  I_red: 30167
+  S_blue: 110
+  S_green: 128
+  S_mean: 70
+  S_red: 128
+? !!python/tuple
+- -59
+- 2
+: I_blue: 29534
+  I_green: 34059
+  I_mean: 31256
+  I_red: 30175
+  S_blue: 94
+  S_green: 108
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- -58
+- 2
+: I_blue: 29523
+  I_green: 34011
+  I_mean: 31229
+  I_red: 30153
+  S_blue: 89
+  S_green: 112
+  S_mean: 60
+  S_red: 112
+? !!python/tuple
+- -57
+- 2
+: I_blue: 29545
+  I_green: 34089
+  I_mean: 31281
+  I_red: 30209
+  S_blue: 122
+  S_green: 106
+  S_mean: 67
+  S_red: 124
+? !!python/tuple
+- -56
+- 2
+: I_blue: 29420
+  I_green: 34011
+  I_mean: 31179
+  I_red: 30106
+  S_blue: 83
+  S_green: 111
+  S_mean: 62
+  S_red: 126
+? !!python/tuple
+- -55
+- 2
+: I_blue: 29436
+  I_green: 33984
+  I_mean: 31158
+  I_red: 30056
+  S_blue: 85
+  S_green: 114
+  S_mean: 62
+  S_red: 123
+? !!python/tuple
+- -54
+- 2
+: I_blue: 29472
+  I_green: 33996
+  I_mean: 31203
+  I_red: 30143
+  S_blue: 110
+  S_green: 96
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- -53
+- 2
+: I_blue: 29492
+  I_green: 34037
+  I_mean: 31257
+  I_red: 30243
+  S_blue: 100
+  S_green: 114
+  S_mean: 63
+  S_red: 116
+? !!python/tuple
+- -52
+- 2
+: I_blue: 29483
+  I_green: 34004
+  I_mean: 31207
+  I_red: 30134
+  S_blue: 93
+  S_green: 118
+  S_mean: 65
+  S_red: 127
+? !!python/tuple
+- -51
+- 2
+: I_blue: 29472
+  I_green: 33990
+  I_mean: 31203
+  I_red: 30147
+  S_blue: 85
+  S_green: 105
+  S_mean: 58
+  S_red: 111
+? !!python/tuple
+- -50
+- 2
+: I_blue: 29429
+  I_green: 33964
+  I_mean: 31173
+  I_red: 30126
+  S_blue: 100
+  S_green: 124
+  S_mean: 67
+  S_red: 123
+? !!python/tuple
+- -49
+- 2
+: I_blue: 29466
+  I_green: 34024
+  I_mean: 31230
+  I_red: 30200
+  S_blue: 115
+  S_green: 139
+  S_mean: 73
+  S_red: 127
+? !!python/tuple
+- -48
+- 2
+: I_blue: 29615
+  I_green: 34134
+  I_mean: 31367
+  I_red: 30354
+  S_blue: 111
+  S_green: 106
+  S_mean: 63
+  S_red: 115
+? !!python/tuple
+- -47
+- 2
+: I_blue: 29601
+  I_green: 34136
+  I_mean: 31360
+  I_red: 30344
+  S_blue: 89
+  S_green: 111
+  S_mean: 61
+  S_red: 119
+? !!python/tuple
+- -46
+- 2
+: I_blue: 29593
+  I_green: 34126
+  I_mean: 31363
+  I_red: 30371
+  S_blue: 96
+  S_green: 105
+  S_mean: 59
+  S_red: 108
+? !!python/tuple
+- -45
+- 2
+: I_blue: 29559
+  I_green: 34101
+  I_mean: 31347
+  I_red: 30383
+  S_blue: 103
+  S_green: 109
+  S_mean: 67
+  S_red: 135
+? !!python/tuple
+- -44
+- 2
+: I_blue: 29619
+  I_green: 34134
+  I_mean: 31386
+  I_red: 30405
+  S_blue: 102
+  S_green: 102
+  S_mean: 62
+  S_red: 122
+? !!python/tuple
+- -43
+- 2
+: I_blue: 29755
+  I_green: 34258
+  I_mean: 31509
+  I_red: 30515
+  S_blue: 90
+  S_green: 94
+  S_mean: 58
+  S_red: 116
+? !!python/tuple
+- -42
+- 2
+: I_blue: 29674
+  I_green: 34183
+  I_mean: 31423
+  I_red: 30412
+  S_blue: 94
+  S_green: 100
+  S_mean: 57
+  S_red: 104
+? !!python/tuple
+- -41
+- 2
+: I_blue: 29731
+  I_green: 34167
+  I_mean: 31449
+  I_red: 30451
+  S_blue: 99
+  S_green: 96
+  S_mean: 62
+  S_red: 125
+? !!python/tuple
+- -40
+- 2
+: I_blue: 29669
+  I_green: 34154
+  I_mean: 31418
+  I_red: 30432
+  S_blue: 111
+  S_green: 133
+  S_mean: 73
+  S_red: 138
+? !!python/tuple
+- -39
+- 2
+: I_blue: 29802
+  I_green: 34235
+  I_mean: 31508
+  I_red: 30488
+  S_blue: 110
+  S_green: 106
+  S_mean: 63
+  S_red: 116
+? !!python/tuple
+- -38
+- 2
+: I_blue: 29789
+  I_green: 34248
+  I_mean: 31514
+  I_red: 30507
+  S_blue: 85
+  S_green: 99
+  S_mean: 58
+  S_red: 116
+? !!python/tuple
+- -37
+- 2
+: I_blue: 29806
+  I_green: 34207
+  I_mean: 31512
+  I_red: 30525
+  S_blue: 116
+  S_green: 99
+  S_mean: 65
+  S_red: 124
+? !!python/tuple
+- -36
+- 2
+: I_blue: 29834
+  I_green: 34263
+  I_mean: 31541
+  I_red: 30526
+  S_blue: 109
+  S_green: 124
+  S_mean: 65
+  S_red: 104
+? !!python/tuple
+- -35
+- 2
+: I_blue: 29902
+  I_green: 34306
+  I_mean: 31597
+  I_red: 30585
+  S_blue: 102
+  S_green: 113
+  S_mean: 66
+  S_red: 127
+? !!python/tuple
+- -34
+- 2
+: I_blue: 29987
+  I_green: 34392
+  I_mean: 31667
+  I_red: 30622
+  S_blue: 95
+  S_green: 104
+  S_mean: 60
+  S_red: 115
+? !!python/tuple
+- -33
+- 2
+: I_blue: 29917
+  I_green: 34349
+  I_mean: 31631
+  I_red: 30627
+  S_blue: 109
+  S_green: 112
+  S_mean: 63
+  S_red: 109
+? !!python/tuple
+- -32
+- 2
+: I_blue: 29891
+  I_green: 34306
+  I_mean: 31602
+  I_red: 30611
+  S_blue: 113
+  S_green: 125
+  S_mean: 73
+  S_red: 141
+? !!python/tuple
+- -31
+- 2
+: I_blue: 29953
+  I_green: 34314
+  I_mean: 31624
+  I_red: 30605
+  S_blue: 95
+  S_green: 97
+  S_mean: 59
+  S_red: 114
+? !!python/tuple
+- -30
+- 2
+: I_blue: 29933
+  I_green: 34280
+  I_mean: 31581
+  I_red: 30530
+  S_blue: 96
+  S_green: 93
+  S_mean: 58
+  S_red: 114
+? !!python/tuple
+- -29
+- 2
+: I_blue: 29945
+  I_green: 34334
+  I_mean: 31617
+  I_red: 30573
+  S_blue: 102
+  S_green: 106
+  S_mean: 65
+  S_red: 129
+? !!python/tuple
+- -28
+- 2
+: I_blue: 29991
+  I_green: 34365
+  I_mean: 31649
+  I_red: 30593
+  S_blue: 100
+  S_green: 112
+  S_mean: 61
+  S_red: 107
+? !!python/tuple
+- -27
+- 2
+: I_blue: 29975
+  I_green: 34329
+  I_mean: 31603
+  I_red: 30505
+  S_blue: 113
+  S_green: 142
+  S_mean: 77
+  S_red: 144
+? !!python/tuple
+- -26
+- 2
+: I_blue: 29901
+  I_green: 34261
+  I_mean: 31549
+  I_red: 30486
+  S_blue: 111
+  S_green: 107
+  S_mean: 62
+  S_red: 109
+? !!python/tuple
+- -25
+- 2
+: I_blue: 29962
+  I_green: 34291
+  I_mean: 31581
+  I_red: 30490
+  S_blue: 115
+  S_green: 143
+  S_mean: 73
+  S_red: 122
+? !!python/tuple
+- -24
+- 2
+: I_blue: 29882
+  I_green: 34255
+  I_mean: 31529
+  I_red: 30450
+  S_blue: 131
+  S_green: 152
+  S_mean: 82
+  S_red: 146
+? !!python/tuple
+- -23
+- 2
+: I_blue: 29955
+  I_green: 34297
+  I_mean: 31571
+  I_red: 30461
+  S_blue: 100
+  S_green: 100
+  S_mean: 60
+  S_red: 114
+? !!python/tuple
+- -22
+- 2
+: I_blue: 30020
+  I_green: 34375
+  I_mean: 31637
+  I_red: 30517
+  S_blue: 89
+  S_green: 97
+  S_mean: 57
+  S_red: 111
+? !!python/tuple
+- -21
+- 2
+: I_blue: 30035
+  I_green: 34353
+  I_mean: 31621
+  I_red: 30476
+  S_blue: 106
+  S_green: 122
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -20
+- 2
+: I_blue: 29903
+  I_green: 34265
+  I_mean: 31529
+  I_red: 30419
+  S_blue: 201
+  S_green: 204
+  S_mean: 112
+  S_red: 178
+? !!python/tuple
+- -19
+- 2
+: I_blue: 30007
+  I_green: 34314
+  I_mean: 31593
+  I_red: 30460
+  S_blue: 93
+  S_green: 90
+  S_mean: 56
+  S_red: 111
+? !!python/tuple
+- -18
+- 2
+: I_blue: 29935
+  I_green: 34296
+  I_mean: 31558
+  I_red: 30445
+  S_blue: 84
+  S_green: 94
+  S_mean: 54
+  S_red: 103
+? !!python/tuple
+- -17
+- 2
+: I_blue: 29972
+  I_green: 34228
+  I_mean: 31539
+  I_red: 30418
+  S_blue: 107
+  S_green: 99
+  S_mean: 63
+  S_red: 121
+? !!python/tuple
+- -16
+- 2
+: I_blue: 30022
+  I_green: 34278
+  I_mean: 31577
+  I_red: 30432
+  S_blue: 101
+  S_green: 120
+  S_mean: 66
+  S_red: 123
+? !!python/tuple
+- -15
+- 2
+: I_blue: 30073
+  I_green: 34308
+  I_mean: 31616
+  I_red: 30468
+  S_blue: 122
+  S_green: 121
+  S_mean: 74
+  S_red: 141
+? !!python/tuple
+- -14
+- 2
+: I_blue: 30163
+  I_green: 34422
+  I_mean: 31683
+  I_red: 30465
+  S_blue: 113
+  S_green: 190
+  S_mean: 84
+  S_red: 121
+? !!python/tuple
+- -13
+- 2
+: I_blue: 30143
+  I_green: 34433
+  I_mean: 31714
+  I_red: 30566
+  S_blue: 106
+  S_green: 199
+  S_mean: 93
+  S_red: 165
+? !!python/tuple
+- -12
+- 2
+: I_blue: 30035
+  I_green: 34250
+  I_mean: 31564
+  I_red: 30407
+  S_blue: 114
+  S_green: 129
+  S_mean: 70
+  S_red: 122
+? !!python/tuple
+- -11
+- 2
+: I_blue: 30038
+  I_green: 34215
+  I_mean: 31564
+  I_red: 30441
+  S_blue: 87
+  S_green: 96
+  S_mean: 54
+  S_red: 98
+? !!python/tuple
+- -10
+- 2
+: I_blue: 30001
+  I_green: 34124
+  I_mean: 31486
+  I_red: 30334
+  S_blue: 84
+  S_green: 101
+  S_mean: 60
+  S_red: 126
+? !!python/tuple
+- -9
+- 2
+: I_blue: 29956
+  I_green: 34133
+  I_mean: 31478
+  I_red: 30347
+  S_blue: 95
+  S_green: 100
+  S_mean: 60
+  S_red: 116
+? !!python/tuple
+- -8
+- 2
+: I_blue: 30027
+  I_green: 34137
+  I_mean: 31524
+  I_red: 30409
+  S_blue: 91
+  S_green: 101
+  S_mean: 58
+  S_red: 110
+? !!python/tuple
+- -7
+- 2
+: I_blue: 30007
+  I_green: 34149
+  I_mean: 31521
+  I_red: 30408
+  S_blue: 85
+  S_green: 105
+  S_mean: 55
+  S_red: 98
+? !!python/tuple
+- -6
+- 2
+: I_blue: 30003
+  I_green: 34130
+  I_mean: 31509
+  I_red: 30395
+  S_blue: 94
+  S_green: 115
+  S_mean: 63
+  S_red: 120
+? !!python/tuple
+- -5
+- 2
+: I_blue: 30028
+  I_green: 34079
+  I_mean: 31497
+  I_red: 30386
+  S_blue: 100
+  S_green: 101
+  S_mean: 61
+  S_red: 116
+? !!python/tuple
+- -4
+- 2
+: I_blue: 30024
+  I_green: 34131
+  I_mean: 31509
+  I_red: 30372
+  S_blue: 126
+  S_green: 126
+  S_mean: 71
+  S_red: 121
+? !!python/tuple
+- -3
+- 2
+: I_blue: 30054
+  I_green: 34136
+  I_mean: 31524
+  I_red: 30382
+  S_blue: 114
+  S_green: 116
+  S_mean: 71
+  S_red: 138
+? !!python/tuple
+- -2
+- 2
+: I_blue: 30044
+  I_green: 34118
+  I_mean: 31506
+  I_red: 30357
+  S_blue: 95
+  S_green: 104
+  S_mean: 58
+  S_red: 106
+? !!python/tuple
+- -1
+- 2
+: I_blue: 29994
+  I_green: 34112
+  I_mean: 31492
+  I_red: 30370
+  S_blue: 106
+  S_green: 119
+  S_mean: 63
+  S_red: 103
+? !!python/tuple
+- 0
+- 2
+: I_blue: 30004
+  I_green: 34119
+  I_mean: 31499
+  I_red: 30374
+  S_blue: 111
+  S_green: 107
+  S_mean: 65
+  S_red: 121
+? !!python/tuple
+- 1
+- 2
+: I_blue: 29973
+  I_green: 34047
+  I_mean: 31447
+  I_red: 30321
+  S_blue: 103
+  S_green: 115
+  S_mean: 65
+  S_red: 120
+? !!python/tuple
+- 2
+- 2
+: I_blue: 29912
+  I_green: 34013
+  I_mean: 31414
+  I_red: 30319
+  S_blue: 109
+  S_green: 103
+  S_mean: 61
+  S_red: 107
+? !!python/tuple
+- 3
+- 2
+: I_blue: 29876
+  I_green: 33957
+  I_mean: 31355
+  I_red: 30234
+  S_blue: 81
+  S_green: 89
+  S_mean: 53
+  S_red: 106
+? !!python/tuple
+- 4
+- 2
+: I_blue: 29839
+  I_green: 33943
+  I_mean: 31322
+  I_red: 30186
+  S_blue: 82
+  S_green: 117
+  S_mean: 60
+  S_red: 113
+? !!python/tuple
+- 5
+- 2
+: I_blue: 29811
+  I_green: 33881
+  I_mean: 31312
+  I_red: 30246
+  S_blue: 97
+  S_green: 99
+  S_mean: 60
+  S_red: 115
+? !!python/tuple
+- 6
+- 2
+: I_blue: 29831
+  I_green: 33872
+  I_mean: 31295
+  I_red: 30182
+  S_blue: 109
+  S_green: 103
+  S_mean: 61
+  S_red: 106
+? !!python/tuple
+- 7
+- 2
+: I_blue: 29769
+  I_green: 33854
+  I_mean: 31243
+  I_red: 30108
+  S_blue: 125
+  S_green: 130
+  S_mean: 75
+  S_red: 136
+? !!python/tuple
+- 8
+- 2
+: I_blue: 29692
+  I_green: 33742
+  I_mean: 31160
+  I_red: 30048
+  S_blue: 118
+  S_green: 105
+  S_mean: 64
+  S_red: 112
+? !!python/tuple
+- 9
+- 2
+: I_blue: 29657
+  I_green: 33698
+  I_mean: 31115
+  I_red: 29990
+  S_blue: 91
+  S_green: 84
+  S_mean: 53
+  S_red: 100
+? !!python/tuple
+- 10
+- 2
+: I_blue: 29682
+  I_green: 33717
+  I_mean: 31139
+  I_red: 30020
+  S_blue: 86
+  S_green: 82
+  S_mean: 51
+  S_red: 97
+? !!python/tuple
+- 11
+- 2
+: I_blue: 29675
+  I_green: 33746
+  I_mean: 31146
+  I_red: 30018
+  S_blue: 96
+  S_green: 94
+  S_mean: 56
+  S_red: 104
+? !!python/tuple
+- 12
+- 2
+: I_blue: 29712
+  I_green: 33758
+  I_mean: 31149
+  I_red: 29979
+  S_blue: 87
+  S_green: 100
+  S_mean: 53
+  S_red: 88
+? !!python/tuple
+- 13
+- 2
+: I_blue: 29630
+  I_green: 33694
+  I_mean: 31080
+  I_red: 29916
+  S_blue: 107
+  S_green: 102
+  S_mean: 62
+  S_red: 113
+? !!python/tuple
+- 14
+- 2
+: I_blue: 29601
+  I_green: 33591
+  I_mean: 31028
+  I_red: 29894
+  S_blue: 86
+  S_green: 91
+  S_mean: 60
+  S_red: 132
+? !!python/tuple
+- 15
+- 2
+: I_blue: 29530
+  I_green: 33619
+  I_mean: 30994
+  I_red: 29835
+  S_blue: 108
+  S_green: 131
+  S_mean: 71
+  S_red: 130
+? !!python/tuple
+- 16
+- 2
+: I_blue: 29594
+  I_green: 33592
+  I_mean: 31021
+  I_red: 29879
+  S_blue: 114
+  S_green: 110
+  S_mean: 68
+  S_red: 130
+? !!python/tuple
+- 17
+- 2
+: I_blue: 29526
+  I_green: 33575
+  I_mean: 30964
+  I_red: 29791
+  S_blue: 96
+  S_green: 135
+  S_mean: 63
+  S_red: 97
+? !!python/tuple
+- 18
+- 2
+: I_blue: 29484
+  I_green: 33442
+  I_mean: 30888
+  I_red: 29738
+  S_blue: 112
+  S_green: 129
+  S_mean: 70
+  S_red: 124
+? !!python/tuple
+- 19
+- 2
+: I_blue: 29491
+  I_green: 33447
+  I_mean: 30912
+  I_red: 29800
+  S_blue: 151
+  S_green: 139
+  S_mean: 79
+  S_red: 119
+? !!python/tuple
+- 20
+- 2
+: I_blue: 29559
+  I_green: 33547
+  I_mean: 30974
+  I_red: 29817
+  S_blue: 160
+  S_green: 133
+  S_mean: 84
+  S_red: 146
+? !!python/tuple
+- 21
+- 2
+: I_blue: 29544
+  I_green: 33489
+  I_mean: 30967
+  I_red: 29868
+  S_blue: 125
+  S_green: 118
+  S_mean: 72
+  S_red: 135
+? !!python/tuple
+- 22
+- 2
+: I_blue: 29552
+  I_green: 33461
+  I_mean: 30944
+  I_red: 29819
+  S_blue: 107
+  S_green: 111
+  S_mean: 68
+  S_red: 134
+? !!python/tuple
+- 23
+- 2
+: I_blue: 29518
+  I_green: 33461
+  I_mean: 30940
+  I_red: 29842
+  S_blue: 108
+  S_green: 118
+  S_mean: 65
+  S_red: 115
+? !!python/tuple
+- 24
+- 2
+: I_blue: 29582
+  I_green: 33530
+  I_mean: 30988
+  I_red: 29854
+  S_blue: 100
+  S_green: 108
+  S_mean: 62
+  S_red: 116
+? !!python/tuple
+- 25
+- 2
+: I_blue: 29646
+  I_green: 33576
+  I_mean: 31053
+  I_red: 29938
+  S_blue: 91
+  S_green: 112
+  S_mean: 61
+  S_red: 117
+? !!python/tuple
+- 26
+- 2
+: I_blue: 29675
+  I_green: 33631
+  I_mean: 31079
+  I_red: 29933
+  S_blue: 119
+  S_green: 100
+  S_mean: 65
+  S_red: 118
+? !!python/tuple
+- 27
+- 2
+: I_blue: 29732
+  I_green: 33633
+  I_mean: 31125
+  I_red: 30011
+  S_blue: 93
+  S_green: 114
+  S_mean: 70
+  S_red: 153
+? !!python/tuple
+- 28
+- 2
+: I_blue: 29737
+  I_green: 33670
+  I_mean: 31126
+  I_red: 29971
+  S_blue: 95
+  S_green: 108
+  S_mean: 59
+  S_red: 104
+? !!python/tuple
+- 29
+- 2
+: I_blue: 29712
+  I_green: 33642
+  I_mean: 31099
+  I_red: 29945
+  S_blue: 105
+  S_green: 110
+  S_mean: 63
+  S_red: 115
+? !!python/tuple
+- 30
+- 2
+: I_blue: 29681
+  I_green: 33652
+  I_mean: 31103
+  I_red: 29976
+  S_blue: 91
+  S_green: 115
+  S_mean: 60
+  S_red: 109
+? !!python/tuple
+- 31
+- 2
+: I_blue: 29695
+  I_green: 33684
+  I_mean: 31122
+  I_red: 29988
+  S_blue: 107
+  S_green: 115
+  S_mean: 65
+  S_red: 119
+? !!python/tuple
+- 32
+- 2
+: I_blue: 29723
+  I_green: 33635
+  I_mean: 31100
+  I_red: 29942
+  S_blue: 94
+  S_green: 122
+  S_mean: 66
+  S_red: 125
+? !!python/tuple
+- 33
+- 2
+: I_blue: 29659
+  I_green: 33595
+  I_mean: 31053
+  I_red: 29905
+  S_blue: 100
+  S_green: 108
+  S_mean: 63
+  S_red: 119
+? !!python/tuple
+- 34
+- 2
+: I_blue: 29685
+  I_green: 33607
+  I_mean: 31046
+  I_red: 29847
+  S_blue: 81
+  S_green: 112
+  S_mean: 59
+  S_red: 112
+? !!python/tuple
+- 35
+- 2
+: I_blue: 29699
+  I_green: 33582
+  I_mean: 31050
+  I_red: 29869
+  S_blue: 103
+  S_green: 102
+  S_mean: 58
+  S_red: 100
+? !!python/tuple
+- 36
+- 2
+: I_blue: 29643
+  I_green: 33585
+  I_mean: 31021
+  I_red: 29835
+  S_blue: 112
+  S_green: 115
+  S_mean: 67
+  S_red: 125
+? !!python/tuple
+- 37
+- 2
+: I_blue: 29596
+  I_green: 33516
+  I_mean: 30973
+  I_red: 29809
+  S_blue: 124
+  S_green: 117
+  S_mean: 71
+  S_red: 128
+? !!python/tuple
+- 38
+- 2
+: I_blue: 29579
+  I_green: 33488
+  I_mean: 30946
+  I_red: 29773
+  S_blue: 112
+  S_green: 113
+  S_mean: 63
+  S_red: 107
+? !!python/tuple
+- 39
+- 2
+: I_blue: 29559
+  I_green: 33501
+  I_mean: 30928
+  I_red: 29724
+  S_blue: 107
+  S_green: 101
+  S_mean: 65
+  S_red: 128
+? !!python/tuple
+- 40
+- 2
+: I_blue: 29588
+  I_green: 33459
+  I_mean: 30926
+  I_red: 29733
+  S_blue: 117
+  S_green: 132
+  S_mean: 70
+  S_red: 119
+? !!python/tuple
+- 41
+- 2
+: I_blue: 29526
+  I_green: 33433
+  I_mean: 30887
+  I_red: 29703
+  S_blue: 119
+  S_green: 122
+  S_mean: 73
+  S_red: 140
+? !!python/tuple
+- 42
+- 2
+: I_blue: 29469
+  I_green: 33354
+  I_mean: 30799
+  I_red: 29575
+  S_blue: 97
+  S_green: 108
+  S_mean: 62
+  S_red: 120
+? !!python/tuple
+- 43
+- 2
+: I_blue: 29450
+  I_green: 33348
+  I_mean: 30799
+  I_red: 29600
+  S_blue: 103
+  S_green: 111
+  S_mean: 63
+  S_red: 117
+? !!python/tuple
+- 44
+- 2
+: I_blue: 29455
+  I_green: 33377
+  I_mean: 30817
+  I_red: 29619
+  S_blue: 90
+  S_green: 97
+  S_mean: 54
+  S_red: 97
+? !!python/tuple
+- 45
+- 2
+: I_blue: 29528
+  I_green: 33377
+  I_mean: 30846
+  I_red: 29634
+  S_blue: 105
+  S_green: 113
+  S_mean: 66
+  S_red: 128
+? !!python/tuple
+- 46
+- 2
+: I_blue: 29442
+  I_green: 33344
+  I_mean: 30773
+  I_red: 29535
+  S_blue: 80
+  S_green: 85
+  S_mean: 49
+  S_red: 92
+? !!python/tuple
+- 47
+- 2
+: I_blue: 29368
+  I_green: 33344
+  I_mean: 30754
+  I_red: 29551
+  S_blue: 98
+  S_green: 101
+  S_mean: 59
+  S_red: 109
+? !!python/tuple
+- 48
+- 2
+: I_blue: 29406
+  I_green: 33339
+  I_mean: 30762
+  I_red: 29541
+  S_blue: 122
+  S_green: 120
+  S_mean: 68
+  S_red: 112
+? !!python/tuple
+- 49
+- 2
+: I_blue: 29407
+  I_green: 33396
+  I_mean: 30770
+  I_red: 29507
+  S_blue: 128
+  S_green: 114
+  S_mean: 73
+  S_red: 140
+? !!python/tuple
+- 50
+- 2
+: I_blue: 29478
+  I_green: 33452
+  I_mean: 30834
+  I_red: 29574
+  S_blue: 102
+  S_green: 109
+  S_mean: 61
+  S_red: 106
+? !!python/tuple
+- 51
+- 2
+: I_blue: 29429
+  I_green: 33374
+  I_mean: 30773
+  I_red: 29518
+  S_blue: 232
+  S_green: 251
+  S_mean: 135
+  S_red: 220
+? !!python/tuple
+- 52
+- 2
+: I_blue: 29514
+  I_green: 33364
+  I_mean: 30829
+  I_red: 29611
+  S_blue: 97
+  S_green: 91
+  S_mean: 59
+  S_red: 119
+? !!python/tuple
+- 53
+- 2
+: I_blue: 29503
+  I_green: 33383
+  I_mean: 30825
+  I_red: 29591
+  S_blue: 89
+  S_green: 91
+  S_mean: 59
+  S_red: 123
+? !!python/tuple
+- 54
+- 2
+: I_blue: 29544
+  I_green: 33391
+  I_mean: 30840
+  I_red: 29587
+  S_blue: 99
+  S_green: 100
+  S_mean: 57
+  S_red: 102
+? !!python/tuple
+- 55
+- 2
+: I_blue: 29584
+  I_green: 33442
+  I_mean: 30889
+  I_red: 29643
+  S_blue: 112
+  S_green: 105
+  S_mean: 64
+  S_red: 119
+? !!python/tuple
+- 56
+- 2
+: I_blue: 29676
+  I_green: 33490
+  I_mean: 30969
+  I_red: 29743
+  S_blue: 104
+  S_green: 115
+  S_mean: 64
+  S_red: 115
+? !!python/tuple
+- 57
+- 2
+: I_blue: 29691
+  I_green: 33525
+  I_mean: 30978
+  I_red: 29720
+  S_blue: 90
+  S_green: 111
+  S_mean: 61
+  S_red: 115
+? !!python/tuple
+- 58
+- 2
+: I_blue: 29718
+  I_green: 33488
+  I_mean: 30976
+  I_red: 29724
+  S_blue: 105
+  S_green: 97
+  S_mean: 60
+  S_red: 112
+? !!python/tuple
+- 59
+- 2
+: I_blue: 29766
+  I_green: 33539
+  I_mean: 31035
+  I_red: 29801
+  S_blue: 109
+  S_green: 96
+  S_mean: 59
+  S_red: 102
+? !!python/tuple
+- 60
+- 2
+: I_blue: 29743
+  I_green: 33563
+  I_mean: 31029
+  I_red: 29781
+  S_blue: 94
+  S_green: 86
+  S_mean: 56
+  S_red: 110
+? !!python/tuple
+- 61
+- 2
+: I_blue: 29775
+  I_green: 33635
+  I_mean: 31073
+  I_red: 29811
+  S_blue: 109
+  S_green: 139
+  S_mean: 71
+  S_red: 121
+? !!python/tuple
+- 62
+- 2
+: I_blue: 29778
+  I_green: 33628
+  I_mean: 31057
+  I_red: 29765
+  S_blue: 175
+  S_green: 179
+  S_mean: 99
+  S_red: 162
+? !!python/tuple
+- 63
+- 2
+: I_blue: 29706
+  I_green: 33523
+  I_mean: 30991
+  I_red: 29745
+  S_blue: 116
+  S_green: 112
+  S_mean: 65
+  S_red: 111
+? !!python/tuple
+- 64
+- 2
+: I_blue: 29683
+  I_green: 33507
+  I_mean: 30978
+  I_red: 29745
+  S_blue: 106
+  S_green: 109
+  S_mean: 61
+  S_red: 105
+? !!python/tuple
+- 65
+- 2
+: I_blue: 29627
+  I_green: 33478
+  I_mean: 30918
+  I_red: 29649
+  S_blue: 111
+  S_green: 121
+  S_mean: 70
+  S_red: 134
+? !!python/tuple
+- 66
+- 2
+: I_blue: 29562
+  I_green: 33430
+  I_mean: 30897
+  I_red: 29701
+  S_blue: 102
+  S_green: 135
+  S_mean: 74
+  S_red: 144
+? !!python/tuple
+- 67
+- 2
+: I_blue: 29496
+  I_green: 33360
+  I_mean: 30793
+  I_red: 29525
+  S_blue: 83
+  S_green: 95
+  S_mean: 55
+  S_red: 109
+? !!python/tuple
+- 68
+- 2
+: I_blue: 29490
+  I_green: 33320
+  I_mean: 30762
+  I_red: 29476
+  S_blue: 98
+  S_green: 109
+  S_mean: 61
+  S_red: 114
+? !!python/tuple
+- 69
+- 2
+: I_blue: 29481
+  I_green: 33263
+  I_mean: 30728
+  I_red: 29440
+  S_blue: 145
+  S_green: 124
+  S_mean: 76
+  S_red: 130
+? !!python/tuple
+- 70
+- 2
+: I_blue: 29437
+  I_green: 33252
+  I_mean: 30700
+  I_red: 29412
+  S_blue: 134
+  S_green: 126
+  S_mean: 76
+  S_red: 135
+? !!python/tuple
+- 71
+- 2
+: I_blue: 29394
+  I_green: 33193
+  I_mean: 30660
+  I_red: 29395
+  S_blue: 111
+  S_green: 108
+  S_mean: 62
+  S_red: 108
+? !!python/tuple
+- 72
+- 2
+: I_blue: 29372
+  I_green: 33160
+  I_mean: 30606
+  I_red: 29288
+  S_blue: 123
+  S_green: 118
+  S_mean: 70
+  S_red: 127
+? !!python/tuple
+- 73
+- 2
+: I_blue: 29368
+  I_green: 33205
+  I_mean: 30631
+  I_red: 29320
+  S_blue: 107
+  S_green: 116
+  S_mean: 63
+  S_red: 108
+? !!python/tuple
+- 74
+- 2
+: I_blue: 29321
+  I_green: 33166
+  I_mean: 30588
+  I_red: 29277
+  S_blue: 108
+  S_green: 99
+  S_mean: 64
+  S_red: 127
+? !!python/tuple
+- 75
+- 2
+: I_blue: 29285
+  I_green: 33088
+  I_mean: 30528
+  I_red: 29213
+  S_blue: 110
+  S_green: 105
+  S_mean: 69
+  S_red: 144
+? !!python/tuple
+- 76
+- 2
+: I_blue: 29275
+  I_green: 33105
+  I_mean: 30525
+  I_red: 29196
+  S_blue: 84
+  S_green: 101
+  S_mean: 64
+  S_red: 142
+? !!python/tuple
+- 77
+- 2
+: I_blue: 29213
+  I_green: 33043
+  I_mean: 30460
+  I_red: 29126
+  S_blue: 106
+  S_green: 111
+  S_mean: 65
+  S_red: 121
+? !!python/tuple
+- 78
+- 2
+: I_blue: 29199
+  I_green: 32993
+  I_mean: 30429
+  I_red: 29096
+  S_blue: 115
+  S_green: 105
+  S_mean: 62
+  S_red: 103
+? !!python/tuple
+- 79
+- 2
+: I_blue: 29203
+  I_green: 33017
+  I_mean: 30445
+  I_red: 29115
+  S_blue: 131
+  S_green: 125
+  S_mean: 74
+  S_red: 133
+? !!python/tuple
+- 80
+- 2
+: I_blue: 29196
+  I_green: 33001
+  I_mean: 30439
+  I_red: 29121
+  S_blue: 121
+  S_green: 106
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- 81
+- 2
+: I_blue: 29265
+  I_green: 33214
+  I_mean: 30535
+  I_red: 29126
+  S_blue: 109
+  S_green: 151
+  S_mean: 74
+  S_red: 122
+? !!python/tuple
+- 82
+- 2
+: null
+? !!python/tuple
+- 83
+- 2
+: null
+? !!python/tuple
+- 84
+- 2
+: null
+? !!python/tuple
+- 85
+- 2
+: null
+? !!python/tuple
+- 86
+- 2
+: null
+? !!python/tuple
+- 87
+- 2
+: null
+? !!python/tuple
+- 88
+- 2
+: null
+? !!python/tuple
+- 89
+- 2
+: null
+? !!python/tuple
+- 90
+- 2
+: null
+? !!python/tuple
+- 91
+- 2
+: null
+? !!python/tuple
+- 92
+- 2
+: null
+? !!python/tuple
+- 93
+- 2
+: null
+? !!python/tuple
+- 94
+- 2
+: null
+? !!python/tuple
+- 95
+- 2
+: null
+? !!python/tuple
+- 96
+- 2
+: null
+? !!python/tuple
+- 97
+- 2
+: null
+? !!python/tuple
+- 98
+- 2
+: null
+? !!python/tuple
+- 99
+- 2
+: null
+? !!python/tuple
+- 100
+- 2
+: null
+? !!python/tuple
+- 101
+- 2
+: null
+? !!python/tuple
+- 102
+- 2
+: null
+? !!python/tuple
+- 103
+- 2
+: null
+? !!python/tuple
+- 104
+- 2
+: null
+? !!python/tuple
+- 105
+- 2
+: null
+? !!python/tuple
+- 106
+- 2
+: null
+? !!python/tuple
+- 107
+- 2
+: null
+? !!python/tuple
+- 108
+- 2
+: null
+? !!python/tuple
+- 109
+- 2
+: null
+? !!python/tuple
+- 110
+- 2
+: null
+? !!python/tuple
+- 111
+- 2
+: null
+? !!python/tuple
+- 112
+- 2
+: null
+? !!python/tuple
+- 113
+- 2
+: null
+? !!python/tuple
+- 114
+- 2
+: null
+? !!python/tuple
+- 115
+- 2
+: null
+? !!python/tuple
+- 116
+- 2
+: null
+? !!python/tuple
+- 117
+- 2
+: null
+? !!python/tuple
+- 118
+- 2
+: null
+? !!python/tuple
+- 119
+- 2
+: null
+? !!python/tuple
+- 120
+- 2
+: null
+? !!python/tuple
+- 121
+- 2
+: null
+? !!python/tuple
+- 122
+- 2
+: null
+? !!python/tuple
+- 123
+- 2
+: null
+? !!python/tuple
+- 124
+- 2
+: null
+? !!python/tuple
+- 125
+- 2
+: null
+? !!python/tuple
+- 126
+- 2
+: null
+? !!python/tuple
+- 127
+- 2
+: null
+? !!python/tuple
+- 128
+- 2
+: null
+? !!python/tuple
+- 129
+- 2
+: null
+? !!python/tuple
+- 130
+- 2
+: null
+? !!python/tuple
+- 131
+- 2
+: null
+? !!python/tuple
+- 132
+- 2
+: null
+? !!python/tuple
+- 133
+- 2
+: null
+? !!python/tuple
+- 134
+- 2
+: null
+? !!python/tuple
+- 135
+- 2
+: null
+? !!python/tuple
+- 136
+- 2
+: null
+? !!python/tuple
+- 137
+- 2
+: null
+? !!python/tuple
+- 138
+- 2
+: null
+? !!python/tuple
+- 139
+- 2
+: null
+? !!python/tuple
+- 140
+- 2
+: null
+? !!python/tuple
+- 141
+- 2
+: null
+? !!python/tuple
+- 142
+- 2
+: null
+? !!python/tuple
+- 143
+- 2
+: null
+? !!python/tuple
+- 144
+- 2
+: null
+? !!python/tuple
+- 145
+- 2
+: null
+? !!python/tuple
+- 146
+- 2
+: null
+? !!python/tuple
+- 147
+- 2
+: null
+? !!python/tuple
+- 148
+- 2
+: null
+? !!python/tuple
+- 149
+- 2
+: null
+? !!python/tuple
+- 150
+- 2
+: null
+? !!python/tuple
+- 151
+- 2
+: null
+? !!python/tuple
+- 152
+- 2
+: null
+? !!python/tuple
+- 153
+- 2
+: null
+? !!python/tuple
+- 154
+- 2
+: null
+? !!python/tuple
+- 155
+- 2
+: null
+? !!python/tuple
+- -155
+- 3
+: null
+? !!python/tuple
+- -154
+- 3
+: null
+? !!python/tuple
+- -153
+- 3
+: null
+? !!python/tuple
+- -152
+- 3
+: null
+? !!python/tuple
+- -151
+- 3
+: null
+? !!python/tuple
+- -150
+- 3
+: null
+? !!python/tuple
+- -149
+- 3
+: null
+? !!python/tuple
+- -148
+- 3
+: null
+? !!python/tuple
+- -147
+- 3
+: null
+? !!python/tuple
+- -146
+- 3
+: null
+? !!python/tuple
+- -145
+- 3
+: null
+? !!python/tuple
+- -144
+- 3
+: null
+? !!python/tuple
+- -143
+- 3
+: null
+? !!python/tuple
+- -142
+- 3
+: null
+? !!python/tuple
+- -141
+- 3
+: null
+? !!python/tuple
+- -140
+- 3
+: null
+? !!python/tuple
+- -139
+- 3
+: null
+? !!python/tuple
+- -138
+- 3
+: null
+? !!python/tuple
+- -137
+- 3
+: null
+? !!python/tuple
+- -136
+- 3
+: null
+? !!python/tuple
+- -135
+- 3
+: null
+? !!python/tuple
+- -134
+- 3
+: null
+? !!python/tuple
+- -133
+- 3
+: null
+? !!python/tuple
+- -132
+- 3
+: null
+? !!python/tuple
+- -131
+- 3
+: null
+? !!python/tuple
+- -130
+- 3
+: null
+? !!python/tuple
+- -129
+- 3
+: null
+? !!python/tuple
+- -128
+- 3
+: null
+? !!python/tuple
+- -127
+- 3
+: null
+? !!python/tuple
+- -126
+- 3
+: null
+? !!python/tuple
+- -125
+- 3
+: null
+? !!python/tuple
+- -124
+- 3
+: null
+? !!python/tuple
+- -123
+- 3
+: null
+? !!python/tuple
+- -122
+- 3
+: null
+? !!python/tuple
+- -121
+- 3
+: null
+? !!python/tuple
+- -120
+- 3
+: null
+? !!python/tuple
+- -119
+- 3
+: null
+? !!python/tuple
+- -118
+- 3
+: null
+? !!python/tuple
+- -117
+- 3
+: null
+? !!python/tuple
+- -116
+- 3
+: null
+? !!python/tuple
+- -115
+- 3
+: null
+? !!python/tuple
+- -114
+- 3
+: null
+? !!python/tuple
+- -113
+- 3
+: null
+? !!python/tuple
+- -112
+- 3
+: null
+? !!python/tuple
+- -111
+- 3
+: null
+? !!python/tuple
+- -110
+- 3
+: null
+? !!python/tuple
+- -109
+- 3
+: null
+? !!python/tuple
+- -108
+- 3
+: null
+? !!python/tuple
+- -107
+- 3
+: null
+? !!python/tuple
+- -106
+- 3
+: null
+? !!python/tuple
+- -105
+- 3
+: null
+? !!python/tuple
+- -104
+- 3
+: null
+? !!python/tuple
+- -103
+- 3
+: null
+? !!python/tuple
+- -102
+- 3
+: null
+? !!python/tuple
+- -101
+- 3
+: null
+? !!python/tuple
+- -100
+- 3
+: null
+? !!python/tuple
+- -99
+- 3
+: null
+? !!python/tuple
+- -98
+- 3
+: null
+? !!python/tuple
+- -97
+- 3
+: null
+? !!python/tuple
+- -96
+- 3
+: null
+? !!python/tuple
+- -95
+- 3
+: null
+? !!python/tuple
+- -94
+- 3
+: null
+? !!python/tuple
+- -93
+- 3
+: I_blue: 27571
+  I_green: 28773
+  I_mean: 26658
+  I_red: 23632
+  S_blue: 103
+  S_green: 129
+  S_mean: 70
+  S_red: 133
+? !!python/tuple
+- -92
+- 3
+: I_blue: 27544
+  I_green: 28787
+  I_mean: 26679
+  I_red: 23707
+  S_blue: 117
+  S_green: 116
+  S_mean: 68
+  S_red: 123
+? !!python/tuple
+- -91
+- 3
+: I_blue: 27580
+  I_green: 28801
+  I_mean: 26682
+  I_red: 23667
+  S_blue: 168
+  S_green: 158
+  S_mean: 90
+  S_red: 141
+? !!python/tuple
+- -90
+- 3
+: I_blue: 27564
+  I_green: 28741
+  I_mean: 26643
+  I_red: 23625
+  S_blue: 99
+  S_green: 112
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- -89
+- 3
+: I_blue: 27575
+  I_green: 28736
+  I_mean: 26650
+  I_red: 23641
+  S_blue: 102
+  S_green: 102
+  S_mean: 61
+  S_red: 114
+? !!python/tuple
+- -88
+- 3
+: I_blue: 27492
+  I_green: 28681
+  I_mean: 26604
+  I_red: 23640
+  S_blue: 114
+  S_green: 140
+  S_mean: 73
+  S_red: 124
+? !!python/tuple
+- -87
+- 3
+: I_blue: 27454
+  I_green: 28657
+  I_mean: 26573
+  I_red: 23609
+  S_blue: 137
+  S_green: 143
+  S_mean: 78
+  S_red: 127
+? !!python/tuple
+- -86
+- 3
+: I_blue: 27459
+  I_green: 28614
+  I_mean: 26558
+  I_red: 23602
+  S_blue: 120
+  S_green: 129
+  S_mean: 72
+  S_red: 128
+? !!python/tuple
+- -85
+- 3
+: I_blue: 27452
+  I_green: 28621
+  I_mean: 26566
+  I_red: 23626
+  S_blue: 108
+  S_green: 112
+  S_mean: 64
+  S_red: 115
+? !!python/tuple
+- -84
+- 3
+: I_blue: 27381
+  I_green: 28557
+  I_mean: 26494
+  I_red: 23545
+  S_blue: 107
+  S_green: 109
+  S_mean: 63
+  S_red: 113
+? !!python/tuple
+- -83
+- 3
+: I_blue: 27341
+  I_green: 28550
+  I_mean: 26459
+  I_red: 23488
+  S_blue: 98
+  S_green: 110
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- -82
+- 3
+: I_blue: 27406
+  I_green: 28591
+  I_mean: 26527
+  I_red: 23584
+  S_blue: 100
+  S_green: 95
+  S_mean: 59
+  S_red: 115
+? !!python/tuple
+- -81
+- 3
+: I_blue: 27413
+  I_green: 28613
+  I_mean: 26527
+  I_red: 23556
+  S_blue: 95
+  S_green: 143
+  S_mean: 70
+  S_red: 126
+? !!python/tuple
+- -80
+- 3
+: I_blue: 27474
+  I_green: 28611
+  I_mean: 26575
+  I_red: 23640
+  S_blue: 121
+  S_green: 130
+  S_mean: 75
+  S_red: 141
+? !!python/tuple
+- -79
+- 3
+: I_blue: 27511
+  I_green: 28647
+  I_mean: 26612
+  I_red: 23680
+  S_blue: 113
+  S_green: 100
+  S_mean: 66
+  S_red: 132
+? !!python/tuple
+- -78
+- 3
+: I_blue: 27552
+  I_green: 28709
+  I_mean: 26644
+  I_red: 23673
+  S_blue: 139
+  S_green: 125
+  S_mean: 76
+  S_red: 133
+? !!python/tuple
+- -77
+- 3
+: I_blue: 27504
+  I_green: 28637
+  I_mean: 26584
+  I_red: 23612
+  S_blue: 110
+  S_green: 141
+  S_mean: 74
+  S_red: 134
+? !!python/tuple
+- -76
+- 3
+: I_blue: 27457
+  I_green: 28607
+  I_mean: 26556
+  I_red: 23604
+  S_blue: 111
+  S_green: 120
+  S_mean: 69
+  S_red: 129
+? !!python/tuple
+- -75
+- 3
+: I_blue: 27438
+  I_green: 28560
+  I_mean: 26512
+  I_red: 23538
+  S_blue: 150
+  S_green: 158
+  S_mean: 83
+  S_red: 125
+? !!python/tuple
+- -74
+- 3
+: I_blue: 27440
+  I_green: 28605
+  I_mean: 26531
+  I_red: 23550
+  S_blue: 110
+  S_green: 116
+  S_mean: 66
+  S_red: 117
+? !!python/tuple
+- -73
+- 3
+: I_blue: 27377
+  I_green: 28528
+  I_mean: 26480
+  I_red: 23536
+  S_blue: 131
+  S_green: 112
+  S_mean: 74
+  S_red: 142
+? !!python/tuple
+- -72
+- 3
+: I_blue: 27363
+  I_green: 28500
+  I_mean: 26456
+  I_red: 23507
+  S_blue: 127
+  S_green: 122
+  S_mean: 73
+  S_red: 131
+? !!python/tuple
+- -71
+- 3
+: I_blue: 27341
+  I_green: 28484
+  I_mean: 26430
+  I_red: 23466
+  S_blue: 106
+  S_green: 102
+  S_mean: 63
+  S_red: 120
+? !!python/tuple
+- -70
+- 3
+: I_blue: 27325
+  I_green: 28469
+  I_mean: 26399
+  I_red: 23405
+  S_blue: 116
+  S_green: 129
+  S_mean: 66
+  S_red: 99
+? !!python/tuple
+- -69
+- 3
+: I_blue: 27310
+  I_green: 28487
+  I_mean: 26401
+  I_red: 23407
+  S_blue: 102
+  S_green: 125
+  S_mean: 68
+  S_red: 128
+? !!python/tuple
+- -68
+- 3
+: I_blue: 27385
+  I_green: 28551
+  I_mean: 26465
+  I_red: 23459
+  S_blue: 104
+  S_green: 115
+  S_mean: 63
+  S_red: 110
+? !!python/tuple
+- -67
+- 3
+: I_blue: 27448
+  I_green: 28611
+  I_mean: 26531
+  I_red: 23535
+  S_blue: 101
+  S_green: 116
+  S_mean: 62
+  S_red: 108
+? !!python/tuple
+- -66
+- 3
+: I_blue: 27466
+  I_green: 28652
+  I_mean: 26561
+  I_red: 23567
+  S_blue: 110
+  S_green: 119
+  S_mean: 65
+  S_red: 109
+? !!python/tuple
+- -65
+- 3
+: I_blue: 27493
+  I_green: 28637
+  I_mean: 26569
+  I_red: 23579
+  S_blue: 87
+  S_green: 111
+  S_mean: 63
+  S_red: 127
+? !!python/tuple
+- -64
+- 3
+: I_blue: 27485
+  I_green: 28653
+  I_mean: 26567
+  I_red: 23564
+  S_blue: 110
+  S_green: 110
+  S_mean: 65
+  S_red: 119
+? !!python/tuple
+- -63
+- 3
+: I_blue: 27503
+  I_green: 28639
+  I_mean: 26578
+  I_red: 23592
+  S_blue: 89
+  S_green: 110
+  S_mean: 63
+  S_red: 128
+? !!python/tuple
+- -62
+- 3
+: I_blue: 27495
+  I_green: 28648
+  I_mean: 26577
+  I_red: 23589
+  S_blue: 106
+  S_green: 117
+  S_mean: 69
+  S_red: 136
+? !!python/tuple
+- -61
+- 3
+: I_blue: 27497
+  I_green: 28674
+  I_mean: 26584
+  I_red: 23582
+  S_blue: 110
+  S_green: 132
+  S_mean: 69
+  S_red: 120
+? !!python/tuple
+- -60
+- 3
+: I_blue: 27491
+  I_green: 28649
+  I_mean: 26567
+  I_red: 23563
+  S_blue: 132
+  S_green: 146
+  S_mean: 79
+  S_red: 133
+? !!python/tuple
+- -59
+- 3
+: I_blue: 27428
+  I_green: 28597
+  I_mean: 26516
+  I_red: 23524
+  S_blue: 103
+  S_green: 140
+  S_mean: 70
+  S_red: 121
+? !!python/tuple
+- -58
+- 3
+: I_blue: 27399
+  I_green: 28566
+  I_mean: 26491
+  I_red: 23508
+  S_blue: 130
+  S_green: 139
+  S_mean: 79
+  S_red: 142
+? !!python/tuple
+- -57
+- 3
+: I_blue: 27409
+  I_green: 28628
+  I_mean: 26524
+  I_red: 23535
+  S_blue: 137
+  S_green: 133
+  S_mean: 76
+  S_red: 125
+? !!python/tuple
+- -56
+- 3
+: I_blue: 27313
+  I_green: 28563
+  I_mean: 26454
+  I_red: 23486
+  S_blue: 95
+  S_green: 134
+  S_mean: 70
+  S_red: 132
+? !!python/tuple
+- -55
+- 3
+: I_blue: 27356
+  I_green: 28533
+  I_mean: 26449
+  I_red: 23460
+  S_blue: 203
+  S_green: 198
+  S_mean: 113
+  S_red: 188
+? !!python/tuple
+- -54
+- 3
+: I_blue: 27390
+  I_green: 28550
+  I_mean: 26490
+  I_red: 23530
+  S_blue: 121
+  S_green: 107
+  S_mean: 70
+  S_red: 138
+? !!python/tuple
+- -53
+- 3
+: I_blue: 27356
+  I_green: 28555
+  I_mean: 26488
+  I_red: 23554
+  S_blue: 112
+  S_green: 122
+  S_mean: 70
+  S_red: 130
+? !!python/tuple
+- -52
+- 3
+: I_blue: 27375
+  I_green: 28555
+  I_mean: 26487
+  I_red: 23533
+  S_blue: 111
+  S_green: 130
+  S_mean: 67
+  S_red: 111
+? !!python/tuple
+- -51
+- 3
+: I_blue: 27378
+  I_green: 28523
+  I_mean: 26476
+  I_red: 23528
+  S_blue: 118
+  S_green: 123
+  S_mean: 69
+  S_red: 118
+? !!python/tuple
+- -50
+- 3
+: I_blue: 27356
+  I_green: 28485
+  I_mean: 26451
+  I_red: 23514
+  S_blue: 117
+  S_green: 121
+  S_mean: 68
+  S_red: 118
+? !!python/tuple
+- -49
+- 3
+: I_blue: 27323
+  I_green: 28501
+  I_mean: 26458
+  I_red: 23552
+  S_blue: 111
+  S_green: 130
+  S_mean: 73
+  S_red: 139
+? !!python/tuple
+- -48
+- 3
+: I_blue: 27362
+  I_green: 28503
+  I_mean: 26493
+  I_red: 23615
+  S_blue: 94
+  S_green: 94
+  S_mean: 58
+  S_red: 115
+? !!python/tuple
+- -47
+- 3
+: I_blue: 27413
+  I_green: 28563
+  I_mean: 26549
+  I_red: 23672
+  S_blue: 98
+  S_green: 106
+  S_mean: 59
+  S_red: 105
+? !!python/tuple
+- -46
+- 3
+: I_blue: 27426
+  I_green: 28555
+  I_mean: 26577
+  I_red: 23750
+  S_blue: 86
+  S_green: 100
+  S_mean: 56
+  S_red: 107
+? !!python/tuple
+- -45
+- 3
+: I_blue: 27471
+  I_green: 28626
+  I_mean: 26646
+  I_red: 23841
+  S_blue: 79
+  S_green: 97
+  S_mean: 54
+  S_red: 104
+? !!python/tuple
+- -44
+- 3
+: I_blue: 27491
+  I_green: 28634
+  I_mean: 26649
+  I_red: 23822
+  S_blue: 98
+  S_green: 120
+  S_mean: 64
+  S_red: 114
+? !!python/tuple
+- -43
+- 3
+: I_blue: 27560
+  I_green: 28686
+  I_mean: 26710
+  I_red: 23886
+  S_blue: 106
+  S_green: 101
+  S_mean: 61
+  S_red: 112
+? !!python/tuple
+- -42
+- 3
+: I_blue: 27586
+  I_green: 28701
+  I_mean: 26734
+  I_red: 23917
+  S_blue: 87
+  S_green: 100
+  S_mean: 55
+  S_red: 103
+? !!python/tuple
+- -41
+- 3
+: I_blue: 27671
+  I_green: 28750
+  I_mean: 26793
+  I_red: 23960
+  S_blue: 93
+  S_green: 119
+  S_mean: 64
+  S_red: 122
+? !!python/tuple
+- -40
+- 3
+: I_blue: 27570
+  I_green: 28668
+  I_mean: 26715
+  I_red: 23908
+  S_blue: 114
+  S_green: 122
+  S_mean: 70
+  S_red: 129
+? !!python/tuple
+- -39
+- 3
+: I_blue: 27660
+  I_green: 28705
+  I_mean: 26762
+  I_red: 23922
+  S_blue: 108
+  S_green: 106
+  S_mean: 64
+  S_red: 119
+? !!python/tuple
+- -38
+- 3
+: I_blue: 27648
+  I_green: 28726
+  I_mean: 26768
+  I_red: 23931
+  S_blue: 115
+  S_green: 119
+  S_mean: 69
+  S_red: 129
+? !!python/tuple
+- -37
+- 3
+: I_blue: 27629
+  I_green: 28700
+  I_mean: 26760
+  I_red: 23951
+  S_blue: 93
+  S_green: 106
+  S_mean: 63
+  S_red: 129
+? !!python/tuple
+- -36
+- 3
+: I_blue: 27662
+  I_green: 28711
+  I_mean: 26763
+  I_red: 23916
+  S_blue: 104
+  S_green: 109
+  S_mean: 66
+  S_red: 130
+? !!python/tuple
+- -35
+- 3
+: I_blue: 27683
+  I_green: 28762
+  I_mean: 26799
+  I_red: 23952
+  S_blue: 118
+  S_green: 98
+  S_mean: 65
+  S_red: 122
+? !!python/tuple
+- -34
+- 3
+: I_blue: 27796
+  I_green: 28883
+  I_mean: 26895
+  I_red: 24008
+  S_blue: 78
+  S_green: 117
+  S_mean: 57
+  S_red: 98
+? !!python/tuple
+- -33
+- 3
+: I_blue: 27823
+  I_green: 28879
+  I_mean: 26918
+  I_red: 24054
+  S_blue: 104
+  S_green: 104
+  S_mean: 65
+  S_red: 129
+? !!python/tuple
+- -32
+- 3
+: I_blue: 27839
+  I_green: 28901
+  I_mean: 26947
+  I_red: 24103
+  S_blue: 100
+  S_green: 117
+  S_mean: 68
+  S_red: 135
+? !!python/tuple
+- -31
+- 3
+: I_blue: 27847
+  I_green: 28906
+  I_mean: 26944
+  I_red: 24080
+  S_blue: 124
+  S_green: 141
+  S_mean: 78
+  S_red: 140
+? !!python/tuple
+- -30
+- 3
+: I_blue: 27760
+  I_green: 28779
+  I_mean: 26821
+  I_red: 23924
+  S_blue: 192
+  S_green: 207
+  S_mean: 113
+  S_red: 193
+? !!python/tuple
+- -29
+- 3
+: I_blue: 27800
+  I_green: 28859
+  I_mean: 26885
+  I_red: 23997
+  S_blue: 110
+  S_green: 117
+  S_mean: 74
+  S_red: 154
+? !!python/tuple
+- -28
+- 3
+: I_blue: 27904
+  I_green: 28966
+  I_mean: 26987
+  I_red: 24092
+  S_blue: 89
+  S_green: 108
+  S_mean: 58
+  S_red: 108
+? !!python/tuple
+- -27
+- 3
+: I_blue: 27854
+  I_green: 28903
+  I_mean: 26913
+  I_red: 23984
+  S_blue: 91
+  S_green: 115
+  S_mean: 65
+  S_red: 131
+? !!python/tuple
+- -26
+- 3
+: I_blue: 27809
+  I_green: 28858
+  I_mean: 26879
+  I_red: 23970
+  S_blue: 94
+  S_green: 106
+  S_mean: 62
+  S_red: 121
+? !!python/tuple
+- -25
+- 3
+: I_blue: 27782
+  I_green: 28816
+  I_mean: 26836
+  I_red: 23911
+  S_blue: 85
+  S_green: 96
+  S_mean: 56
+  S_red: 111
+? !!python/tuple
+- -24
+- 3
+: I_blue: 27748
+  I_green: 28821
+  I_mean: 26833
+  I_red: 23930
+  S_blue: 99
+  S_green: 97
+  S_mean: 59
+  S_red: 113
+? !!python/tuple
+- -23
+- 3
+: I_blue: 27802
+  I_green: 28838
+  I_mean: 26864
+  I_red: 23954
+  S_blue: 107
+  S_green: 110
+  S_mean: 67
+  S_red: 130
+? !!python/tuple
+- -22
+- 3
+: I_blue: 27888
+  I_green: 28928
+  I_mean: 26937
+  I_red: 23996
+  S_blue: 98
+  S_green: 115
+  S_mean: 62
+  S_red: 110
+? !!python/tuple
+- -21
+- 3
+: I_blue: 27954
+  I_green: 28970
+  I_mean: 26981
+  I_red: 24019
+  S_blue: 113
+  S_green: 116
+  S_mean: 65
+  S_red: 113
+? !!python/tuple
+- -20
+- 3
+: I_blue: 27875
+  I_green: 28918
+  I_mean: 26926
+  I_red: 23985
+  S_blue: 101
+  S_green: 105
+  S_mean: 59
+  S_red: 101
+? !!python/tuple
+- -19
+- 3
+: I_blue: 27829
+  I_green: 28815
+  I_mean: 26860
+  I_red: 23938
+  S_blue: 140
+  S_green: 125
+  S_mean: 72
+  S_red: 110
+? !!python/tuple
+- -18
+- 3
+: I_blue: 27817
+  I_green: 28848
+  I_mean: 26862
+  I_red: 23922
+  S_blue: 105
+  S_green: 113
+  S_mean: 64
+  S_red: 115
+? !!python/tuple
+- -17
+- 3
+: I_blue: 27843
+  I_green: 28797
+  I_mean: 26845
+  I_red: 23895
+  S_blue: 112
+  S_green: 100
+  S_mean: 65
+  S_red: 129
+? !!python/tuple
+- -16
+- 3
+: I_blue: 27860
+  I_green: 28828
+  I_mean: 26862
+  I_red: 23898
+  S_blue: 112
+  S_green: 124
+  S_mean: 66
+  S_red: 111
+? !!python/tuple
+- -15
+- 3
+: I_blue: 27893
+  I_green: 28816
+  I_mean: 26878
+  I_red: 23926
+  S_blue: 101
+  S_green: 85
+  S_mean: 58
+  S_red: 115
+? !!python/tuple
+- -14
+- 3
+: I_blue: 27887
+  I_green: 28868
+  I_mean: 26872
+  I_red: 23861
+  S_blue: 123
+  S_green: 148
+  S_mean: 76
+  S_red: 123
+? !!python/tuple
+- -13
+- 3
+: I_blue: 27782
+  I_green: 28791
+  I_mean: 26813
+  I_red: 23867
+  S_blue: 106
+  S_green: 182
+  S_mean: 86
+  S_red: 152
+? !!python/tuple
+- -12
+- 3
+: I_blue: 27834
+  I_green: 28744
+  I_mean: 26815
+  I_red: 23869
+  S_blue: 133
+  S_green: 118
+  S_mean: 72
+  S_red: 125
+? !!python/tuple
+- -11
+- 3
+: I_blue: 27812
+  I_green: 28706
+  I_mean: 26794
+  I_red: 23866
+  S_blue: 103
+  S_green: 110
+  S_mean: 62
+  S_red: 111
+? !!python/tuple
+- -10
+- 3
+: I_blue: 27795
+  I_green: 28657
+  I_mean: 26744
+  I_red: 23782
+  S_blue: 96
+  S_green: 101
+  S_mean: 56
+  S_red: 98
+? !!python/tuple
+- -9
+- 3
+: I_blue: 27766
+  I_green: 28666
+  I_mean: 26751
+  I_red: 23822
+  S_blue: 105
+  S_green: 111
+  S_mean: 62
+  S_red: 110
+? !!python/tuple
+- -8
+- 3
+: I_blue: 27834
+  I_green: 28676
+  I_mean: 26793
+  I_red: 23871
+  S_blue: 98
+  S_green: 109
+  S_mean: 61
+  S_red: 112
+? !!python/tuple
+- -7
+- 3
+: I_blue: 27858
+  I_green: 28738
+  I_mean: 26839
+  I_red: 23921
+  S_blue: 91
+  S_green: 111
+  S_mean: 57
+  S_red: 96
+? !!python/tuple
+- -6
+- 3
+: I_blue: 27879
+  I_green: 28719
+  I_mean: 26832
+  I_red: 23899
+  S_blue: 100
+  S_green: 104
+  S_mean: 62
+  S_red: 118
+? !!python/tuple
+- -5
+- 3
+: I_blue: 27888
+  I_green: 28702
+  I_mean: 26839
+  I_red: 23927
+  S_blue: 99
+  S_green: 108
+  S_mean: 60
+  S_red: 105
+? !!python/tuple
+- -4
+- 3
+: I_blue: 27889
+  I_green: 28733
+  I_mean: 26848
+  I_red: 23923
+  S_blue: 119
+  S_green: 116
+  S_mean: 68
+  S_red: 121
+? !!python/tuple
+- -3
+- 3
+: I_blue: 27893
+  I_green: 28713
+  I_mean: 26839
+  I_red: 23911
+  S_blue: 97
+  S_green: 109
+  S_mean: 64
+  S_red: 128
+? !!python/tuple
+- -2
+- 3
+: I_blue: 27861
+  I_green: 28698
+  I_mean: 26813
+  I_red: 23882
+  S_blue: 99
+  S_green: 112
+  S_mean: 60
+  S_red: 103
+? !!python/tuple
+- -1
+- 3
+: I_blue: 27776
+  I_green: 28664
+  I_mean: 26773
+  I_red: 23879
+  S_blue: 128
+  S_green: 133
+  S_mean: 73
+  S_red: 119
+? !!python/tuple
+- 0
+- 3
+: I_blue: 27735
+  I_green: 28603
+  I_mean: 26712
+  I_red: 23799
+  S_blue: 94
+  S_green: 112
+  S_mean: 60
+  S_red: 107
+? !!python/tuple
+- 1
+- 3
+: I_blue: 27745
+  I_green: 28586
+  I_mean: 26708
+  I_red: 23795
+  S_blue: 103
+  S_green: 91
+  S_mean: 61
+  S_red: 123
+? !!python/tuple
+- 2
+- 3
+: I_blue: 27767
+  I_green: 28610
+  I_mean: 26739
+  I_red: 23842
+  S_blue: 102
+  S_green: 119
+  S_mean: 66
+  S_red: 122
+? !!python/tuple
+- 3
+- 3
+: I_blue: 27731
+  I_green: 28589
+  I_mean: 26706
+  I_red: 23799
+  S_blue: 125
+  S_green: 134
+  S_mean: 73
+  S_red: 122
+? !!python/tuple
+- 4
+- 3
+: I_blue: 27722
+  I_green: 28562
+  I_mean: 26684
+  I_red: 23768
+  S_blue: 117
+  S_green: 136
+  S_mean: 72
+  S_red: 121
+? !!python/tuple
+- 5
+- 3
+: I_blue: 27646
+  I_green: 28479
+  I_mean: 26634
+  I_red: 23777
+  S_blue: 107
+  S_green: 110
+  S_mean: 65
+  S_red: 125
+? !!python/tuple
+- 6
+- 3
+: I_blue: 27649
+  I_green: 28468
+  I_mean: 26605
+  I_red: 23699
+  S_blue: 95
+  S_green: 98
+  S_mean: 54
+  S_red: 90
+? !!python/tuple
+- 7
+- 3
+: I_blue: 27625
+  I_green: 28476
+  I_mean: 26596
+  I_red: 23689
+  S_blue: 93
+  S_green: 101
+  S_mean: 58
+  S_red: 108
+? !!python/tuple
+- 8
+- 3
+: I_blue: 27567
+  I_green: 28370
+  I_mean: 26522
+  I_red: 23629
+  S_blue: 177
+  S_green: 166
+  S_mean: 96
+  S_red: 156
+? !!python/tuple
+- 9
+- 3
+: I_blue: 27540
+  I_green: 28351
+  I_mean: 26488
+  I_red: 23573
+  S_blue: 112
+  S_green: 125
+  S_mean: 67
+  S_red: 113
+? !!python/tuple
+- 10
+- 3
+: I_blue: 27501
+  I_green: 28293
+  I_mean: 26445
+  I_red: 23543
+  S_blue: 110
+  S_green: 118
+  S_mean: 66
+  S_red: 118
+? !!python/tuple
+- 11
+- 3
+: I_blue: 27488
+  I_green: 28315
+  I_mean: 26440
+  I_red: 23519
+  S_blue: 94
+  S_green: 119
+  S_mean: 58
+  S_red: 90
+? !!python/tuple
+- 12
+- 3
+: I_blue: 27496
+  I_green: 28297
+  I_mean: 26420
+  I_red: 23467
+  S_blue: 271
+  S_green: 285
+  S_mean: 151
+  S_red: 229
+? !!python/tuple
+- 13
+- 3
+: I_blue: 27498
+  I_green: 28322
+  I_mean: 26443
+  I_red: 23511
+  S_blue: 99
+  S_green: 98
+  S_mean: 56
+  S_red: 95
+? !!python/tuple
+- 14
+- 3
+: I_blue: 27456
+  I_green: 28229
+  I_mean: 26377
+  I_red: 23447
+  S_blue: 93
+  S_green: 103
+  S_mean: 63
+  S_red: 131
+? !!python/tuple
+- 15
+- 3
+: I_blue: 27373
+  I_green: 28210
+  I_mean: 26327
+  I_red: 23400
+  S_blue: 107
+  S_green: 115
+  S_mean: 65
+  S_red: 118
+? !!python/tuple
+- 16
+- 3
+: I_blue: 27424
+  I_green: 28163
+  I_mean: 26330
+  I_red: 23404
+  S_blue: 106
+  S_green: 102
+  S_mean: 65
+  S_red: 132
+? !!python/tuple
+- 17
+- 3
+: I_blue: 27421
+  I_green: 28234
+  I_mean: 26357
+  I_red: 23416
+  S_blue: 94
+  S_green: 125
+  S_mean: 66
+  S_red: 122
+? !!python/tuple
+- 18
+- 3
+: I_blue: 27461
+  I_green: 28198
+  I_mean: 26361
+  I_red: 23425
+  S_blue: 98
+  S_green: 116
+  S_mean: 66
+  S_red: 130
+? !!python/tuple
+- 19
+- 3
+: I_blue: 27413
+  I_green: 28127
+  I_mean: 26310
+  I_red: 23390
+  S_blue: 119
+  S_green: 122
+  S_mean: 66
+  S_red: 103
+? !!python/tuple
+- 20
+- 3
+: I_blue: 27365
+  I_green: 28121
+  I_mean: 26276
+  I_red: 23344
+  S_blue: 83
+  S_green: 94
+  S_mean: 60
+  S_red: 133
+? !!python/tuple
+- 21
+- 3
+: I_blue: 27395
+  I_green: 28135
+  I_mean: 26316
+  I_red: 23419
+  S_blue: 102
+  S_green: 110
+  S_mean: 65
+  S_red: 126
+? !!python/tuple
+- 22
+- 3
+: I_blue: 27438
+  I_green: 28116
+  I_mean: 26325
+  I_red: 23422
+  S_blue: 99
+  S_green: 111
+  S_mean: 62
+  S_red: 112
+? !!python/tuple
+- 23
+- 3
+: I_blue: 27400
+  I_green: 28142
+  I_mean: 26317
+  I_red: 23409
+  S_blue: 94
+  S_green: 106
+  S_mean: 58
+  S_red: 102
+? !!python/tuple
+- 24
+- 3
+: I_blue: 27438
+  I_green: 28167
+  I_mean: 26335
+  I_red: 23402
+  S_blue: 78
+  S_green: 98
+  S_mean: 53
+  S_red: 99
+? !!python/tuple
+- 25
+- 3
+: I_blue: 27490
+  I_green: 28180
+  I_mean: 26373
+  I_red: 23451
+  S_blue: 94
+  S_green: 88
+  S_mean: 55
+  S_red: 107
+? !!python/tuple
+- 26
+- 3
+: I_blue: 27496
+  I_green: 28246
+  I_mean: 26404
+  I_red: 23472
+  S_blue: 127
+  S_green: 117
+  S_mean: 72
+  S_red: 132
+? !!python/tuple
+- 27
+- 3
+: I_blue: 27585
+  I_green: 28275
+  I_mean: 26470
+  I_red: 23550
+  S_blue: 176
+  S_green: 182
+  S_mean: 104
+  S_red: 187
+? !!python/tuple
+- 28
+- 3
+: I_blue: 27549
+  I_green: 28250
+  I_mean: 26431
+  I_red: 23495
+  S_blue: 146
+  S_green: 155
+  S_mean: 86
+  S_red: 147
+? !!python/tuple
+- 29
+- 3
+: I_blue: 27571
+  I_green: 28263
+  I_mean: 26444
+  I_red: 23498
+  S_blue: 116
+  S_green: 131
+  S_mean: 70
+  S_red: 120
+? !!python/tuple
+- 30
+- 3
+: I_blue: 27578
+  I_green: 28283
+  I_mean: 26472
+  I_red: 23556
+  S_blue: 114
+  S_green: 108
+  S_mean: 68
+  S_red: 132
+? !!python/tuple
+- 31
+- 3
+: I_blue: 27571
+  I_green: 28336
+  I_mean: 26490
+  I_red: 23564
+  S_blue: 116
+  S_green: 134
+  S_mean: 68
+  S_red: 106
+? !!python/tuple
+- 32
+- 3
+: I_blue: 27605
+  I_green: 28318
+  I_mean: 26498
+  I_red: 23573
+  S_blue: 106
+  S_green: 118
+  S_mean: 65
+  S_red: 118
+? !!python/tuple
+- 33
+- 3
+: I_blue: 27555
+  I_green: 28261
+  I_mean: 26449
+  I_red: 23532
+  S_blue: 125
+  S_green: 147
+  S_mean: 75
+  S_red: 116
+? !!python/tuple
+- 34
+- 3
+: I_blue: 27554
+  I_green: 28225
+  I_mean: 26413
+  I_red: 23461
+  S_blue: 113
+  S_green: 128
+  S_mean: 71
+  S_red: 130
+? !!python/tuple
+- 35
+- 3
+: I_blue: 27536
+  I_green: 28195
+  I_mean: 26394
+  I_red: 23453
+  S_blue: 168
+  S_green: 159
+  S_mean: 90
+  S_red: 140
+? !!python/tuple
+- 36
+- 3
+: I_blue: 27520
+  I_green: 28223
+  I_mean: 26390
+  I_red: 23427
+  S_blue: 125
+  S_green: 128
+  S_mean: 71
+  S_red: 121
+? !!python/tuple
+- 37
+- 3
+: I_blue: 27488
+  I_green: 28186
+  I_mean: 26365
+  I_red: 23422
+  S_blue: 116
+  S_green: 124
+  S_mean: 70
+  S_red: 126
+? !!python/tuple
+- 38
+- 3
+: I_blue: 27407
+  I_green: 28097
+  I_mean: 26272
+  I_red: 23312
+  S_blue: 137
+  S_green: 153
+  S_mean: 83
+  S_red: 143
+? !!python/tuple
+- 39
+- 3
+: I_blue: 27395
+  I_green: 28088
+  I_mean: 26254
+  I_red: 23279
+  S_blue: 110
+  S_green: 114
+  S_mean: 66
+  S_red: 119
+? !!python/tuple
+- 40
+- 3
+: I_blue: 27505
+  I_green: 28145
+  I_mean: 26326
+  I_red: 23329
+  S_blue: 128
+  S_green: 128
+  S_mean: 79
+  S_red: 156
+? !!python/tuple
+- 41
+- 3
+: I_blue: 27471
+  I_green: 28129
+  I_mean: 26307
+  I_red: 23323
+  S_blue: 248
+  S_green: 253
+  S_mean: 140
+  S_red: 227
+? !!python/tuple
+- 42
+- 3
+: I_blue: 27448
+  I_green: 28087
+  I_mean: 26264
+  I_red: 23259
+  S_blue: 157
+  S_green: 153
+  S_mean: 91
+  S_red: 163
+? !!python/tuple
+- 43
+- 3
+: I_blue: 27400
+  I_green: 28037
+  I_mean: 26223
+  I_red: 23234
+  S_blue: 113
+  S_green: 122
+  S_mean: 66
+  S_red: 112
+? !!python/tuple
+- 44
+- 3
+: I_blue: 27341
+  I_green: 28001
+  I_mean: 26158
+  I_red: 23134
+  S_blue: 100
+  S_green: 108
+  S_mean: 58
+  S_red: 98
+? !!python/tuple
+- 45
+- 3
+: I_blue: 27302
+  I_green: 27915
+  I_mean: 26102
+  I_red: 23089
+  S_blue: 99
+  S_green: 121
+  S_mean: 67
+  S_red: 131
+? !!python/tuple
+- 46
+- 3
+: I_blue: 27317
+  I_green: 27986
+  I_mean: 26136
+  I_red: 23106
+  S_blue: 99
+  S_green: 105
+  S_mean: 61
+  S_red: 114
+? !!python/tuple
+- 47
+- 3
+: I_blue: 27291
+  I_green: 28022
+  I_mean: 26143
+  I_red: 23117
+  S_blue: 132
+  S_green: 97
+  S_mean: 67
+  S_red: 119
+? !!python/tuple
+- 48
+- 3
+: I_blue: 27281
+  I_green: 28010
+  I_mean: 26129
+  I_red: 23096
+  S_blue: 95
+  S_green: 97
+  S_mean: 58
+  S_red: 113
+? !!python/tuple
+- 49
+- 3
+: I_blue: 27299
+  I_green: 28000
+  I_mean: 26115
+  I_red: 23047
+  S_blue: 102
+  S_green: 110
+  S_mean: 62
+  S_red: 113
+? !!python/tuple
+- 50
+- 3
+: I_blue: 27331
+  I_green: 28012
+  I_mean: 26145
+  I_red: 23093
+  S_blue: 95
+  S_green: 105
+  S_mean: 58
+  S_red: 106
+? !!python/tuple
+- 51
+- 3
+: I_blue: 27350
+  I_green: 28032
+  I_mean: 26161
+  I_red: 23101
+  S_blue: 113
+  S_green: 119
+  S_mean: 70
+  S_red: 132
+? !!python/tuple
+- 52
+- 3
+: I_blue: 27357
+  I_green: 27978
+  I_mean: 26149
+  I_red: 23112
+  S_blue: 97
+  S_green: 105
+  S_mean: 61
+  S_red: 119
+? !!python/tuple
+- 53
+- 3
+: I_blue: 27339
+  I_green: 27980
+  I_mean: 26144
+  I_red: 23115
+  S_blue: 98
+  S_green: 104
+  S_mean: 59
+  S_red: 107
+? !!python/tuple
+- 54
+- 3
+: I_blue: 27336
+  I_green: 27947
+  I_mean: 26109
+  I_red: 23046
+  S_blue: 85
+  S_green: 104
+  S_mean: 56
+  S_red: 104
+? !!python/tuple
+- 55
+- 3
+: I_blue: 27370
+  I_green: 27976
+  I_mean: 26140
+  I_red: 23076
+  S_blue: 101
+  S_green: 104
+  S_mean: 56
+  S_red: 86
+? !!python/tuple
+- 56
+- 3
+: I_blue: 27465
+  I_green: 28046
+  I_mean: 26232
+  I_red: 23185
+  S_blue: 101
+  S_green: 117
+  S_mean: 61
+  S_red: 98
+? !!python/tuple
+- 57
+- 3
+: I_blue: 27506
+  I_green: 28075
+  I_mean: 26255
+  I_red: 23185
+  S_blue: 106
+  S_green: 96
+  S_mean: 59
+  S_red: 109
+? !!python/tuple
+- 58
+- 3
+: I_blue: 27511
+  I_green: 28076
+  I_mean: 26265
+  I_red: 23210
+  S_blue: 99
+  S_green: 96
+  S_mean: 58
+  S_red: 110
+? !!python/tuple
+- 59
+- 3
+: I_blue: 27603
+  I_green: 28157
+  I_mean: 26339
+  I_red: 23257
+  S_blue: 96
+  S_green: 94
+  S_mean: 62
+  S_red: 129
+? !!python/tuple
+- 60
+- 3
+: I_blue: 27624
+  I_green: 28209
+  I_mean: 26381
+  I_red: 23310
+  S_blue: 85
+  S_green: 109
+  S_mean: 57
+  S_red: 104
+? !!python/tuple
+- 61
+- 3
+: I_blue: 27632
+  I_green: 28237
+  I_mean: 26393
+  I_red: 23311
+  S_blue: 97
+  S_green: 90
+  S_mean: 55
+  S_red: 102
+? !!python/tuple
+- 62
+- 3
+: I_blue: 27724
+  I_green: 28313
+  I_mean: 26464
+  I_red: 23357
+  S_blue: 104
+  S_green: 103
+  S_mean: 61
+  S_red: 113
+? !!python/tuple
+- 63
+- 3
+: I_blue: 27685
+  I_green: 28271
+  I_mean: 26440
+  I_red: 23366
+  S_blue: 204
+  S_green: 186
+  S_mean: 109
+  S_red: 176
+? !!python/tuple
+- 64
+- 3
+: I_blue: 27669
+  I_green: 28263
+  I_mean: 26435
+  I_red: 23373
+  S_blue: 104
+  S_green: 105
+  S_mean: 61
+  S_red: 108
+? !!python/tuple
+- 65
+- 3
+: I_blue: 27640
+  I_green: 28236
+  I_mean: 26405
+  I_red: 23340
+  S_blue: 104
+  S_green: 111
+  S_mean: 66
+  S_red: 131
+? !!python/tuple
+- 66
+- 3
+: I_blue: 27648
+  I_green: 28272
+  I_mean: 26449
+  I_red: 23429
+  S_blue: 92
+  S_green: 138
+  S_mean: 71
+  S_red: 136
+? !!python/tuple
+- 67
+- 3
+: I_blue: 27558
+  I_green: 28162
+  I_mean: 26321
+  I_red: 23244
+  S_blue: 92
+  S_green: 97
+  S_mean: 56
+  S_red: 102
+? !!python/tuple
+- 68
+- 3
+: I_blue: 27524
+  I_green: 28106
+  I_mean: 26265
+  I_red: 23166
+  S_blue: 99
+  S_green: 100
+  S_mean: 61
+  S_red: 119
+? !!python/tuple
+- 69
+- 3
+: I_blue: 27541
+  I_green: 28096
+  I_mean: 26276
+  I_red: 23191
+  S_blue: 106
+  S_green: 92
+  S_mean: 57
+  S_red: 101
+? !!python/tuple
+- 70
+- 3
+: I_blue: 27474
+  I_green: 28029
+  I_mean: 26213
+  I_red: 23138
+  S_blue: 89
+  S_green: 109
+  S_mean: 57
+  S_red: 101
+? !!python/tuple
+- 71
+- 3
+: I_blue: 27394
+  I_green: 27971
+  I_mean: 26149
+  I_red: 23082
+  S_blue: 100
+  S_green: 104
+  S_mean: 62
+  S_red: 120
+? !!python/tuple
+- 72
+- 3
+: I_blue: 27372
+  I_green: 27919
+  I_mean: 26097
+  I_red: 23000
+  S_blue: 114
+  S_green: 87
+  S_mean: 57
+  S_red: 95
+? !!python/tuple
+- 73
+- 3
+: I_blue: 27337
+  I_green: 27933
+  I_mean: 26079
+  I_red: 22967
+  S_blue: 107
+  S_green: 103
+  S_mean: 62
+  S_red: 114
+? !!python/tuple
+- 74
+- 3
+: I_blue: 27317
+  I_green: 27906
+  I_mean: 26057
+  I_red: 22950
+  S_blue: 105
+  S_green: 105
+  S_mean: 62
+  S_red: 115
+? !!python/tuple
+- 75
+- 3
+: I_blue: 27267
+  I_green: 27819
+  I_mean: 25999
+  I_red: 22913
+  S_blue: 102
+  S_green: 97
+  S_mean: 58
+  S_red: 104
+? !!python/tuple
+- 76
+- 3
+: I_blue: 27188
+  I_green: 27784
+  I_mean: 25928
+  I_red: 22813
+  S_blue: 126
+  S_green: 123
+  S_mean: 69
+  S_red: 112
+? !!python/tuple
+- 77
+- 3
+: I_blue: 27163
+  I_green: 27754
+  I_mean: 25904
+  I_red: 22795
+  S_blue: 108
+  S_green: 111
+  S_mean: 69
+  S_red: 141
+? !!python/tuple
+- 78
+- 3
+: I_blue: 27138
+  I_green: 27697
+  I_mean: 25863
+  I_red: 22756
+  S_blue: 196
+  S_green: 194
+  S_mean: 104
+  S_red: 150
+? !!python/tuple
+- 79
+- 3
+: I_blue: 27121
+  I_green: 27722
+  I_mean: 25866
+  I_red: 22755
+  S_blue: 147
+  S_green: 121
+  S_mean: 76
+  S_red: 128
+? !!python/tuple
+- 80
+- 3
+: I_blue: 27177
+  I_green: 27758
+  I_mean: 25915
+  I_red: 22810
+  S_blue: 137
+  S_green: 142
+  S_mean: 76
+  S_red: 120
+? !!python/tuple
+- 81
+- 3
+: I_blue: 27260
+  I_green: 27945
+  I_mean: 26002
+  I_red: 22801
+  S_blue: 130
+  S_green: 157
+  S_mean: 77
+  S_red: 114
+? !!python/tuple
+- 82
+- 3
+: null
+? !!python/tuple
+- 83
+- 3
+: null
+? !!python/tuple
+- 84
+- 3
+: null
+? !!python/tuple
+- 85
+- 3
+: null
+? !!python/tuple
+- 86
+- 3
+: null
+? !!python/tuple
+- 87
+- 3
+: null
+? !!python/tuple
+- 88
+- 3
+: null
+? !!python/tuple
+- 89
+- 3
+: null
+? !!python/tuple
+- 90
+- 3
+: null
+? !!python/tuple
+- 91
+- 3
+: null
+? !!python/tuple
+- 92
+- 3
+: null
+? !!python/tuple
+- 93
+- 3
+: null
+? !!python/tuple
+- 94
+- 3
+: null
+? !!python/tuple
+- 95
+- 3
+: null
+? !!python/tuple
+- 96
+- 3
+: null
+? !!python/tuple
+- 97
+- 3
+: null
+? !!python/tuple
+- 98
+- 3
+: null
+? !!python/tuple
+- 99
+- 3
+: null
+? !!python/tuple
+- 100
+- 3
+: null
+? !!python/tuple
+- 101
+- 3
+: null
+? !!python/tuple
+- 102
+- 3
+: null
+? !!python/tuple
+- 103
+- 3
+: null
+? !!python/tuple
+- 104
+- 3
+: null
+? !!python/tuple
+- 105
+- 3
+: null
+? !!python/tuple
+- 106
+- 3
+: null
+? !!python/tuple
+- 107
+- 3
+: null
+? !!python/tuple
+- 108
+- 3
+: null
+? !!python/tuple
+- 109
+- 3
+: null
+? !!python/tuple
+- 110
+- 3
+: null
+? !!python/tuple
+- 111
+- 3
+: null
+? !!python/tuple
+- 112
+- 3
+: null
+? !!python/tuple
+- 113
+- 3
+: null
+? !!python/tuple
+- 114
+- 3
+: null
+? !!python/tuple
+- 115
+- 3
+: null
+? !!python/tuple
+- 116
+- 3
+: null
+? !!python/tuple
+- 117
+- 3
+: null
+? !!python/tuple
+- 118
+- 3
+: null
+? !!python/tuple
+- 119
+- 3
+: null
+? !!python/tuple
+- 120
+- 3
+: null
+? !!python/tuple
+- 121
+- 3
+: null
+? !!python/tuple
+- 122
+- 3
+: null
+? !!python/tuple
+- 123
+- 3
+: null
+? !!python/tuple
+- 124
+- 3
+: null
+? !!python/tuple
+- 125
+- 3
+: null
+? !!python/tuple
+- 126
+- 3
+: null
+? !!python/tuple
+- 127
+- 3
+: null
+? !!python/tuple
+- 128
+- 3
+: null
+? !!python/tuple
+- 129
+- 3
+: null
+? !!python/tuple
+- 130
+- 3
+: null
+? !!python/tuple
+- 131
+- 3
+: null
+? !!python/tuple
+- 132
+- 3
+: null
+? !!python/tuple
+- 133
+- 3
+: null
+? !!python/tuple
+- 134
+- 3
+: null
+? !!python/tuple
+- 135
+- 3
+: null
+? !!python/tuple
+- 136
+- 3
+: null
+? !!python/tuple
+- 137
+- 3
+: null
+? !!python/tuple
+- 138
+- 3
+: null
+? !!python/tuple
+- 139
+- 3
+: null
+? !!python/tuple
+- 140
+- 3
+: null
+? !!python/tuple
+- 141
+- 3
+: null
+? !!python/tuple
+- 142
+- 3
+: null
+? !!python/tuple
+- 143
+- 3
+: null
+? !!python/tuple
+- 144
+- 3
+: null
+? !!python/tuple
+- 145
+- 3
+: null
+? !!python/tuple
+- 146
+- 3
+: null
+? !!python/tuple
+- 147
+- 3
+: null
+? !!python/tuple
+- 148
+- 3
+: null
+? !!python/tuple
+- 149
+- 3
+: null
+? !!python/tuple
+- 150
+- 3
+: null
+? !!python/tuple
+- 151
+- 3
+: null
+? !!python/tuple
+- 152
+- 3
+: null
+? !!python/tuple
+- 153
+- 3
+: null
+? !!python/tuple
+- 154
+- 3
+: null
+? !!python/tuple
+- 155
+- 3
+: null
+? !!python/tuple
+- -155
+- 4
+: null
+? !!python/tuple
+- -154
+- 4
+: null
+? !!python/tuple
+- -153
+- 4
+: null
+? !!python/tuple
+- -152
+- 4
+: null
+? !!python/tuple
+- -151
+- 4
+: null
+? !!python/tuple
+- -150
+- 4
+: null
+? !!python/tuple
+- -149
+- 4
+: null
+? !!python/tuple
+- -148
+- 4
+: null
+? !!python/tuple
+- -147
+- 4
+: null
+? !!python/tuple
+- -146
+- 4
+: null
+? !!python/tuple
+- -145
+- 4
+: null
+? !!python/tuple
+- -144
+- 4
+: null
+? !!python/tuple
+- -143
+- 4
+: null
+? !!python/tuple
+- -142
+- 4
+: null
+? !!python/tuple
+- -141
+- 4
+: null
+? !!python/tuple
+- -140
+- 4
+: null
+? !!python/tuple
+- -139
+- 4
+: null
+? !!python/tuple
+- -138
+- 4
+: null
+? !!python/tuple
+- -137
+- 4
+: null
+? !!python/tuple
+- -136
+- 4
+: null
+? !!python/tuple
+- -135
+- 4
+: null
+? !!python/tuple
+- -134
+- 4
+: null
+? !!python/tuple
+- -133
+- 4
+: null
+? !!python/tuple
+- -132
+- 4
+: null
+? !!python/tuple
+- -131
+- 4
+: null
+? !!python/tuple
+- -130
+- 4
+: null
+? !!python/tuple
+- -129
+- 4
+: null
+? !!python/tuple
+- -128
+- 4
+: null
+? !!python/tuple
+- -127
+- 4
+: null
+? !!python/tuple
+- -126
+- 4
+: null
+? !!python/tuple
+- -125
+- 4
+: null
+? !!python/tuple
+- -124
+- 4
+: null
+? !!python/tuple
+- -123
+- 4
+: null
+? !!python/tuple
+- -122
+- 4
+: null
+? !!python/tuple
+- -121
+- 4
+: null
+? !!python/tuple
+- -120
+- 4
+: null
+? !!python/tuple
+- -119
+- 4
+: null
+? !!python/tuple
+- -118
+- 4
+: null
+? !!python/tuple
+- -117
+- 4
+: null
+? !!python/tuple
+- -116
+- 4
+: null
+? !!python/tuple
+- -115
+- 4
+: null
+? !!python/tuple
+- -114
+- 4
+: null
+? !!python/tuple
+- -113
+- 4
+: null
+? !!python/tuple
+- -112
+- 4
+: null
+? !!python/tuple
+- -111
+- 4
+: null
+? !!python/tuple
+- -110
+- 4
+: null
+? !!python/tuple
+- -109
+- 4
+: null
+? !!python/tuple
+- -108
+- 4
+: null
+? !!python/tuple
+- -107
+- 4
+: null
+? !!python/tuple
+- -106
+- 4
+: null
+? !!python/tuple
+- -105
+- 4
+: null
+? !!python/tuple
+- -104
+- 4
+: null
+? !!python/tuple
+- -103
+- 4
+: null
+? !!python/tuple
+- -102
+- 4
+: null
+? !!python/tuple
+- -101
+- 4
+: null
+? !!python/tuple
+- -100
+- 4
+: null
+? !!python/tuple
+- -99
+- 4
+: null
+? !!python/tuple
+- -98
+- 4
+: null
+? !!python/tuple
+- -97
+- 4
+: null
+? !!python/tuple
+- -96
+- 4
+: null
+? !!python/tuple
+- -95
+- 4
+: null
+? !!python/tuple
+- -94
+- 4
+: null
+? !!python/tuple
+- -93
+- 4
+: I_blue: 25410
+  I_green: 23983
+  I_mean: 22661
+  I_red: 18590
+  S_blue: 103
+  S_green: 106
+  S_mean: 62
+  S_red: 113
+? !!python/tuple
+- -92
+- 4
+: I_blue: 25401
+  I_green: 23984
+  I_mean: 22673
+  I_red: 18636
+  S_blue: 90
+  S_green: 121
+  S_mean: 65
+  S_red: 127
+? !!python/tuple
+- -91
+- 4
+: I_blue: 25485
+  I_green: 24054
+  I_mean: 22736
+  I_red: 18670
+  S_blue: 98
+  S_green: 107
+  S_mean: 64
+  S_red: 128
+? !!python/tuple
+- -90
+- 4
+: I_blue: 25403
+  I_green: 23945
+  I_mean: 22645
+  I_red: 18589
+  S_blue: 118
+  S_green: 114
+  S_mean: 67
+  S_red: 119
+? !!python/tuple
+- -89
+- 4
+: I_blue: 25369
+  I_green: 23916
+  I_mean: 22618
+  I_red: 18569
+  S_blue: 126
+  S_green: 103
+  S_mean: 65
+  S_red: 109
+? !!python/tuple
+- -88
+- 4
+: I_blue: 25246
+  I_green: 23809
+  I_mean: 22516
+  I_red: 18493
+  S_blue: 97
+  S_green: 94
+  S_mean: 62
+  S_red: 130
+? !!python/tuple
+- -87
+- 4
+: I_blue: 25177
+  I_green: 23774
+  I_mean: 22475
+  I_red: 18476
+  S_blue: 106
+  S_green: 120
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -86
+- 4
+: I_blue: 25254
+  I_green: 23768
+  I_mean: 22509
+  I_red: 18507
+  S_blue: 100
+  S_green: 117
+  S_mean: 65
+  S_red: 122
+? !!python/tuple
+- -85
+- 4
+: I_blue: 25271
+  I_green: 23828
+  I_mean: 22556
+  I_red: 18569
+  S_blue: 85
+  S_green: 108
+  S_mean: 59
+  S_red: 114
+? !!python/tuple
+- -84
+- 4
+: I_blue: 25224
+  I_green: 23783
+  I_mean: 22506
+  I_red: 18512
+  S_blue: 103
+  S_green: 107
+  S_mean: 61
+  S_red: 108
+? !!python/tuple
+- -83
+- 4
+: I_blue: 25177
+  I_green: 23737
+  I_mean: 22462
+  I_red: 18473
+  S_blue: 104
+  S_green: 120
+  S_mean: 65
+  S_red: 114
+? !!python/tuple
+- -82
+- 4
+: I_blue: 25267
+  I_green: 23826
+  I_mean: 22543
+  I_red: 18538
+  S_blue: 124
+  S_green: 127
+  S_mean: 73
+  S_red: 132
+? !!python/tuple
+- -81
+- 4
+: I_blue: 25286
+  I_green: 23821
+  I_mean: 22547
+  I_red: 18536
+  S_blue: 100
+  S_green: 119
+  S_mean: 67
+  S_red: 132
+? !!python/tuple
+- -80
+- 4
+: I_blue: 25280
+  I_green: 23824
+  I_mean: 22550
+  I_red: 18548
+  S_blue: 111
+  S_green: 110
+  S_mean: 65
+  S_red: 117
+? !!python/tuple
+- -79
+- 4
+: I_blue: 25327
+  I_green: 23887
+  I_mean: 22610
+  I_red: 18618
+  S_blue: 114
+  S_green: 100
+  S_mean: 62
+  S_red: 111
+? !!python/tuple
+- -78
+- 4
+: I_blue: 25367
+  I_green: 23934
+  I_mean: 22641
+  I_red: 18622
+  S_blue: 93
+  S_green: 111
+  S_mean: 57
+  S_red: 91
+? !!python/tuple
+- -77
+- 4
+: I_blue: 25324
+  I_green: 23878
+  I_mean: 22593
+  I_red: 18578
+  S_blue: 118
+  S_green: 118
+  S_mean: 67
+  S_red: 116
+? !!python/tuple
+- -76
+- 4
+: I_blue: 25284
+  I_green: 23813
+  I_mean: 22560
+  I_red: 18584
+  S_blue: 113
+  S_green: 121
+  S_mean: 68
+  S_red: 123
+? !!python/tuple
+- -75
+- 4
+: I_blue: 25206
+  I_green: 23769
+  I_mean: 22498
+  I_red: 18521
+  S_blue: 100
+  S_green: 114
+  S_mean: 61
+  S_red: 106
+? !!python/tuple
+- -74
+- 4
+: I_blue: 25168
+  I_green: 23736
+  I_mean: 22459
+  I_red: 18473
+  S_blue: 119
+  S_green: 124
+  S_mean: 66
+  S_red: 102
+? !!python/tuple
+- -73
+- 4
+: I_blue: 25129
+  I_green: 23695
+  I_mean: 22430
+  I_red: 18466
+  S_blue: 126
+  S_green: 131
+  S_mean: 72
+  S_red: 117
+? !!python/tuple
+- -72
+- 4
+: I_blue: 25175
+  I_green: 23718
+  I_mean: 22467
+  I_red: 18508
+  S_blue: 118
+  S_green: 138
+  S_mean: 72
+  S_red: 120
+? !!python/tuple
+- -71
+- 4
+: I_blue: 25096
+  I_green: 23671
+  I_mean: 22402
+  I_red: 18441
+  S_blue: 167
+  S_green: 138
+  S_mean: 83
+  S_red: 123
+? !!python/tuple
+- -70
+- 4
+: I_blue: 25140
+  I_green: 23678
+  I_mean: 22417
+  I_red: 18434
+  S_blue: 149
+  S_green: 148
+  S_mean: 81
+  S_red: 126
+? !!python/tuple
+- -69
+- 4
+: I_blue: 25176
+  I_green: 23751
+  I_mean: 22469
+  I_red: 18482
+  S_blue: 143
+  S_green: 159
+  S_mean: 82
+  S_red: 125
+? !!python/tuple
+- -68
+- 4
+: I_blue: 25240
+  I_green: 23816
+  I_mean: 22524
+  I_red: 18516
+  S_blue: 128
+  S_green: 134
+  S_mean: 74
+  S_red: 123
+? !!python/tuple
+- -67
+- 4
+: I_blue: 25260
+  I_green: 23832
+  I_mean: 22553
+  I_red: 18569
+  S_blue: 104
+  S_green: 119
+  S_mean: 64
+  S_red: 110
+? !!python/tuple
+- -66
+- 4
+: I_blue: 25311
+  I_green: 23905
+  I_mean: 22608
+  I_red: 18610
+  S_blue: 90
+  S_green: 120
+  S_mean: 61
+  S_red: 105
+? !!python/tuple
+- -65
+- 4
+: I_blue: 25384
+  I_green: 23926
+  I_mean: 22658
+  I_red: 18664
+  S_blue: 138
+  S_green: 164
+  S_mean: 88
+  S_red: 156
+? !!python/tuple
+- -64
+- 4
+: I_blue: 25335
+  I_green: 23920
+  I_mean: 22631
+  I_red: 18639
+  S_blue: 129
+  S_green: 151
+  S_mean: 80
+  S_red: 139
+? !!python/tuple
+- -63
+- 4
+: I_blue: 25346
+  I_green: 23905
+  I_mean: 22647
+  I_red: 18692
+  S_blue: 106
+  S_green: 125
+  S_mean: 69
+  S_red: 127
+? !!python/tuple
+- -62
+- 4
+: I_blue: 25364
+  I_green: 23945
+  I_mean: 22667
+  I_red: 18693
+  S_blue: 127
+  S_green: 127
+  S_mean: 73
+  S_red: 126
+? !!python/tuple
+- -61
+- 4
+: I_blue: 25331
+  I_green: 23909
+  I_mean: 22640
+  I_red: 18682
+  S_blue: 95
+  S_green: 106
+  S_mean: 61
+  S_red: 116
+? !!python/tuple
+- -60
+- 4
+: I_blue: 25331
+  I_green: 23905
+  I_mean: 22630
+  I_red: 18656
+  S_blue: 104
+  S_green: 107
+  S_mean: 64
+  S_red: 122
+? !!python/tuple
+- -59
+- 4
+: I_blue: 25298
+  I_green: 23903
+  I_mean: 22626
+  I_red: 18678
+  S_blue: 119
+  S_green: 113
+  S_mean: 64
+  S_red: 103
+? !!python/tuple
+- -58
+- 4
+: I_blue: 25306
+  I_green: 23879
+  I_mean: 22618
+  I_red: 18669
+  S_blue: 108
+  S_green: 111
+  S_mean: 60
+  S_red: 95
+? !!python/tuple
+- -57
+- 4
+: I_blue: 25283
+  I_green: 23880
+  I_mean: 22610
+  I_red: 18667
+  S_blue: 97
+  S_green: 104
+  S_mean: 58
+  S_red: 101
+? !!python/tuple
+- -56
+- 4
+: I_blue: 25225
+  I_green: 23835
+  I_mean: 22568
+  I_red: 18645
+  S_blue: 145
+  S_green: 134
+  S_mean: 74
+  S_red: 107
+? !!python/tuple
+- -55
+- 4
+: I_blue: 25252
+  I_green: 23827
+  I_mean: 22572
+  I_red: 18639
+  S_blue: 100
+  S_green: 110
+  S_mean: 59
+  S_red: 100
+? !!python/tuple
+- -54
+- 4
+: I_blue: 25264
+  I_green: 23827
+  I_mean: 22591
+  I_red: 18683
+  S_blue: 105
+  S_green: 88
+  S_mean: 56
+  S_red: 102
+? !!python/tuple
+- -53
+- 4
+: I_blue: 25292
+  I_green: 23878
+  I_mean: 22645
+  I_red: 18765
+  S_blue: 94
+  S_green: 101
+  S_mean: 58
+  S_red: 109
+? !!python/tuple
+- -52
+- 4
+: I_blue: 25247
+  I_green: 23810
+  I_mean: 22584
+  I_red: 18696
+  S_blue: 114
+  S_green: 121
+  S_mean: 67
+  S_red: 113
+? !!python/tuple
+- -51
+- 4
+: I_blue: 25265
+  I_green: 23793
+  I_mean: 22592
+  I_red: 18719
+  S_blue: 95
+  S_green: 95
+  S_mean: 57
+  S_red: 106
+? !!python/tuple
+- -50
+- 4
+: I_blue: 25280
+  I_green: 23821
+  I_mean: 22613
+  I_red: 18739
+  S_blue: 97
+  S_green: 111
+  S_mean: 60
+  S_red: 105
+? !!python/tuple
+- -49
+- 4
+: I_blue: 25237
+  I_green: 23807
+  I_mean: 22595
+  I_red: 18742
+  S_blue: 81
+  S_green: 85
+  S_mean: 50
+  S_red: 98
+? !!python/tuple
+- -48
+- 4
+: I_blue: 25304
+  I_green: 23863
+  I_mean: 22656
+  I_red: 18802
+  S_blue: 89
+  S_green: 102
+  S_mean: 57
+  S_red: 105
+? !!python/tuple
+- -47
+- 4
+: I_blue: 25278
+  I_green: 23823
+  I_mean: 22633
+  I_red: 18798
+  S_blue: 97
+  S_green: 93
+  S_mean: 53
+  S_red: 90
+? !!python/tuple
+- -46
+- 4
+: I_blue: 25296
+  I_green: 23819
+  I_mean: 22654
+  I_red: 18849
+  S_blue: 104
+  S_green: 100
+  S_mean: 58
+  S_red: 102
+? !!python/tuple
+- -45
+- 4
+: I_blue: 25300
+  I_green: 23861
+  I_mean: 22676
+  I_red: 18867
+  S_blue: 113
+  S_green: 126
+  S_mean: 69
+  S_red: 120
+? !!python/tuple
+- -44
+- 4
+: I_blue: 25342
+  I_green: 23917
+  I_mean: 22714
+  I_red: 18884
+  S_blue: 102
+  S_green: 117
+  S_mean: 65
+  S_red: 119
+? !!python/tuple
+- -43
+- 4
+: I_blue: 25435
+  I_green: 23974
+  I_mean: 22779
+  I_red: 18929
+  S_blue: 99
+  S_green: 116
+  S_mean: 64
+  S_red: 117
+? !!python/tuple
+- -42
+- 4
+: I_blue: 25391
+  I_green: 23943
+  I_mean: 22750
+  I_red: 18917
+  S_blue: 111
+  S_green: 108
+  S_mean: 63
+  S_red: 109
+? !!python/tuple
+- -41
+- 4
+: I_blue: 25446
+  I_green: 23982
+  I_mean: 22779
+  I_red: 18910
+  S_blue: 105
+  S_green: 98
+  S_mean: 58
+  S_red: 101
+? !!python/tuple
+- -40
+- 4
+: I_blue: 25441
+  I_green: 23996
+  I_mean: 22784
+  I_red: 18916
+  S_blue: 118
+  S_green: 139
+  S_mean: 73
+  S_red: 122
+? !!python/tuple
+- -39
+- 4
+: I_blue: 25539
+  I_green: 24050
+  I_mean: 22852
+  I_red: 18967
+  S_blue: 125
+  S_green: 128
+  S_mean: 73
+  S_red: 127
+? !!python/tuple
+- -38
+- 4
+: I_blue: 25527
+  I_green: 24052
+  I_mean: 22857
+  I_red: 18994
+  S_blue: 141
+  S_green: 159
+  S_mean: 87
+  S_red: 154
+? !!python/tuple
+- -37
+- 4
+: I_blue: 25543
+  I_green: 24062
+  I_mean: 22872
+  I_red: 19012
+  S_blue: 147
+  S_green: 148
+  S_mean: 81
+  S_red: 129
+? !!python/tuple
+- -36
+- 4
+: I_blue: 25555
+  I_green: 24096
+  I_mean: 22890
+  I_red: 19021
+  S_blue: 111
+  S_green: 147
+  S_mean: 73
+  S_red: 119
+? !!python/tuple
+- -35
+- 4
+: I_blue: 25507
+  I_green: 24015
+  I_mean: 22842
+  I_red: 19006
+  S_blue: 102
+  S_green: 104
+  S_mean: 64
+  S_red: 126
+? !!python/tuple
+- -34
+- 4
+: I_blue: 25553
+  I_green: 24075
+  I_mean: 22871
+  I_red: 18986
+  S_blue: 118
+  S_green: 115
+  S_mean: 65
+  S_red: 106
+? !!python/tuple
+- -33
+- 4
+: I_blue: 25580
+  I_green: 24089
+  I_mean: 22901
+  I_red: 19036
+  S_blue: 112
+  S_green: 99
+  S_mean: 64
+  S_red: 125
+? !!python/tuple
+- -32
+- 4
+: I_blue: 25576
+  I_green: 24106
+  I_mean: 22918
+  I_red: 19072
+  S_blue: 112
+  S_green: 105
+  S_mean: 62
+  S_red: 108
+? !!python/tuple
+- -31
+- 4
+: I_blue: 25590
+  I_green: 24082
+  I_mean: 22906
+  I_red: 19047
+  S_blue: 107
+  S_green: 107
+  S_mean: 61
+  S_red: 108
+? !!python/tuple
+- -30
+- 4
+: I_blue: 25565
+  I_green: 24056
+  I_mean: 22877
+  I_red: 19010
+  S_blue: 102
+  S_green: 117
+  S_mean: 65
+  S_red: 119
+? !!python/tuple
+- -29
+- 4
+: I_blue: 25611
+  I_green: 24114
+  I_mean: 22927
+  I_red: 19056
+  S_blue: 111
+  S_green: 114
+  S_mean: 66
+  S_red: 122
+? !!python/tuple
+- -28
+- 4
+: I_blue: 25615
+  I_green: 24128
+  I_mean: 22946
+  I_red: 19096
+  S_blue: 88
+  S_green: 114
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- -27
+- 4
+: I_blue: 25616
+  I_green: 24077
+  I_mean: 22909
+  I_red: 19035
+  S_blue: 120
+  S_green: 139
+  S_mean: 73
+  S_red: 121
+? !!python/tuple
+- -26
+- 4
+: I_blue: 25606
+  I_green: 24092
+  I_mean: 22919
+  I_red: 19059
+  S_blue: 106
+  S_green: 89
+  S_mean: 57
+  S_red: 101
+? !!python/tuple
+- -25
+- 4
+: I_blue: 25617
+  I_green: 24082
+  I_mean: 22927
+  I_red: 19083
+  S_blue: 86
+  S_green: 81
+  S_mean: 50
+  S_red: 95
+? !!python/tuple
+- -24
+- 4
+: I_blue: 25598
+  I_green: 24093
+  I_mean: 22928
+  I_red: 19095
+  S_blue: 116
+  S_green: 133
+  S_mean: 67
+  S_red: 101
+? !!python/tuple
+- -23
+- 4
+: I_blue: 25645
+  I_green: 24107
+  I_mean: 22948
+  I_red: 19094
+  S_blue: 121
+  S_green: 125
+  S_mean: 71
+  S_red: 125
+? !!python/tuple
+- -22
+- 4
+: I_blue: 25685
+  I_green: 24133
+  I_mean: 22988
+  I_red: 19148
+  S_blue: 113
+  S_green: 114
+  S_mean: 65
+  S_red: 111
+? !!python/tuple
+- -21
+- 4
+: I_blue: 25738
+  I_green: 24145
+  I_mean: 23010
+  I_red: 19149
+  S_blue: 110
+  S_green: 112
+  S_mean: 65
+  S_red: 116
+? !!python/tuple
+- -20
+- 4
+: I_blue: 25657
+  I_green: 24108
+  I_mean: 22966
+  I_red: 19133
+  S_blue: 100
+  S_green: 91
+  S_mean: 55
+  S_red: 98
+? !!python/tuple
+- -19
+- 4
+: I_blue: 25681
+  I_green: 24088
+  I_mean: 22968
+  I_red: 19137
+  S_blue: 92
+  S_green: 100
+  S_mean: 56
+  S_red: 103
+? !!python/tuple
+- -18
+- 4
+: I_blue: 25685
+  I_green: 24129
+  I_mean: 22990
+  I_red: 19156
+  S_blue: 105
+  S_green: 100
+  S_mean: 60
+  S_red: 109
+? !!python/tuple
+- -17
+- 4
+: I_blue: 25684
+  I_green: 24080
+  I_mean: 22964
+  I_red: 19130
+  S_blue: 94
+  S_green: 103
+  S_mean: 57
+  S_red: 102
+? !!python/tuple
+- -16
+- 4
+: I_blue: 25701
+  I_green: 24087
+  I_mean: 22970
+  I_red: 19122
+  S_blue: 125
+  S_green: 134
+  S_mean: 74
+  S_red: 126
+? !!python/tuple
+- -15
+- 4
+: I_blue: 25730
+  I_green: 24107
+  I_mean: 22999
+  I_red: 19162
+  S_blue: 115
+  S_green: 111
+  S_mean: 69
+  S_red: 134
+? !!python/tuple
+- -14
+- 4
+: I_blue: 25710
+  I_green: 24067
+  I_mean: 22944
+  I_red: 19055
+  S_blue: 82
+  S_green: 145
+  S_mean: 62
+  S_red: 89
+? !!python/tuple
+- -13
+- 4
+: I_blue: 25693
+  I_green: 24075
+  I_mean: 22968
+  I_red: 19137
+  S_blue: 100
+  S_green: 170
+  S_mean: 79
+  S_red: 132
+? !!python/tuple
+- -12
+- 4
+: I_blue: 25669
+  I_green: 24006
+  I_mean: 22932
+  I_red: 19122
+  S_blue: 93
+  S_green: 111
+  S_mean: 60
+  S_red: 110
+? !!python/tuple
+- -11
+- 4
+: I_blue: 25651
+  I_green: 23933
+  I_mean: 22909
+  I_red: 19145
+  S_blue: 105
+  S_green: 109
+  S_mean: 60
+  S_red: 99
+? !!python/tuple
+- -10
+- 4
+: I_blue: 25673
+  I_green: 23922
+  I_mean: 22895
+  I_red: 19090
+  S_blue: 90
+  S_green: 94
+  S_mean: 60
+  S_red: 127
+? !!python/tuple
+- -9
+- 4
+: I_blue: 25645
+  I_green: 23940
+  I_mean: 22903
+  I_red: 19125
+  S_blue: 90
+  S_green: 107
+  S_mean: 60
+  S_red: 118
+? !!python/tuple
+- -8
+- 4
+: I_blue: 25723
+  I_green: 23961
+  I_mean: 22955
+  I_red: 19181
+  S_blue: 88
+  S_green: 106
+  S_mean: 57
+  S_red: 105
+? !!python/tuple
+- -7
+- 4
+: I_blue: 25721
+  I_green: 24010
+  I_mean: 22972
+  I_red: 19185
+  S_blue: 159
+  S_green: 148
+  S_mean: 91
+  S_red: 169
+? !!python/tuple
+- -6
+- 4
+: I_blue: 25768
+  I_green: 24034
+  I_mean: 23013
+  I_red: 19237
+  S_blue: 178
+  S_green: 180
+  S_mean: 101
+  S_red: 171
+? !!python/tuple
+- -5
+- 4
+: I_blue: 25792
+  I_green: 24037
+  I_mean: 23019
+  I_red: 19229
+  S_blue: 114
+  S_green: 100
+  S_mean: 60
+  S_red: 97
+? !!python/tuple
+- -4
+- 4
+: I_blue: 25782
+  I_green: 24014
+  I_mean: 23003
+  I_red: 19215
+  S_blue: 97
+  S_green: 91
+  S_mean: 57
+  S_red: 112
+? !!python/tuple
+- -3
+- 4
+: I_blue: 25709
+  I_green: 23938
+  I_mean: 22938
+  I_red: 19167
+  S_blue: 86
+  S_green: 107
+  S_mean: 58
+  S_red: 109
+? !!python/tuple
+- -2
+- 4
+: I_blue: 25662
+  I_green: 23904
+  I_mean: 22904
+  I_red: 19146
+  S_blue: 91
+  S_green: 106
+  S_mean: 59
+  S_red: 112
+? !!python/tuple
+- -1
+- 4
+: I_blue: 25604
+  I_green: 23858
+  I_mean: 22846
+  I_red: 19076
+  S_blue: 98
+  S_green: 84
+  S_mean: 54
+  S_red: 98
+? !!python/tuple
+- 0
+- 4
+: I_blue: 25629
+  I_green: 23856
+  I_mean: 22860
+  I_red: 19096
+  S_blue: 104
+  S_green: 106
+  S_mean: 61
+  S_red: 108
+? !!python/tuple
+- 1
+- 4
+: I_blue: 25661
+  I_green: 23904
+  I_mean: 22889
+  I_red: 19104
+  S_blue: 107
+  S_green: 118
+  S_mean: 66
+  S_red: 121
+? !!python/tuple
+- 2
+- 4
+: I_blue: 25599
+  I_green: 23865
+  I_mean: 22855
+  I_red: 19101
+  S_blue: 98
+  S_green: 108
+  S_mean: 59
+  S_red: 103
+? !!python/tuple
+- 3
+- 4
+: I_blue: 25579
+  I_green: 23823
+  I_mean: 22820
+  I_red: 19060
+  S_blue: 114
+  S_green: 101
+  S_mean: 59
+  S_red: 93
+? !!python/tuple
+- 4
+- 4
+: I_blue: 25514
+  I_green: 23758
+  I_mean: 22743
+  I_red: 18957
+  S_blue: 104
+  S_green: 97
+  S_mean: 58
+  S_red: 102
+? !!python/tuple
+- 5
+- 4
+: I_blue: 25468
+  I_green: 23711
+  I_mean: 22708
+  I_red: 18945
+  S_blue: 90
+  S_green: 85
+  S_mean: 54
+  S_red: 106
+? !!python/tuple
+- 6
+- 4
+: I_blue: 25461
+  I_green: 23705
+  I_mean: 22684
+  I_red: 18888
+  S_blue: 96
+  S_green: 98
+  S_mean: 57
+  S_red: 106
+? !!python/tuple
+- 7
+- 4
+: I_blue: 25479
+  I_green: 23731
+  I_mean: 22699
+  I_red: 18888
+  S_blue: 94
+  S_green: 86
+  S_mean: 52
+  S_red: 93
+? !!python/tuple
+- 8
+- 4
+: I_blue: 25436
+  I_green: 23655
+  I_mean: 22640
+  I_red: 18830
+  S_blue: 102
+  S_green: 111
+  S_mean: 62
+  S_red: 111
+? !!python/tuple
+- 9
+- 4
+: I_blue: 25372
+  I_green: 23593
+  I_mean: 22575
+  I_red: 18760
+  S_blue: 109
+  S_green: 116
+  S_mean: 64
+  S_red: 111
+? !!python/tuple
+- 10
+- 4
+: I_blue: 25366
+  I_green: 23560
+  I_mean: 22553
+  I_red: 18734
+  S_blue: 112
+  S_green: 116
+  S_mean: 66
+  S_red: 117
+? !!python/tuple
+- 11
+- 4
+: I_blue: 25367
+  I_green: 23619
+  I_mean: 22580
+  I_red: 18755
+  S_blue: 123
+  S_green: 144
+  S_mean: 77
+  S_red: 136
+? !!python/tuple
+- 12
+- 4
+: I_blue: 25388
+  I_green: 23623
+  I_mean: 22583
+  I_red: 18739
+  S_blue: 122
+  S_green: 124
+  S_mean: 68
+  S_red: 110
+? !!python/tuple
+- 13
+- 4
+: I_blue: 25304
+  I_green: 23541
+  I_mean: 22509
+  I_red: 18683
+  S_blue: 100
+  S_green: 120
+  S_mean: 62
+  S_red: 105
+? !!python/tuple
+- 14
+- 4
+: I_blue: 25265
+  I_green: 23463
+  I_mean: 22447
+  I_red: 18614
+  S_blue: 92
+  S_green: 103
+  S_mean: 58
+  S_red: 109
+? !!python/tuple
+- 15
+- 4
+: I_blue: 25196
+  I_green: 23439
+  I_mean: 22404
+  I_red: 18577
+  S_blue: 96
+  S_green: 92
+  S_mean: 55
+  S_red: 100
+? !!python/tuple
+- 16
+- 4
+: I_blue: 25236
+  I_green: 23394
+  I_mean: 22404
+  I_red: 18584
+  S_blue: 86
+  S_green: 97
+  S_mean: 56
+  S_red: 108
+? !!python/tuple
+- 17
+- 4
+: I_blue: 25197
+  I_green: 23432
+  I_mean: 22388
+  I_red: 18536
+  S_blue: 98
+  S_green: 105
+  S_mean: 57
+  S_red: 94
+? !!python/tuple
+- 18
+- 4
+: I_blue: 25271
+  I_green: 23421
+  I_mean: 22417
+  I_red: 18561
+  S_blue: 95
+  S_green: 118
+  S_mean: 62
+  S_red: 113
+? !!python/tuple
+- 19
+- 4
+: I_blue: 25225
+  I_green: 23381
+  I_mean: 22382
+  I_red: 18540
+  S_blue: 104
+  S_green: 107
+  S_mean: 57
+  S_red: 86
+? !!python/tuple
+- 20
+- 4
+: I_blue: 25227
+  I_green: 23409
+  I_mean: 22381
+  I_red: 18508
+  S_blue: 96
+  S_green: 109
+  S_mean: 58
+  S_red: 100
+? !!python/tuple
+- 21
+- 4
+: I_blue: 25232
+  I_green: 23407
+  I_mean: 22403
+  I_red: 18572
+  S_blue: 108
+  S_green: 88
+  S_mean: 58
+  S_red: 109
+? !!python/tuple
+- 22
+- 4
+: I_blue: 25261
+  I_green: 23407
+  I_mean: 22413
+  I_red: 18573
+  S_blue: 106
+  S_green: 121
+  S_mean: 62
+  S_red: 94
+? !!python/tuple
+- 23
+- 4
+: I_blue: 25240
+  I_green: 23420
+  I_mean: 22416
+  I_red: 18589
+  S_blue: 109
+  S_green: 92
+  S_mean: 59
+  S_red: 108
+? !!python/tuple
+- 24
+- 4
+: I_blue: 25205
+  I_green: 23392
+  I_mean: 22372
+  I_red: 18521
+  S_blue: 101
+  S_green: 101
+  S_mean: 56
+  S_red: 94
+? !!python/tuple
+- 25
+- 4
+: I_blue: 25260
+  I_green: 23415
+  I_mean: 22413
+  I_red: 18564
+  S_blue: 79
+  S_green: 92
+  S_mean: 52
+  S_red: 100
+? !!python/tuple
+- 26
+- 4
+: I_blue: 25325
+  I_green: 23507
+  I_mean: 22469
+  I_red: 18576
+  S_blue: 106
+  S_green: 121
+  S_mean: 65
+  S_red: 113
+? !!python/tuple
+- 27
+- 4
+: I_blue: 25358
+  I_green: 23507
+  I_mean: 22510
+  I_red: 18667
+  S_blue: 125
+  S_green: 133
+  S_mean: 77
+  S_red: 142
+? !!python/tuple
+- 28
+- 4
+: I_blue: 25382
+  I_green: 23554
+  I_mean: 22516
+  I_red: 18613
+  S_blue: 102
+  S_green: 98
+  S_mean: 60
+  S_red: 113
+? !!python/tuple
+- 29
+- 4
+: I_blue: 25374
+  I_green: 23519
+  I_mean: 22496
+  I_red: 18596
+  S_blue: 109
+  S_green: 94
+  S_mean: 59
+  S_red: 104
+? !!python/tuple
+- 30
+- 4
+: I_blue: 25408
+  I_green: 23569
+  I_mean: 22545
+  I_red: 18660
+  S_blue: 115
+  S_green: 95
+  S_mean: 60
+  S_red: 104
+? !!python/tuple
+- 31
+- 4
+: I_blue: 25396
+  I_green: 23577
+  I_mean: 22535
+  I_red: 18632
+  S_blue: 81
+  S_green: 102
+  S_mean: 53
+  S_red: 96
+? !!python/tuple
+- 32
+- 4
+: I_blue: 25358
+  I_green: 23510
+  I_mean: 22481
+  I_red: 18577
+  S_blue: 109
+  S_green: 111
+  S_mean: 64
+  S_red: 116
+? !!python/tuple
+- 33
+- 4
+: I_blue: 25341
+  I_green: 23495
+  I_mean: 22470
+  I_red: 18574
+  S_blue: 112
+  S_green: 116
+  S_mean: 65
+  S_red: 111
+? !!python/tuple
+- 34
+- 4
+: I_blue: 25354
+  I_green: 23469
+  I_mean: 22444
+  I_red: 18509
+  S_blue: 107
+  S_green: 102
+  S_mean: 60
+  S_red: 106
+? !!python/tuple
+- 35
+- 4
+: I_blue: 25353
+  I_green: 23430
+  I_mean: 22428
+  I_red: 18501
+  S_blue: 117
+  S_green: 128
+  S_mean: 72
+  S_red: 131
+? !!python/tuple
+- 36
+- 4
+: I_blue: 25299
+  I_green: 23434
+  I_mean: 22398
+  I_red: 18463
+  S_blue: 99
+  S_green: 121
+  S_mean: 62
+  S_red: 103
+? !!python/tuple
+- 37
+- 4
+: I_blue: 25311
+  I_green: 23413
+  I_mean: 22395
+  I_red: 18462
+  S_blue: 98
+  S_green: 99
+  S_mean: 60
+  S_red: 117
+? !!python/tuple
+- 38
+- 4
+: I_blue: 25191
+  I_green: 23284
+  I_mean: 22271
+  I_red: 18340
+  S_blue: 118
+  S_green: 102
+  S_mean: 65
+  S_red: 118
+? !!python/tuple
+- 39
+- 4
+: I_blue: 25156
+  I_green: 23244
+  I_mean: 22239
+  I_red: 18319
+  S_blue: 84
+  S_green: 98
+  S_mean: 56
+  S_red: 111
+? !!python/tuple
+- 40
+- 4
+: I_blue: 25157
+  I_green: 23241
+  I_mean: 22217
+  I_red: 18253
+  S_blue: 95
+  S_green: 114
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- 41
+- 4
+: I_blue: 25125
+  I_green: 23189
+  I_mean: 22192
+  I_red: 18262
+  S_blue: 130
+  S_green: 158
+  S_mean: 80
+  S_red: 131
+? !!python/tuple
+- 42
+- 4
+: I_blue: 25088
+  I_green: 23146
+  I_mean: 22138
+  I_red: 18182
+  S_blue: 99
+  S_green: 103
+  S_mean: 62
+  S_red: 121
+? !!python/tuple
+- 43
+- 4
+: I_blue: 25062
+  I_green: 23126
+  I_mean: 22117
+  I_red: 18165
+  S_blue: 105
+  S_green: 126
+  S_mean: 64
+  S_red: 103
+? !!python/tuple
+- 44
+- 4
+: I_blue: 25056
+  I_green: 23140
+  I_mean: 22114
+  I_red: 18146
+  S_blue: 103
+  S_green: 111
+  S_mean: 60
+  S_red: 102
+? !!python/tuple
+- 45
+- 4
+: I_blue: 25156
+  I_green: 23182
+  I_mean: 22181
+  I_red: 18206
+  S_blue: 116
+  S_green: 135
+  S_mean: 69
+  S_red: 109
+? !!python/tuple
+- 46
+- 4
+: I_blue: 25195
+  I_green: 23262
+  I_mean: 22233
+  I_red: 18244
+  S_blue: 104
+  S_green: 111
+  S_mean: 64
+  S_red: 119
+? !!python/tuple
+- 47
+- 4
+: I_blue: 25115
+  I_green: 23236
+  I_mean: 22190
+  I_red: 18220
+  S_blue: 112
+  S_green: 103
+  S_mean: 64
+  S_red: 120
+? !!python/tuple
+- 48
+- 4
+: I_blue: 25087
+  I_green: 23162
+  I_mean: 22136
+  I_red: 18160
+  S_blue: 117
+  S_green: 120
+  S_mean: 68
+  S_red: 121
+? !!python/tuple
+- 49
+- 4
+: I_blue: 25110
+  I_green: 23209
+  I_mean: 22155
+  I_red: 18147
+  S_blue: 102
+  S_green: 97
+  S_mean: 59
+  S_red: 109
+? !!python/tuple
+- 50
+- 4
+: I_blue: 25131
+  I_green: 23247
+  I_mean: 22179
+  I_red: 18160
+  S_blue: 100
+  S_green: 108
+  S_mean: 62
+  S_red: 114
+? !!python/tuple
+- 51
+- 4
+: I_blue: 25162
+  I_green: 23248
+  I_mean: 22200
+  I_red: 18190
+  S_blue: 119
+  S_green: 120
+  S_mean: 66
+  S_red: 105
+? !!python/tuple
+- 52
+- 4
+: I_blue: 25174
+  I_green: 23201
+  I_mean: 22193
+  I_red: 18206
+  S_blue: 106
+  S_green: 100
+  S_mean: 60
+  S_red: 108
+? !!python/tuple
+- 53
+- 4
+: I_blue: 25122
+  I_green: 23176
+  I_mean: 22168
+  I_red: 18207
+  S_blue: 118
+  S_green: 111
+  S_mean: 63
+  S_red: 102
+? !!python/tuple
+- 54
+- 4
+: I_blue: 25152
+  I_green: 23155
+  I_mean: 22161
+  I_red: 18178
+  S_blue: 106
+  S_green: 116
+  S_mean: 61
+  S_red: 99
+? !!python/tuple
+- 55
+- 4
+: I_blue: 25181
+  I_green: 23186
+  I_mean: 22191
+  I_red: 18207
+  S_blue: 129
+  S_green: 122
+  S_mean: 71
+  S_red: 120
+? !!python/tuple
+- 56
+- 4
+: I_blue: 25211
+  I_green: 23173
+  I_mean: 22202
+  I_red: 18224
+  S_blue: 127
+  S_green: 130
+  S_mean: 72
+  S_red: 120
+? !!python/tuple
+- 57
+- 4
+: I_blue: 25234
+  I_green: 23207
+  I_mean: 22225
+  I_red: 18235
+  S_blue: 119
+  S_green: 117
+  S_mean: 64
+  S_red: 97
+? !!python/tuple
+- 58
+- 4
+: I_blue: 25303
+  I_green: 23259
+  I_mean: 22284
+  I_red: 18291
+  S_blue: 124
+  S_green: 103
+  S_mean: 63
+  S_red: 103
+? !!python/tuple
+- 59
+- 4
+: I_blue: 25412
+  I_green: 23359
+  I_mean: 22380
+  I_red: 18371
+  S_blue: 109
+  S_green: 111
+  S_mean: 62
+  S_red: 104
+? !!python/tuple
+- 60
+- 4
+: I_blue: 25343
+  I_green: 23354
+  I_mean: 22355
+  I_red: 18369
+  S_blue: 247
+  S_green: 235
+  S_mean: 130
+  S_red: 191
+? !!python/tuple
+- 61
+- 4
+: I_blue: 25503
+  I_green: 23477
+  I_mean: 22485
+  I_red: 18477
+  S_blue: 98
+  S_green: 93
+  S_mean: 56
+  S_red: 103
+? !!python/tuple
+- 62
+- 4
+: I_blue: 25518
+  I_green: 23496
+  I_mean: 22486
+  I_red: 18445
+  S_blue: 92
+  S_green: 117
+  S_mean: 58
+  S_red: 94
+? !!python/tuple
+- 63
+- 4
+: I_blue: 25497
+  I_green: 23468
+  I_mean: 22465
+  I_red: 18430
+  S_blue: 102
+  S_green: 103
+  S_mean: 61
+  S_red: 113
+? !!python/tuple
+- 64
+- 4
+: I_blue: 25423
+  I_green: 23388
+  I_mean: 22398
+  I_red: 18383
+  S_blue: 122
+  S_green: 101
+  S_mean: 64
+  S_red: 110
+? !!python/tuple
+- 65
+- 4
+: I_blue: 25386
+  I_green: 23341
+  I_mean: 22346
+  I_red: 18311
+  S_blue: 103
+  S_green: 93
+  S_mean: 59
+  S_red: 114
+? !!python/tuple
+- 66
+- 4
+: I_blue: 25352
+  I_green: 23343
+  I_mean: 22348
+  I_red: 18350
+  S_blue: 92
+  S_green: 118
+  S_mean: 63
+  S_red: 120
+? !!python/tuple
+- 67
+- 4
+: I_blue: 25279
+  I_green: 23295
+  I_mean: 22272
+  I_red: 18243
+  S_blue: 108
+  S_green: 103
+  S_mean: 58
+  S_red: 92
+? !!python/tuple
+- 68
+- 4
+: I_blue: 25247
+  I_green: 23221
+  I_mean: 22218
+  I_red: 18188
+  S_blue: 117
+  S_green: 116
+  S_mean: 68
+  S_red: 124
+? !!python/tuple
+- 69
+- 4
+: I_blue: 25243
+  I_green: 23183
+  I_mean: 22195
+  I_red: 18161
+  S_blue: 137
+  S_green: 120
+  S_mean: 73
+  S_red: 126
+? !!python/tuple
+- 70
+- 4
+: I_blue: 25228
+  I_green: 23187
+  I_mean: 22188
+  I_red: 18150
+  S_blue: 158
+  S_green: 147
+  S_mean: 82
+  S_red: 123
+? !!python/tuple
+- 71
+- 4
+: I_blue: 25219
+  I_green: 23184
+  I_mean: 22186
+  I_red: 18156
+  S_blue: 149
+  S_green: 153
+  S_mean: 85
+  S_red: 142
+? !!python/tuple
+- 72
+- 4
+: I_blue: 25152
+  I_green: 23103
+  I_mean: 22101
+  I_red: 18050
+  S_blue: 141
+  S_green: 141
+  S_mean: 79
+  S_red: 132
+? !!python/tuple
+- 73
+- 4
+: I_blue: 25099
+  I_green: 23091
+  I_mean: 22064
+  I_red: 18002
+  S_blue: 110
+  S_green: 148
+  S_mean: 73
+  S_red: 122
+? !!python/tuple
+- 74
+- 4
+: I_blue: 25070
+  I_green: 23054
+  I_mean: 22037
+  I_red: 17987
+  S_blue: 103
+  S_green: 120
+  S_mean: 62
+  S_red: 101
+? !!python/tuple
+- 75
+- 4
+: I_blue: 25049
+  I_green: 23023
+  I_mean: 22010
+  I_red: 17958
+  S_blue: 114
+  S_green: 117
+  S_mean: 61
+  S_red: 85
+? !!python/tuple
+- 76
+- 4
+: I_blue: 24964
+  I_green: 22949
+  I_mean: 21932
+  I_red: 17884
+  S_blue: 223
+  S_green: 217
+  S_mean: 121
+  S_red: 187
+? !!python/tuple
+- 77
+- 4
+: I_blue: 24938
+  I_green: 22950
+  I_mean: 21919
+  I_red: 17871
+  S_blue: 87
+  S_green: 102
+  S_mean: 55
+  S_red: 99
+? !!python/tuple
+- 78
+- 4
+: I_blue: 24961
+  I_green: 22899
+  I_mean: 21893
+  I_red: 17821
+  S_blue: 95
+  S_green: 112
+  S_mean: 59
+  S_red: 103
+? !!python/tuple
+- 79
+- 4
+: I_blue: 24916
+  I_green: 22901
+  I_mean: 21881
+  I_red: 17827
+  S_blue: 107
+  S_green: 105
+  S_mean: 60
+  S_red: 101
+? !!python/tuple
+- 80
+- 4
+: I_blue: 24984
+  I_green: 22945
+  I_mean: 21932
+  I_red: 17869
+  S_blue: 96
+  S_green: 82
+  S_mean: 53
+  S_red: 99
+? !!python/tuple
+- 81
+- 4
+: I_blue: 24996
+  I_green: 23050
+  I_mean: 21950
+  I_red: 17806
+  S_blue: 99
+  S_green: 122
+  S_mean: 64
+  S_red: 112
+? !!python/tuple
+- 82
+- 4
+: null
+? !!python/tuple
+- 83
+- 4
+: null
+? !!python/tuple
+- 84
+- 4
+: null
+? !!python/tuple
+- 85
+- 4
+: null
+? !!python/tuple
+- 86
+- 4
+: null
+? !!python/tuple
+- 87
+- 4
+: null
+? !!python/tuple
+- 88
+- 4
+: null
+? !!python/tuple
+- 89
+- 4
+: null
+? !!python/tuple
+- 90
+- 4
+: null
+? !!python/tuple
+- 91
+- 4
+: null
+? !!python/tuple
+- 92
+- 4
+: null
+? !!python/tuple
+- 93
+- 4
+: null
+? !!python/tuple
+- 94
+- 4
+: null
+? !!python/tuple
+- 95
+- 4
+: null
+? !!python/tuple
+- 96
+- 4
+: null
+? !!python/tuple
+- 97
+- 4
+: null
+? !!python/tuple
+- 98
+- 4
+: null
+? !!python/tuple
+- 99
+- 4
+: null
+? !!python/tuple
+- 100
+- 4
+: null
+? !!python/tuple
+- 101
+- 4
+: null
+? !!python/tuple
+- 102
+- 4
+: null
+? !!python/tuple
+- 103
+- 4
+: null
+? !!python/tuple
+- 104
+- 4
+: null
+? !!python/tuple
+- 105
+- 4
+: null
+? !!python/tuple
+- 106
+- 4
+: null
+? !!python/tuple
+- 107
+- 4
+: null
+? !!python/tuple
+- 108
+- 4
+: null
+? !!python/tuple
+- 109
+- 4
+: null
+? !!python/tuple
+- 110
+- 4
+: null
+? !!python/tuple
+- 111
+- 4
+: null
+? !!python/tuple
+- 112
+- 4
+: null
+? !!python/tuple
+- 113
+- 4
+: null
+? !!python/tuple
+- 114
+- 4
+: null
+? !!python/tuple
+- 115
+- 4
+: null
+? !!python/tuple
+- 116
+- 4
+: null
+? !!python/tuple
+- 117
+- 4
+: null
+? !!python/tuple
+- 118
+- 4
+: null
+? !!python/tuple
+- 119
+- 4
+: null
+? !!python/tuple
+- 120
+- 4
+: null
+? !!python/tuple
+- 121
+- 4
+: null
+? !!python/tuple
+- 122
+- 4
+: null
+? !!python/tuple
+- 123
+- 4
+: null
+? !!python/tuple
+- 124
+- 4
+: null
+? !!python/tuple
+- 125
+- 4
+: null
+? !!python/tuple
+- 126
+- 4
+: null
+? !!python/tuple
+- 127
+- 4
+: null
+? !!python/tuple
+- 128
+- 4
+: null
+? !!python/tuple
+- 129
+- 4
+: null
+? !!python/tuple
+- 130
+- 4
+: null
+? !!python/tuple
+- 131
+- 4
+: null
+? !!python/tuple
+- 132
+- 4
+: null
+? !!python/tuple
+- 133
+- 4
+: null
+? !!python/tuple
+- 134
+- 4
+: null
+? !!python/tuple
+- 135
+- 4
+: null
+? !!python/tuple
+- 136
+- 4
+: null
+? !!python/tuple
+- 137
+- 4
+: null
+? !!python/tuple
+- 138
+- 4
+: null
+? !!python/tuple
+- 139
+- 4
+: null
+? !!python/tuple
+- 140
+- 4
+: null
+? !!python/tuple
+- 141
+- 4
+: null
+? !!python/tuple
+- 142
+- 4
+: null
+? !!python/tuple
+- 143
+- 4
+: null
+? !!python/tuple
+- 144
+- 4
+: null
+? !!python/tuple
+- 145
+- 4
+: null
+? !!python/tuple
+- 146
+- 4
+: null
+? !!python/tuple
+- 147
+- 4
+: null
+? !!python/tuple
+- 148
+- 4
+: null
+? !!python/tuple
+- 149
+- 4
+: null
+? !!python/tuple
+- 150
+- 4
+: null
+? !!python/tuple
+- 151
+- 4
+: null
+? !!python/tuple
+- 152
+- 4
+: null
+? !!python/tuple
+- 153
+- 4
+: null
+? !!python/tuple
+- 154
+- 4
+: null
+? !!python/tuple
+- 155
+- 4
+: null
+? !!python/tuple
+- -155
+- 5
+: null
+? !!python/tuple
+- -154
+- 5
+: null
+? !!python/tuple
+- -153
+- 5
+: null
+? !!python/tuple
+- -152
+- 5
+: null
+? !!python/tuple
+- -151
+- 5
+: null
+? !!python/tuple
+- -150
+- 5
+: null
+? !!python/tuple
+- -149
+- 5
+: null
+? !!python/tuple
+- -148
+- 5
+: null
+? !!python/tuple
+- -147
+- 5
+: null
+? !!python/tuple
+- -146
+- 5
+: null
+? !!python/tuple
+- -145
+- 5
+: null
+? !!python/tuple
+- -144
+- 5
+: null
+? !!python/tuple
+- -143
+- 5
+: null
+? !!python/tuple
+- -142
+- 5
+: null
+? !!python/tuple
+- -141
+- 5
+: null
+? !!python/tuple
+- -140
+- 5
+: null
+? !!python/tuple
+- -139
+- 5
+: null
+? !!python/tuple
+- -138
+- 5
+: null
+? !!python/tuple
+- -137
+- 5
+: null
+? !!python/tuple
+- -136
+- 5
+: null
+? !!python/tuple
+- -135
+- 5
+: null
+? !!python/tuple
+- -134
+- 5
+: null
+? !!python/tuple
+- -133
+- 5
+: null
+? !!python/tuple
+- -132
+- 5
+: null
+? !!python/tuple
+- -131
+- 5
+: null
+? !!python/tuple
+- -130
+- 5
+: null
+? !!python/tuple
+- -129
+- 5
+: null
+? !!python/tuple
+- -128
+- 5
+: null
+? !!python/tuple
+- -127
+- 5
+: null
+? !!python/tuple
+- -126
+- 5
+: null
+? !!python/tuple
+- -125
+- 5
+: null
+? !!python/tuple
+- -124
+- 5
+: null
+? !!python/tuple
+- -123
+- 5
+: null
+? !!python/tuple
+- -122
+- 5
+: null
+? !!python/tuple
+- -121
+- 5
+: null
+? !!python/tuple
+- -120
+- 5
+: null
+? !!python/tuple
+- -119
+- 5
+: null
+? !!python/tuple
+- -118
+- 5
+: null
+? !!python/tuple
+- -117
+- 5
+: null
+? !!python/tuple
+- -116
+- 5
+: null
+? !!python/tuple
+- -115
+- 5
+: null
+? !!python/tuple
+- -114
+- 5
+: null
+? !!python/tuple
+- -113
+- 5
+: null
+? !!python/tuple
+- -112
+- 5
+: null
+? !!python/tuple
+- -111
+- 5
+: null
+? !!python/tuple
+- -110
+- 5
+: null
+? !!python/tuple
+- -109
+- 5
+: null
+? !!python/tuple
+- -108
+- 5
+: null
+? !!python/tuple
+- -107
+- 5
+: null
+? !!python/tuple
+- -106
+- 5
+: null
+? !!python/tuple
+- -105
+- 5
+: null
+? !!python/tuple
+- -104
+- 5
+: null
+? !!python/tuple
+- -103
+- 5
+: null
+? !!python/tuple
+- -102
+- 5
+: null
+? !!python/tuple
+- -101
+- 5
+: null
+? !!python/tuple
+- -100
+- 5
+: null
+? !!python/tuple
+- -99
+- 5
+: null
+? !!python/tuple
+- -98
+- 5
+: null
+? !!python/tuple
+- -97
+- 5
+: null
+? !!python/tuple
+- -96
+- 5
+: null
+? !!python/tuple
+- -95
+- 5
+: null
+? !!python/tuple
+- -94
+- 5
+: null
+? !!python/tuple
+- -93
+- 5
+: I_blue: 23369
+  I_green: 19930
+  I_mean: 19379
+  I_red: 14838
+  S_blue: 116
+  S_green: 108
+  S_mean: 66
+  S_red: 121
+? !!python/tuple
+- -92
+- 5
+: I_blue: 23336
+  I_green: 19941
+  I_mean: 19388
+  I_red: 14887
+  S_blue: 114
+  S_green: 136
+  S_mean: 67
+  S_red: 98
+? !!python/tuple
+- -91
+- 5
+: I_blue: 23333
+  I_green: 19896
+  I_mean: 19361
+  I_red: 14855
+  S_blue: 110
+  S_green: 115
+  S_mean: 67
+  S_red: 123
+? !!python/tuple
+- -90
+- 5
+: I_blue: 23305
+  I_green: 19859
+  I_mean: 19326
+  I_red: 14816
+  S_blue: 97
+  S_green: 119
+  S_mean: 65
+  S_red: 124
+? !!python/tuple
+- -89
+- 5
+: I_blue: 23256
+  I_green: 19832
+  I_mean: 19296
+  I_red: 14801
+  S_blue: 119
+  S_green: 132
+  S_mean: 70
+  S_red: 114
+? !!python/tuple
+- -88
+- 5
+: I_blue: 23129
+  I_green: 19705
+  I_mean: 19203
+  I_red: 14775
+  S_blue: 135
+  S_green: 130
+  S_mean: 71
+  S_red: 103
+? !!python/tuple
+- -87
+- 5
+: I_blue: 23102
+  I_green: 19699
+  I_mean: 19179
+  I_red: 14737
+  S_blue: 99
+  S_green: 99
+  S_mean: 57
+  S_red: 103
+? !!python/tuple
+- -86
+- 5
+: I_blue: 23173
+  I_green: 19731
+  I_mean: 19230
+  I_red: 14787
+  S_blue: 109
+  S_green: 100
+  S_mean: 63
+  S_red: 119
+? !!python/tuple
+- -85
+- 5
+: I_blue: 23158
+  I_green: 19706
+  I_mean: 19226
+  I_red: 14816
+  S_blue: 139
+  S_green: 128
+  S_mean: 74
+  S_red: 117
+? !!python/tuple
+- -84
+- 5
+: I_blue: 23117
+  I_green: 19688
+  I_mean: 19184
+  I_red: 14749
+  S_blue: 105
+  S_green: 111
+  S_mean: 63
+  S_red: 113
+? !!python/tuple
+- -83
+- 5
+: I_blue: 23120
+  I_green: 19698
+  I_mean: 19196
+  I_red: 14771
+  S_blue: 114
+  S_green: 96
+  S_mean: 59
+  S_red: 98
+? !!python/tuple
+- -82
+- 5
+: I_blue: 23219
+  I_green: 19786
+  I_mean: 19283
+  I_red: 14844
+  S_blue: 101
+  S_green: 110
+  S_mean: 61
+  S_red: 110
+? !!python/tuple
+- -81
+- 5
+: I_blue: 23254
+  I_green: 19805
+  I_mean: 19296
+  I_red: 14831
+  S_blue: 112
+  S_green: 116
+  S_mean: 65
+  S_red: 110
+? !!python/tuple
+- -80
+- 5
+: I_blue: 23277
+  I_green: 19820
+  I_mean: 19327
+  I_red: 14886
+  S_blue: 120
+  S_green: 107
+  S_mean: 64
+  S_red: 106
+? !!python/tuple
+- -79
+- 5
+: I_blue: 23241
+  I_green: 19798
+  I_mean: 19316
+  I_red: 14909
+  S_blue: 100
+  S_green: 103
+  S_mean: 56
+  S_red: 92
+? !!python/tuple
+- -78
+- 5
+: I_blue: 23254
+  I_green: 19815
+  I_mean: 19314
+  I_red: 14873
+  S_blue: 96
+  S_green: 107
+  S_mean: 58
+  S_red: 103
+? !!python/tuple
+- -77
+- 5
+: I_blue: 23256
+  I_green: 19816
+  I_mean: 19320
+  I_red: 14890
+  S_blue: 102
+  S_green: 114
+  S_mean: 62
+  S_red: 107
+? !!python/tuple
+- -76
+- 5
+: I_blue: 23202
+  I_green: 19776
+  I_mean: 19281
+  I_red: 14866
+  S_blue: 104
+  S_green: 114
+  S_mean: 61
+  S_red: 102
+? !!python/tuple
+- -75
+- 5
+: I_blue: 23145
+  I_green: 19719
+  I_mean: 19228
+  I_red: 14822
+  S_blue: 118
+  S_green: 106
+  S_mean: 61
+  S_red: 96
+? !!python/tuple
+- -74
+- 5
+: I_blue: 23141
+  I_green: 19722
+  I_mean: 19226
+  I_red: 14816
+  S_blue: 103
+  S_green: 110
+  S_mean: 60
+  S_red: 100
+? !!python/tuple
+- -73
+- 5
+: I_blue: 23074
+  I_green: 19671
+  I_mean: 19186
+  I_red: 14815
+  S_blue: 97
+  S_green: 122
+  S_mean: 63
+  S_red: 112
+? !!python/tuple
+- -72
+- 5
+: I_blue: 23045
+  I_green: 19642
+  I_mean: 19162
+  I_red: 14801
+  S_blue: 85
+  S_green: 98
+  S_mean: 55
+  S_red: 102
+? !!python/tuple
+- -71
+- 5
+: I_blue: 23053
+  I_green: 19650
+  I_mean: 19163
+  I_red: 14788
+  S_blue: 100
+  S_green: 108
+  S_mean: 61
+  S_red: 113
+? !!python/tuple
+- -70
+- 5
+: I_blue: 23074
+  I_green: 19678
+  I_mean: 19187
+  I_red: 14809
+  S_blue: 90
+  S_green: 132
+  S_mean: 63
+  S_red: 105
+? !!python/tuple
+- -69
+- 5
+: I_blue: 23099
+  I_green: 19718
+  I_mean: 19214
+  I_red: 14827
+  S_blue: 75
+  S_green: 118
+  S_mean: 55
+  S_red: 93
+? !!python/tuple
+- -68
+- 5
+: I_blue: 23144
+  I_green: 19762
+  I_mean: 19267
+  I_red: 14895
+  S_blue: 100
+  S_green: 118
+  S_mean: 66
+  S_red: 126
+? !!python/tuple
+- -67
+- 5
+: I_blue: 23239
+  I_green: 19848
+  I_mean: 19359
+  I_red: 14990
+  S_blue: 92
+  S_green: 92
+  S_mean: 56
+  S_red: 109
+? !!python/tuple
+- -66
+- 5
+: I_blue: 23259
+  I_green: 19872
+  I_mean: 19375
+  I_red: 14996
+  S_blue: 93
+  S_green: 92
+  S_mean: 55
+  S_red: 101
+? !!python/tuple
+- -65
+- 5
+: I_blue: 23290
+  I_green: 19887
+  I_mean: 19404
+  I_red: 15036
+  S_blue: 97
+  S_green: 92
+  S_mean: 54
+  S_red: 95
+? !!python/tuple
+- -64
+- 5
+: I_blue: 23317
+  I_green: 19894
+  I_mean: 19421
+  I_red: 15053
+  S_blue: 95
+  S_green: 126
+  S_mean: 64
+  S_red: 111
+? !!python/tuple
+- -63
+- 5
+: I_blue: 23374
+  I_green: 19923
+  I_mean: 19468
+  I_red: 15108
+  S_blue: 107
+  S_green: 112
+  S_mean: 62
+  S_red: 104
+? !!python/tuple
+- -62
+- 5
+: I_blue: 23295
+  I_green: 19886
+  I_mean: 19411
+  I_red: 15052
+  S_blue: 120
+  S_green: 129
+  S_mean: 72
+  S_red: 125
+? !!python/tuple
+- -61
+- 5
+: I_blue: 23300
+  I_green: 19896
+  I_mean: 19420
+  I_red: 15065
+  S_blue: 115
+  S_green: 102
+  S_mean: 62
+  S_red: 105
+? !!python/tuple
+- -60
+- 5
+: I_blue: 23260
+  I_green: 19859
+  I_mean: 19379
+  I_red: 15018
+  S_blue: 111
+  S_green: 111
+  S_mean: 59
+  S_red: 87
+? !!python/tuple
+- -59
+- 5
+: I_blue: 23195
+  I_green: 19794
+  I_mean: 19332
+  I_red: 15009
+  S_blue: 128
+  S_green: 128
+  S_mean: 70
+  S_red: 108
+? !!python/tuple
+- -58
+- 5
+: I_blue: 23226
+  I_green: 19780
+  I_mean: 19344
+  I_red: 15026
+  S_blue: 113
+  S_green: 108
+  S_mean: 64
+  S_red: 112
+? !!python/tuple
+- -57
+- 5
+: I_blue: 23155
+  I_green: 19760
+  I_mean: 19310
+  I_red: 15017
+  S_blue: 117
+  S_green: 117
+  S_mean: 63
+  S_red: 96
+? !!python/tuple
+- -56
+- 5
+: I_blue: 23151
+  I_green: 19769
+  I_mean: 19313
+  I_red: 15019
+  S_blue: 107
+  S_green: 120
+  S_mean: 63
+  S_red: 101
+? !!python/tuple
+- -55
+- 5
+: I_blue: 23177
+  I_green: 19766
+  I_mean: 19322
+  I_red: 15023
+  S_blue: 106
+  S_green: 115
+  S_mean: 61
+  S_red: 96
+? !!python/tuple
+- -54
+- 5
+: I_blue: 23159
+  I_green: 19742
+  I_mean: 19312
+  I_red: 15036
+  S_blue: 138
+  S_green: 140
+  S_mean: 76
+  S_red: 119
+? !!python/tuple
+- -53
+- 5
+: I_blue: 23138
+  I_green: 19744
+  I_mean: 19322
+  I_red: 15084
+  S_blue: 131
+  S_green: 142
+  S_mean: 73
+  S_red: 108
+? !!python/tuple
+- -52
+- 5
+: I_blue: 23099
+  I_green: 19692
+  I_mean: 19273
+  I_red: 15030
+  S_blue: 88
+  S_green: 120
+  S_mean: 62
+  S_red: 112
+? !!python/tuple
+- -51
+- 5
+: I_blue: 23139
+  I_green: 19688
+  I_mean: 19290
+  I_red: 15045
+  S_blue: 133
+  S_green: 117
+  S_mean: 69
+  S_red: 109
+? !!python/tuple
+- -50
+- 5
+: I_blue: 23149
+  I_green: 19721
+  I_mean: 19306
+  I_red: 15049
+  S_blue: 99
+  S_green: 99
+  S_mean: 58
+  S_red: 107
+? !!python/tuple
+- -49
+- 5
+: I_blue: 23158
+  I_green: 19748
+  I_mean: 19331
+  I_red: 15088
+  S_blue: 88
+  S_green: 97
+  S_mean: 52
+  S_red: 88
+? !!python/tuple
+- -48
+- 5
+: I_blue: 23233
+  I_green: 19789
+  I_mean: 19393
+  I_red: 15157
+  S_blue: 105
+  S_green: 95
+  S_mean: 59
+  S_red: 110
+? !!python/tuple
+- -47
+- 5
+: I_blue: 23230
+  I_green: 19806
+  I_mean: 19397
+  I_red: 15156
+  S_blue: 95
+  S_green: 96
+  S_mean: 57
+  S_red: 107
+? !!python/tuple
+- -46
+- 5
+: I_blue: 23265
+  I_green: 19849
+  I_mean: 19443
+  I_red: 15215
+  S_blue: 88
+  S_green: 90
+  S_mean: 51
+  S_red: 90
+? !!python/tuple
+- -45
+- 5
+: I_blue: 23248
+  I_green: 19851
+  I_mean: 19441
+  I_red: 15226
+  S_blue: 110
+  S_green: 117
+  S_mean: 64
+  S_red: 107
+? !!python/tuple
+- -44
+- 5
+: I_blue: 23256
+  I_green: 19865
+  I_mean: 19459
+  I_red: 15258
+  S_blue: 122
+  S_green: 126
+  S_mean: 69
+  S_red: 115
+? !!python/tuple
+- -43
+- 5
+: I_blue: 23341
+  I_green: 19932
+  I_mean: 19517
+  I_red: 15280
+  S_blue: 104
+  S_green: 101
+  S_mean: 60
+  S_red: 109
+? !!python/tuple
+- -42
+- 5
+: I_blue: 23286
+  I_green: 19890
+  I_mean: 19474
+  I_red: 15248
+  S_blue: 114
+  S_green: 122
+  S_mean: 65
+  S_red: 105
+? !!python/tuple
+- -41
+- 5
+: I_blue: 23375
+  I_green: 19950
+  I_mean: 19544
+  I_red: 15308
+  S_blue: 102
+  S_green: 105
+  S_mean: 63
+  S_red: 120
+? !!python/tuple
+- -40
+- 5
+: I_blue: 23343
+  I_green: 19928
+  I_mean: 19526
+  I_red: 15309
+  S_blue: 99
+  S_green: 95
+  S_mean: 59
+  S_red: 114
+? !!python/tuple
+- -39
+- 5
+: I_blue: 23404
+  I_green: 19950
+  I_mean: 19555
+  I_red: 15312
+  S_blue: 93
+  S_green: 95
+  S_mean: 55
+  S_red: 100
+? !!python/tuple
+- -38
+- 5
+: I_blue: 23373
+  I_green: 19930
+  I_mean: 19545
+  I_red: 15332
+  S_blue: 99
+  S_green: 96
+  S_mean: 54
+  S_red: 87
+? !!python/tuple
+- -37
+- 5
+: I_blue: 23332
+  I_green: 19898
+  I_mean: 19516
+  I_red: 15319
+  S_blue: 124
+  S_green: 131
+  S_mean: 70
+  S_red: 111
+? !!python/tuple
+- -36
+- 5
+: I_blue: 23387
+  I_green: 19953
+  I_mean: 19574
+  I_red: 15382
+  S_blue: 96
+  S_green: 109
+  S_mean: 58
+  S_red: 101
+? !!python/tuple
+- -35
+- 5
+: I_blue: 23436
+  I_green: 19979
+  I_mean: 19607
+  I_red: 15407
+  S_blue: 119
+  S_green: 119
+  S_mean: 67
+  S_red: 112
+? !!python/tuple
+- -34
+- 5
+: I_blue: 23503
+  I_green: 20055
+  I_mean: 19669
+  I_red: 15451
+  S_blue: 97
+  S_green: 110
+  S_mean: 60
+  S_red: 108
+? !!python/tuple
+- -33
+- 5
+: I_blue: 23503
+  I_green: 20026
+  I_mean: 19666
+  I_red: 15470
+  S_blue: 85
+  S_green: 113
+  S_mean: 59
+  S_red: 110
+? !!python/tuple
+- -32
+- 5
+: I_blue: 23487
+  I_green: 20008
+  I_mean: 19662
+  I_red: 15493
+  S_blue: 116
+  S_green: 118
+  S_mean: 67
+  S_red: 116
+? !!python/tuple
+- -31
+- 5
+: I_blue: 23508
+  I_green: 20008
+  I_mean: 19673
+  I_red: 15505
+  S_blue: 120
+  S_green: 126
+  S_mean: 70
+  S_red: 119
+? !!python/tuple
+- -30
+- 5
+: I_blue: 23541
+  I_green: 20016
+  I_mean: 19690
+  I_red: 15514
+  S_blue: 106
+  S_green: 99
+  S_mean: 59
+  S_red: 105
+? !!python/tuple
+- -29
+- 5
+: I_blue: 23534
+  I_green: 20046
+  I_mean: 19699
+  I_red: 15518
+  S_blue: 93
+  S_green: 111
+  S_mean: 58
+  S_red: 100
+? !!python/tuple
+- -28
+- 5
+: I_blue: 23536
+  I_green: 20028
+  I_mean: 19702
+  I_red: 15544
+  S_blue: 117
+  S_green: 125
+  S_mean: 70
+  S_red: 122
+? !!python/tuple
+- -27
+- 5
+: I_blue: 23476
+  I_green: 19967
+  I_mean: 19637
+  I_red: 15468
+  S_blue: 92
+  S_green: 96
+  S_mean: 55
+  S_red: 102
+? !!python/tuple
+- -26
+- 5
+: I_blue: 23467
+  I_green: 19945
+  I_mean: 19626
+  I_red: 15467
+  S_blue: 112
+  S_green: 111
+  S_mean: 62
+  S_red: 101
+? !!python/tuple
+- -25
+- 5
+: I_blue: 23500
+  I_green: 19961
+  I_mean: 19648
+  I_red: 15483
+  S_blue: 99
+  S_green: 104
+  S_mean: 57
+  S_red: 98
+? !!python/tuple
+- -24
+- 5
+: I_blue: 23461
+  I_green: 19955
+  I_mean: 19628
+  I_red: 15469
+  S_blue: 122
+  S_green: 109
+  S_mean: 63
+  S_red: 98
+? !!python/tuple
+- -23
+- 5
+: I_blue: 23520
+  I_green: 19993
+  I_mean: 19668
+  I_red: 15493
+  S_blue: 117
+  S_green: 115
+  S_mean: 64
+  S_red: 100
+? !!python/tuple
+- -22
+- 5
+: I_blue: 23590
+  I_green: 20041
+  I_mean: 19725
+  I_red: 15545
+  S_blue: 103
+  S_green: 113
+  S_mean: 63
+  S_red: 112
+? !!python/tuple
+- -21
+- 5
+: I_blue: 23639
+  I_green: 20088
+  I_mean: 19757
+  I_red: 15545
+  S_blue: 118
+  S_green: 130
+  S_mean: 68
+  S_red: 104
+? !!python/tuple
+- -20
+- 5
+: I_blue: 23509
+  I_green: 20013
+  I_mean: 19676
+  I_red: 15508
+  S_blue: 115
+  S_green: 114
+  S_mean: 61
+  S_red: 90
+? !!python/tuple
+- -19
+- 5
+: I_blue: 23517
+  I_green: 19968
+  I_mean: 19662
+  I_red: 15502
+  S_blue: 103
+  S_green: 81
+  S_mean: 53
+  S_red: 94
+? !!python/tuple
+- -18
+- 5
+: I_blue: 23484
+  I_green: 19959
+  I_mean: 19640
+  I_red: 15479
+  S_blue: 112
+  S_green: 132
+  S_mean: 67
+  S_red: 104
+? !!python/tuple
+- -17
+- 5
+: I_blue: 23519
+  I_green: 19934
+  I_mean: 19643
+  I_red: 15476
+  S_blue: 122
+  S_green: 119
+  S_mean: 64
+  S_red: 92
+? !!python/tuple
+- -16
+- 5
+: I_blue: 23493
+  I_green: 19903
+  I_mean: 19623
+  I_red: 15473
+  S_blue: 94
+  S_green: 101
+  S_mean: 56
+  S_red: 98
+? !!python/tuple
+- -15
+- 5
+: I_blue: 23500
+  I_green: 19892
+  I_mean: 19623
+  I_red: 15477
+  S_blue: 125
+  S_green: 112
+  S_mean: 66
+  S_red: 109
+? !!python/tuple
+- -14
+- 5
+: I_blue: 23553
+  I_green: 19948
+  I_mean: 19659
+  I_red: 15478
+  S_blue: 83
+  S_green: 110
+  S_mean: 55
+  S_red: 91
+? !!python/tuple
+- -13
+- 5
+: I_blue: 23549
+  I_green: 19970
+  I_mean: 19685
+  I_red: 15536
+  S_blue: 109
+  S_green: 127
+  S_mean: 64
+  S_red: 98
+? !!python/tuple
+- -12
+- 5
+: I_blue: 23573
+  I_green: 19927
+  I_mean: 19674
+  I_red: 15523
+  S_blue: 109
+  S_green: 123
+  S_mean: 63
+  S_red: 94
+? !!python/tuple
+- -11
+- 5
+: I_blue: 23604
+  I_green: 19924
+  I_mean: 19696
+  I_red: 15561
+  S_blue: 108
+  S_green: 121
+  S_mean: 64
+  S_red: 106
+? !!python/tuple
+- -10
+- 5
+: I_blue: 23595
+  I_green: 19900
+  I_mean: 19665
+  I_red: 15502
+  S_blue: 117
+  S_green: 110
+  S_mean: 62
+  S_red: 95
+? !!python/tuple
+- -9
+- 5
+: I_blue: 23580
+  I_green: 19907
+  I_mean: 19665
+  I_red: 15509
+  S_blue: 98
+  S_green: 89
+  S_mean: 54
+  S_red: 94
+? !!python/tuple
+- -8
+- 5
+: I_blue: 23595
+  I_green: 19921
+  I_mean: 19689
+  I_red: 15552
+  S_blue: 90
+  S_green: 92
+  S_mean: 55
+  S_red: 105
+? !!python/tuple
+- -7
+- 5
+: I_blue: 23581
+  I_green: 19937
+  I_mean: 19694
+  I_red: 15564
+  S_blue: 99
+  S_green: 109
+  S_mean: 62
+  S_red: 118
+? !!python/tuple
+- -6
+- 5
+: I_blue: 23589
+  I_green: 19917
+  I_mean: 19685
+  I_red: 15550
+  S_blue: 104
+  S_green: 112
+  S_mean: 61
+  S_red: 101
+? !!python/tuple
+- -5
+- 5
+: I_blue: 23639
+  I_green: 19928
+  I_mean: 19723
+  I_red: 15603
+  S_blue: 92
+  S_green: 110
+  S_mean: 58
+  S_red: 100
+? !!python/tuple
+- -4
+- 5
+: I_blue: 23635
+  I_green: 19940
+  I_mean: 19717
+  I_red: 15576
+  S_blue: 112
+  S_green: 114
+  S_mean: 67
+  S_red: 125
+? !!python/tuple
+- -3
+- 5
+: I_blue: 23630
+  I_green: 19939
+  I_mean: 19714
+  I_red: 15575
+  S_blue: 117
+  S_green: 113
+  S_mean: 67
+  S_red: 121
+? !!python/tuple
+- -2
+- 5
+: I_blue: 23603
+  I_green: 19893
+  I_mean: 19677
+  I_red: 15536
+  S_blue: 148
+  S_green: 139
+  S_mean: 77
+  S_red: 113
+? !!python/tuple
+- -1
+- 5
+: I_blue: 23556
+  I_green: 19904
+  I_mean: 19669
+  I_red: 15547
+  S_blue: 151
+  S_green: 131
+  S_mean: 81
+  S_red: 143
+? !!python/tuple
+- 0
+- 5
+: I_blue: 23573
+  I_green: 19887
+  I_mean: 19664
+  I_red: 15532
+  S_blue: 119
+  S_green: 110
+  S_mean: 66
+  S_red: 116
+? !!python/tuple
+- 1
+- 5
+: I_blue: 23604
+  I_green: 19922
+  I_mean: 19695
+  I_red: 15560
+  S_blue: 118
+  S_green: 104
+  S_mean: 64
+  S_red: 111
+? !!python/tuple
+- 2
+- 5
+: I_blue: 23598
+  I_green: 19928
+  I_mean: 19696
+  I_red: 15562
+  S_blue: 129
+  S_green: 114
+  S_mean: 65
+  S_red: 95
+? !!python/tuple
+- 3
+- 5
+: I_blue: 23533
+  I_green: 19839
+  I_mean: 19623
+  I_red: 15497
+  S_blue: 129
+  S_green: 121
+  S_mean: 68
+  S_red: 104
+? !!python/tuple
+- 4
+- 5
+: I_blue: 23439
+  I_green: 19772
+  I_mean: 19541
+  I_red: 15413
+  S_blue: 120
+  S_green: 137
+  S_mean: 74
+  S_red: 129
+? !!python/tuple
+- 5
+- 5
+: I_blue: 23391
+  I_green: 19687
+  I_mean: 19497
+  I_red: 15415
+  S_blue: 126
+  S_green: 115
+  S_mean: 68
+  S_red: 112
+? !!python/tuple
+- 6
+- 5
+: I_blue: 23381
+  I_green: 19701
+  I_mean: 19486
+  I_red: 15377
+  S_blue: 104
+  S_green: 123
+  S_mean: 65
+  S_red: 110
+? !!python/tuple
+- 7
+- 5
+: I_blue: 23396
+  I_green: 19721
+  I_mean: 19497
+  I_red: 15374
+  S_blue: 99
+  S_green: 121
+  S_mean: 63
+  S_red: 108
+? !!python/tuple
+- 8
+- 5
+: I_blue: 23392
+  I_green: 19648
+  I_mean: 19462
+  I_red: 15346
+  S_blue: 111
+  S_green: 115
+  S_mean: 65
+  S_red: 113
+? !!python/tuple
+- 9
+- 5
+: I_blue: 23294
+  I_green: 19561
+  I_mean: 19382
+  I_red: 15291
+  S_blue: 98
+  S_green: 116
+  S_mean: 60
+  S_red: 100
+? !!python/tuple
+- 10
+- 5
+: I_blue: 23278
+  I_green: 19545
+  I_mean: 19367
+  I_red: 15278
+  S_blue: 99
+  S_green: 101
+  S_mean: 59
+  S_red: 111
+? !!python/tuple
+- 11
+- 5
+: I_blue: 23215
+  I_green: 19527
+  I_mean: 19330
+  I_red: 15250
+  S_blue: 137
+  S_green: 127
+  S_mean: 72
+  S_red: 109
+? !!python/tuple
+- 12
+- 5
+: I_blue: 23265
+  I_green: 19560
+  I_mean: 19365
+  I_red: 15270
+  S_blue: 170
+  S_green: 156
+  S_mean: 87
+  S_red: 125
+? !!python/tuple
+- 13
+- 5
+: I_blue: 23266
+  I_green: 19548
+  I_mean: 19355
+  I_red: 15251
+  S_blue: 117
+  S_green: 93
+  S_mean: 57
+  S_red: 85
+? !!python/tuple
+- 14
+- 5
+: I_blue: 23235
+  I_green: 19496
+  I_mean: 19309
+  I_red: 15197
+  S_blue: 103
+  S_green: 127
+  S_mean: 63
+  S_red: 99
+? !!python/tuple
+- 15
+- 5
+: I_blue: 23177
+  I_green: 19510
+  I_mean: 19287
+  I_red: 15175
+  S_blue: 94
+  S_green: 97
+  S_mean: 57
+  S_red: 108
+? !!python/tuple
+- 16
+- 5
+: I_blue: 23187
+  I_green: 19441
+  I_mean: 19254
+  I_red: 15135
+  S_blue: 93
+  S_green: 105
+  S_mean: 54
+  S_red: 86
+? !!python/tuple
+- 17
+- 5
+: I_blue: 23195
+  I_green: 19477
+  I_mean: 19259
+  I_red: 15105
+  S_blue: 113
+  S_green: 125
+  S_mean: 65
+  S_red: 103
+? !!python/tuple
+- 18
+- 5
+: I_blue: 23159
+  I_green: 19397
+  I_mean: 19210
+  I_red: 15075
+  S_blue: 100
+  S_green: 111
+  S_mean: 62
+  S_red: 115
+? !!python/tuple
+- 19
+- 5
+: I_blue: 23103
+  I_green: 19356
+  I_mean: 19169
+  I_red: 15048
+  S_blue: 109
+  S_green: 121
+  S_mean: 64
+  S_red: 107
+? !!python/tuple
+- 20
+- 5
+: I_blue: 23075
+  I_green: 19347
+  I_mean: 19145
+  I_red: 15015
+  S_blue: 123
+  S_green: 129
+  S_mean: 71
+  S_red: 119
+? !!python/tuple
+- 21
+- 5
+: I_blue: 23114
+  I_green: 19371
+  I_mean: 19190
+  I_red: 15087
+  S_blue: 107
+  S_green: 101
+  S_mean: 57
+  S_red: 92
+? !!python/tuple
+- 22
+- 5
+: I_blue: 23159
+  I_green: 19372
+  I_mean: 19208
+  I_red: 15093
+  S_blue: 121
+  S_green: 122
+  S_mean: 64
+  S_red: 89
+? !!python/tuple
+- 23
+- 5
+: I_blue: 23181
+  I_green: 19405
+  I_mean: 19225
+  I_red: 15091
+  S_blue: 129
+  S_green: 132
+  S_mean: 73
+  S_red: 122
+? !!python/tuple
+- 24
+- 5
+: I_blue: 23193
+  I_green: 19429
+  I_mean: 19246
+  I_red: 15118
+  S_blue: 121
+  S_green: 137
+  S_mean: 72
+  S_red: 117
+? !!python/tuple
+- 25
+- 5
+: I_blue: 23220
+  I_green: 19455
+  I_mean: 19270
+  I_red: 15136
+  S_blue: 137
+  S_green: 121
+  S_mean: 69
+  S_red: 101
+? !!python/tuple
+- 26
+- 5
+: I_blue: 23239
+  I_green: 19470
+  I_mean: 19272
+  I_red: 15108
+  S_blue: 140
+  S_green: 118
+  S_mean: 71
+  S_red: 110
+? !!python/tuple
+- 27
+- 5
+: I_blue: 23339
+  I_green: 19520
+  I_mean: 19349
+  I_red: 15189
+  S_blue: 124
+  S_green: 110
+  S_mean: 67
+  S_red: 115
+? !!python/tuple
+- 28
+- 5
+: I_blue: 23321
+  I_green: 19550
+  I_mean: 19343
+  I_red: 15158
+  S_blue: 104
+  S_green: 99
+  S_mean: 59
+  S_red: 104
+? !!python/tuple
+- 29
+- 5
+: I_blue: 23353
+  I_green: 19556
+  I_mean: 19361
+  I_red: 15174
+  S_blue: 97
+  S_green: 107
+  S_mean: 58
+  S_red: 99
+? !!python/tuple
+- 30
+- 5
+: I_blue: 23352
+  I_green: 19592
+  I_mean: 19378
+  I_red: 15192
+  S_blue: 119
+  S_green: 122
+  S_mean: 64
+  S_red: 94
+? !!python/tuple
+- 31
+- 5
+: I_blue: 23336
+  I_green: 19616
+  I_mean: 19371
+  I_red: 15161
+  S_blue: 109
+  S_green: 118
+  S_mean: 63
+  S_red: 101
+? !!python/tuple
+- 32
+- 5
+: I_blue: 23364
+  I_green: 19562
+  I_mean: 19355
+  I_red: 15139
+  S_blue: 149
+  S_green: 136
+  S_mean: 79
+  S_red: 127
+? !!python/tuple
+- 33
+- 5
+: I_blue: 23296
+  I_green: 19522
+  I_mean: 19311
+  I_red: 15116
+  S_blue: 131
+  S_green: 123
+  S_mean: 70
+  S_red: 112
+? !!python/tuple
+- 34
+- 5
+: I_blue: 23313
+  I_green: 19536
+  I_mean: 19306
+  I_red: 15071
+  S_blue: 101
+  S_green: 111
+  S_mean: 63
+  S_red: 118
+? !!python/tuple
+- 35
+- 5
+: I_blue: 23311
+  I_green: 19482
+  I_mean: 19279
+  I_red: 15045
+  S_blue: 122
+  S_green: 102
+  S_mean: 63
+  S_red: 104
+? !!python/tuple
+- 36
+- 5
+: I_blue: 23225
+  I_green: 19437
+  I_mean: 19213
+  I_red: 14978
+  S_blue: 102
+  S_green: 102
+  S_mean: 57
+  S_red: 95
+? !!python/tuple
+- 37
+- 5
+: I_blue: 23178
+  I_green: 19382
+  I_mean: 19173
+  I_red: 14959
+  S_blue: 135
+  S_green: 125
+  S_mean: 74
+  S_red: 127
+? !!python/tuple
+- 38
+- 5
+: I_blue: 23079
+  I_green: 19286
+  I_mean: 19082
+  I_red: 14881
+  S_blue: 146
+  S_green: 111
+  S_mean: 71
+  S_red: 112
+? !!python/tuple
+- 39
+- 5
+: I_blue: 23037
+  I_green: 19259
+  I_mean: 19035
+  I_red: 14811
+  S_blue: 102
+  S_green: 115
+  S_mean: 61
+  S_red: 104
+? !!python/tuple
+- 40
+- 5
+: I_blue: 23061
+  I_green: 19243
+  I_mean: 19041
+  I_red: 14819
+  S_blue: 85
+  S_green: 102
+  S_mean: 57
+  S_red: 110
+? !!python/tuple
+- 41
+- 5
+: I_blue: 23006
+  I_green: 19206
+  I_mean: 18988
+  I_red: 14752
+  S_blue: 110
+  S_green: 114
+  S_mean: 63
+  S_red: 106
+? !!python/tuple
+- 42
+- 5
+: I_blue: 22985
+  I_green: 19177
+  I_mean: 18957
+  I_red: 14710
+  S_blue: 92
+  S_green: 106
+  S_mean: 58
+  S_red: 107
+? !!python/tuple
+- 43
+- 5
+: I_blue: 22963
+  I_green: 19144
+  I_mean: 18928
+  I_red: 14678
+  S_blue: 141
+  S_green: 129
+  S_mean: 71
+  S_red: 98
+? !!python/tuple
+- 44
+- 5
+: I_blue: 23005
+  I_green: 19191
+  I_mean: 18954
+  I_red: 14668
+  S_blue: 112
+  S_green: 118
+  S_mean: 62
+  S_red: 92
+? !!python/tuple
+- 45
+- 5
+: I_blue: 23058
+  I_green: 19221
+  I_mean: 18999
+  I_red: 14718
+  S_blue: 99
+  S_green: 103
+  S_mean: 57
+  S_red: 94
+? !!python/tuple
+- 46
+- 5
+: I_blue: 23026
+  I_green: 19213
+  I_mean: 18974
+  I_red: 14685
+  S_blue: 108
+  S_green: 101
+  S_mean: 59
+  S_red: 100
+? !!python/tuple
+- 47
+- 5
+: I_blue: 23005
+  I_green: 19253
+  I_mean: 18987
+  I_red: 14704
+  S_blue: 85
+  S_green: 107
+  S_mean: 57
+  S_red: 103
+? !!python/tuple
+- 48
+- 5
+: I_blue: 22993
+  I_green: 19205
+  I_mean: 18950
+  I_red: 14652
+  S_blue: 99
+  S_green: 97
+  S_mean: 56
+  S_red: 100
+? !!python/tuple
+- 49
+- 5
+: I_blue: 23008
+  I_green: 19249
+  I_mean: 18961
+  I_red: 14626
+  S_blue: 95
+  S_green: 103
+  S_mean: 54
+  S_red: 87
+? !!python/tuple
+- 50
+- 5
+: I_blue: 23007
+  I_green: 19234
+  I_mean: 18960
+  I_red: 14640
+  S_blue: 99
+  S_green: 121
+  S_mean: 63
+  S_red: 107
+? !!python/tuple
+- 51
+- 5
+: I_blue: 23053
+  I_green: 19285
+  I_mean: 18996
+  I_red: 14652
+  S_blue: 80
+  S_green: 93
+  S_mean: 49
+  S_red: 83
+? !!python/tuple
+- 52
+- 5
+: I_blue: 23086
+  I_green: 19263
+  I_mean: 19006
+  I_red: 14670
+  S_blue: 104
+  S_green: 98
+  S_mean: 57
+  S_red: 98
+? !!python/tuple
+- 53
+- 5
+: I_blue: 23063
+  I_green: 19263
+  I_mean: 18992
+  I_red: 14651
+  S_blue: 109
+  S_green: 134
+  S_mean: 69
+  S_red: 116
+? !!python/tuple
+- 54
+- 5
+: I_blue: 23063
+  I_green: 19237
+  I_mean: 18962
+  I_red: 14586
+  S_blue: 157
+  S_green: 153
+  S_mean: 85
+  S_red: 136
+? !!python/tuple
+- 55
+- 5
+: I_blue: 23130
+  I_green: 19282
+  I_mean: 19018
+  I_red: 14642
+  S_blue: 149
+  S_green: 145
+  S_mean: 82
+  S_red: 137
+? !!python/tuple
+- 56
+- 5
+: I_blue: 23195
+  I_green: 19328
+  I_mean: 19070
+  I_red: 14687
+  S_blue: 121
+  S_green: 145
+  S_mean: 73
+  S_red: 116
+? !!python/tuple
+- 57
+- 5
+: I_blue: 23249
+  I_green: 19366
+  I_mean: 19105
+  I_red: 14701
+  S_blue: 111
+  S_green: 107
+  S_mean: 59
+  S_red: 92
+? !!python/tuple
+- 58
+- 5
+: I_blue: 23303
+  I_green: 19416
+  I_mean: 19148
+  I_red: 14725
+  S_blue: 106
+  S_green: 116
+  S_mean: 61
+  S_red: 95
+? !!python/tuple
+- 59
+- 5
+: I_blue: 23309
+  I_green: 19437
+  I_mean: 19160
+  I_red: 14735
+  S_blue: 98
+  S_green: 114
+  S_mean: 60
+  S_red: 103
+? !!python/tuple
+- 60
+- 5
+: I_blue: 23319
+  I_green: 19476
+  I_mean: 19182
+  I_red: 14752
+  S_blue: 96
+  S_green: 85
+  S_mean: 57
+  S_red: 117
+? !!python/tuple
+- 61
+- 5
+: I_blue: 23362
+  I_green: 19520
+  I_mean: 19216
+  I_red: 14768
+  S_blue: 104
+  S_green: 109
+  S_mean: 60
+  S_red: 103
+? !!python/tuple
+- 62
+- 5
+: I_blue: 23338
+  I_green: 19480
+  I_mean: 19176
+  I_red: 14710
+  S_blue: 119
+  S_green: 96
+  S_mean: 60
+  S_red: 99
+? !!python/tuple
+- 63
+- 5
+: I_blue: 23288
+  I_green: 19448
+  I_mean: 19136
+  I_red: 14672
+  S_blue: 197
+  S_green: 151
+  S_mean: 98
+  S_red: 158
+? !!python/tuple
+- 64
+- 5
+: I_blue: 23283
+  I_green: 19389
+  I_mean: 19117
+  I_red: 14680
+  S_blue: 113
+  S_green: 113
+  S_mean: 64
+  S_red: 109
+? !!python/tuple
+- 65
+- 5
+: I_blue: 23271
+  I_green: 19395
+  I_mean: 19106
+  I_red: 14654
+  S_blue: 95
+  S_green: 94
+  S_mean: 58
+  S_red: 115
+? !!python/tuple
+- 66
+- 5
+: I_blue: 23216
+  I_green: 19334
+  I_mean: 19073
+  I_red: 14671
+  S_blue: 103
+  S_green: 106
+  S_mean: 62
+  S_red: 114
+? !!python/tuple
+- 67
+- 5
+: I_blue: 23165
+  I_green: 19256
+  I_mean: 19002
+  I_red: 14586
+  S_blue: 107
+  S_green: 117
+  S_mean: 62
+  S_red: 102
+? !!python/tuple
+- 68
+- 5
+: I_blue: 23105
+  I_green: 19184
+  I_mean: 18930
+  I_red: 14501
+  S_blue: 104
+  S_green: 112
+  S_mean: 60
+  S_red: 96
+? !!python/tuple
+- 69
+- 5
+: I_blue: 23094
+  I_green: 19138
+  I_mean: 18905
+  I_red: 14483
+  S_blue: 124
+  S_green: 104
+  S_mean: 66
+  S_red: 119
+? !!python/tuple
+- 70
+- 5
+: I_blue: 23036
+  I_green: 19113
+  I_mean: 18868
+  I_red: 14455
+  S_blue: 104
+  S_green: 97
+  S_mean: 57
+  S_red: 99
+? !!python/tuple
+- 71
+- 5
+: I_blue: 23003
+  I_green: 19087
+  I_mean: 18849
+  I_red: 14459
+  S_blue: 131
+  S_green: 112
+  S_mean: 65
+  S_red: 97
+? !!python/tuple
+- 72
+- 5
+: I_blue: 23001
+  I_green: 19066
+  I_mean: 18828
+  I_red: 14417
+  S_blue: 92
+  S_green: 118
+  S_mean: 59
+  S_red: 98
+? !!python/tuple
+- 73
+- 5
+: I_blue: 22997
+  I_green: 19094
+  I_mean: 18833
+  I_red: 14408
+  S_blue: 112
+  S_green: 109
+  S_mean: 63
+  S_red: 107
+? !!python/tuple
+- 74
+- 5
+: I_blue: 22902
+  I_green: 18988
+  I_mean: 18734
+  I_red: 14312
+  S_blue: 102
+  S_green: 117
+  S_mean: 62
+  S_red: 105
+? !!python/tuple
+- 75
+- 5
+: I_blue: 22887
+  I_green: 18949
+  I_mean: 18712
+  I_red: 14300
+  S_blue: 100
+  S_green: 91
+  S_mean: 55
+  S_red: 97
+? !!python/tuple
+- 76
+- 5
+: I_blue: 22845
+  I_green: 18951
+  I_mean: 18689
+  I_red: 14272
+  S_blue: 95
+  S_green: 99
+  S_mean: 57
+  S_red: 107
+? !!python/tuple
+- 77
+- 5
+: I_blue: 22803
+  I_green: 18915
+  I_mean: 18650
+  I_red: 14233
+  S_blue: 150
+  S_green: 132
+  S_mean: 77
+  S_red: 116
+? !!python/tuple
+- 78
+- 5
+: I_blue: 22843
+  I_green: 18923
+  I_mean: 18671
+  I_red: 14249
+  S_blue: 103
+  S_green: 101
+  S_mean: 61
+  S_red: 117
+? !!python/tuple
+- 79
+- 5
+: I_blue: 22856
+  I_green: 18960
+  I_mean: 18688
+  I_red: 14250
+  S_blue: 106
+  S_green: 101
+  S_mean: 62
+  S_red: 119
+? !!python/tuple
+- 80
+- 5
+: I_blue: 22925
+  I_green: 18981
+  I_mean: 18727
+  I_red: 14276
+  S_blue: 179
+  S_green: 166
+  S_mean: 92
+  S_red: 129
+? !!python/tuple
+- 81
+- 5
+: I_blue: 22948
+  I_green: 19072
+  I_mean: 18752
+  I_red: 14238
+  S_blue: 120
+  S_green: 122
+  S_mean: 68
+  S_red: 114
+? !!python/tuple
+- 82
+- 5
+: null
+? !!python/tuple
+- 83
+- 5
+: null
+? !!python/tuple
+- 84
+- 5
+: null
+? !!python/tuple
+- 85
+- 5
+: null
+? !!python/tuple
+- 86
+- 5
+: null
+? !!python/tuple
+- 87
+- 5
+: null
+? !!python/tuple
+- 88
+- 5
+: null
+? !!python/tuple
+- 89
+- 5
+: null
+? !!python/tuple
+- 90
+- 5
+: null
+? !!python/tuple
+- 91
+- 5
+: null
+? !!python/tuple
+- 92
+- 5
+: null
+? !!python/tuple
+- 93
+- 5
+: null
+? !!python/tuple
+- 94
+- 5
+: null
+? !!python/tuple
+- 95
+- 5
+: null
+? !!python/tuple
+- 96
+- 5
+: null
+? !!python/tuple
+- 97
+- 5
+: null
+? !!python/tuple
+- 98
+- 5
+: null
+? !!python/tuple
+- 99
+- 5
+: null
+? !!python/tuple
+- 100
+- 5
+: null
+? !!python/tuple
+- 101
+- 5
+: null
+? !!python/tuple
+- 102
+- 5
+: null
+? !!python/tuple
+- 103
+- 5
+: null
+? !!python/tuple
+- 104
+- 5
+: null
+? !!python/tuple
+- 105
+- 5
+: null
+? !!python/tuple
+- 106
+- 5
+: null
+? !!python/tuple
+- 107
+- 5
+: null
+? !!python/tuple
+- 108
+- 5
+: null
+? !!python/tuple
+- 109
+- 5
+: null
+? !!python/tuple
+- 110
+- 5
+: null
+? !!python/tuple
+- 111
+- 5
+: null
+? !!python/tuple
+- 112
+- 5
+: null
+? !!python/tuple
+- 113
+- 5
+: null
+? !!python/tuple
+- 114
+- 5
+: null
+? !!python/tuple
+- 115
+- 5
+: null
+? !!python/tuple
+- 116
+- 5
+: null
+? !!python/tuple
+- 117
+- 5
+: null
+? !!python/tuple
+- 118
+- 5
+: null
+? !!python/tuple
+- 119
+- 5
+: null
+? !!python/tuple
+- 120
+- 5
+: null
+? !!python/tuple
+- 121
+- 5
+: null
+? !!python/tuple
+- 122
+- 5
+: null
+? !!python/tuple
+- 123
+- 5
+: null
+? !!python/tuple
+- 124
+- 5
+: null
+? !!python/tuple
+- 125
+- 5
+: null
+? !!python/tuple
+- 126
+- 5
+: null
+? !!python/tuple
+- 127
+- 5
+: null
+? !!python/tuple
+- 128
+- 5
+: null
+? !!python/tuple
+- 129
+- 5
+: null
+? !!python/tuple
+- 130
+- 5
+: null
+? !!python/tuple
+- 131
+- 5
+: null
+? !!python/tuple
+- 132
+- 5
+: null
+? !!python/tuple
+- 133
+- 5
+: null
+? !!python/tuple
+- 134
+- 5
+: null
+? !!python/tuple
+- 135
+- 5
+: null
+? !!python/tuple
+- 136
+- 5
+: null
+? !!python/tuple
+- 137
+- 5
+: null
+? !!python/tuple
+- 138
+- 5
+: null
+? !!python/tuple
+- 139
+- 5
+: null
+? !!python/tuple
+- 140
+- 5
+: null
+? !!python/tuple
+- 141
+- 5
+: null
+? !!python/tuple
+- 142
+- 5
+: null
+? !!python/tuple
+- 143
+- 5
+: null
+? !!python/tuple
+- 144
+- 5
+: null
+? !!python/tuple
+- 145
+- 5
+: null
+? !!python/tuple
+- 146
+- 5
+: null
+? !!python/tuple
+- 147
+- 5
+: null
+? !!python/tuple
+- 148
+- 5
+: null
+? !!python/tuple
+- 149
+- 5
+: null
+? !!python/tuple
+- 150
+- 5
+: null
+? !!python/tuple
+- 151
+- 5
+: null
+? !!python/tuple
+- 152
+- 5
+: null
+? !!python/tuple
+- 153
+- 5
+: null
+? !!python/tuple
+- 154
+- 5
+: null
+? !!python/tuple
+- 155
+- 5
+: null

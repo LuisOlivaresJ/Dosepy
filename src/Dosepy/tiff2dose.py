@@ -4,7 +4,7 @@ from skimage.morphology import square
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Dosepy.calibration import CalibrationLUT, MM_PER_INCH
+from Dosepy.calibration import LUT, MM_PER_INCH
 from Dosepy.image import TiffImage
 
 import math
@@ -19,7 +19,7 @@ class Tiff2Dose:
         The lut to use for curve calibration.
     
     """
-    def __init__(self, img: TiffImage, cal: CalibrationLUT):
+    def __init__(self, img: TiffImage, cal: LUT, zero: TiffImage = None):
         """
         Parameters
         ----------
@@ -27,12 +27,17 @@ class Tiff2Dose:
             The tiff image to convert to dose.
         cal : CalibrationLUT
             The lut to use for curve calibration.
+        zero : TiffImage
+            The tiff image to use as a zero dose reference.
         """
         self.img = img
         self.cal = cal
+        self.zero_img = zero
+        self.zero_intensity = None
+        self.u_zero_intensity = None
 
 
-    def from_red(self, fit_function: str):
+    def red(self, fit_function: str):
 
         #high_pixels = self.img.shape[0]
         width_pixels = self.img.shape[1]
@@ -51,7 +56,7 @@ class Tiff2Dose:
             img_array = self.img.array[:, :, 0]
 
         # Buffer array to store dose from img
-        dose = np.empty((self.img.shape()))
+        dose = np.empty(img_array.shape)
 
         # Create a list with the lateral positions in milimeters
         origin = self.img.physical_shape[1]/2
@@ -64,7 +69,7 @@ class Tiff2Dose:
         # Convert image to dose one column at a time
         for column in range(0, width_pixels):
 
-            # Get pixel position
+            # Get pixel positions rounded ceil and floor for interpolation
             pix_position = pixel_positions_mm[column]
             position_ceil = math.ceil(pix_position)
             position_floor = math.floor(pix_position)
@@ -76,7 +81,8 @@ class Tiff2Dose:
                 channel = "red",
             )
             cal_intensities_floor = self.cal._get_intensities(
-                lateral_position=position_floor
+                lateral_position=position_floor,
+                channel = "red",
             )
             cal_doses_ceil = self.cal._get_lateral_doses(position=position_ceil)
             cal_doses_floor = self.cal._get_lateral_doses(position=position_floor)
@@ -85,28 +91,32 @@ class Tiff2Dose:
             interp_intensities = [
                 np.interp(
                     pix_position,
-                    cal_intensities_floor[i],
-                    cal_intensities_ceil[i])
-                for i in range(len(cal_intensities_floor))]
+                    [position_floor, position_ceil],
+                    [cal_intensities_floor[i], cal_intensities_ceil[i]],
+                )
+                for i in range(len(cal_intensities_floor))
+            ]
             
             interp_doses = [
                 np.interp(
                     pix_position,
-                    cal_doses_floor[i],
-                    cal_doses_ceil[i],
+                    [position_floor, position_ceil],
+                    [cal_doses_floor[i], cal_doses_ceil[i]],
                 )
-                for i in range(len(cal_intensities_floor))
+                for i in range(len(cal_doses_floor))
             ]
 
-            # Compute dose
+            if not self.zero_img:
+                # Generate a qt widget to show the image
+                # The user should be able to create a roi selection
+                # Add a event handler to get the roi selection when the user press enter
+                # In the event handler function, change the Tiff2Dose.zero_intenstie attribute
 
+                pass
+
+            # Compute dose
             ## _get_dose_from_fit uses the first element of the array to normalize
-            dose[:, column] = self.cal._get_dose_from_fit(
-                calib_film_intensities = interp_intensities,
-                calib_dose = interp_doses,
-                intensities = img_array[:, column],
-                fit_function = fit_function
-            )
+
 
         return dose
     

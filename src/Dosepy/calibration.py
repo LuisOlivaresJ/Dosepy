@@ -766,7 +766,7 @@ class LUT:
         return sorted(set(positions))
     
 
-    def _get_intensities(self, lateral_position: float = 0, channel: str = "red") -> ndarray:
+    def _get_intensities(self, lateral_position: float = 0, channel: str = "red") -> tuple[ndarray, ndarray]:
         """
         Get the pixel values and standar deviation of the channel at a given lateral position,
         for each film, in descending order. 
@@ -781,7 +781,7 @@ class LUT:
 
         Returns
         -------
-        ndarray
+        tuple[ndarray, ndarray]
             Arrays with the pixel values and standar deaviation of the channel at the given lateral position.
         """
         # Check if the channel is valid.
