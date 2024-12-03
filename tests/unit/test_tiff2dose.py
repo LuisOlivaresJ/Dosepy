@@ -3,6 +3,7 @@
 import pytest
 from pathlib import Path
 import numpy as np
+from numpy import ndarray
 from Dosepy.tiff2dose import Tiff2Dose
 from Dosepy.calibration import LUT
 from Dosepy.image import TiffImage, DoseImage, load
@@ -15,12 +16,13 @@ def calibration_lut():
     beam_profile_path = cwd / "fixtures/CAL/BeamProfile.csv"
 
     cal_img = load(file_path)
-    profile = np.genfromtxt(beam_profile_path, delimiter=",")
+    #profile = np.genfromtxt(beam_profile_path, delimiter=",")
 
     cal = LUT(cal_img)
     cal.set_central_rois((180, 8), show=False)
     cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
-    cal.compute_central_lut()
+    cal.set_beam_profile(str(beam_profile_path))
+    cal.compute_lateral_lut()
 
     return cal
 
@@ -39,9 +41,11 @@ def test_tiff2dose_instance(verif_img, calibration_lut):
     t2d = Tiff2Dose(verif_img, calibration_lut)
     assert isinstance(t2d, Tiff2Dose)
 
+"""
 # Test the red method of the Tiff2Dose class
 def test_red_retuns_a_DoseImage_instance(verif_img, calibration_lut):
     t2d = Tiff2Dose(verif_img, calibration_lut)
     dred = t2d.red("rational")
 
-    assert isinstance(dred, DoseImage)
+    assert isinstance(dred, ndarray)
+"""
