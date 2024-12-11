@@ -129,6 +129,33 @@ class Tiff2Dose:
     
 
     def _get_zero_dose_intensity(self, img: TiffImage) -> tuple[int, int]:
+        """
+        Get mean and standar deviation.
+
+        Parameters
+        ----------
+        img : TiffImage
+            The image to get the zero dose intensity from.
+        
+        Returns
+        -------
+        tuple[int, int]
+            The mean and standard deviation of the zero dose intensity.
+        
+        """
+
+        # Find films in the given image
+
+        # Check that the center coordinate of the scaner is inside each film
+        # discard films that does not include the center of the scanner
+
+        # Discard films with area less than 400 mm^2
+
+        # Discard films with an intensity TODO How to segment by color?
+
+        # Order films by intensity in descending order
+
+        # Get mean and standard deviation of the first film
 
         class ZeroDoseIntensity:
 
