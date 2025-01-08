@@ -912,7 +912,7 @@ class ArrayImage(BaseImage):
         (useful for example for spot labels are used in films).
 
         It is assumed that both distributions have exactly the same physical dimensions, and the positions
-        ​​for each point coincide with each other, that is, the images are registered.
+        for each point coincide with each other, that is, the images are registered.
 
         Interpolation is not supported yet.
 
@@ -939,7 +939,7 @@ class ArrayImage(BaseImage):
         >>> from Dosepy.image import load
         >>> import numpy as np
 
-        >>> # We generate the arrays, A and B, with the values ​​96 and 100 in all their elements.
+        >>> # We generate the arrays, A and B, with the values 96 and 100 in all their elements.
         >>> A = np.zeros((30, 30)) + 96
         >>> B = np.zeros((30, 30)) + 100
 

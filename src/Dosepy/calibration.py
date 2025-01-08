@@ -9,7 +9,7 @@ DESCRIPTION
     OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     Main differences:
     - The data structure (LUT) to store intensites from pixels is a dictionary object.
-    - The data is created for every milimeter in the lateral direction of the scanner, instead of each pixel.
+    - The data is created at every milimeter in the lateral direction of the scanner, instead of each pixel.
     - The data contains the standard deviation of the pixel values for uncertainty analysis.
     - Automatic roi detection is implemented with scikit-image.regionprops() function.
     - Plot function for fit and scanner uncertainty.
@@ -56,7 +56,7 @@ class LUT:
         The look-up table (LUT) used to store data as a nested dictionary.
         At every milimeter (BIN_WIDTH constant) in the lateral direction
         (perpendicular to the scanning direction), the lut stores the corrected dose,
-        the mean pixel value, and the standard deviation of the pixel values for each color channel.
+        the mean, and the standard deviation of the pixel values for each color channel.
         The LUT is organized as follows:
         {
             'author' : str,
