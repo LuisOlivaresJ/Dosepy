@@ -33,6 +33,26 @@ class TestReadableImage(unittest.TestCase):
     #TO DO: A test function for TiffImage.dpi
 
 
+class TestTiffImage(unittest.TestCase):
+
+    # Test the get_labeled_objects method
+    def test_get_labeled_objects_six_films(self):
+        file_path = cwd / "fixtures" / "CAL" / "film20240620_002.tif"
+        img = image.load(file_path)
+        _, num_object = img.get_labeled_objects(
+            return_num=True
+        )
+        self.assertEqual(num_object, 6)
+
+    def test_get_labeled_objects_with_filters(self):
+        file_path = cwd / "fixtures" / "CAL20241106_001.tif"
+        img = image.load(file_path)
+        _, num_object = img.get_labeled_objects(
+            return_num=True,
+        )
+        self.assertEqual(num_object, 11)
+
+
 class Test_ArrayImage(unittest.TestCase):
     # Test the creation of an ArrayImage instance
     def test_create_array_image_instance(self):

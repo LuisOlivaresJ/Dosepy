@@ -12,6 +12,7 @@ DESCRIPTION
 
 from pathlib import Path
 import numpy as np
+from numpy import ndarray
 import os.path as osp
 from typing import Any, Union
 import imageio.v3 as iio
@@ -20,7 +21,8 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from skimage.color import rgb2gray
+import skimage
+from skimage.color import rgb2gray, rgb2hsv
 from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
@@ -35,6 +37,7 @@ import math
 from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
+MIN_AREA_FOR_FILMS = 400  # 20x20 mm^2
 
 ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
 
@@ -370,8 +373,9 @@ class TiffImage(BaseImage):
         self._dpi = dpi
         self.sid = sid
 
-        self.label_image = np.array([])
+        self.labeled_films = np.array([])
         self.number_of_films = None
+
 
     @property
     def dpi(self) -> float | None:
@@ -386,6 +390,7 @@ class TiffImage(BaseImage):
 
         return dpi
 
+
     @property
     def dpmm(self) -> float | None:
         """The Dots-per-mm of the image, defined at isocenter. E.g. if an EPID
@@ -394,6 +399,130 @@ class TiffImage(BaseImage):
             return self.dpi / MM_PER_INCH
         except TypeError:
             return
+
+
+    def set_labeled_films_and_filters(self):
+        """
+        Set the labeled films and optical filters in the image.
+        """
+
+        # Get labeled objects
+        labeled_objects, number_of_objects = self.get_labeled_objects(return_num = True)
+
+        # Set the labeled films and filters
+        film_counter = 0
+        films = np.zeros(labeled_objects.shape)
+        filter_counter = 0
+        filters = np.zeros(labeled_objects.shape)
+
+        min_area_in_pixels = int(MIN_AREA_FOR_FILMS * (1/MM_PER_INCH)**2 * (self.img.dpi)**2)
+        
+        properties = regionprops(label_image = labeled_objects)
+
+        for n, p in enumerate(properties, start = 1):
+            
+            if p.area < min_area_in_pixels:
+                filter_counter += 1
+                filters[filters == n] = filter_counter
+            else:
+                film_counter += 1
+                films[films == n] = film_counter
+
+        self.labeled_films = films
+        self.labeled_optical_filters = filters
+
+
+    def get_labeled_objects(
+        self,
+        return_num: bool = False,
+        threshold: tuple[float, float] = (0.1, 0.8),
+        min_area: float = 100,
+        show: bool = False,
+        ) -> np.ndarray | tuple[np.ndarray, int]:
+        """
+        Get a labeled array and the number of regions in an image.
+
+        Parameters
+        ----------
+        return_num : bool
+            If True, the number of labeled regions is returned.
+        threshold : tuple
+            The threshold values used to detect film.
+            The first value is used as a threshold for dark regions (< 0.1) and the second value for bright regions (> 0.9).
+        min_area : float
+            The minimum area in mm^2 of a region to be considered a film.
+        show : bool
+            If True, the image and histogram are shown.
+
+        Returns
+        -------
+        labeled_img : ndarray
+            Image with labeled regions
+        num_labels : int
+            Number of labeled regions if return_num is True
+
+        """
+        # Convert to HSV
+        hsv_img = rgb2hsv(self.array)
+        #h = hsv_img[:, :, 0]
+        #s = hsv_img[:, :, 1]
+        v = hsv_img[:, :, 2]
+
+        # Get binary with thresholding
+        ## If v is LOW, it is a DARK region
+        ## If v is HIGH, it is a BRIGHT region
+        binary_img = np.logical_and(
+            v > threshold[0],
+            v < threshold[1]
+            )
+
+        # Filter for small bright spots
+        bi_img_filtered = skimage.morphology.binary_erosion(
+            binary_img,
+            mode="min",
+            footprint=square(3)
+            )
+
+        # Get labeled regions and properties
+        labeled_img = label(bi_img_filtered)
+        properties = regionprops(label_image = labeled_img)
+
+        # Remove objects with area less than 10 x 10 mm^2
+        ## What is the number of pixels in 10 x 10 mm^2?
+        ## [10 mm (1 inch / 25.4 mm) (300 pixels / 1 inch)]**2
+        ##               ^- mm to inch       ^- inch to pixels
+
+        minimum_area = int(min_area * (1/MM_PER_INCH)**2 * (self.dpi)**2)
+        print(f"The minimum area in pixels is: {minimum_area}")
+
+        film_counter = 0  # Used to reset label number
+
+        for n, p in enumerate(properties, start = 1):
+            
+            if p.area < minimum_area:  # Remove small regions
+                labeled_img[labeled_img == n] = 0
+
+            else:
+                film_counter += 1
+                print(f"Object num. {film_counter}")
+                labeled_img[labeled_img == n] = film_counter
+                
+
+        # Plot histogram if show is True
+        if show:
+            fig = plt.figure(tight_layout=True)
+            ax1 = fig.add_subplot(121)
+            ax2 = fig.add_subplot(122)
+
+            ax1.imshow(v)
+            ax1.set_title("Value")
+            ax2.hist(v.ravel(), 512)
+
+        if return_num:
+            return (labeled_img, film_counter)
+        else:
+            return labeled_img
+
 
     def get_stat(
             self,
@@ -432,39 +561,27 @@ class TiffImage(BaseImage):
         >>> list(zip(mean, std))
         """
 
-        if not self.label_image.any():
-            self.set_labeled_img(threshold = 0.90)
+        if not self.labeled_films.any():
+            self.set_labeled_films_and_filters()
 
         if show:
             fig, axes = plt.subplots(ncols=1)
-            #ax = axes.ravel()
             axes = plt.subplot(1, 1, 1)
-            #axes.imshow(gray_scale, cmap="gray")
-            axes.imshow(self.array/np.max(self.array))
-
-        #print(f"Number of images detected: {num}")
+            axes.imshow(self.array/np.max(self.array))         
 
         # Films
         if ch in ["R", "Red", "r", "red"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 0])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 0])
         elif ch in ["G", "Green", "g", "green"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 1])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 1])
         elif ch in ["B", "Blue", "b", "blue"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 2])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 2])
         elif ch in ["M", "Mean", "m", "mean"]:
-            films = regionprops(self.label_image,
+            films = regionprops(self.labeled_films,
                                 intensity_image=np.mean(self.array, axis=2)
                                 )
         else:
             print("Channel not founded")
-
-        # Find the unexposed film.
-        #mean_pixel = []
-        #for film in films:
-        #    mean_pixel.append(film.intensity_mean)
-        #index_ref = mean_pixel.index(max(mean_pixel))
-        #print(f"Index reference: {index_ref}")
-        #end Find the unexposed film.
 
         mean = []
         std = []
@@ -529,6 +646,7 @@ class TiffImage(BaseImage):
 
         return mean, std
 
+
     def plot(
         self,
         ax: plt.Axes = None,
@@ -559,6 +677,7 @@ class TiffImage(BaseImage):
         if show:
             plt.show()
         return ax
+
 
     def to_dose(self, cal, clip=False):
         """Convert the tiff image to a dose distribution. The tiff file image
@@ -655,19 +774,7 @@ class TiffImage(BaseImage):
 
         return dose_in_rois
     
-    def set_labeled_img(self, threshold=None):
-        
-        erosion_pix = int(6*self.dpmm)  # Number of pixels used for erosion.
-        #print(f"Number of pixels to remove borders: {erosion_pix}")
 
-        gray_scale = rgb2gray(self.array)
-        if not threshold:
-            thresh = threshold_otsu(gray_scale)  # Used for films identification.
-        else:
-            thresh = threshold * np.amax(gray_scale)
-        binary = erosion(gray_scale < thresh, square(erosion_pix))
-        self.label_image, self.number_of_films = label(binary, return_num=True)
-        
 ## TODO Delete this class
 class CalibImage(TiffImage):
     """A tiff image used for calibration."""

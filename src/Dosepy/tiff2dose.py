@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 from skimage.filters.rank import median
 from skimage.morphology import square
 
@@ -10,8 +12,22 @@ from Dosepy.image import TiffImage
 
 import math
 
+
+class Tiff2DoseM:
+    """
+    Converts a tiff image to dose map.
+
+    This class implements the Factory Method Pattern.
+    """
+    def get_dose(img: TiffImage, format: str, lut: LUT, img_zero: TiffImage):
+        dose_converter = dose_converter_factory.get_dose_converter(format)
+        return dose_converter.get_dose(img, lut, img_zero)
+    
+
+
 class Tiff2Dose:
-    """ Tiff to dose manager to convert a tiff image to a dose map.
+    """
+    Tiff to dose manager to convert a tiff image to a dose map.
     Attributes
     ----------
     img : TiffImage
@@ -71,7 +87,7 @@ class Tiff2Dose:
             num = self.img.array.shape[1]
             ) - origin
 
-        # Convert image to dose one column at a time
+        # Convert image to dose, one column at a time
         for column in range(0, width_pixels):
 
             # Get pixel positions rounded ceil and floor for interpolation
@@ -226,4 +242,78 @@ class Tiff2Dose:
         if show:
             plt.show()
 
+
+class Tiff2DoseFactory:
+    """Used to manage tiff to dose converters."""
+    def __init__(self):
+        self._converters = {}
+    
+    def register_method(self, format, converter):
+        self._converters[format] = converter
+
+    def get_dose_converter(self, format):
+        converter = self._converters.get(format)
+        if not converter:
+            raise ValueError(format)
+        return converter()
+
+
+class DoseConverter(ABC):
+
+    def __init__(self):
+        self.pixel_positions_mm = None
+
+    
+    @abstractmethod
+    def get_dose(img, lut, img_zero):
+        pass
+
+
+    def create_positions(self, img):
+        # Create a list with lateral positions in milimeters, with the center of the image as the origin.
+        origin = img.physical_shape[1]/2
+        self.pixel_positions_mm = np.linspace(
+            start = 0,
+            stop = img.physical_shape[1],
+            num = img.array.shape[1]
+            ) - origin
+        
+
+    def apply_filter(self, array, lut):
+
+        if lut.lut["filter"]:
+            mask = "TODO"
+
+            filtered_array =  median(
+                array,
+                footprint = square(lut.lut["filter"]),
+                mask = mask,
+                )
+            
+        else:
+            filtered_array = array
+
+        return filtered_array
+
+
+class RedPolynomialDoseConverter(DoseConverter):
+    
+    def get_dose(self, img, lut, img_zero):
+        # TODO
+        if not lut.lut["lateral_correction"]:
+            doses = lut.lut["nominal_doses"]
+            mean_intensity, std = img.get_stat(ch = "R", roi = (5,5), show=True)
+            return "TODO"
+        
+        # Crear una lista con las posiciones en mm
+        self.create_positions(img)
+        # Aplicar filtro si lut se creo con filtro
+        red = self.apply_filter(img.array[:, :, 0], lut)
+        # Convertir cada pixel a dosis
+        print("TODO")
+        return "Dose"
+
+
+dose_converter_factory = Tiff2DoseFactory()
+dose_converter_factory.register_method("RP", RedPolynomialDoseConverter)
 
