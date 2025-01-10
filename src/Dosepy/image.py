@@ -283,6 +283,15 @@ class BaseImage(ABC):
         All parameters are passed to that function."""
         self.array = rotate(self.array, angle, mode=mode, *args, **kwargs)
 
+    def center(self) -> tuple[float, float]:
+        """
+        Return the center position of the image array as a tuple.
+        Even-length arrays will return the midpoint between central two indices. Odd will return the central index.
+        """
+        x_center = (self.shape[1] / 2) - 0.5
+        y_center = (self.shape[0] / 2) - 0.5
+
+        return x_center, y_center
 
     def get_labeled_image(
             self,
@@ -428,8 +437,8 @@ class TiffImage(BaseImage):
                 #film_counter += 1
                 filters[filters == n] = 0
 
-        self.labeled_films = films
-        self.labeled_optical_filters = filters
+        self.labeled_films = label(films)
+        self.labeled_optical_filters = label(filters)
 
 
     def get_labeled_objects(

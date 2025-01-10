@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from skimage.filters.rank import median
 from skimage.morphology import square
+from skimage.measure import label, regionprops
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ from matplotlib.widgets import RectangleSelector
 
 from Dosepy.calibration import LUT, MM_PER_INCH
 from Dosepy.image import TiffImage
+from Dosepy.tools.functions import optical_density, uncertainty_optical_density
 
 import math
 
@@ -19,9 +21,13 @@ class Tiff2DoseM:
 
     This class implements the Factory Method Pattern.
     """
-    def get_dose(img: TiffImage, format: str, lut: LUT, img_zero: TiffImage):
+    def get_dose(
+            img: TiffImage,
+            format: str,
+            lut: LUT
+            ):
         dose_converter = dose_converter_factory.get_dose_converter(format)
-        return dose_converter.get_dose(img, lut, img_zero)
+        return dose_converter.get_dose(img, lut)
     
 
 
@@ -259,13 +265,18 @@ class Tiff2DoseFactory:
 
 
 class DoseConverter(ABC):
+    """
+    Abstract class to create DoseConverter classes.
+
+    Note: The TiffImage should have a reference film with zero dose.
+    """
 
     def __init__(self):
         self.pixel_positions_mm = None
 
     
     @abstractmethod
-    def get_dose(img, lut, img_zero):
+    def get_dose(img, lut):
         pass
 
 
@@ -294,24 +305,98 @@ class DoseConverter(ABC):
             filtered_array = array
 
         return filtered_array
+    
+
+    def check_optical_filters(img: TiffImage, lut: LUT):
+        # TODO Obtener mean and std de la intensidad de los filtros al momento
+        # de la calibración. Deberán almacenarse en LUT
+        return True
+    
+
+    def get_zero_dose_intensity(img: TiffImage) -> int:
+        pass
+
 
 
 class RedPolynomialDoseConverter(DoseConverter):
     
-    def get_dose(self, img, lut, img_zero):
-        # TODO
+    def get_dose(self, img: TiffImage, lut: LUT):
+
+        # TODO LUT does not have data for no-latera-correction
         if not lut.lut["lateral_correction"]:
             doses = lut.lut["nominal_doses"]
             mean_intensity, std = img.get_stat(ch = "R", roi = (5,5), show=True)
+
+            film_response = optical_density(img.array[:, :, 0], mean_intensity[0])
+            # Get popt
+            #dose_image = polynomial_g3(x, *cal.popt)
+            # Get sorted intensities from unexposed (high intensity) to exposed (low intensity) doses.
+            mean_intensity = sorted(mean_intensity, reverse=True)
             return "TODO"
         
         # Crear una lista con las posiciones en mm
         self.create_positions(img)
+
         # Aplicar filtro si lut se creo con filtro
-        red = self.apply_filter(img.array[:, :, 0], lut)
+        if lut.lut["filter"]:
+            red = self.apply_filter(img.array[:, :, 0], lut)
+
+        # Check that mean intensity of filters are equal (considering standar deviation)
+        ## Get mask for films and filters
+        img.set_labeled_films_and_filters()  ## TODO use cache or something to check if it is aldready calculated
+        if not self.check_optical_filters(img):
+            print("The mean intensity of the filters are not equal.")
+
         # Convertir cada pixel a dosis
+        ## Obtener intensidad a cero Grays
+        zero_dose_intensity = self.get_zero_dose_intensity(img)
+        ### En img, identificar film con cero grays
+        ### Revisar film contiene el centro de la imagen
+        ### Obtener intensidad en el centro del scaner, en el film zero
+        
         print("TODO")
         return "Dose"
+
+
+    def get_zero_dose_intensity(img: TiffImage) -> int:
+        # En img, identificar film con cero grays
+        
+        properties = regionprops(img.labeled_films, intensity_image = img.array[:, :, 0])
+        zero_film_index = None
+        zero_dose_intensity = None
+        for n, p in enumerate(properties, start = 1):
+            if p.intensity_mean > zero_dose_intensity:
+                zero_dose_intensity = p.intensity_mean
+                zero_film_index = n - 1
+
+        zero_film_properties = properties[zero_film_index]
+
+        # Revisar si film contiene el centro de la imagen
+        min_row, min_col, max_row, max_col = zero_film_properties.bbox
+        center_x, center_y = img.center()
+
+        if max_col < center_y or min_col > center_y:
+            print("The film is not in the center of the scaner.")
+            return False
+
+        # Obtener intensidad en el centro del scaner, en el film zero
+        ## crear box con la imagen
+        x0, y0 = zero_film_properties.centroid
+        min_lenght = 0.5 * zero_film_properties.axis_minor_length
+        min_row_roi = int(x0 - min_lenght*0.9)
+        max_row_roi = int(x0 + min_lenght*0.9)
+
+        ## Get the mean intensity
+        median_intensity = np.median(
+            img[min_row_roi : max_row_roi, y0, 0])
+        
+        roi = {
+            "min_row": min_row_roi,
+            "max_row": max_row_roi,
+            "pixel_position": y0 
+        }
+        
+        return median_intensity, roi
 
 
 dose_converter_factory = Tiff2DoseFactory()
