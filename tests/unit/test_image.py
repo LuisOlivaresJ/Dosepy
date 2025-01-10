@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from Dosepy import image
+from skimage.measure import label
 import numpy as np
 
 cwd = Path(__file__).parent
@@ -51,6 +52,24 @@ class TestTiffImage(unittest.TestCase):
             return_num=True,
         )
         self.assertEqual(num_object, 11)
+
+
+    def test_set_labeled_films_and_filters(self):
+        """Test set_labeled_films_and_filters, count the number of films"""
+        file_path = cwd / "fixtures" / "CAL20241106_001.tif"
+        img = image.load(file_path)
+        img.set_labeled_films_and_filters()
+        _, num_of_films = label(img.labeled_films, return_num=True)
+        self.assertEqual(num_of_films, 8)
+
+
+    def test_set_labeled_films_and_filters(self):
+        """Test set_labeled_films_and_filters, count the number of films"""
+        file_path = cwd / "fixtures" / "CAL20241106_001.tif"
+        img = image.load(file_path)
+        img.set_labeled_films_and_filters()
+        _, num_of_filters = label(img.labeled_optical_filters, return_num=True)
+        self.assertEqual(num_of_filters, 3)
 
 
 class Test_ArrayImage(unittest.TestCase):

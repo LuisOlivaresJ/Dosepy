@@ -410,23 +410,23 @@ class TiffImage(BaseImage):
         labeled_objects, number_of_objects = self.get_labeled_objects(return_num = True)
 
         # Set the labeled films and filters
-        film_counter = 0
-        films = np.zeros(labeled_objects.shape)
-        filter_counter = 0
-        filters = np.zeros(labeled_objects.shape)
+        #film_counter = 0
+        films = np.copy(labeled_objects)
+        #filter_counter = 0
+        filters = np.copy(labeled_objects)
 
-        min_area_in_pixels = int(MIN_AREA_FOR_FILMS * (1/MM_PER_INCH)**2 * (self.img.dpi)**2)
+        min_area_in_pixels = int(MIN_AREA_FOR_FILMS * (1/MM_PER_INCH)**2 * (self.dpi)**2)
         
         properties = regionprops(label_image = labeled_objects)
 
         for n, p in enumerate(properties, start = 1):
             
             if p.area < min_area_in_pixels:
-                filter_counter += 1
-                filters[filters == n] = filter_counter
+                #filter_counter += 1
+                films[films == n] = 0
             else:
-                film_counter += 1
-                films[films == n] = film_counter
+                #film_counter += 1
+                filters[filters == n] = 0
 
         self.labeled_films = films
         self.labeled_optical_filters = filters
