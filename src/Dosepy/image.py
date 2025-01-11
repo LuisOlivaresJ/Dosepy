@@ -30,6 +30,7 @@ from skimage.filters.rank import mean
 from skimage.transform import rotate
 from .tools.resol import equate_resolution
 from .tools.files_to_image import equate_array_size
+from .tools.array_utils import filter_array
 
 import math
 
@@ -750,6 +751,7 @@ class TiffImage(BaseImage):
 
         return load(dose_image, dpi=self.dpi)
 
+
     def doses_in_central_rois(self, cal, roi, show):
         """Dose in central film rois.
 
@@ -783,6 +785,41 @@ class TiffImage(BaseImage):
 
         return dose_in_rois
     
+
+    def filter_channel(
+        self,
+        size: float | int = 0.05,
+        kind: str = "median",
+        channel: str = "R"
+    ) -> None:
+        """Apply a filter to the given channel.
+
+        Parameters
+        ----------
+        size : int, float
+            Size of the median filter to apply.
+            If a float, the size is the ratio of the length. Must be in the range 0-1.
+            E.g. if size=0.1 for a 1000-element array, the filter will be 100 elements.
+            If an int, the filter is the size passed.
+        kind : {'median', 'gaussian'}
+            The kind of filter to apply. If gaussian, *size* is the sigma value.
+        channel : {'R', 'G', 'B'}
+            The color channel to filter
+
+        Notes
+        -----
+        This function was adapted from the `pylinac` library filter fuction.
+        https://github.com/jrkerns/pylinac/blob/f16b70a1c70e15061211c853942296287cb865d3/pylinac/core/image.py#L618
+        """
+        if channel in ["R", "Red", "r", "red"]:
+            self.array[:, :, 0] = filter_array(self.array[:, :, 0], size=size, kind=kind)
+        elif channel in ["G", "Green", "g", "green"]:
+            self.array[:, :, 1] = filter_array(self.array[:, :, 1], size=size, kind=kind)
+        elif channel in ["B", "Blue", "b", "blue"]:
+            self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
+        else:
+            raise ValueError("Channel not suported. Use 'R', 'G' or 'B'.")
+        
 
 ## TODO Delete this class
 class CalibImage(TiffImage):

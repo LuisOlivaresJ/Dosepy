@@ -284,30 +284,15 @@ class LUT:
         self._check_before_compute_lut(filter)
         self.lut['lateral_correction'] = True
 
-        # Apply filter to the image.
+        # Apply a filter to the image.
         if filter:
             self.lut['filter'] = filter
-            # Labeled area of the films.
-            mask, _ = self.tiff_image.get_labeled_image(
-                erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH
-                )
-            )
-            # Array buffer to store the filtered image.
-            array_img = np.empty(
-                shape = (
-                    self.tiff_image.array.shape[0],
-                    self.tiff_image.array.shape[1],
-                    self.tiff_image.array.shape[2]
-                    ),
-                dtype = np.uint16
-                )
-            for i in range(3):
-                
-                array_img[:,:,i] = median(
-                    self.tiff_image.array[:, :, i],
-                    footprint = square(filter),
-                    mask = mask,
-                    )
+            self.tiff_image.filter_channel(filter, "median", "R")
+            self.tiff_image.filter_channel(filter, "median", "G")
+            self.tiff_image.filter_channel(filter, "median", "B")
+
+            array_img = self.tiff_image.array
+
         else: # Unfiltered image.
             array_img = self.tiff_image.array
 
