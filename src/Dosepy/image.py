@@ -487,6 +487,8 @@ class TiffImage(BaseImage):
             )
 
         # Filter for small bright spots
+        ## The erosion_pix parameter is set to 6 times the resolution in mm.
+        #erosion_pix = int(6*self.dpi/MM_PER_INCH)
         bi_img_filtered = skimage.morphology.binary_erosion(
             binary_img,
             mode="min",
@@ -965,6 +967,7 @@ class ArrayImage(BaseImage):
 
         """
         np_tif = self.array.astype(np.uint16)
+        #np_tif = self.array
         tif_encoded = iio.imwrite(
             "<bytes>",
             np_tif,

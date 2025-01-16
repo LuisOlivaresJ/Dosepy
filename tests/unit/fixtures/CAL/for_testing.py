@@ -70,7 +70,7 @@ print(f"Channel: {channel}")
 fit_function = "rational"
 
 #print(cal._get_calibration_positions())
-intensities, std = cal._get_intensities(
+intensities, std = cal.get_intensities(
     lateral_position = position,
     channel = channel,
     )
@@ -134,7 +134,7 @@ cal_filter.plot_dose_fit_uncertainty(
 
 #cal_filter.plot_lateral_response(channel = "red")
 
-intensities_filter, std_filter = cal_filter._get_intensities(
+intensities_filter, std_filter = cal_filter.get_intensities(
     lateral_position = position,
     channel = channel,
     )

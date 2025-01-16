@@ -106,25 +106,25 @@ def test_set_central_rois(example_image):
     assert cal.lut["rois"] == [
         {
             "x": 81,
-            "y": 390,
+            "y": 391,
             "width": 88,
             "height": 23,
         },
         {
             "x": 174,
-            "y": 399,
+            "y": 398,
             "width": 88,
             "height": 23,
         },
         {
-            "x": 271,
+            "x": 270,
             "y": 392,
             "width": 88,
             "height": 23,
         },
         {
             "x": 365,
-            "y": 402,
+            "y": 401,
             "width": 88,
             "height": 23,
         },
@@ -136,7 +136,7 @@ def test_set_central_rois(example_image):
         },
         {
             "x": 559,
-            "y": 401,
+            "y": 400,
             "width": 88,
             "height": 23,
         },
@@ -175,7 +175,7 @@ def test_get_lateral_response_below_10(example_image):
         cal.set_central_rois(size = (180, 8)) 
         cal.compute_lateral_lut()
         
-        intensity, _, _ = cal.get_lateral_respose(roi=5, channel="red")
+        intensity, _, _ = cal.get_lateral_intensity(roi=5, channel="red")
         I_central = intensity[int(len(intensity)/2)]
         I_relative = intensity/I_central
 
@@ -238,7 +238,7 @@ def test_get_dose_from_fit_polynomial(example_image):
     dose = cal._get_lateral_doses(position = position)
 
     # Red channel
-    i_red, u_r = cal._get_intensities(
+    i_red, u_r = cal.get_intensities(
           lateral_position = position,
           channel = "red",
     )
@@ -251,7 +251,7 @@ def test_get_dose_from_fit_polynomial(example_image):
     )
 
     # Green channel
-    i_green, u_g = cal._get_intensities(
+    i_green, u_g = cal.get_intensities(
           lateral_position = position,
           channel = "green",
     )
@@ -265,7 +265,7 @@ def test_get_dose_from_fit_polynomial(example_image):
         )
     
     # Blue channel
-    i_blue, u_b = cal._get_intensities(
+    i_blue, u_b = cal.get_intensities(
           lateral_position = position,
           channel = "blue",
     )
@@ -299,7 +299,7 @@ def test_get_dose_from_fit_rational(example_image):
     dose = cal._get_lateral_doses(position = position)
 
     # Red channel
-    i_red, u_r = cal._get_intensities(
+    i_red, u_r = cal.get_intensities(
           lateral_position = position,
           channel = "red",
     )
@@ -312,7 +312,7 @@ def test_get_dose_from_fit_rational(example_image):
     )
 
     # Green channel
-    i_green, u_g = cal._get_intensities(
+    i_green, u_g = cal.get_intensities(
           lateral_position = position,
           channel = "green",
     )
@@ -325,7 +325,7 @@ def test_get_dose_from_fit_rational(example_image):
         )
     
     # Blue channel
-    i_blue, u_b = cal._get_intensities(
+    i_blue, u_b = cal.get_intensities(
           lateral_position = position,
           channel = "blue",
     )
@@ -350,8 +350,8 @@ def test_compute_central_lut(example_image):
 
     cal.compute_central_lut()
 
-    intensities, std = cal._get_intensities(channel = "red")
+    intensities, std = cal.get_intensities(channel = "red")
     
     # Assert first roi
-    assert int(intensities[0]) == 42544
-    assert int(std[0]) == 137
+    assert int(intensities[0]) == 42533
+    assert int(std[0]) == 133

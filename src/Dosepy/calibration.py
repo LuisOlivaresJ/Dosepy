@@ -239,10 +239,8 @@ class LUT:
         height_roi = size[1] * dpmm
 
         # Get labeled image
-        # The erosion_pix parameter is set to 6 times the resolution in mm.
-        label_image, num_films_detected = self.tiff_image.get_labeled_image(
-            erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)
-            )
+        self.tiff_image.set_labeled_films_and_filters()
+        label_image = self.tiff_image.labeled_films
 
         rois = []
 
@@ -470,10 +468,10 @@ class LUT:
         # Get the lateral pixel values, standar deviation and coordinate, for each roi.
         for roi_counter in range(num_rois):
 
-            intensity, std, coordinate = self.get_lateral_respose(roi_counter, channel)
+            intensity, std, coordinate = self.get_lateral_intensity(roi_counter, channel)
 
             # Normalize the pixel values to the central pixel value.
-            I_central = intensity[int(len(intensity)/2)]
+            I_central = intensity[int(len(intensity)/2)] # Central pixel value.
             I_relative = intensity / I_central * 100 - 100
 
             # Standar deviation of the pixel values.
@@ -481,7 +479,8 @@ class LUT:
 
             # Plot the lateral response.
             axes[roi_counter].errorbar(
-                coordinate, I_relative,
+                coordinate,
+                I_relative,
                 yerr = std_Ir,
                 color = color,
                 ecolor = color,
@@ -525,7 +524,7 @@ class LUT:
         position = int(position)
 
         # Get the pixel values of the channel at the given lateral position.
-        calib_intensities, std = self._get_intensities(position, channel)
+        calib_intensities, std = self.get_intensities(position, channel)
         calib_intensities_curve = np.linspace(calib_intensities[0], calib_intensities[-1], endpoint=True, num=100)
 
         if fit_type == "rational":
@@ -587,7 +586,7 @@ class LUT:
         else:
             doses = self.lut.get("nominal_doses")
 
-        intensities, std = self._get_intensities(position, channel)
+        intensities, std = self.get_intensities(position, channel)
         uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit_function)
         u_percent = uncertainty[1:] / doses[1:] * 100
         
@@ -599,7 +598,7 @@ class LUT:
         ax.set_ylabel("Dose uncertainty [%]")
 
 
-    def get_lateral_respose(self, roi: int, channel: str) -> tuple[ndarray, ndarray, ndarray]:
+    def get_lateral_intensity(self, roi: int, channel: str) -> tuple[ndarray, ndarray, ndarray]:
         """
         Get the lateral response of the scanner for a given ROI and channel.
 
@@ -659,6 +658,53 @@ class LUT:
         ])
 
         return np.array(intensity), np.array(std), np.array(coordinate)
+
+
+    def get_intensities(
+            self,
+            lateral_position: float = 0,
+            channel: str = "red"
+        ) -> tuple[ndarray, ndarray]:
+        """
+        Get the pixel values and standar deviation of the channel at a given lateral position,
+        for each film, in descending order. 
+
+        Parameters
+        ----------
+        lateral_position : float
+            The lateral position in milimeters.
+
+        channel : str
+            The color channel. "red", "green", "blue" or "mean".
+
+        Returns
+        -------
+        tuple[ndarray, ndarray]
+            Arrays with the pixel values and standar deaviation of the channel at the given lateral position.
+        """
+        # Check if the channel is valid.
+        if channel.lower() not in ["red", "green", "blue", "mean"]:
+            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
+        
+        # Check if position is between the lateral limits.
+        if lateral_position < self.lut["lateral_limits"]["left"] or lateral_position > self.lut["lateral_limits"]["right"]:
+            raise Exception("Position out of lateral limits.")
+        
+        position = round(lateral_position)
+        intensities = []
+        std = []
+
+        for roi in range(len(self.lut["rois"])):
+            intensities.append(self.lut[(position, roi)]["I_" + channel])
+            std.append(self.lut[(position, roi)]["S_" + channel])
+
+        data = zip(intensities, std)
+        # Sort by intensities in descending order.
+        sorted_data = sorted(data, reverse=True)
+
+        intensities, std = zip(*sorted_data)
+
+        return np.array(intensities), np.array(std)
 
 
     def to_yaml_file(self, path: str):
@@ -749,49 +795,6 @@ class LUT:
         """
         positions = [key[0] for key in self.lut.keys() if isinstance(key, tuple)]
         return sorted(set(positions))
-    
-
-    def _get_intensities(self, lateral_position: float = 0, channel: str = "red") -> tuple[ndarray, ndarray]:
-        """
-        Get the pixel values and standar deviation of the channel at a given lateral position,
-        for each film, in descending order. 
-
-        Parameters
-        ----------
-        lateral_position : float
-            The lateral position in milimeters.
-
-        channel : str
-            The color channel. "red", "green", "blue" or "mean".
-
-        Returns
-        -------
-        tuple[ndarray, ndarray]
-            Arrays with the pixel values and standar deaviation of the channel at the given lateral position.
-        """
-        # Check if the channel is valid.
-        if channel.lower() not in ["red", "green", "blue", "mean"]:
-            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
-        
-        # Check if position is between the lateral limits.
-        if lateral_position < self.lut["lateral_limits"]["left"] or lateral_position > self.lut["lateral_limits"]["right"]:
-            raise Exception("Position out of lateral limits.")
-        
-        position = round(lateral_position)
-        intensities = []
-        std = []
-
-        for roi in range(len(self.lut["rois"])):
-            intensities.append(self.lut[(position, roi)]["I_" + channel])
-            std.append(self.lut[(position, roi)]["S_" + channel])
-
-        data = zip(intensities, std)
-        # Sort by intensities in descending order.
-        sorted_data = sorted(data, reverse=True)
-
-        intensities, std = zip(*sorted_data)
-
-        return np.array(intensities), np.array(std)
 
     
     def _get_lateral_doses(self, position: float) -> list:
@@ -897,7 +900,7 @@ class LUT:
             Dose fit uncertanties
         """
 
-        #intensities_calibration, std = self._get_intensities(position, channel)
+        #intensities_calibration, std = self.get_intensities(position, channel)
         if fit_function == "rational":
 
             response_cal = ratio(calib_film_intensities, calib_film_intensities[0])

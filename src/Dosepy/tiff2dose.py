@@ -6,16 +6,17 @@ from skimage.measure import label, regionprops
 
 import numpy as np
 from numpy import ndarray
+from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 from matplotlib.widgets import RectangleSelector
 
 from Dosepy.calibration import LUT, MM_PER_INCH
 from Dosepy.image import TiffImage
-from Dosepy.tools.functions import optical_density, uncertainty_optical_density
+from Dosepy.tools.functions import optical_density, uncertainty_optical_density, polynomial_n
 
 import math
 
-
+# TODO This class will override the Tiff2Dose class
 class Tiff2DoseM:
     """
     Converts a tiff image to dose map.
@@ -29,7 +30,7 @@ class Tiff2DoseM:
             lut: LUT
             ):
         dose_converter = dose_converter_factory.get_dose_converter(format)
-        return dose_converter.get_dose(img, lut)
+        return dose_converter.convert2dose(img, lut)
     
 
 
@@ -110,27 +111,27 @@ class Tiff2Dose:
                 dose[:, column] = 0
                 continue
 
-            position_ceil = math.ceil(pix_position)
+            rounded_ceil_position = math.ceil(pix_position)
             #position_floor = math.floor(pix_position)
 
             # Get calibration intensities and calibration doses at pixel positions
             ## Get ceil and floor values to interpolate
-            cal_intensities_ceil, _ = self.lut._get_intensities(
-                lateral_position = position_ceil,
+            cal_intensities_ceil, _ = self.lut.get_intensities(
+                lateral_position = rounded_ceil_position,
                 channel = "red",
             )
-            cal_intensities_floor, _ = self.lut._get_intensities(
+            cal_intensities_floor, _ = self.lut.get_intensities(
                 lateral_position = rounded_floor_position,
                 channel = "red",
             )
-            cal_doses_ceil = self.lut._get_lateral_doses(position=position_ceil)
+            cal_doses_ceil = self.lut._get_lateral_doses(position=rounded_ceil_position)
             cal_doses_floor = self.lut._get_lateral_doses(position = rounded_floor_position)
 
             ## Interpolate values
             interp_intensities = [
                 np.interp(
                     pix_position,
-                    [rounded_floor_position, position_ceil],
+                    [rounded_floor_position, rounded_ceil_position],
                     [cal_intensities_floor[i], cal_intensities_ceil[i]],
                 )
                 for i in range(len(cal_intensities_floor))
@@ -139,7 +140,7 @@ class Tiff2Dose:
             interp_doses = [
                 np.interp(
                     pix_position,
-                    [rounded_floor_position, position_ceil],
+                    [rounded_floor_position, rounded_ceil_position],
                     [cal_doses_floor[i], cal_doses_ceil[i]],
                 )
                 for i in range(len(cal_doses_floor))
@@ -278,35 +279,8 @@ class DoseConverter(ABC):
 
     
     @abstractmethod
-    def get_dose(img, lut):
+    def convert2dose(self, img: TiffImage, lut: LUT):
         pass
-
-
-    def create_positions(self, img):
-        # Create a list with lateral positions in milimeters, with the center of the image as the origin.
-        origin = img.physical_shape[1]/2
-        self.pixel_positions_mm = np.linspace(
-            start = 0,
-            stop = img.physical_shape[1],
-            num = img.array.shape[1]
-            ) - origin
-        
-
-    def apply_filter(self, array, lut):
-
-        if lut.lut["filter"]:
-            mask = "TODO"
-
-            filtered_array =  median(
-                array,
-                footprint = square(lut.lut["filter"]),
-                mask = mask,
-                )
-            
-        else:
-            filtered_array = array
-
-        return filtered_array
     
 
     def check_optical_filters(self, img: TiffImage, lut: LUT):
@@ -315,43 +289,75 @@ class DoseConverter(ABC):
         return True
     
 
-    def get_zero_dose_intensity(
+    def _set_lateral_positions(self, img):
+        """
+        Create an array with lateral positions in milimeters, with
+        the center of the image as the origin.
+        """
+        origin = img.physical_shape[1]/2
+        
+        self.pixel_positions_mm = np.linspace(
+            start = 0,
+            stop = img.physical_shape[1],
+            num = img.array.shape[1]
+            ) - origin
+
+
+    def _get_zero_dose_intensity_at_center(
             self,
             img: TiffImage,
-            intensity_array: ndarray,
+            channel: str,
             ) -> tuple[int, dict]:
-        # En img, identificar film con cero grays
-        print("Inside RedPolynomialDoseConverter.get_zero_dose_intensity")
+        """
+        Get the intensity of the zero dose film.
+
+        The algorithm finds the film with the highest intensity, 
+        then checks if the film is in the center of the scanner.
+
+        Returns the mean intensity of the film and a dictionary 
+        with the region of interest used to get a median of the intensities.
+        """
+        print("Inside RedPolynomialDoseConverter.get_zero_dose_intensity method")
         
+        if channel == "red":
+            intensity_array = img.array[:, :, 0]
+        elif channel == "green":
+            intensity_array = img.array[:, :, 1]
+        elif channel == "blue":
+            intensity_array = img.array[:, :, 2]
+
         properties = regionprops(img.labeled_films, intensity_image = intensity_array)
+        
+        # Find film with the highest intensity
         zero_film_index = None
         zero_dose_intensity = 0
-        for n, p in enumerate(properties, start = 1):
+        for n, p in enumerate(properties):
             if p.intensity_mean > zero_dose_intensity:
                 zero_dose_intensity = p.intensity_mean
-                zero_film_index = n - 1
+                zero_film_index = n
 
         zero_film_properties = properties[zero_film_index]
 
-        # Revisar si film contiene el centro de la imagen
+        # Is the film in the center of the image?
         min_row, min_col, max_row, max_col = zero_film_properties.bbox
-        center_x, center_y = img.center()
+        img_center_x, img_center_y = img.center()
 
-        #if max_col < center_y or min_col > center_y:
-        if not min_col < center_y < max_col:
+        if not min_col < img_center_y < max_col:
             print("The film is not in the center of the scaner.")
             raise ValueError("The film is not in the center of the scaner.")
 
-        # Obtener intensidad en el centro del scaner, en el film zero
-        ## crear box con la imagen
+        # Get the mean intensity of the film
+        ## Create a region of interest (ROI) around
         x0, y0 = zero_film_properties.centroid
-        min_lenght = 0.5 * zero_film_properties.axis_minor_length
-        min_row_roi = int(x0 - min_lenght*0.9)
-        max_row_roi = int(x0 + min_lenght*0.9)
+        # ROI height of 80% of the minor axis length
+        min_lenght = 0.8 * zero_film_properties.axis_minor_length
+        min_row_roi = int(x0 - min_lenght / 2)
+        max_row_roi = int(x0 + min_lenght / 2)
 
         ## Get the mean intensity
         median_intensity = np.median(
-            intensity_array[min_row_roi : max_row_roi, int(y0)])
+            intensity_array[min_row_roi : max_row_roi, int(img_center_y)]
+            )
         
         roi = {
             "min_row": min_row_roi,
@@ -360,12 +366,55 @@ class DoseConverter(ABC):
         }
         
         return median_intensity, roi
+    
 
+    def _get_lateral_intensities_for_zero_dose(
+            self,
+            img: TiffImage,
+            lut: LUT,
+            channel: str,
+        ) -> tuple[ndarray: ndarray]:
+        """
+        Get the lateral intensities of the zero dose film that was
+        scanned togheter with the film that is going to be converted to dose.
+
+        The algorithm uses normalized intensities of the zero dose film used for calibration.
+        """
+
+        # Get intensities of the films used for calibration
+        intensities, std = lut.get_intensities(0, "red")
+
+        # Get index of higest intensity (unexposed film)
+        index = np.argmax(intensities)
+
+        # Get lateral intensities for zero dose film used for calibration
+        lateral_intensities, std, positions = lut.get_lateral_intensity(index, "red")
+
+        # Get intensity at 0 position
+        origin_index = np.argwhere(positions == 0)[0]
+        print(f"{origin_index=}")
+        reference_intensity = lateral_intensities[origin_index]
+        print(f"{reference_intensity=}")
+        
+        # Normalize intensities
+        relative_intensities = lateral_intensities/reference_intensity
+
+        # Get the intensity of the unexposed film that was scanned togheter 
+        # with the film that is going to be converted to dose
+        zero_dose_intensity_at_center, roi = self._get_zero_dose_intensity_at_center(
+            img,
+            channel,
+            )
+
+        # Compute lateral intensities for film with zero dose
+        zero_dose_intensities = zero_dose_intensity_at_center * relative_intensities
+
+        return zero_dose_intensities, positions
 
 
 class RedPolynomialDoseConverter(DoseConverter):
     
-    def get_dose(self, img: TiffImage, lut: LUT):
+    def convert2dose(self, img: TiffImage, lut: LUT):
 
         # TODO LUT does not have data for no-latera-correction
         if not lut.lut["lateral_correction"]:
@@ -379,34 +428,94 @@ class RedPolynomialDoseConverter(DoseConverter):
             mean_intensity = sorted(mean_intensity, reverse=True)
             return "TODO"
         
-        # Crear una lista con las posiciones en mm
-        self.create_positions(img)
+        # Create lateral positions in milimeters
+        self._set_lateral_positions(img)
 
-        # Aplicar filtro si lut se creo con filtro
+        # Apply filter if it was usesd for calibration
         if lut.lut["filter"]:
             img.filter_channel(lut.lut["filter"], channel="R")
 
-        # Check that mean intensity of filters are equal (considering standar deviation)
+        # TODO Check that mean intensity of filters are equal (considering standar deviation)
         ## Get mask for films and filters
         img.set_labeled_films_and_filters()  ## TODO use cache or something to check if it is aldready calculated
         if not self.check_optical_filters(img, lut):
             print("The mean intensity of the filters are not equal.")
 
-        # Convertir cada pixel a dosis
-        ## Obtener intensidad a cero Grays
-        zero_dose_intensity, roi = self.get_zero_dose_intensity(
-            img,
-            img.array[:, :, 0],
+        # Get lateral intensities for the unexposed film scanned with the film to be converted to dose
+        lateral_intensities_for_zero_dose, positions = self._get_lateral_intensities_for_zero_dose(img, lut, channel="red")
+
+        # Convert image to dose, one column at a time
+        # Buffer array to store dose array
+        dose_array = np.empty(img.array[:, :, 0].shape)
+        print(f"Dose array shape: {dose_array.shape}")
+        width_in_pixels = img.shape[1]
+        for column in range(0, width_in_pixels):
+
+            # Get pixel position in milimeters
+            pix_position = self.pixel_positions_mm[column]
+
+            # Round pixel position to work with position inside LUT limits.
+            rounded_floor_position = math.floor(pix_position)
+            rounded_ceil_position = math.ceil(pix_position)
+            print(f"{rounded_floor_position=}")
+            if rounded_floor_position <= lut.lut["lateral_limits"]["left"] or rounded_ceil_position >= lut.lut["lateral_limits"]["right"]:
+                dose_array[:, column] = 0
+                continue
+
+            # Get calibration intensities and calibration doses at pixel position
+            
+            ## Get ceil and floor intensities to interpolate at pixel position
+            cal_intensities_ceil, _ = lut.get_intensities(
+                lateral_position = rounded_ceil_position,
+                channel = "red",
             )
-        
-        
-        print(f"{zero_dose_intensity}")
-        print(f"{roi}")
+            cal_intensities_floor, _ = lut.get_intensities(
+                lateral_position = rounded_floor_position,
+                channel = "red",
+            )
+            cal_doses_ceil = lut._get_lateral_doses(position=rounded_ceil_position)
+            cal_doses_floor = lut._get_lateral_doses(position = rounded_floor_position)
 
-        
-        print("TODO")
-        return "Dose"
+            ## Interpolate intensities and doses
+            calibration_intensities = np.array([
+                np.interp(
+                    pix_position,
+                    [rounded_floor_position, rounded_ceil_position],
+                    [cal_intensities_floor[i], cal_intensities_ceil[i]],
+                )
+                for i in range(len(cal_intensities_floor))
+            ])
+            
+            calibration_doses = np.array([
+                np.interp(
+                    pix_position,
+                    [rounded_floor_position, rounded_ceil_position],
+                    [cal_doses_floor[i], cal_doses_ceil[i]],
+                )
+                for i in range(len(cal_doses_floor))
+            ])
 
+            # Compute fit coefficients
+            cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
+            popt, pcov = curve_fit(polynomial_n, cal_responses, calibration_doses)
+
+            # index for pixel position
+            idx_pixel_position = np.argwhere(positions == rounded_floor_position)
+
+            # Compute film response as optical density
+            film_response = optical_density(
+                img.array[:, column, 0],
+                lateral_intensities_for_zero_dose[idx_pixel_position]
+                )
+            
+            # Compute dose
+            dose_array[:, column] = polynomial_n(film_response, *popt)
+
+        # Remove unphysical values
+        dose_array[dose_array < 0] = 0
+        dose_array[np.isnan(dose_array)] = 0
+
+        return dose_array
 
 
 
