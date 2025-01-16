@@ -17,6 +17,7 @@ DESCRIPTION
 """
 
 from __future__ import annotations
+import math
 
 import numpy as np
 from numpy import ndarray
@@ -705,6 +706,93 @@ class LUT:
         intensities, std = zip(*sorted_data)
 
         return np.array(intensities), np.array(std)
+
+
+    def get_interpolated_intensities_at_position(self, position: float, channel: str) -> ndarray:
+        """
+        Get the interpolated pixel values at a given lateral position.
+
+        Parameters
+        ----------
+        position : float
+            The lateral position in milimeters.
+        channel : str
+            The color channel. "red", "green" or "blue".
+
+        Returns
+        -------
+        ndarray
+            An array with the interpolated pixel values at the given lateral position.
+        """
+        # Check if the channel is valid.
+        if channel.lower() not in ["red", "green", "blue", "mean"]:
+            raise Exception("Invalid channel. Choose between 'red', 'green', 'blue' or 'mean'.")
+        
+        rounded_floor_position = math.floor(position)
+        rounded_ceil_position = math.ceil(position)
+
+        # Check if position is between the lateral limits.
+        if rounded_floor_position < self.lut["lateral_limits"]["left"] or rounded_ceil_position > self.lut["lateral_limits"]["right"]:
+            raise Exception("Position out of lateral limits.")
+        
+
+        cal_intensities_ceil, _ = self.get_intensities(
+                        lateral_position = rounded_ceil_position,
+                        channel = channel,
+                    )
+        cal_intensities_floor, _ = self.get_intensities(
+                lateral_position = rounded_floor_position,
+                channel = channel,
+            )
+        
+        calibration_intensities = np.array([
+                np.interp(
+                    position,
+                    [rounded_floor_position, rounded_ceil_position],
+                    [cal_intensities_floor[i], cal_intensities_ceil[i]],
+                )
+                for i in range(len(cal_intensities_floor))
+            ])
+
+        return calibration_intensities
+
+
+    def get_interpolated_doses_at_position(self, position: float) -> ndarray:
+        """
+        Get the interpolated doses at a given lateral position.
+
+        Parameters
+        ----------
+        position : float
+            The lateral position in milimeters.
+
+        Returns
+        -------
+        ndarray
+            An array with the interpolated doses at the given lateral position.
+        """
+        
+        rounded_floor_position = math.floor(position)
+        rounded_ceil_position = math.ceil(position)
+
+        # Check if position is between the lateral limits.
+        if rounded_floor_position < self.lut["lateral_limits"]["left"] or rounded_ceil_position > self.lut["lateral_limits"]["right"]:
+            raise Exception("Position out of lateral limits.")
+        
+        cal_doses_ceil = self._get_lateral_doses(position=rounded_ceil_position)
+        cal_doses_floor = self._get_lateral_doses(position = rounded_floor_position)
+        
+        # Interpolate
+        calibration_doses = np.array([
+                np.interp(
+                    position,
+                    [rounded_floor_position, rounded_ceil_position],
+                    [cal_doses_floor[i], cal_doses_ceil[i]],
+                )
+                for i in range(len(cal_doses_floor))
+            ])
+
+        return calibration_doses
 
 
     def to_yaml_file(self, path: str):

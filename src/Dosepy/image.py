@@ -383,7 +383,10 @@ class TiffImage(BaseImage):
         self._dpi = dpi
         self.sid = sid
 
+        # Use set_labeled_films_and_filters() method to fill these attributes.
         self.labeled_films = np.array([])
+        self.labeled_optical_filters = np.array([])
+
         self.number_of_films = None
 
 

@@ -19,18 +19,51 @@ import math
 # TODO This class will override the Tiff2Dose class
 class Tiff2DoseM:
     """
-    Converts a tiff image to dose map.
-
-    This class implements the Factory Method Pattern.
+    Class used to convert a tiff image to a dose array.
+    Methods
+    -------
+    get_dose(img: TiffImage, format: str, lut: LUT)
+        Get the dose array from a tiff image.
+    
+    Notes
+    -----
+    This class implements the Factory Method Pattern. The get_dose method
+    uses the Tiff2DoseFactory to get the correct dose converter.
     """
+
+    def __init__(self):
+        self.dose_converter = None
+
+    def _set_dose_converter(self, format: str):
+        self.dose_converter = dose_converter_factory.get_dose_converter(format)
+
     def get_dose(
             self,
             img: TiffImage,
             format: str,
             lut: LUT
             ):
-        dose_converter = dose_converter_factory.get_dose_converter(format)
-        return dose_converter.convert2dose(img, lut)
+        """
+        Get the dose array from a tiff image.
+
+        Parameters
+        ----------
+        img : TiffImage
+            The tiff image to convert to dose.
+        format : str
+            The channel and fit function to use for the conversion.
+            "RP" for red channel and polynomial fit function of the
+            form y = a*x + b*x**n, where a, b and n are the fit coefficients.
+        lut : LUT
+            The look up table with the calibration data.
+
+        Returns
+        -------
+        numpy.ndarray
+            The dose
+        """
+        self._set_dose_converter(format)
+        return self.dose_converter.convert2dose(img, lut)
     
 
 
@@ -437,7 +470,9 @@ class RedPolynomialDoseConverter(DoseConverter):
 
         # TODO Check that mean intensity of filters are equal (considering standar deviation)
         ## Get mask for films and filters
-        img.set_labeled_films_and_filters()  ## TODO use cache or something to check if it is aldready calculated
+        if img.labeled_films.size == 0 or img.labeled_optical_filters.size == 0:
+            img.set_labeled_films_and_filters()
+
         if not self.check_optical_filters(img, lut):
             print("The mean intensity of the filters are not equal.")
 
@@ -447,53 +482,28 @@ class RedPolynomialDoseConverter(DoseConverter):
         # Convert image to dose, one column at a time
         # Buffer array to store dose array
         dose_array = np.empty(img.array[:, :, 0].shape)
-        print(f"Dose array shape: {dose_array.shape}")
         width_in_pixels = img.shape[1]
         for column in range(0, width_in_pixels):
 
             # Get pixel position in milimeters
             pix_position = self.pixel_positions_mm[column]
 
-            # Round pixel position to work with position inside LUT limits.
+            # Round pixel position to work inside LUT limits.
             rounded_floor_position = math.floor(pix_position)
             rounded_ceil_position = math.ceil(pix_position)
-            print(f"{rounded_floor_position=}")
             if rounded_floor_position <= lut.lut["lateral_limits"]["left"] or rounded_ceil_position >= lut.lut["lateral_limits"]["right"]:
                 dose_array[:, column] = 0
                 continue
 
             # Get calibration intensities and calibration doses at pixel position
-            
-            ## Get ceil and floor intensities to interpolate at pixel position
-            cal_intensities_ceil, _ = lut.get_intensities(
-                lateral_position = rounded_ceil_position,
-                channel = "red",
-            )
-            cal_intensities_floor, _ = lut.get_intensities(
-                lateral_position = rounded_floor_position,
-                channel = "red",
-            )
-            cal_doses_ceil = lut._get_lateral_doses(position=rounded_ceil_position)
-            cal_doses_floor = lut._get_lateral_doses(position = rounded_floor_position)
 
-            ## Interpolate intensities and doses
-            calibration_intensities = np.array([
-                np.interp(
-                    pix_position,
-                    [rounded_floor_position, rounded_ceil_position],
-                    [cal_intensities_floor[i], cal_intensities_ceil[i]],
-                )
-                for i in range(len(cal_intensities_floor))
-            ])
-            
-            calibration_doses = np.array([
-                np.interp(
-                    pix_position,
-                    [rounded_floor_position, rounded_ceil_position],
-                    [cal_doses_floor[i], cal_doses_ceil[i]],
-                )
-                for i in range(len(cal_doses_floor))
-            ])
+            calibration_intensities = lut.get_interpolated_intensities_at_position(
+                position = pix_position,
+                channel = "red",
+            )
+            calibration_doses = lut.get_interpolated_doses_at_position(
+                position = pix_position,
+            )
 
             # Compute fit coefficients
             cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
