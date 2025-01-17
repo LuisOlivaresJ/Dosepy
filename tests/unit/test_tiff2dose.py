@@ -142,5 +142,5 @@ def test_convert2dose_using_RedPolynomialDoseConverter(
         verif_img_with_filters,
         calibration_lut_with_filters
     )
-
+    # Dose tolerance of 5%
     assert np.mean(dose[100:125, 400:500]) == pytest.approx(5, abs=0.25)
