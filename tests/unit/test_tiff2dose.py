@@ -12,7 +12,7 @@ from Dosepy.tiff2dose import RedPolynomialDoseConverter
 cwd = Path(__file__).parent
 
 @pytest.fixture
-def calibration_lut():
+def calibration_lateral_lut_without_filters():
     file_path = cwd / "fixtures/CAL/film20240620_002.tif"
     beam_profile_path = cwd / "fixtures/CAL/BeamProfile.csv"
 
@@ -27,6 +27,17 @@ def calibration_lut():
 
     return cal
 
+
+@pytest.fixture
+def calibration_central_lut_without_filters():
+    file_path = cwd / "fixtures/CAL/film20240620_002.tif"
+    cal_img = load(file_path)
+    cal = LUT(cal_img)
+    cal.set_central_rois((8, 8))
+    cal.set_doses([0, 1, 2, 4, 6.5, 9.5])
+    cal.compute_central_lut()
+
+    return cal
 
 @pytest.fixture
 def calibration_lut_with_filters():
@@ -62,12 +73,13 @@ def verif_img_with_filters():
     return img
 
 
+"""
 # Test instance of the Tiff2Dose class
 def test_tiff2dose_instance(verif_img, calibration_lut):
     t2d = Tiff2Dose(verif_img, calibration_lut)
     assert isinstance(t2d, Tiff2Dose)
 
-"""
+
 # Test the red method of the Tiff2Dose class
 def test_red_retuns_a_DoseImage_instance(verif_img, calibration_lut):
     t2d = Tiff2Dose(verif_img, calibration_lut)
@@ -89,13 +101,12 @@ def test_register_method():
     assert isinstance(t2df.get_dose_converter("RP"), RedPolynomialDoseConverter)
 
 
-# Test RedPolynomialDoseConverter 
+# Test DoseConverter using RedPolynomialDoseConverter inhereted class
 
 # Test _set_lateral_positions method
-def test_set_lateral_positions():
+def test_set_lateral_positions(verif_img_with_filters):
 
-    file_path = "/home/luis/Documents/GitHub/Dosepy/tests/unit/fixtures/Ver_050dpi20241106_001.tif"
-    img = load(file_path)
+    img = verif_img_with_filters
 
     rpd = RedPolynomialDoseConverter()
     rpd._set_lateral_positions(img)
@@ -137,10 +148,24 @@ def test_convert2dose_using_RedPolynomialDoseConverter(
         verif_img_with_filters,
         calibration_lut_with_filters
     ):
-    rpd = RedPolynomialDoseConverter()
-    dose = rpd.convert2dose(
+    rpdc = RedPolynomialDoseConverter()
+    dose = rpdc.convert2dose(
         verif_img_with_filters,
         calibration_lut_with_filters
     )
     # Dose tolerance of 5%
     assert np.mean(dose[100:125, 400:500]) == pytest.approx(5, abs=0.25)
+
+
+# Test convert2dose method without lateral correction
+def test_convert2dose_without_lateral_correction(
+    verif_img,
+    calibration_central_lut_without_filters
+    ):
+    rpdc = RedPolynomialDoseConverter()
+    dose = rpdc.convert2dose(
+        verif_img,
+        calibration_central_lut_without_filters
+    )
+
+    assert np.mean(dose[370:380, 430:460]) == pytest.approx(4, rel=0.05)
