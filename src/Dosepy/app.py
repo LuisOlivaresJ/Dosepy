@@ -47,8 +47,8 @@ class MainWindow(QMainWindow):
     def _create_toolbar(self):
         toolbar = self.addToolBar("Settings")
         toolbar.addAction(self.calib_setings_action)
-        toolbar_ct_viewer = self.addToolBar("CT viewer")
-        toolbar_ct_viewer.addAction(self.ct_viewer_action)
+        #toolbar_ct_viewer = self.addToolBar("CT viewer")
+        #toolbar_ct_viewer.addAction(self.ct_viewer_action)
         toolbar.setOrientation(Qt.Orientation.Horizontal)
         self.conf_window = ConfigWindow()
         self.ct_viewer = CTViewer()

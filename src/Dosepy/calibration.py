@@ -506,13 +506,11 @@ class LUT:
         calib_intensities_curve = np.linspace(calib_intensities[0], calib_intensities[-1], endpoint=True, num=100)
 
         if fit_type == "rational":
-            #response = intensities / intensities[0]
             response = ratio(calib_intensities, calib_intensities[0])
             response_curve = ratio(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_ratio(calib_intensities, std, calib_intensities[0], std[0])
 
         elif fit_type == "polynomial":
-            #response = -np.log10(intensities/intensities[0])
             response = optical_density(calib_intensities, calib_intensities[0])
             response_curve = optical_density(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_optical_density(calib_intensities, std, calib_intensities[0], std[0])

@@ -49,7 +49,7 @@ class ConfigWindow(QWidget):
 
         self.channel_label = QLabel(f"Channel: {settings.get_channel()}")
         self.channel = QComboBox()
-        self.channel.addItems(["Red", "Green", "Blue", "Mean"])
+        self.channel.addItems(["Red", "Green", "Blue"])
 
         self.fit_label = QLabel(f"Fit function: {settings.get_fit_function()}")
         self.fit_function = QComboBox()

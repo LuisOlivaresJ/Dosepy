@@ -3,6 +3,31 @@
 Changelog
 =========
 
+v 0.8.0 (JAN-2025)
+------------------
+
+Improvements
+^^^^^^^^^^^^
+* Lateral scanner response correction.
+* Uncertainty analysis.
+* Automatic quality control test between scanned images.
+* Improved algorithm for automatic film detection.
+
+Improvements for developing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* New LUT class on calibration module, used to manipulate data for film calibration.
+* Tiff2Dose module uses the DoseConverter interface to handle conversion to dose using different channel or fit function.
+* Dosepy has a MIT license
+
+Issue
+^^^^^
+* On Dosepy GUI, changed settings by the user were not updated to the application.
+
+Change
+^^^^^^
+* On image module, TiffImage.get_labeled_objects() was remplaced with TiffImage.set_labeled_films_and_filters() method.
+* On image module, load_images was replaced with load_multiples fucntion.
+
 v 0.7.0 (SEP-2024)
 ------------------
 
@@ -11,7 +36,7 @@ Improvements
 * The app now allows to store configuration settings for film calibration (with a .toml file).
 * New functionalities for the GUI, like buttons for dose image manipulation.
 * New method for resolution management, called reduce_resolution_as(). The user can now reduce the resolution of some image to match the resolution of a reference one (useful for gamma analysis).
-* README update to be more user-friendly for Python developers.
+* README update to be user-friendly for Python developers.
 
 Improvements for developing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

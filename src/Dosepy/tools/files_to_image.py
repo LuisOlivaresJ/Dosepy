@@ -148,9 +148,9 @@ def equate_array_size(
     return cropped_images
 
 
-def merge(file_list: list, images: list) -> list:
+def average(file_list: list, images: list) -> list:
     """
-    Merge images with the same file name. Last 7 characters are not accounted.
+    Average images with the same file name. Last 7 characters are not accounted.
 
     Parameters
     ----------

@@ -12,7 +12,6 @@ DESCRIPTION
 
 from pathlib import Path
 import numpy as np
-from numpy import ndarray
 import os.path as osp
 from typing import Any, Union
 import imageio.v3 as iio
@@ -29,7 +28,7 @@ from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 from skimage.transform import rotate
 from .tools.resol import equate_resolution
-from .tools.files_to_image import equate_array_size
+from .tools.files_to_image import equate_array_size, average, stack_images
 from .tools.array_utils import filter_array
 
 import math
@@ -40,13 +39,10 @@ from .i_o import retrieve_dicom_file, is_dicom_image
 MM_PER_INCH = 25.4
 MIN_AREA_FOR_FILMS = 400  # 20x20 mm^2
 
-ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
+ImageLike = Union["ArrayImage", "TiffImage"]
 
 
-def load(path: str | Path | np.ndarray,
-         for_calib: bool = False,
-         filter: int | None = None,
-         **kwargs) -> "ImageLike":
+def load(path: str | Path | np.ndarray, **kwargs) -> ImageLike:
     r"""Load a DICOM image, TIF image, or numpy 2D array.
 
     Parameters
@@ -54,16 +50,9 @@ def load(path: str | Path | np.ndarray,
     path : str, file-object
         The path to the image file or array.
 
-    for_calib : bool, default = False
-        True if the image is going to be used to get a calibration curve.
-
-    filter : int
-        If None (default), no filtering will be done to the image.
-        If an int, will perform median filtering over image of size ``filter``.
-
     kwargs
-        See :class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`,
-        or :class:`~Dosepy.image.CalibImage` for keyword arguments.
+        See :class:`~Dosepy.image.ArrayImage` or :class:`~Dosepy.image.TiffImage`,
+        for keyword arguments.
 
     Returns
     -------
@@ -110,22 +99,9 @@ def load(path: str | Path | np.ndarray,
     elif _is_image_file(path):
         if _is_tif_file(path):
             if _is_RGB(path):
-                if for_calib:
-                    calib_image = CalibImage(path, **kwargs)
-                    if isinstance(filter, int):
-                        for i in range(3):
-                            calib_image.array[:, :, i] = mean(
-                                calib_image.array[:, :, i],
-                                footprint=square(filter))
-                    return calib_image
-                else:
-                    tiff_image = TiffImage(path, **kwargs)
-                    if isinstance(filter, int):
-                        for i in range(3):
-                            tiff_image.array[:, :, i] = mean(
-                                tiff_image.array[:, :, i],
-                                footprint=square(filter))
-                    return tiff_image
+                tiff_image = TiffImage(path, **kwargs)
+                return tiff_image
+            
             else:
                 raise TypeError(f"The argument '{path}' was not found to be\
                                 a RGB TIFF file.")
@@ -137,23 +113,38 @@ def load(path: str | Path | np.ndarray,
                         a valid file.")
 
 
-def load_images(paths: list):
+def load_multiples(files: list[str]) -> ImageLike:
     """
+    Load multiple images into a single one. 
+    Equate TIFF files to have the same array size.
+    Average images with the same file name and stack imges with different name.
+     
     Parameters
     ----------
-    paths : list
-        List with the paths to the TIFF files.
-
-    Return
-    ------
-    list of TIffImage
+    files : list[str]
+        List of paths to the images.
+        
+    Returns
+    -------
+    ImageLike
+        The merged image.
     """
-    images = []
-
-    for file in paths:
-        images.append(load(file))
     
-    return images
+    if len(files) == 1:
+        return load(files[0])
+    
+    else:
+        # Load images
+        images = []
+        for file in files:
+            images.append(load(file))
+        
+        img = load(files[0]) # Placeholder
+        equated_images = equate_array_size(images, axis=("width", "height"))
+        averaged_images = average(files, equated_images)
+        stacked = stack_images(averaged_images, padding=6)
+        img.array = stacked.array
+        return img
 
 
 def _is_array(obj: Any) -> bool:
@@ -388,6 +379,7 @@ class TiffImage(BaseImage):
         self.labeled_optical_filters = np.array([])
 
         self.number_of_films = None
+        self.optical_filter_counter = None
 
 
     @property
@@ -423,26 +415,29 @@ class TiffImage(BaseImage):
         labeled_objects, number_of_objects = self.get_labeled_objects(return_num = True)
 
         # Set the labeled films and filters
-        #film_counter = 0
         films = np.copy(labeled_objects)
-        #filter_counter = 0
+        
         filters = np.copy(labeled_objects)
 
         min_area_in_pixels = int(MIN_AREA_FOR_FILMS * (1/MM_PER_INCH)**2 * (self.dpi)**2)
         
         properties = regionprops(label_image = labeled_objects)
 
+        film_counter = 0
+        filter_counter = 0
         for n, p in enumerate(properties, start = 1):
             
             if p.area < min_area_in_pixels:
-                #filter_counter += 1
+                filter_counter += 1
                 films[films == n] = 0
             else:
-                #film_counter += 1
+                film_counter += 1
                 filters[filters == n] = 0
 
         self.labeled_films = label(films)
+        self.number_of_films = film_counter
         self.labeled_optical_filters = label(filters)
+        self.optical_filter_counter = filter_counter
 
 
     def get_labeled_objects(
@@ -693,7 +688,7 @@ class TiffImage(BaseImage):
             plt.show()
         return ax
 
-
+    ## TODO Delete this method
     def to_dose(self, cal, clip=False):
         """Convert the tiff image to a dose distribution. The tiff file image
         has to contain an unirradiated film used as a reference for zero Gray.
@@ -756,7 +751,7 @@ class TiffImage(BaseImage):
 
         return load(dose_image, dpi=self.dpi)
 
-
+    ## TODO Delete this method
     def doses_in_central_rois(self, cal, roi, show):
         """Dose in central film rois.
 
@@ -824,83 +819,7 @@ class TiffImage(BaseImage):
             self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
         else:
             raise ValueError("Channel not suported. Use 'R', 'G' or 'B'.")
-        
-
-## TODO Delete this class
-class CalibImage(TiffImage):
-    """A tiff image used for calibration."""
-
-    def __init__(self, path: str | Path, **kwargs):
-        """
-        Parameters
-        ----------
-        path : str, file-object
-            The path to the file.
-
-        dpi : float
-            The dots-per-inch of the image, defined at isocenter.
-
-            .. note:: If a DPI tag is found in the image, that value will
-            override the parameter, otherwise this one will be used.
-        """
-        super().__init__(path, **kwargs)
-        self.calibration_curve_computed = False
-
-    def get_calibration(
-        self,
-        doses: list,
-        func="P3",
-        channel="R",
-        roi=(5, 5),
-        threshold=None,
-        ):
-        r"""Computes calibration curve. Use non-linear least squares to
-        fit a function, func, to data. For more information see
-        scipy.optimize.curve_fit.
-
-        Parameter
-        ---------
-        doses : list
-            Doses values used to expose films for calibration.
-        func : string
-            "P3": Polynomial function of degree 3, using optical density as film response. "RF" or "Rational": Rational function, using normalized pixel value relative to the unexposed film.
-        channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
-        roi : tuple
-            Width and height region of interest (roi) in millimeters, at the
-            center of the film.
-
-        Returns
-        -------
-        ::class:`~Dosepy.calibration.Calibration`
-            Instance of a Calibration class.
-
-        Examples
-        --------
-        Load an image from a file and compute a calibration curve using green
-        channel::
-
-        >>> from Dosepy.image import load
-        >>> path_to_image = r"C:\QA\image.tif"
-        >>> cal_image = load(path_to_image, for_calib = True)
-        >>> cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], channel = "G")
-        >>> # Plot the calibration curve
-        >>> cal.plot()
-        """
-
-        doses = sorted(doses)
-        mean_pixel, _ = self.get_stat(ch=channel, roi=roi)
-        mean_pixel = sorted(mean_pixel, reverse=True)
-        mean_pixel = np.array(mean_pixel)
-
-        if func in ["P3", "Polynomial"]:
-            x = -np.log10(mean_pixel/mean_pixel[0])  # Optical density
-
-        elif func in ["RF", "Rational"]:
-            x = mean_pixel/mean_pixel[0]
-
-        return Calibration(y=doses, x=x, func=func, channel=channel)
-    
+            
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""

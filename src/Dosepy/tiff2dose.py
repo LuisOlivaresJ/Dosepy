@@ -302,7 +302,7 @@ class Tiff2DoseFactory:
 
 class DoseConverter(ABC):
     """
-    Abstract class to create DoseConverter classes.
+    An abstract class used to create DoseConverter classes.
 
     Note: The TiffImage should have a reference film with zero dose.
     """
@@ -446,6 +446,13 @@ class DoseConverter(ABC):
 
 
 class RedPolynomialDoseConverter(DoseConverter):
+    """
+    Class to convert a tiff image to a dose array using the red channel and 
+    a polynomial fit function of the form y = a*x + b*x**n, where a, b and n are
+    the fit coefficients.
+    
+    This class implements the DoseConverter interface.
+    """
     
     def convert2dose(self, img: TiffImage, lut: LUT) -> np.ndarray:
 

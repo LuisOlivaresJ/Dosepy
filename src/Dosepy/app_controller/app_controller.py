@@ -22,6 +22,7 @@ from Dosepy.app_components.file_dialog import (
 from Dosepy.image import load
 from Dosepy.config.io_settings import load_settings
 from Dosepy.i_o import is_dicom_image
+from Dosepy.calibration import LUT
 
 
 class BaseController(ABC):
@@ -62,16 +63,18 @@ class ToolbarController(BaseController):
 
 
     def _save_settings(self):
-        print("Save settings")
+        print("Saving settings")
         roi_size_h = self._view.conf_window.roi_size_h.text()
         roi_size_v = self._view.conf_window.roi_size_v.text()
+        # TODO Performe validation
 
         channel = self._view.conf_window.channel.currentText()
         fit_function = self._view.conf_window.fit_function.currentText()
 
-        settings = load_settings()
+        settings = self._model.config
 
         settings.set_calib_roi_size((float(roi_size_h), float(roi_size_v)))
+
         self._view.conf_window.roi_size_h_label.setText(
             f"ROI size horizontal (mm): {settings.get_calib_roi_size()[0]}")
         self._view.conf_window.roi_size_v_label.setText(
@@ -306,7 +309,8 @@ class CalibrationController(BaseController):
         new_files = open_files_dialog("Images (*.tif *.tiff)")
 
         if new_files:
-    
+            
+            # Validate the files
             if self._model.are_valid_tif_files(new_files):
                 
                 current_files = self._view.cal_widget.get_files_list()
@@ -317,10 +321,8 @@ class CalibrationController(BaseController):
                     # Display path to files
                     self._view.cal_widget.set_files_list(list_files)
 
-                    # load files
-                    self._model.calibration_img = self._model.load_calib_files(
-                        list_files,
-                        )
+                    # Load files
+                    self._model.calibration_img = self._model.load_files(list_files)
                     self._prepare_for_calibration()
                 
                 else:
@@ -338,8 +340,8 @@ class CalibrationController(BaseController):
                         # Display path to files
                         self._view.cal_widget.set_files_list(list_files)
 
-                        # load files
-                        self._model.calibration_img = self._model.load_calib_files(
+                        # Load files
+                        self._model.calibration_img = self._model.load_files(
                         list_files,
                         )
                         self._prepare_for_calibration()
@@ -358,41 +360,62 @@ class CalibrationController(BaseController):
 
     def _prepare_for_calibration(self):
 
+        # Show the images in the GUI
         self._view.cal_widget.plot_image(self._model.calibration_img)
 
         # Find how many film we have and show a table for user input dose values
-        self._model.calibration_img.set_labeled_img()
+        self._model.calibration_img.set_labeled_films_and_filters()
         num = self._model.calibration_img.number_of_films
         print(f"Number of detected films: {num}")
+        # Update the number of rows in the table
         self._view.cal_widget.set_table_rows(rows = num)
         header = self._view.cal_widget.dose_table.horizontalHeader()
+        # Validate dose as the user inputs the values
         self._view.cal_widget.dose_table.cellChanged.connect(self._is_a_valid_dose)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-
+        # Enable the apply calibration button
         self._view.cal_widget.apply_button.setEnabled(True)
 
 
     def _apply_calib_button(self):
-        print("Apply button pressed.")
+        print("Apply calibration button pressed.")
         # Is dose table completed?
         num = self._model.calibration_img.number_of_films
         if self._view.cal_widget.is_dose_table_complete(num):
-            #print("Doses OK")
+            
+            # Get user configured values
             doses = self._view.cal_widget.get_doses()
             roi_size = self._model.config.get_calib_roi_size()
+            print(f"{roi_size=}")
             channel = self._model.config.get_channel()
+            print(f"{channel=}")
             fit = self._model.config.get_fit_function()
+            print(f"{fit=}")
+            
+            # Create LUT
             #breakpoint()
             #print(doses)
             if self._model.calibration_img:
-                cal = self._model.calibration_img.get_calibration(
+                """ cal = self._model.calibration_img.get_calibration(
                     doses = doses,
                     channel = channel,
                     roi = roi_size,
                     func = fit,
-                    )
+                    ) 
+                """
+                cal = LUT(self._model.calibration_img)
+                cal.set_central_rois(roi_size)
+                cal.set_doses(doses)
+                cal.compute_central_lut()
                 #breakpoint()
-                self._view.cal_widget.plot_cal_curve(cal)
+
+                # Update Plot of the fit function
+                self._view.cal_widget.plot_cal_curve(
+                    cal,
+                    channel=channel.lower(),
+                    fit_function = fit.lower(),
+                    )
+                
                 self._view.cal_widget.save_cal_button.setEnabled(True)
 
                 # Dosepy implementation.
