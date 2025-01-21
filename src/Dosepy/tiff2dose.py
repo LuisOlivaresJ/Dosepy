@@ -66,7 +66,7 @@ class Tiff2DoseM:
         return self.dose_converter.convert2dose(img, lut)
     
 
-
+# TODO delete this class
 class Tiff2Dose:
     """
     Tiff to dose manager to convert a tiff image to a dose map.

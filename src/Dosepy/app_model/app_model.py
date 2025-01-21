@@ -7,6 +7,7 @@ from numpy import ndarray
 from importlib import resources
 import pickle
 from Dosepy.config.io_settings import Settings, load_settings
+from Dosepy.calibration import LUT
 
 
 class Model:
@@ -19,7 +20,7 @@ class Model:
     def __init__(self):
         self.calibration_img: TiffImage = None  # The image used to produce a calibration curve
         self.tif_img: TiffImage = None  # The tif image to be analysed
-        self.lut = None  # The calibration object used for tif to dose calculation
+        self.lut: LUT = None  # The calibration object used for tif to dose calculation
         self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
 
         self.config: Settings = load_settings()  # The settings for the application.
@@ -47,61 +48,16 @@ class Model:
     def load_files(self, files: list) -> ImageLike:
         # TODO Perform input validation
         return load_multiples(files)
-
-
-    def create_dosepy_lut(self, doses, roi):
-        #channel = ["m", "r", "g", "b"]
-        doses = np.array(doses)
-        lut = np.zeros([6, len(doses)])
-        lut[0,:] = doses
-        lut[1,:] = doses * 1  # Correct doses for machine daily output
-        lut[2,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="m",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-        lut[3,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="r",
-                roi=roi,
-                show=False,
-                threshold=None
-               )
-            )
-        lut[4,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="g",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-        lut[5,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="b",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-
-        return lut
+    
     
     def save_lut(self, file_path: str):
-        
-        file = open(file_path + ".cal", 'wb')
-        pickle.dump(self.lut, file, pickle.HIGHEST_PROTOCOL)
-        file.close()
+        self.lut.to_yaml_file(file_path)
 
-    def load_lut(self, lut_path: str):
-        file = open(lut_path, 'rb')
-        lut = pickle.load(file)
-        file.close()
-        return lut
+
+    def load_lut(self, lut_path: str):     
+        return LUT.from_yaml_file(lut_path)
     
+
     def save_dose_as_tif(self, file_name: str):
         data_array = self.ref_dose_img.array*100  # Gy to cGy
         data = data_array.astype(np.uint16)

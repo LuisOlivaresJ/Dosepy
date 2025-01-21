@@ -441,18 +441,14 @@ class CalibrationController(BaseController):
                 root_directory = str(root_calibration_path)
             )
 
-        if lut_file_name:
-            print(lut_file_name)
-        
+        if lut_file_name:        
             self._model.save_lut(str(lut_file_name))
-            #self._view.dose_widget.cali_label.setText(
-            #    f"Calibration file: " + str(lut_file_name)
-            #    )
 
 
     def _clear_file_button(self):
         #TODO_
         self._view.cal_widget.files_list.clear()
+
 
     # Secondary functions
     # -------------------
@@ -557,7 +553,7 @@ class Tiff2DoseController(BaseController):
         else:
             "Open lut"
             lut_file_path = open_files_dialog(
-                filter = "Calibration. (*.cal)",
+                filter = "Calibration. (*.yaml)",
                 dir = "calib"
                 )
             
@@ -580,7 +576,6 @@ class Tiff2DoseController(BaseController):
 
     def _save_tif2dose_button(self):
 
-        print("Hola save as tif button")
         root_dose_path = Path(__file__).parent / "user" / "dose distr"
         if not root_dose_path.exists():
             os.makedirs(root_dose_path)

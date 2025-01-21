@@ -26,7 +26,8 @@ Issue
 Change
 ^^^^^^
 * On image module, TiffImage.get_labeled_objects() was remplaced with TiffImage.set_labeled_films_and_filters() method.
-* On image module, load_images was replaced with load_multiples fucntion.
+* On image module, load_images was replaced with load_multiples fucntion. The to_dose() and dose_in_central_rois() methods where deleted.
+* On module calibration, Calibration class was deleted to use LUT class instead.
 
 v 0.7.0 (SEP-2024)
 ------------------

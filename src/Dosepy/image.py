@@ -33,7 +33,6 @@ from .tools.array_utils import filter_array
 
 import math
 
-#from .calibration import polynomial_g3, rational_func, Calibration
 from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
@@ -687,103 +686,6 @@ class TiffImage(BaseImage):
         if show:
             plt.show()
         return ax
-
-    ## TODO Delete this method
-    def to_dose(self, cal, clip=False):
-        """Convert the tiff image to a dose distribution. The tiff file image
-        has to contain an unirradiated film used as a reference for zero Gray.
-
-        Parameters
-        ----------
-        cal : :class:`~Dosepy.calibration.Calibration`
-            Instance of a Calibration class
-
-        clip : bool, default: False
-            If True, limit the maximum dose to the greatest used for calibration. Useful to avoid very high doses.
-
-        Returns
-        -------
-        :class:`~Dosepy.image.ArrayImage`
-            Dose distribution.
-        """
-        mean_pixel, _ = self.get_stat(
-            ch=cal.channel,
-            roi=(5, 5),
-            show=False,
-            )
-        mean_pixel = sorted(mean_pixel, reverse=True)
-
-        if cal.channel in ["R", "Red", "r", "red"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 0]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 0]/mean_pixel[0]
-
-        elif cal.channel in ["G", "Green", "g", "green"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 1]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 1]/mean_pixel[0]
-
-        elif cal.channel in ["B", "Blue", "b", "blue"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 2]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 2]/mean_pixel[0]
-
-        elif cal.channel in ["M", "Mean", "m", "mean"]:
-            array = np.mean(self.array, axis=2)
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(array/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array/mean_pixel[0]
-
-        if cal.func in ["P3", "Polynomial"]:
-            dose_image = polynomial_g3(x, *cal.popt)
-        elif cal.func in ["RF", "Rational"]:
-            dose_image = rational_func(x, *cal.popt)
-
-        dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
-
-        if clip:  # Limit the maximum dose
-            max_calib_dose = cal.doses[-1]
-            dose_image[dose_image > max_calib_dose] = max_calib_dose
-
-        return load(dose_image, dpi=self.dpi)
-
-    ## TODO Delete this method
-    def doses_in_central_rois(self, cal, roi, show):
-        """Dose in central film rois.
-
-        Parameters
-        ----------
-        cal : Dosepy.calibration.Calibration
-            Instance of a Calibration class
-        roi : tuple
-            Width and height of a region of interest (roi) in millimeters (mm), at the
-            center of the film.
-        show : bool
-            Whether to actually show the image and rois.
-
-        Returns
-        -------
-        array : numpy.ndarray
-            Doses on heach founded film.
-        """
-        mean_pixel, _ = self.get_stat(ch=cal.channel, roi=roi, show=show)
-        #
-        if cal.func in ["P3", "Polynomial"]:
-            mean_pixel = sorted(mean_pixel)  # Film response.
-            optical_density = -np.log10(mean_pixel/mean_pixel[0])
-            dose_in_rois = polynomial_g3(optical_density, *cal.popt)
-
-        elif cal.func in ["RF", "Rational"]:
-            # Pixel normalization 
-            mean_pixel = sorted(mean_pixel, reverse = True)
-            norm_pixel = np.array(mean_pixel)/mean_pixel[0]
-            dose_in_rois = rational_func(norm_pixel, *cal.popt)
-
-        return dose_in_rois
     
 
     def filter_channel(
