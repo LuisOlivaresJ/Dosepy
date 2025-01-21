@@ -447,86 +447,100 @@ class DoseConverter(ABC):
 
 class RedPolynomialDoseConverter(DoseConverter):
     
-    def convert2dose(self, img: TiffImage, lut: LUT):
+    def convert2dose(self, img: TiffImage, lut: LUT) -> np.ndarray:
 
-        # TODO LUT does not have data for no-latera-correction
+        # Without lateral correction
         if not lut.lut["lateral_correction"]:
-            doses = lut.lut["nominal_doses"]
-            mean_intensity, std = img.get_stat(ch = "R", roi = (5,5), show=True)
 
-            film_response = optical_density(img.array[:, :, 0], mean_intensity[0])
-            # Get popt
-            #dose_image = polynomial_g3(x, *cal.popt)
-            # Get sorted intensities from unexposed (high intensity) to exposed (low intensity) doses.
-            mean_intensity = sorted(mean_intensity, reverse=True)
-            return "TODO"
-        
-        # Create lateral positions in milimeters
-        self._set_lateral_positions(img)
+            # Get calibration intensities and calibration doses at the center
 
-        # Apply filter if it was usesd for calibration
-        if lut.lut["filter"]:
-            img.filter_channel(lut.lut["filter"], channel="R")
-
-        # TODO Check that mean intensity of filters are equal (considering standar deviation)
-        ## Get mask for films and filters
-        if img.labeled_films.size == 0 or img.labeled_optical_filters.size == 0:
-            img.set_labeled_films_and_filters()
-
-        if not self.check_optical_filters(img, lut):
-            print("The mean intensity of the filters are not equal.")
-
-        # Get lateral intensities for the unexposed film scanned with the film to be converted to dose
-        lateral_intensities_for_zero_dose, positions = self._get_lateral_intensities_for_zero_dose(img, lut, channel="red")
-
-        # Convert image to dose, one column at a time
-        # Buffer array to store dose array
-        dose_array = np.empty(img.array[:, :, 0].shape)
-        width_in_pixels = img.shape[1]
-        for column in range(0, width_in_pixels):
-
-            # Get pixel position in milimeters
-            pix_position = self.pixel_positions_mm[column]
-
-            # Round pixel position to work inside LUT limits.
-            rounded_floor_position = math.floor(pix_position)
-            rounded_ceil_position = math.ceil(pix_position)
-            if rounded_floor_position <= lut.lut["lateral_limits"]["left"] or rounded_ceil_position >= lut.lut["lateral_limits"]["right"]:
-                dose_array[:, column] = 0
-                continue
-
-            # Get calibration intensities and calibration doses at pixel position
-
-            calibration_intensities = lut.get_interpolated_intensities_at_position(
-                position = pix_position,
+            calibration_intensities, std = lut.get_intensities(
+                lateral_position = 0,
                 channel = "red",
             )
-            calibration_doses = lut.get_interpolated_doses_at_position(
-                position = pix_position,
-            )
+            calibration_doses = lut.lut["nominal_doses"]
 
             # Compute fit coefficients
             cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
             popt, pcov = curve_fit(polynomial_n, cal_responses, calibration_doses)
 
-            # index for pixel position
-            idx_pixel_position = np.argwhere(positions == rounded_floor_position)
+            # Mean intensity of zero dose
+            mean_intensity, std = img.get_stat(ch = "R", roi = (8, 8))
+            mean_intensity = sorted(mean_intensity, reverse=True)
 
             # Compute film response as optical density
-            film_response = optical_density(
-                img.array[:, column, 0],
-                lateral_intensities_for_zero_dose[idx_pixel_position]
-                )
+            film_response = optical_density(img.array[:, :, 0], mean_intensity[0])
             
             # Compute dose
-            dose_array[:, column] = polynomial_n(film_response, *popt)
+            dose_array = polynomial_n(film_response, *popt)
+        
+        # With lateral correction
+        else:
+            # Create lateral positions in milimeters
+            self._set_lateral_positions(img)
+
+            # Apply filter if it was usesd for calibration
+            if lut.lut["filter"]:
+                img.filter_channel(lut.lut["filter"], channel="R")
+
+            # TODO Check that mean intensity of filters are equal (considering standar deviation)
+            ## Get mask for films and filters
+            if img.labeled_films.size == 0 or img.labeled_optical_filters.size == 0:
+                img.set_labeled_films_and_filters()
+
+            if not self.check_optical_filters(img, lut):
+                print("The mean intensity of the filters are not equal.")
+
+            # Get lateral intensities for the unexposed film scanned with the film to be converted to dose
+            lateral_intensities_for_zero_dose, positions = self._get_lateral_intensities_for_zero_dose(img, lut, channel="red")
+
+            # Convert image to dose, one column at a time
+            # Buffer array to store dose array
+            dose_array = np.empty(img.array[:, :, 0].shape)
+            width_in_pixels = img.shape[1]
+            for column in range(0, width_in_pixels):
+
+                # Get pixel position in milimeters
+                pix_position = self.pixel_positions_mm[column]
+
+                # Round pixel position to work inside LUT limits.
+                rounded_floor_position = math.floor(pix_position)
+                rounded_ceil_position = math.ceil(pix_position)
+                if rounded_floor_position <= lut.lut["lateral_limits"]["left"] or rounded_ceil_position >= lut.lut["lateral_limits"]["right"]:
+                    dose_array[:, column] = 0
+                    continue
+
+                # Get calibration intensities and calibration doses at pixel position
+
+                calibration_intensities = lut.get_interpolated_intensities_at_position(
+                    position = pix_position,
+                    channel = "red",
+                )
+                calibration_doses = lut.get_interpolated_doses_at_position(
+                    position = pix_position,
+                )
+
+                # Compute fit coefficients
+                cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
+                popt, pcov = curve_fit(polynomial_n, cal_responses, calibration_doses)
+
+                # index for pixel position
+                idx_pixel_position = np.argwhere(positions == rounded_floor_position)
+
+                # Compute film response as optical density
+                film_response = optical_density(
+                    img.array[:, column, 0],
+                    lateral_intensities_for_zero_dose[idx_pixel_position]
+                    )
+                
+                # Compute dose
+                dose_array[:, column] = polynomial_n(film_response, *popt)
 
         # Remove unphysical values
         dose_array[dose_array < 0] = 0
         dose_array[np.isnan(dose_array)] = 0
 
         return dose_array
-
 
 
 dose_converter_factory = Tiff2DoseFactory()

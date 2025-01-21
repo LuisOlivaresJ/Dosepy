@@ -3,16 +3,16 @@ NAME
     Calibration module
 
 DESCRIPTION
-    Module for the management of the calibration curve. 
+    Module for the management of the film calibration. 
     See LUT class for details.
     The LUT class is an adoption of the LUT class from 
     OMG Dosimetry package (https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT)
     Main differences:
-    - The data structure (LUT) to store intensites from pixels is a dictionary object.
+    - The data structure (LUT) to store intensites from pixels uses a dictionary and get methods.
     - The data is created at every milimeter in the lateral direction of the scanner, instead of each pixel.
     - The data contains the standard deviation of the pixel values for uncertainty analysis.
-    - Automatic roi detection is implemented with scikit-image.regionprops() function.
-    - Plot function for fit and scanner uncertainty.
+    - Automatic roi detection is implemented with scikit-image methods.
+    - Added a plot function for fit and scanner uncertainty.
 
 """
 
@@ -149,7 +149,6 @@ class LUT:
         # Check if the doses are provided.
         if doses:
             self.set_doses(doses)
-        #self.set_beam_profile(beam_profile)
         
 
     def set_doses(self, doses: list) -> None:
@@ -197,10 +196,6 @@ class LUT:
 
         # Load the beam profile.
         self.lut['beam_profile'] = load_beam_profile(beam_profile)
-
-        # Print the beam profile.
-        #print(self.lut['beam_profile'])
-        #type(self.lut['beam_profile'])
 
 
     def set_central_rois(self, size : tuple, show = False) -> None:
@@ -319,17 +314,15 @@ class LUT:
                 else:
                     # Used to check if the target position is reached.
                     diff = abs(pixel_position[column_pixel] - target_position)
-                    #print(diff)
-                    #print(self.lut["resolution"]/MM_PER_INCH)
+
                     if diff <= 1/(self.lut["resolution"]/MM_PER_INCH):
-                        #print(f"Target position: {target_position}")
                         self.lut[(target_position, roi_num)] = {
-                            'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 0])),
-                            'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 0])),
-                            'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 1])),
-                            'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 1])),
-                            'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 2])),
-                            'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 2, 2])),
+                            'I_red': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 0])),
+                            'S_red': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 0])),
+                            'I_green': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 1])),
+                            'S_green': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 1])),
+                            'I_blue': int(np.mean(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 2])),
+                            'S_blue': int(np.std(array_img[roi['x'] : roi['x'] + roi['height'], column_pixel-1: column_pixel + 1, 2])),
                         }
                             
                         self.lut[(target_position, roi_num)]["I_mean"] = int(
@@ -349,8 +342,6 @@ class LUT:
                         # Update target position.
                         target_position += 1
 
-        #self._plot_rois(dpmm=self.lut["resolution"]/MM_PER_INCH, origin=-self.tiff_image.physical_shape[1]/2)
-
 
     def compute_central_lut(self, filter: int = None) -> None:
         """
@@ -368,31 +359,17 @@ class LUT:
         self.lut['lateral_limits']['right'] = self.tiff_image.physical_shape[1]/2
 
         self.lut['lateral_correction'] = False
-        # Apply filter to the image.
+
+        # Apply a filter to the image.
         if filter:
             self.lut['filter'] = filter
-            # Labeled area of the films.
-            mask, _ = self.tiff_image.get_labeled_image(
-                erosion_pix=int(6*self.lut["resolution"]/MM_PER_INCH)
-            )
-            # Array buffer to store the filtered image.
-            array_img = np.empty(
-                shape = (
-                    self.tiff_image.array.shape[0],
-                    self.tiff_image.array.shape[1],
-                    self.tiff_image.array.shape[2]
-                    ),
-                dtype = np.uint16
-                )
-            for i in range(3):
-                
-                array_img[:,:,i] = median(
-                    self.tiff_image.array[:,:,i],
-                    footprint = square(filter),
-                    mask = mask,
-                    )
-        else:
-            # Unfiltered image.
+            self.tiff_image.filter_channel(filter, "median", "R")
+            self.tiff_image.filter_channel(filter, "median", "G")
+            self.tiff_image.filter_channel(filter, "median", "B")
+
+            array_img = self.tiff_image.array
+
+        else: # Unfiltered image.
             array_img = self.tiff_image.array
 
         for roi_num, roi in enumerate(self.lut["rois"]):

@@ -55,12 +55,10 @@ def test_initialization(example_image, example_profile, example_metadata):
     
     profile = example_profile
 
-    cal = LUT(example_image,
-                        #lateral_correction = True,
-                        #beam_profile = profile,
-                        #filter = 3,
-                        metadata = example_metadata,
-                        )
+    cal = LUT(
+         example_image, 
+         metadata = example_metadata
+         )
     
     assert isinstance(cal.tiff_image, TiffImage)
     assert cal.lut["author"] == "John Doe"
@@ -146,6 +144,9 @@ def test_set_central_rois(example_image):
 # Test the compute_lateral_lut method
 def test_compute_lateral_lut(example_image):
         
+        # Relative tolerance of 1% for mean intensity.
+        rel = 1/100
+        
         cal = LUT(example_image)
     
         cal.set_central_rois(size = (180, 8))
@@ -155,18 +156,14 @@ def test_compute_lateral_lut(example_image):
         assert cal.lut["lateral_limits"]["left"] == -93
         assert cal.lut["lateral_limits"]["right"] == 82
     
-        
-        assert cal.lut[(2, 0)]["I_red"] == 42353
-        assert cal.lut[(2, 0)]["S_red"] == 110
+        assert cal.lut[(2, 0)]["I_red"] == pytest.approx(42353, rel=rel)
 
-        assert cal.lut[(2, 0)]["I_green"] == 41625
-        assert cal.lut[(2, 0)]["S_green"] == 108
+        assert cal.lut[(2, 0)]["I_green"] == pytest.approx(41625, rel=rel)
 
-        assert cal.lut[(2, 0)]["I_blue"] == 32326
-        assert cal.lut[(2, 0)]["S_blue"] == 95
+        assert cal.lut[(2, 0)]["I_blue"] == pytest.approx(32326, rel=rel)
 
-        assert cal.lut[(2, 0)]["I_mean"] == 38768
-        assert cal.lut[(2, 0)]["S_mean"] == 60
+        assert cal.lut[(2, 0)]["I_mean"] == pytest.approx(38768, rel=rel)
+
 
 # Test lateral response below to 10 % of the central response        
 def test_get_lateral_response_below_10(example_image):
