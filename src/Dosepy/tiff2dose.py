@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import RectangleSelector
 
 from Dosepy.calibration import LUT, MM_PER_INCH
-from Dosepy.image import TiffImage
+from Dosepy.image import TiffImage, ArrayImage
 from Dosepy.tools.functions import optical_density, uncertainty_optical_density, polynomial_n
 
 import math
@@ -42,7 +42,7 @@ class Tiff2DoseM:
             img: TiffImage,
             format: str,
             lut: LUT
-            ):
+            ) -> ArrayImage:
         """
         Get the dose array from a tiff image.
 
@@ -312,7 +312,7 @@ class DoseConverter(ABC):
 
     
     @abstractmethod
-    def convert2dose(self, img: TiffImage, lut: LUT):
+    def convert2dose(self, img: TiffImage, lut: LUT) -> ArrayImage:
         pass
     
 
@@ -454,7 +454,7 @@ class RedPolynomialDoseConverter(DoseConverter):
     This class implements the DoseConverter interface.
     """
     
-    def convert2dose(self, img: TiffImage, lut: LUT) -> np.ndarray:
+    def convert2dose(self, img: TiffImage, lut: LUT) -> ArrayImage:
 
         # Without lateral correction
         if not lut.lut["lateral_correction"]:
@@ -547,7 +547,11 @@ class RedPolynomialDoseConverter(DoseConverter):
         dose_array[dose_array < 0] = 0
         dose_array[np.isnan(dose_array)] = 0
 
-        return dose_array
+        # Limit maximum dose to 1.3 times the maximum dose used for calibration
+        max = lut.lut.get("nominal_doses")[-1]*1.3
+        dose_array[dose_array > max] = max
+
+        return ArrayImage(dose_array, dpi=img.dpi)
 
 
 dose_converter_factory = Tiff2DoseFactory()

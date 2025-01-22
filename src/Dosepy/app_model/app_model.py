@@ -1,6 +1,6 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load, load_multiples, ImageLike, TiffImage
+from Dosepy.image import _is_RGB, _is_image_file, load, load_multiples, ImageLike, TiffImage, ArrayImage
 import imageio.v3 as iio
 import numpy as np
 from numpy import ndarray
@@ -21,12 +21,12 @@ class Model:
         self.calibration_img: TiffImage = None  # The image used to produce a calibration curve
         self.tif_img: TiffImage = None  # The tif image to be analysed
         self.lut: LUT = None  # The calibration object used for tif to dose calculation
-        self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
+        self.dose_img_from_film = ArrayImage  # The dose distribution calculated from a tiff file
 
         self.config: Settings = load_settings()  # The settings for the application.
         
         self.ct_array_img: ndarray = None  # The CT image to be used for user mark localization
-        # The index slice of the user mark in the CT image.
+        # Index of the user's mark in the CT image.
         # Row as +y, column as +x, slice as +z. The same as DICOM convention.
         self.ct_index: list[int, int, int] = None
         # Aspect ratio of the CT image.
@@ -59,8 +59,8 @@ class Model:
     
 
     def save_dose_as_tif(self, file_name: str):
-        data_array = self.ref_dose_img.array*100  # Gy to cGy
+        data_array = self.dose_img_from_film.array*100  # Gy to cGy
         data = data_array.astype(np.uint16)
-        img = load(data, dpi = self.ref_dose_img.dpi)
+        img = load(data, dpi = self.dose_img_from_film.dpi)
         img.save_as_tif(file_name)
 

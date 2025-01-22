@@ -10,19 +10,17 @@ from abc import ABC, abstractmethod
 import os
 import numpy as np
 import pydicom
-from os import listdir
 from os.path import isfile, join
 
 from Dosepy.app_components.file_dialog import (
     open_files_dialog,
     save_lut_file_dialog,
     Error_Dialog,
-
 )
-from Dosepy.image import load
-from Dosepy.config.io_settings import load_settings
 from Dosepy.i_o import is_dicom_image
 from Dosepy.calibration import LUT
+from Dosepy.tiff2dose import Tiff2DoseM
+from Dosepy.image import ArrayImage
 
 
 class BaseController(ABC):
@@ -494,7 +492,8 @@ class Tiff2DoseController(BaseController):
         new_files = open_files_dialog("Images (*.tif *.tiff)")
 
         if new_files:
-    
+            
+            # Validate files
             if self._model.are_valid_tif_files(new_files):
 
                 current_files = self._view.dose_widget.get_files_list()
@@ -506,9 +505,7 @@ class Tiff2DoseController(BaseController):
                     self._view.dose_widget.set_files_list(list_files)
 
                     # load the files
-                    self._model.tif_img = self._model.load_files(
-                        list_files,
-                        )
+                    self._model.tif_img = self._model.load_files(list_files)
                     self._prepare_for_tif_to_dose()
 
                 else:
@@ -546,12 +543,9 @@ class Tiff2DoseController(BaseController):
 
 
     def _prepare_for_tif_to_dose(self):
-        
-        if self._model.lut:
-            self._model.ref_dose_img = self._model.tif_img.to_dose(self._model.lut) # An ArrayImage
-
-        else:
-            "Open lut"
+        # Check for LUT
+        if not self._model.lut:
+            print("Open the lut file")
             lut_file_path = open_files_dialog(
                 filter = "Calibration. (*.yaml)",
                 dir = "calib"
@@ -559,19 +553,26 @@ class Tiff2DoseController(BaseController):
             
             if lut_file_path:
                 if len(lut_file_path) == 1:
-
                     self._model.lut = self._model.load_lut(lut_file_path[0])
-                    self._model.ref_dose_img = self._model.tif_img.to_dose(
-                        self._model.lut
-                        ) # An ArrayImage
                 else:
-                    msg = "Chose one calibration file."
+                    msg = "Choose one calibration file."
                     print(msg)
                     Error_Dialog(msg).exec()
             else:
                 self._view.dose_widget.files_list.clear()
+        
+        # Compute dose from tiff
+        t2d_manager = Tiff2DoseM()
+        # TODO support for channel and fit function
+        t2d_format = "RP"
+        self._model.dose_img_from_film = t2d_manager.get_dose(
+            self._model.tif_img,
+            t2d_format,
+            self._model.lut
+            )
 
-        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        # Plot the dose distribution
+        self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
 
 
     def _save_tif2dose_button(self):
@@ -593,27 +594,27 @@ class Tiff2DoseController(BaseController):
     # Related to tiff2dose tool buttons in plot
     def _flip_h_button(self):
         """Flip the the dose distribution in the left/right direction."""
-        if self._model.ref_dose_img is not None:
-            self._model.ref_dose_img.fliplr()
-            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        if self._model.dose_img_from_film is not None:
+            self._model.dose_img_from_film.fliplr()
+            self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
 
     def _flip_v_button(self):
         """Flip the the dose distribution in the up/down direction."""
-        if self._model.ref_dose_img is not None:
-            self._model.ref_dose_img.flipud()
-            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        if self._model.dose_img_from_film is not None:
+            self._model.dose_img_from_film.flipud()
+            self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
 
     def _rotate_cw_button(self):
         """Rotate the the dose distribution clockwise."""
-        if self._model.ref_dose_img is not None:
-            self._model.ref_dose_img.rotate(angle = 1)
-            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        if self._model.dose_img_from_film is not None:
+            self._model.dose_img_from_film.rotate(angle = 1)
+            self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
 
     def _rotate_ccw_button(self):
         """Rotate the the dose distribution counter clockwise."""
-        if self._model.ref_dose_img is not None:
-            self._model.ref_dose_img.rotate(angle = -1)
-            self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        if self._model.dose_img_from_film is not None:
+            self._model.dose_img_from_film.rotate(angle = -1)
+            self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
 
     def _selection_button(self):
         """Select a region of interest in the dose distribution."""
@@ -632,20 +633,20 @@ class Tiff2DoseController(BaseController):
 
     def _on_move_plot(self, event):
         """Show the dose value in the plot view label."""
-        if event.inaxes == self._view.dose_widget.axe_image and self._model.ref_dose_img is not None:
+        if event.inaxes == self._view.dose_widget.axe_image and self._model.dose_img_from_film is not None:
             column = int(event.xdata)
             row = int(event.ydata)
-            dose = self._model.ref_dose_img.array[row, column]
+            dose = self._model.dose_img_from_film.array[row, column]
             self._view.dose_widget.show_dose_value(column, row, dose)
 
     def _cut_button(self):
         """Cut the dose distribution based on rectangle selection."""
         xmin, xmax, ymin, ymax = self._view.dose_widget.rs.extents
-        self._model.ref_dose_img.array = self._model.ref_dose_img.array[int(ymin): int(ymax), int(xmin): int(xmax)]
+        self._model.dose_img_from_film.array = self._model.dose_img_from_film.array[int(ymin): int(ymax), int(xmin): int(xmax)]
         self._view.dose_widget.rs.set_visible(False)
         self._view.dose_widget.selection_button.setChecked(False)
         self._view.dose_widget.cut_button.setEnabled(False)
-        self._view.dose_widget.plot_dose(self._model.ref_dose_img)
+        self._view.dose_widget.plot_dose(self._model.dose_img_from_film)
         self._view.dose_widget._create_rectangle_selector()
 
 

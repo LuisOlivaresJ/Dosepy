@@ -343,8 +343,7 @@ class TiffImage(BaseImage):
         path: str | Path,
         *,
         dpi: float | None = None,
-        sid: float | None = None,
-            ):
+        ):
         """
         Parameters
         ----------
@@ -355,8 +354,6 @@ class TiffImage(BaseImage):
 
             .. note:: If a X and Y Resolution tag is found in the image, that
             value will override the parameter, otherwise this one will be used.
-        sid : float
-            The Source-to-Image distance in mm.
         label_img : numpy.adarray
             Label image regions.
         """
@@ -371,7 +368,6 @@ class TiffImage(BaseImage):
             pass
 
         self._dpi = dpi
-        self.sid = sid
 
         # Use set_labeled_films_and_filters() method to fill these attributes.
         self.labeled_films = np.array([])
@@ -385,14 +381,7 @@ class TiffImage(BaseImage):
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
 
-        dpi = None
-
-        if self.sid is not None:
-            dpi *= self.sid / 1000
-        else:
-            dpi = self._dpi
-
-        return dpi
+        return self._dpi
 
 
     @property
@@ -731,7 +720,6 @@ class ArrayImage(BaseImage):
         array: np.ndarray,
         *,
         dpi: float = None,
-        sid: float = None,
         dtype=None,
     ):
         """
@@ -755,7 +743,6 @@ class ArrayImage(BaseImage):
         else:
             self.array = array
         self._dpi = dpi
-        self.sid = sid
 
     @property
     def dpmm(self) -> float | None:
@@ -768,12 +755,8 @@ class ArrayImage(BaseImage):
     @property
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
-        dpi = None
-        if self._dpi is not None:
-            dpi = self._dpi
-            if self.sid is not None:
-                dpi *= self.sid / 1000
-        return dpi
+
+        return self._dpi
 
     @property
     def physical_shape(self):

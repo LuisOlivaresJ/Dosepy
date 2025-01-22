@@ -154,7 +154,7 @@ def test_convert2dose_using_RedPolynomialDoseConverter(
         calibration_lut_with_filters
     )
     # Dose tolerance of 5%
-    assert np.mean(dose[100:125, 400:500]) == pytest.approx(5, abs=0.25)
+    assert np.mean(dose.array[100:125, 400:500]) == pytest.approx(5, abs=0.25)
 
 
 # Test convert2dose method without lateral correction
@@ -168,4 +168,4 @@ def test_convert2dose_without_lateral_correction(
         calibration_central_lut_without_filters
     )
 
-    assert np.mean(dose[370:380, 430:460]) == pytest.approx(4, rel=0.05)
+    assert np.mean(dose.array[370:380, 430:460]) == pytest.approx(4, rel=0.05)
