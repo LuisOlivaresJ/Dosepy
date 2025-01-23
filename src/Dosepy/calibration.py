@@ -202,19 +202,24 @@ class LUT:
         self.lut['beam_profile'] = load_beam_profile(beam_profile)
 
 
-    def set_central_rois(self, size : tuple, show = False) -> None:
+    def set_central_rois(self, size: tuple = None, show = False) -> None:
         """
-        Setup the ROIs and lateral limits at the center of each film.
+        Used for film and optical filter identification on the image.
+        This allows to set-up regions of interest and lateral limits.
 
         Parameters
         ----------
         size : tuple[width: int, height int]
-            The size of the ROIs in milimeters.
+            The size of the ROIs in milimeters. If None, an automatic roi size is performed.
 
         Note
         -------
         lut.["rois"] is created with the following structure:    
-        [{'x': int, 'y': int, 'width': int, 'height': int}, {...}, ...]
+        [
+            {'x': int, 'y': int, 'width': int, 'height': int},
+            {...},
+            ...
+        ]
         where: x and y are the coordinates of the top-left corner 
         (x for row and y for column),
         width and height are the size of the ROI in pixels.
@@ -223,29 +228,30 @@ class LUT:
         # Check if the image is loaded.
         if self.tiff_image is None:
             raise Exception("No image loaded.")
+        
+        # Get labeled objects
+        self.tiff_image.set_labeled_films_and_filters()
+        labeled_films = self.tiff_image.labeled_films
 
         # Get the image size in mm.
         height, width = self.tiff_image.physical_shape
+
+        # Get the image resolution in mm.
+        dpmm = self.lut["resolution"]/MM_PER_INCH
 
         # Check if the size of the ROIs is valid.
         if size[0] > width or size[1] > height:
             raise Exception("Invalid ROI size. The size of the ROIs must be smaller than the image.")
 
-        # Get the image resolution in mm.
-        dpmm = self.lut["resolution"]/MM_PER_INCH
-
         # Calculate the size of the ROIs in pixels.
         width_roi = size[0] * dpmm
         height_roi = size[1] * dpmm
 
-        # Get labeled image
-        self.tiff_image.set_labeled_films_and_filters()
-        label_image = self.tiff_image.labeled_films
-
         rois = []
 
         # Get the central region of each film.
-        for region in regionprops(label_image):
+        for region in regionprops(labeled_films):
+            # TODO Is this check necesary? set_labeled_films_and_filters filters for small objects
             if region.area > 0.5*width_roi*height_roi:
                 rois.append(
                     {

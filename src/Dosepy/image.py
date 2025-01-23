@@ -370,8 +370,8 @@ class TiffImage(BaseImage):
         self._dpi = dpi
 
         # Use set_labeled_films_and_filters() method to fill these attributes.
-        self.labeled_films = np.array([])
-        self.labeled_optical_filters = np.array([])
+        self.labeled_films = None
+        self.labeled_optical_filters = None
 
         self.number_of_films = None
         self.number_of_optical_filters = None
@@ -562,7 +562,9 @@ class TiffImage(BaseImage):
         >>> list(zip(mean, std))
         """
 
-        if not self.labeled_films.any():
+        # TODO If self.labeled_films is currently calculated (i.e. an np.ndarray), this check will result in an error.
+        #if not self.labeled_films.any():
+        if not isinstance(self.labeled_films, np.ndarray):
             self.set_labeled_films_and_filters()
 
         if show:
