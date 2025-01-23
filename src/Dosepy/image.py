@@ -374,7 +374,7 @@ class TiffImage(BaseImage):
         self.labeled_optical_filters = np.array([])
 
         self.number_of_films = None
-        self.optical_filter_counter = None
+        self.number_of_optical_filters = None
 
 
     @property
@@ -397,6 +397,9 @@ class TiffImage(BaseImage):
     def set_labeled_films_and_filters(self):
         """
         Set the labeled films and optical filters in the image.
+
+        This method sets the following class attributes: labeled_films, number_of_films, 
+        labeled_opticalfilters and numer_of_filters.
         """
 
         # Get labeled objects
@@ -425,7 +428,7 @@ class TiffImage(BaseImage):
         self.labeled_films = label(films)
         self.number_of_films = film_counter
         self.labeled_optical_filters = label(filters)
-        self.optical_filter_counter = filter_counter
+        self.number_of_optical_filters = filter_counter
 
 
     def get_labeled_objects(

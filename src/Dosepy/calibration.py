@@ -77,6 +77,8 @@ class LUT:
             'resolution' : float,  # The resolution of the image in dots per inch.
             'lateral_limits' : {"left": int, "right": int},  # Left and rigth lateral limits of the scanner where calibration is valid, in milimeters from the center of the image.
             'lateral_correction' : bool,  # True if a LUT is computed for every milimeter in the scanner lateral direction.
+            'rois_for_optical_filters' : list of dictionaries containing coordinate and radius of circular roi(s).
+            'intensities_of_optical_filters : list, # Sorted red channel intensities of optical filters.
             (lateral_position : int, roi_number : int) : {
                 'corrected_dose' : float,  # Contains the output and beam profile corrected doses.
                 'I_red' : float,  # Mean pixel value of the red channel.
@@ -145,6 +147,8 @@ class LUT:
         self.lut['rois'] = None
 
         self.lut['filter'] = None
+        self.lut['rois_for_optical_filters'] = None
+        self.lut['intensities_of_optical_filters'] = None
 
         # Check if the doses are provided.
         if doses:
@@ -342,6 +346,8 @@ class LUT:
                         # Update target position.
                         target_position += 1
 
+        self._set_roi_and_intensity_of_optical_filters()
+
 
     def compute_central_lut(self, filter: int = None) -> None:
         """
@@ -399,6 +405,8 @@ class LUT:
                     self.lut[(position, roi_num)]["S_blue"]**2
                     )**0.5 / 3
                 )
+
+        self._set_roi_and_intensity_of_optical_filters()
 
 
     def plot_lateral_response(self, channel: str = "red"):
@@ -683,6 +691,15 @@ class LUT:
         return np.array(intensities), np.array(std)
 
 
+    def get_intensities_of_optical_filters(self):
+       
+        return self.lut.get("intensities_of_optical_filters")
+    
+    def get_rois_of_optical_filters(self):
+
+        return self.lut.get("rois_for_optical_filters")
+        
+
     def get_interpolated_intensities_at_position(self, position: float, channel: str) -> ndarray:
         """
         Get the interpolated pixel values at a given lateral position.
@@ -893,6 +910,29 @@ class LUT:
         lateral_doses = sorted([float(dose * profile) for dose in self.lut["nominal_doses"]])
 
         return lateral_doses
+
+
+    def _set_roi_and_intensity_of_optical_filters(self):
+
+        if self.tiff_image.number_of_optical_filters == 0:
+            return
+        
+        # Get the central region of each filter.
+        rois = []
+        intensities = []
+        
+        for region in regionprops(self.tiff_image.labeled_optical_filters, self.tiff_image.array[:, :, 0]):
+            rois.append(
+                {
+                    'x': int(region.centroid[0]),
+                    'y': int(region.centroid[1]),
+                    'radius': int(region.axis_minor_length),
+                }
+            )
+            intensities.append(region.intensity_mean)
+
+        self.lut["rois_for_optical_filters"] = rois
+        self.lut["intensities_of_optical_filters"] = sorted(intensities)
 
 
     @staticmethod

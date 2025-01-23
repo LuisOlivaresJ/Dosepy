@@ -33,6 +33,13 @@ def example_metadata():
         "wait_time": 24,
     }
 
+@pytest.fixture
+def cal_img_with_filters():
+    file_path = cwd / "fixtures/CAL20241106_001.tif"
+    cal_img = load(file_path)
+
+    return cal_img
+
 # Test the instance of the LUT class
 def test_instance(example_image, example_metadata):
     
@@ -352,3 +359,38 @@ def test_compute_central_lut(example_image):
     # Assert first roi
     assert int(intensities[0]) == 42533
     assert int(std[0]) == 133
+
+
+# Test if LUT has mean intensities of filters
+def test_optical_filters_in_lut(cal_img_with_filters):
+
+    cal = LUT(cal_img_with_filters)
+    cal_img_with_filters.set_labeled_films_and_filters()
+    cal._set_roi_and_intensity_of_optical_filters()
+    intensity_of_filters = cal.get_intensities_of_optical_filters()
+
+    assert intensity_of_filters[0] == pytest.approx(9329, 0.01)
+    assert intensity_of_filters[1] == pytest.approx(13264, 0.01)
+    assert intensity_of_filters[2] == pytest.approx(20746, 0.01)
+
+
+# Test coordinate of optical filters
+def test_coordinate_optical_filters(cal_img_with_filters):
+    
+    cal = LUT(cal_img_with_filters)
+    cal_img_with_filters.set_labeled_films_and_filters()
+    cal._set_roi_and_intensity_of_optical_filters()
+
+    rois = cal.get_rois_of_optical_filters()
+    
+    assert rois[0].get("x") == pytest.approx(960, abs=20)
+    assert rois[0].get("y") == pytest.approx(600, abs=20)
+    assert rois[0].get("radius") == pytest.approx(29, abs=10)
+
+    assert rois[1].get("x") == pytest.approx(960, abs=20)
+    assert rois[1].get("y") == pytest.approx(310, abs=20)
+    assert rois[1].get("radius") == pytest.approx(29, abs=10)
+
+    assert rois[2].get("x") == pytest.approx(960, abs=20)
+    assert rois[2].get("y") == pytest.approx(455, abs=20)
+    assert rois[2].get("radius") == pytest.approx(29, abs=10)
