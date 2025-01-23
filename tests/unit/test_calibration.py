@@ -147,6 +147,45 @@ def test_set_central_rois(example_image):
         },
     ]
 
+# Test set_central_rois with automatic size
+def test_set_central_rois_without_size(example_image):
+    cal = LUT(example_image)
+
+    # Create rois
+    cal.set_central_rois()
+
+    # Test width. 589 pixels equals 200 mm (with resolution of 75dpi)
+    assert cal.lut["rois"][0].get("width") == pytest.approx(589, rel=10)  
+    assert cal.lut["rois"][1].get("width") == pytest.approx(589, rel=10)
+    assert cal.lut["rois"][2].get("width") == pytest.approx(589, rel=10)
+    assert cal.lut["rois"][3].get("width") == pytest.approx(589, rel=10)
+    assert cal.lut["rois"][4].get("width") == pytest.approx(589, rel=10)
+    assert cal.lut["rois"][5].get("width") == pytest.approx(589, rel=10)
+
+    # Test height. 53 pixels equals 18 mm
+    assert cal.lut["rois"][0].get("height") == pytest.approx(53, rel=10) 
+    assert cal.lut["rois"][1].get("height") == pytest.approx(53, rel=10)
+    assert cal.lut["rois"][2].get("height") == pytest.approx(53, rel=10)
+    assert cal.lut["rois"][3].get("height") == pytest.approx(53, rel=10)
+    assert cal.lut["rois"][4].get("height") == pytest.approx(53, rel=10)
+    assert cal.lut["rois"][5].get("height") == pytest.approx(53, rel=10)
+
+    # Test x coordinate
+    assert cal.lut["rois"][0].get("x") == pytest.approx(65, rel=10)
+    assert cal.lut["rois"][1].get("x") == pytest.approx(161, rel=10)
+    assert cal.lut["rois"][2].get("x") == pytest.approx(255, rel=10)
+    assert cal.lut["rois"][3].get("x") == pytest.approx(347, rel=10)
+    assert cal.lut["rois"][4].get("x") == pytest.approx(440, rel=10)
+    assert cal.lut["rois"][5].get("x") == pytest.approx(545, rel=10)
+
+    # Test y coordinate
+    assert cal.lut["rois"][0].get("y") == pytest.approx(138, rel=10)
+    assert cal.lut["rois"][1].get("y") == pytest.approx(138, rel=10)
+    assert cal.lut["rois"][2].get("y") == pytest.approx(138, rel=10)
+    assert cal.lut["rois"][3].get("y") == pytest.approx(138, rel=10)
+    assert cal.lut["rois"][4].get("y") == pytest.approx(138, rel=10)
+    assert cal.lut["rois"][5].get("y") == pytest.approx(138, rel=10)
+
 
 # Test the compute_lateral_lut method
 def test_compute_lateral_lut(example_image):

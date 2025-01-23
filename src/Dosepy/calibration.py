@@ -205,7 +205,7 @@ class LUT:
     def set_central_rois(self, size: tuple = None, show = False) -> None:
         """
         Used for film and optical filter identification on the image.
-        This allows to set-up regions of interest and lateral limits.
+        This allows to create regions of interest and lateral limits.
 
         Parameters
         ----------
@@ -233,26 +233,26 @@ class LUT:
         self.tiff_image.set_labeled_films_and_filters()
         labeled_films = self.tiff_image.labeled_films
 
-        # Get the image size in mm.
-        height, width = self.tiff_image.physical_shape
-
         # Get the image resolution in mm.
         dpmm = self.lut["resolution"]/MM_PER_INCH
 
-        # Check if the size of the ROIs is valid.
-        if size[0] > width or size[1] > height:
-            raise Exception("Invalid ROI size. The size of the ROIs must be smaller than the image.")
-
-        # Calculate the size of the ROIs in pixels.
-        width_roi = size[0] * dpmm
-        height_roi = size[1] * dpmm
+        # Get the image size in mm.
+        height, width = self.tiff_image.physical_shape
 
         rois = []
+        if size:
+            # Check size of ROIs.
+            if size[0] > width or size[1] > height:
+                raise Exception("Invalid ROI size. The size of the ROIs must be smaller than the image.")
 
-        # Get the central region of each film.
-        for region in regionprops(labeled_films):
-            # TODO Is this check necesary? set_labeled_films_and_filters filters for small objects
-            if region.area > 0.5*width_roi*height_roi:
+            # Calculate the size of the ROIs in pixels.
+            width_roi = size[0] * dpmm
+            height_roi = size[1] * dpmm
+
+            # Get the central region of each film.
+            for region in regionprops(labeled_films):
+                # TODO Is this check necesary? set_labeled_films_and_filters filters for small objects
+                #if region.area > 0.5*width_roi*height_roi:
                 rois.append(
                     {
                         'x': int(region.centroid[0] - height_roi/2),
@@ -261,6 +261,28 @@ class LUT:
                         'height': int(height_roi),
                     }
                 )
+
+        else:  # Roi size based of region properties
+            for region in regionprops(labeled_films):
+
+                # Create rois based on region properties
+
+                pix_in_3_mm = int(3*dpmm)  # Used to remove borders
+
+                x = region.bbox[0] + pix_in_3_mm
+                y = region.bbox[1] + pix_in_3_mm
+                width_roi = region.bbox[3] - region.bbox[1] - 2*pix_in_3_mm
+                height_roi = region.bbox[2]- region.bbox[0] - 2*pix_in_3_mm
+
+                rois.append(
+                    {
+                        'x': x,
+                        'y': y,
+                        'width': width_roi,
+                        'height': height_roi 
+                    }
+                )
+
         self.lut["rois"] = rois
 
         # Find maximum y values in milimeters.
@@ -697,12 +719,25 @@ class LUT:
         return np.array(intensities), np.array(std)
 
 
-    def get_intensities_of_optical_filters(self):
+    def get_intensities_of_optical_filters(self) -> list[float]:
+        """
+        Return the intensities of the optical filters in the red channel.
+        """
        
         return self.lut.get("intensities_of_optical_filters")
     
-    def get_rois_of_optical_filters(self):
 
+    def get_rois_of_optical_filters(self) -> list[dict]:
+        """
+        Return the rois of the optical filters as a list of dictionaries.
+        [
+            {
+                'x': int,  # The x coordinate (row) of the top-left corner of the ROI.
+                'y': int,  # The y coordinate (column) of the top-left corner of the ROI.
+                'radius': int,
+            }
+        ]
+        """
         return self.lut.get("rois_for_optical_filters")
         
 
