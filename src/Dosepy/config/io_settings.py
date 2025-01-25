@@ -1,4 +1,14 @@
-# This module is used to read and write the settings.toml file.
+"""
+This module is used to manage settings for the GUI application (Dosepy.app).
+It uses an instance of the Settings class constructed with the load_settings() function.
+
+A settings.toml file is used to store setting on disk. Existing "key-value" pairs can be
+modified as needed. 
+
+New key-value pairs must not be directly added to settings.toml file,
+instead add them as attriutes of the class Settings and update the 
+_create_default_settings() function.
+"""
 
 #TODO: Change app_controller to use the settings module to get the ROI size
 #TODO: Create a GUI to change the settings
@@ -12,15 +22,27 @@ from pydantic import BaseModel, Field, ValidationError
 toml_file_path = pathlib.Path(__file__).parent.parent / "config" / "settings.toml"
 
 class Settings(BaseModel):
-    """ Class to store the settings from the settings.toml file. An instance class must be created using the load_settings function"""
+    """
+    Class used to manage settings.
+
+    Notes
+    -----
+    * An instance of this class must be created using the load_settings() function (see below)
+    * Every set_some_attribute() method must save to settings.toml file.
+    """
     
-    roi_size_h: float = Field(gt=0)  # Horizontal size of the ROI in mm, must be greater than 0
-    roi_size_v: float = Field(gt=0)  # Vertical size of the ROI in mm, must be greater than 0
+    roi_automatic: bool = True  # Used to create an automatic roi size.
+    roi_size_h: float = Field(default = 8, gt=0)  # Horizontal size of the ROI in mm, must be greater than 0
+    roi_size_v: float = Field(default = 8, gt=0)  # Vertical size of the ROI in mm, must be greater than 0
 
     channel: str = "red"  # Channel to use for the dose calculation
     fit_function: str = "Rational"  # Fit function to use for the dose calculation
 
     lateral_correction: bool = False  # If lateral correction is enabled
+
+
+    def get_roi_automatic(self) -> bool:
+        return self.roi_automatic
 
     def get_calib_roi_size(self) -> tuple:
         return (self.roi_size_h, self.roi_size_v)
@@ -34,6 +56,25 @@ class Settings(BaseModel):
     def get_lateral_correction(self) -> bool:
         return self.lateral_correction
     
+
+    def set_roi_automatic(self, roi_automatic: bool) -> None:
+        """ 
+        Set the ROI automatic in the settings.toml file 
+
+        Parameters
+        ----------
+            roi_automatic : bool 
+            If the ROI size is has to be calculated automatically
+        """
+        # Update the ROI automatic
+        self.roi_automatic = roi_automatic
+        seetings = _load_toml_file()
+        seetings["user"]["roi_automatic"] = roi_automatic
+        # Save to the settings.toml file
+        with open(toml_file_path, mode="wt", encoding="utf-8") as fp:
+            tomlkit.dump(seetings, fp)
+    
+
     def set_calib_roi_size(self, roi_size: tuple) -> None:
         """ 
         Set the ROI size in the settings.toml file 
@@ -77,6 +118,7 @@ class Settings(BaseModel):
         with open(toml_file_path, mode="wt", encoding="utf-8") as fp:
             tomlkit.dump(seetings, fp)
 
+
     def set_fit_function(self, fit_function: str) -> None:
         """ 
         Set the fit function in the settings.toml file 
@@ -110,20 +152,6 @@ class Settings(BaseModel):
             tomlkit.dump(seetings, fp)
             
 
-def _load_toml_file() -> tomlkit.TOMLDocument:
-    _create_toml_file_if_not_exists()
-    with open(toml_file_path, mode="rt", encoding="utf-8") as fp:
-        return tomlkit.load(fp)
-
-
-def _create_toml_file_if_not_exists() -> None:
-    if not toml_file_path.exists():
-        # Create the file if it does not exist
-        toml_file_path.touch()
-        # Create the default settings
-        _create_default_settings(toml_file_path)
-
-
 def load_settings() -> Settings:
     """ Load the settings from the settings.toml file """
     _create_toml_file_if_not_exists()
@@ -142,6 +170,20 @@ def load_settings() -> Settings:
         return load_settings()
 
 
+def _load_toml_file() -> tomlkit.TOMLDocument:
+    _create_toml_file_if_not_exists()
+    with open(toml_file_path, mode="rt", encoding="utf-8") as fp:
+        return tomlkit.load(fp)
+
+
+def _create_toml_file_if_not_exists() -> None:
+    if not toml_file_path.exists():
+        # Create the file if it does not exist
+        toml_file_path.touch()
+        # Create the default settings
+        _create_default_settings(toml_file_path)
+
+
 def _create_default_settings(path) -> None:
     # Used by load_settings if the settings.toml file does not exist or is not well formatted
     settings = tomlkit.document()
@@ -149,6 +191,8 @@ def _create_default_settings(path) -> None:
     settings.add(tomlkit.nl())
 
     user = tomlkit.table()
+    user.add(tomlkit.comment("Automatic roi size"))
+    user.add("roi_automatic", True)
     user.add(tomlkit.comment("ROI size in mm"))
     user.add("roi_size_h", 8.0)  # Default value: 8 millimeters
     user.add("roi_size_v", 8.0)

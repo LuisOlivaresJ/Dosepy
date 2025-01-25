@@ -10,6 +10,11 @@ class TestSettings(unittest.TestCase):
         settings = Settings(roi_size_h = 8.0, roi_size_v = 8.0)
         self.assertIsInstance(settings, Settings)
 
+    # Test the get_roi_automatic method
+    def test_get_roi_automatic(self):
+        settings = Settings(roi_automatic = True)
+        self.assertTrue(settings.get_roi_automatic())
+
     # Test the get_calib_roi_size method
     def test_get_calib_roi_size(self):
         settings = Settings(roi_size_h = 8.0, roi_size_v = 8.0)
@@ -24,6 +29,12 @@ class TestSettings(unittest.TestCase):
     def test_get_calib_roi_size_load_settings(self):
         settings = load_settings()
         self.assertEqual(settings.get_calib_roi_size(), (8.0, 8.0))
+
+    # Test the set_roi_automatic method
+    def test_set_roi_automatic(self):
+        settings = Settings(roi_automatic = True)
+        settings.set_roi_automatic(False)
+        self.assertFalse(settings.get_roi_automatic())
 
     # Test the set_calib_roi_size method
     def test_set_calib_roi_size(self):
