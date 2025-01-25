@@ -425,9 +425,8 @@ class DoseConverter(ABC):
 
         # Get intensity at 0 position
         origin_index = np.argwhere(positions == 0)[0]
-        print(f"{origin_index=}")
+        
         reference_intensity = lateral_intensities[origin_index]
-        print(f"{reference_intensity=}")
         
         # Normalize intensities
         relative_intensities = lateral_intensities/reference_intensity
@@ -481,7 +480,7 @@ class RedPolynomialDoseConverter(DoseConverter):
             # Compute dose
             dose_array = polynomial_n(film_response, *popt)
         
-        # With lateral correction
+        # Use lateral correction
         else:
             # Create lateral positions in milimeters
             self._set_lateral_positions(img)
@@ -490,10 +489,8 @@ class RedPolynomialDoseConverter(DoseConverter):
             if lut.lut["filter"]:
                 img.filter_channel(lut.lut["filter"], channel="R")
 
-            # TODO Check that mean intensity of filters are equal (considering standar deviation)
-            ## Get mask for films and filters
-            if img.labeled_films.size == 0 or img.labeled_optical_filters.size == 0:
-                img.set_labeled_films_and_filters()
+            # Film detection
+            img.set_labeled_films_and_filters()
 
             if not self.check_optical_filters(img, lut):
                 print("The mean intensity of the filters are not equal.")

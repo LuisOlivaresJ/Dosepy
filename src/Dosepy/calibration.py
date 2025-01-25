@@ -205,12 +205,13 @@ class LUT:
     def set_central_rois(self, size: tuple = None, show = False) -> None:
         """
         Used for film and optical filter identification on the image.
-        This allows to create regions of interest and lateral limits.
+        This allows to create automatic regions of interest and lateral limits.
 
         Parameters
         ----------
         size : tuple[width: int, height int]
-            The size of the ROIs in milimeters. If None, an automatic roi size is performed.
+            The size of the ROIs in milimeters. 
+            If None, the height is calculated as 30% of the bounded box of the film. 
 
         Note
         -------
@@ -262,17 +263,18 @@ class LUT:
                     }
                 )
 
-        else:  # Roi size based of region properties
+        # Roi size based of region properties
+        else:
             for region in regionprops(labeled_films):
 
                 # Create rois based on region properties
 
-                pix_in_3_mm = int(3*dpmm)  # Used to remove borders
-
-                x = region.bbox[0] + pix_in_3_mm
-                y = region.bbox[1] + pix_in_3_mm
-                width_roi = region.bbox[3] - region.bbox[1] - 2*pix_in_3_mm
-                height_roi = region.bbox[2]- region.bbox[0] - 2*pix_in_3_mm
+                pix_in_5_mm = int(5*dpmm)  # Used to remove borders
+                
+                width_roi = int(region.bbox[3] - region.bbox[1] - 2*pix_in_5_mm)
+                height_roi = int((region.bbox[2] - region.bbox[0])*0.3)  # 30% of the height of the bbox
+                x = int(region.centroid[0] - height_roi/2)
+                y = int(region.bbox[1] + pix_in_5_mm)
 
                 rois.append(
                     {
@@ -293,7 +295,7 @@ class LUT:
 
         # Plot rois.
         if show:
-            self._plot_rois()
+            self.plot_rois()
 
 
     def compute_lateral_lut(self, filter: int = None) -> None:
@@ -610,6 +612,77 @@ class LUT:
         ax.set_ylabel("Dose uncertainty [%]")
 
 
+    def plot_rois(self, ax: plt.Axes = None):
+        """
+        Plot the ROIs on the image.
+        """
+        # Check for rois
+        if not self.lut.get("rois"):
+            print("Use set_central_rois() method.")
+            return
+        
+        if len(self.lut.get("rois")) == 0:
+            print("No films found.")
+            return
+
+        dpmm = self.lut["resolution"]/MM_PER_INCH
+        origin = -self.tiff_image.physical_shape[1]/2
+
+        if ax is None:
+            fig, ax = plt.subplots()
+
+        ax.imshow(self.tiff_image.array/np.max(self.tiff_image.array))
+
+        for roi in self.lut["rois"]:
+            rect = plt.Rectangle(
+                (roi['y'], roi['x']),
+                roi['width'],
+                roi['height'],
+                edgecolor = 'crimson',
+                fill = False,
+                linestyle = '--',
+            )
+            ax.add_patch(rect)
+        
+        if self.lut["lateral_correction"]:
+            
+            y_left_limit_pix =int((self.lut["lateral_limits"]["left"] - origin)*dpmm)
+            y_right_limit_pix = int((self.lut["lateral_limits"]["right"] - origin)*dpmm)
+
+            ax.axvline(y_left_limit_pix)
+            ax.axvline(y_right_limit_pix)
+    
+        return ax
+
+
+    def plot_roi_of_optical_filter(self, ax: plt.Axes = None):
+        
+        # Check for rois
+        if not self.lut.get("rois_for_optical_filters"):
+            print("No rois found")
+            return    
+        if len(self.lut.get("rois_for_optical_filters")) == 0:
+            print("No rois found.")
+            return
+
+        if ax is None:
+            fig, ax = plt.subplots()
+
+        ax.imshow(self.tiff_image.array/np.max(self.tiff_image.array))
+
+        for roi in self.lut["rois_for_optical_filters"]:
+            
+            circ = plt.Circle(
+                xy = (roi.get("y"), roi.get("x")),
+                radius = roi.get("radius"),
+                edgecolor = 'crimson',
+                fill = False,
+                )
+            ax.add_patch(circ)
+    
+        return ax
+
+
     def get_lateral_intensity(self, roi: int, channel: str) -> tuple[ndarray, ndarray, ndarray]:
         """
         Get the lateral response of the scanner for a given ROI and channel.
@@ -876,41 +949,7 @@ class LUT:
         if filter and not isinstance(filter, int):
             raise Exception("Filter must be an integer.")
         # Check if the doses are set.
-
-
-    def _plot_rois(self, ax: plt.Axes = None):
-        """
-        Plot the ROIs on the image.
-        """
-        dpmm = self.lut["resolution"]/MM_PER_INCH
-        origin = -self.tiff_image.physical_shape[1]/2
-
-        if ax is None:
-            fig, ax = plt.subplots()
-
-        ax.imshow(self.tiff_image.array/np.max(self.tiff_image.array))
-        for roi in self.lut["rois"]:
-            rect = plt.Rectangle(
-                (roi['y'], roi['x']),
-                roi['width'],
-                roi['height'],
-                edgecolor = 'r',
-                fill = False,
-                linestyle = '--',
-            )
-            ax.add_patch(rect)
-        
-        if self.lut["lateral_correction"]:
-            
-            # r0' = r0 - r00', change of origin.
-            #print(self.lut["lateral_limits"])
-            y_left_limit_pix =int((self.lut["lateral_limits"]["left"] - origin)*dpmm)
-            y_right_limit_pix = int((self.lut["lateral_limits"]["right"] - origin)*dpmm)
-
-            ax.axvline(y_left_limit_pix)
-            ax.axvline(y_right_limit_pix)
-        #plt.show()
-
+    
 
     def _get_calibration_positions(self) -> list:
         """
@@ -963,11 +1002,12 @@ class LUT:
         intensities = []
         
         for region in regionprops(self.tiff_image.labeled_optical_filters, self.tiff_image.array[:, :, 0]):
+
             rois.append(
                 {
                     'x': int(region.centroid[0]),
                     'y': int(region.centroid[1]),
-                    'radius': int(region.axis_minor_length),
+                    'radius': int(region.axis_minor_length/2)
                 }
             )
             intensities.append(region.intensity_mean)

@@ -446,10 +446,10 @@ class TiffImage(BaseImage):
         return_num : bool
             If True, the number of labeled regions is returned.
         threshold : tuple
-            The threshold values used to detect film.
+            The threshold values used to detect ojects.
             The first value is used as a threshold for dark regions (< 0.1) and the second value for bright regions (> 0.9).
         min_area : float
-            The minimum area in mm^2 of a region to be considered a film.
+            The minimum area in mm^2 of a region to be considered an onject.
         show : bool
             If True, the image and histogram are shown.
 
@@ -476,8 +476,6 @@ class TiffImage(BaseImage):
             )
 
         # Filter for small bright spots
-        ## The erosion_pix parameter is set to 6 times the resolution in mm.
-        #erosion_pix = int(6*self.dpi/MM_PER_INCH)
         bi_img_filtered = skimage.morphology.binary_erosion(
             binary_img,
             mode="min",
@@ -494,7 +492,6 @@ class TiffImage(BaseImage):
         ##               ^- mm to inch       ^- inch to pixels
 
         minimum_area = int(min_area * (1/MM_PER_INCH)**2 * (self.dpi)**2)
-        print(f"The minimum area in pixels is: {minimum_area}")
 
         film_counter = 0  # Used to reset label number
 

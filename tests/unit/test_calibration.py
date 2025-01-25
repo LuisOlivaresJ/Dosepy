@@ -424,12 +424,12 @@ def test_coordinate_optical_filters(cal_img_with_filters):
     
     assert rois[0].get("x") == pytest.approx(960, abs=20)
     assert rois[0].get("y") == pytest.approx(600, abs=20)
-    assert rois[0].get("radius") == pytest.approx(29, abs=10)
+    assert rois[0].get("radius") == pytest.approx(15, abs=10)
 
     assert rois[1].get("x") == pytest.approx(960, abs=20)
     assert rois[1].get("y") == pytest.approx(310, abs=20)
-    assert rois[1].get("radius") == pytest.approx(29, abs=10)
+    assert rois[1].get("radius") == pytest.approx(15, abs=10)
 
     assert rois[2].get("x") == pytest.approx(960, abs=20)
     assert rois[2].get("y") == pytest.approx(455, abs=20)
-    assert rois[2].get("radius") == pytest.approx(29, abs=10)
+    assert rois[2].get("radius") == pytest.approx(15, abs=10)
