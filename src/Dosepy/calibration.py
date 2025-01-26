@@ -125,14 +125,6 @@ class LUT:
         if tiff_image is not None and not isinstance(tiff_image, TiffImage):
             raise Exception("Image must be a TiffImage object.")
 
-        if tiff_image is not None:
-            self.tiff_image = tiff_image
-            self.lut['resolution'] = tiff_image.dpi
-
-        else:
-            self.tiff_image = None
-            self.lut['resolution'] = None
-
         self.lut['author'] = metadata.get('author')
         self.lut['film_lote'] = metadata.get('film_lote')
         self.lut['scanner'] = metadata.get('scanner')
@@ -153,6 +145,21 @@ class LUT:
         # Check if the doses are provided.
         if doses:
             self.set_doses(doses)
+
+        # Check if the image is provided.
+        if tiff_image is not None:
+            self.tiff_image = tiff_image
+            self.lut['resolution'] = tiff_image.dpi
+
+            # Label objects
+            self.tiff_image.set_labeled_films_and_filters()
+
+            # Set lateral limits
+            self._compute_lateral_limits()
+
+        else:
+            self.tiff_image = None
+            self.lut['resolution'] = None
         
 
     def set_doses(self, doses: list) -> None:
@@ -230,8 +237,7 @@ class LUT:
         if self.tiff_image is None:
             raise Exception("No image loaded.")
         
-        # Get labeled objects
-        self.tiff_image.set_labeled_films_and_filters()
+        # Get labeled films
         labeled_films = self.tiff_image.labeled_films
 
         # Get the image resolution in mm.
@@ -252,8 +258,7 @@ class LUT:
 
             # Get the central region of each film.
             for region in regionprops(labeled_films):
-                # TODO Is this check necesary? set_labeled_films_and_filters filters for small objects
-                #if region.area > 0.5*width_roi*height_roi:
+
                 rois.append(
                     {
                         'x': int(region.centroid[0] - height_roi/2),
@@ -262,19 +267,23 @@ class LUT:
                         'height': int(height_roi),
                     }
                 )
+            
+            # Override lateral limits.
+            # Find maximum y value (column) in milimeters.
+            self.lut["lateral_limits"]["left"] = int(max([roi['y'] for roi in rois])/dpmm - width/2)
 
-        # Roi size based of region properties
+            # Find minimum (y + width) value in milimeters.
+            self.lut["lateral_limits"]["right"] = int(min([roi['y'] + roi["width"] for roi in rois])/dpmm - width/2)
+
+
+        # Create rois as 30% on width and height of the bounding box around the labeled film
         else:
             for region in regionprops(labeled_films):
-
-                # Create rois based on region properties
-
-                pix_in_5_mm = int(5*dpmm)  # Used to remove borders
                 
-                width_roi = int(region.bbox[3] - region.bbox[1] - 2*pix_in_5_mm)
-                height_roi = int((region.bbox[2] - region.bbox[0])*0.3)  # 30% of the height of the bbox
+                width_roi = int( 0.3 * (region.bbox[3] - region.bbox[1]))
+                height_roi = int( 0.3 * (region.bbox[2] - region.bbox[0]))
                 x = int(region.centroid[0] - height_roi/2)
-                y = int(region.bbox[1] + pix_in_5_mm)
+                y = int(region.centroid[1] - width_roi/2)
 
                 rois.append(
                     {
@@ -286,12 +295,6 @@ class LUT:
                 )
 
         self.lut["rois"] = rois
-
-        # Find maximum y values in milimeters.
-        self.lut["lateral_limits"]["left"] = int(max([roi['y'] for roi in rois])/dpmm - width/2)
-
-        # Find minimum y + width values in milimeters.
-        self.lut["lateral_limits"]["right"] = int(min([roi['y'] + roi["width"] for roi in rois])/dpmm - width/2)
 
         # Plot rois.
         if show:
@@ -930,6 +933,46 @@ class LUT:
             cal = LUT()
             cal.lut = yaml.full_load(file)
         return cal
+
+
+    def _compute_lateral_limits(self):
+
+        # Get labeled films
+        labeled_films = self.tiff_image.labeled_films
+
+        # Get the image resolution in mm.
+        dpmm = self.lut["resolution"]/MM_PER_INCH
+
+        # Get the image size in mm.
+        img_height, img_width = self.tiff_image.physical_shape
+
+        film_rois = []
+
+        # ROI size based on region properties
+
+        for region in regionprops(labeled_films):
+
+            # Create rois based on region properties
+            pix_in_5_mm = int(5*dpmm)  # Used to remove borders
+            
+            # As remainder bbox: Bounding box (min_row, min_col, max_row, max_col)
+            width_roi = int(region.bbox[3] - region.bbox[1] - 2*pix_in_5_mm)
+            
+            # Left column
+            y = int(region.bbox[1] + pix_in_5_mm)
+
+            film_rois.append(
+                {
+                    'y': y,
+                    'width': width_roi,
+                }
+            )
+
+        # Find maximum y value (column) in milimeters.
+        self.lut["lateral_limits"]["left"] = int(max([roi['y'] for roi in film_rois])/dpmm - img_width/2)
+
+        # Find minimum (y + width) value in milimeters.
+        self.lut["lateral_limits"]["right"] = int(min([roi['y'] + roi["width"] for roi in film_rois])/dpmm - img_width/2)
 
 
     def _check_before_compute_lut(self, filter: int) -> None:

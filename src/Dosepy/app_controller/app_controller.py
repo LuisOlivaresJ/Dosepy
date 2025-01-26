@@ -19,7 +19,7 @@ from Dosepy.app_components.file_dialog import (
 )
 from Dosepy.i_o import is_dicom_image
 from Dosepy.calibration import LUT
-from Dosepy.tiff2dose import Tiff2DoseM
+from Dosepy.tiff2dose import Tiff2DoseM, T2D_METHOD_MAP
 from Dosepy.image import ArrayImage
 
 
@@ -561,13 +561,20 @@ class Tiff2DoseController(BaseController):
             else:
                 self._view.dose_widget.files_list.clear()
         
+        # Get user settings
+        channel = self._model.config.get_channel()
+        fit_function = self._model.config.get_fit_function()
+
+        # Define tiff to dose method
+        t2d_method = T2D_METHOD_MAP.get((channel.lower(), fit_function.lower()))
+
         # Compute dose from tiff
         t2d_manager = Tiff2DoseM()
         # TODO support for channel and fit function
-        t2d_format = "RP"
+        #t2d_format = "RP"
         self._model.dose_img_from_film = t2d_manager.get_dose(
             self._model.tif_img,
-            t2d_format,
+            t2d_method,
             self._model.lut
             )
 

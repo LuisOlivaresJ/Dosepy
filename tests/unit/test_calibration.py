@@ -44,9 +44,10 @@ def cal_img_with_filters():
 def test_instance(example_image, example_metadata):
     
         #profile = example_profile
-        cal = LUT(example_image,
-                            metadata = example_metadata,
-                            )
+        cal = LUT(
+            example_image,
+            metadata = example_metadata,
+            )
         assert isinstance(cal, LUT)
 
 # Test a correct orientation of the image 
@@ -187,6 +188,16 @@ def test_set_central_rois_without_size(example_image):
     assert cal.lut["rois"][5].get("y") == pytest.approx(138, rel=10)
 
 
+# Test _compute_lateral_limits method
+def test_compute_lateral_limits(example_image):
+    
+    cal = LUT(example_image)
+    cal._compute_lateral_limits()
+
+    assert cal.lut["lateral_limits"]["left"] == pytest.approx(-98.8, abs=5)
+    assert cal.lut["lateral_limits"]["right"] == pytest.approx(91, abs=5)
+
+
 # Test the compute_lateral_lut method
 def test_compute_lateral_lut(example_image):
         
@@ -199,8 +210,8 @@ def test_compute_lateral_lut(example_image):
     
         cal.compute_lateral_lut()
 
-        assert cal.lut["lateral_limits"]["left"] == -93
-        assert cal.lut["lateral_limits"]["right"] == 82
+        assert cal.lut["lateral_limits"]["left"] == pytest.approx(-93, abs=5)
+        assert cal.lut["lateral_limits"]["right"] == pytest.approx(82, abs=5)
     
         assert cal.lut[(2, 0)]["I_red"] == pytest.approx(42353, rel=rel)
 

@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 import numpy as np
 from numpy import ndarray
-from Dosepy.tiff2dose import Tiff2Dose
+#from Dosepy.tiff2dose import Tiff2Dose
 from Dosepy.calibration import LUT
 from Dosepy.image import TiffImage, DoseImage, load
 from Dosepy.tiff2dose import RedPolynomialDoseConverter
@@ -114,14 +114,15 @@ def test_set_lateral_positions(verif_img_with_filters):
     assert rpd.pixel_positions_mm[0] < -150
     assert rpd.pixel_positions_mm[-1] > 150
 
-# Test _get_zero_dose_intensity_at_center method
-def test_get_zero_dose_intensity_at_center(verif_img_with_filters):
+# Test _get_zero_dose_intensity method
+def test_get_zero_dose_intensity(verif_img_with_filters):
 
     rpd = RedPolynomialDoseConverter()
 
-    intensity, _ = rpd._get_zero_dose_intensity_at_center(
+    intensity, _ = rpd._get_zero_dose_intensity(
         verif_img_with_filters,
-        "red"
+        "red",
+        at_zero_position = True
         )
 
     assert intensity == pytest.approx(40604, abs = 100)
