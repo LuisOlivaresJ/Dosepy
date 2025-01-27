@@ -640,6 +640,7 @@ class Tiff2DoseController(BaseController):
 
     def _on_move_plot(self, event):
         """Show the dose value in the plot view label."""
+        # TODO If there is no image, this event shows an error because there is no dose_img_from_film object
         if event.inaxes == self._view.dose_widget.axe_image and self._model.dose_img_from_film is not None:
             column = int(event.xdata)
             row = int(event.ydata)
