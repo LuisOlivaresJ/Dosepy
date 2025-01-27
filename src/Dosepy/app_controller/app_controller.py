@@ -21,11 +21,13 @@ from Dosepy.i_o import is_dicom_image
 from Dosepy.calibration import LUT
 from Dosepy.tiff2dose import Tiff2DoseM, T2D_METHOD_MAP
 from Dosepy.image import ArrayImage
+from Dosepy.app_model.app_model import Model
+from Dosepy.app_components.main_window import MainWindow
 
 
 class BaseController(ABC):
     """Abstract class."""
-    def __init__(self, model, view):
+    def __init__(self, model: Model, view: MainWindow):
 
         self._model = model
         self._view = view
@@ -38,9 +40,10 @@ class BaseController(ABC):
 # Class that controls the main toolbar widget
 class ToolbarController(BaseController):
     """Related to the toolbar."""
-    def __init__(self, model, view):
+    def __init__(self, model: Model, view: MainWindow):
         super().__init__(model, view)
 
+        self._view.conf_window._create_calib_box_group(self._model.config)
         self._connectSignalsAndSlots()
 
 
@@ -60,32 +63,42 @@ class ToolbarController(BaseController):
             self._view.ct_viewer.show()
 
 
+    def _is_valid_roi_size(self):
+        if self._view.conf_window.roi_size_h.text() == "":
+            print("ROI height must not be empty")
+            return
+        
+        if int(self._view.conf_window.roi_size_h.text()) < 1:
+            print("ROI height must be greater than 1")
+            return
+        
+        if self._view.conf_window.roi_size_v.text() == "":
+            print("ROI width must not be empty")
+            return
+        
+        if int(self._view.conf_window.roi_size_v.text()) < 1:
+            print("ROI width must be greater than 1")
+            return
+        
+        self._save_settings()
+
+
     def _save_settings(self):
         print("Saving settings")
+
+        # TODO Performe validation for every action that change the value and save it.
+        roi_automatic = self._view.conf_window.roi_automatic_cbox.currentText()
         roi_size_h = self._view.conf_window.roi_size_h.text()
         roi_size_v = self._view.conf_window.roi_size_v.text()
-        # TODO Performe validation
-
         channel = self._view.conf_window.channel.currentText()
         fit_function = self._view.conf_window.fit_function.currentText()
 
         settings = self._model.config
 
+        settings.set_roi_automatic(roi_automatic)
         settings.set_calib_roi_size((float(roi_size_h), float(roi_size_v)))
-
-        self._view.conf_window.roi_size_h_label.setText(
-            f"ROI size horizontal (mm): {settings.get_calib_roi_size()[0]}")
-        self._view.conf_window.roi_size_v_label.setText(
-            f"ROI size vertical (mm): {settings.get_calib_roi_size()[1]}")
-        
         settings.set_channel(channel)
-        self._view.conf_window.channel_label.setText(
-            f"Channel: {settings.get_channel()}"
-            )
         settings.set_fit_function(fit_function)
-        self._view.conf_window.fit_label.setText(
-            f"Fit function: {settings.get_fit_function()}"
-            )
 
 
     def _event_handler_open_ct_button(self):
@@ -282,9 +295,16 @@ class ToolbarController(BaseController):
 
 
     def _connectSignalsAndSlots(self):
+        # Actions on tab widgets
         self._view.calib_setings_action.triggered.connect(self._open_calibration_settings)
         self._view.ct_viewer_action.triggered.connect(self._event_handler_ct_viewer)
-        self._view.conf_window.save_button.clicked.connect(self._save_settings)
+
+        # Configuration widgets
+        self._view.conf_window.roi_automatic_cbox.currentIndexChanged.connect(self._save_settings)
+        self._view.conf_window.roi_size_h.textEdited.connect(self._is_valid_roi_size)
+        self._view.conf_window.roi_size_v.textEdited.connect(self._is_valid_roi_size)
+        self._view.conf_window.channel.currentIndexChanged.connect(self._save_settings)
+        self._view.conf_window.fit_function.currentIndexChanged.connect(self._save_settings)
         
         # CT Viewer
         self._view.ct_viewer.load_button.clicked.connect(self._event_handler_open_ct_button)

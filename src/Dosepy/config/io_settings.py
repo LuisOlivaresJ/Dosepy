@@ -31,7 +31,7 @@ class Settings(BaseModel):
     * Every set_some_attribute() method must save to settings.toml file.
     """
     
-    roi_automatic: bool = True  # Used to create an automatic roi size.
+    roi_automatic: str = "Disable"  # Used to create an automatic roi size.
     roi_size_h: float = Field(default = 8, gt=0)  # Horizontal size of the ROI in mm, must be greater than 0
     roi_size_v: float = Field(default = 8, gt=0)  # Vertical size of the ROI in mm, must be greater than 0
 
@@ -41,7 +41,7 @@ class Settings(BaseModel):
     lateral_correction: bool = False  # If lateral correction is enabled
 
 
-    def get_roi_automatic(self) -> bool:
+    def get_roi_automatic(self) -> str:
         return self.roi_automatic
 
     def get_calib_roi_size(self) -> tuple:
@@ -192,7 +192,7 @@ def _create_default_settings(path) -> None:
 
     user = tomlkit.table()
     user.add(tomlkit.comment("Automatic roi size"))
-    user.add("roi_automatic", True)
+    user.add("roi_automatic", "Enable")
     user.add(tomlkit.comment("ROI size in mm"))
     user.add("roi_size_h", 8.0)  # Default value: 8 millimeters
     user.add("roi_size_v", 8.0)
