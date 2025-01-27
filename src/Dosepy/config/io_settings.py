@@ -10,8 +10,6 @@ instead add them as attriutes of the class Settings and update the
 _create_default_settings() function.
 """
 
-#TODO: Change app_controller to use the settings module to get the ROI size
-#TODO: Create a GUI to change the settings
 
 import tomlkit
 import pathlib
