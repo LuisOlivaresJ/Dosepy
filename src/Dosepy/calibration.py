@@ -195,7 +195,7 @@ class LUT:
         
         The array must contain the position and relative profile value.
         First column should be a position, given in mm, with 0 being at center.
-        Second column should be the measured profile relative value [%], normalised to 100 in the center.
+        Second column should be the relative value [%], normalized to 100 in the center.
         Corrected doses are defined as dose_corrected(position) = dose * profile(position),
         where profile(y) is the beam profile, normalized to 100% at beam center
         axis, which is assumed to be aligned with scanner center.
@@ -580,9 +580,9 @@ class LUT:
 
     def plot_dose_fit_uncertainty(
         self,
-        position: float,
-        channel: str,
-        fit_function: str,
+        position: float = 0,
+        channel: str = "red",
+        fit_function: str = "rational",
         ax: plt.Axes = None,
         **kwargs
         ):

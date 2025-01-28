@@ -1,23 +1,23 @@
 # Installation
 
-If you are going to work with python packages (for example Dosepy), it is a good practice to create virtual environments for your different applications, to avoid python-packages dependency conflicts. To do that, first we need to install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (a python package manager). Once installed, open *Anaconda Prompt* (a black window) and write the following commands:
+If you are working with Python packages (for example Dosepy), it is a good practice to create virtual environments for your different applications, to avoid python-packages dependency conflicts. To do that, first we need to install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (a python package manager). Once installed, open *Anaconda Prompt* (a black window) and write the following commands:
 
 
 ```python
-conda create -n myenv python=3.10
+conda create -n myenv python=3.11
 conda activate myenv 
 pip install Dosepy
 ```
 
-1. The first line is used to create an environment named "myenv", with a specific version of Python: 3.10
+1. The first line is used to create an environment named "myenv", with a specific version of Python: 3.11
 2. The second line activates the created environment
 3. The last one to install Dosepy
 
 For more information about environments, [see this guide](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#)
 
-## Open Dosepy application
+## Open Dosepy the GUI application
 
-To open the Dosepy application first start a python interpreter, for example running the python command:
+First start a python interpreter, for example running the python command:
 
 ```python
 python

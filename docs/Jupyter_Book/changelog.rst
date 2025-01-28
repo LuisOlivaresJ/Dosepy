@@ -15,9 +15,9 @@ Improvements
 
 Improvements for developing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* New LUT class on calibration module, used to manipulate data for film calibration.
-* Tiff2Dose module uses the DoseConverter interface to handle conversion to dose using different channel or fit function.
-* Dosepy has a MIT license
+* New LUT class on calibration module, used to manipulate data for film calibration. The class is an adoption of the LUT class from `OMG Dosimetry package <https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT>`_
+* Tiff2Dose module uses the DoseConverter interface to handle conversion to dose using a different channel or fit function.
+* Dosepy has a MIT license on belief that open source is better science.
 
 Issue
 ^^^^^
