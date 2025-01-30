@@ -9,6 +9,8 @@ import copy
 import math
 import logging
 
+from pathlib import Path
+
 #from Dosepy.image import load
 
 logging.basicConfig(
@@ -148,7 +150,7 @@ def equate_array_size(
     return cropped_images
 
 
-def average(file_list: list, images: list) -> list:
+def average(file_list: list[str | Path], images: list) -> list:
     """
     Average images with the same file name. Last 7 characters are not accounted.
 
@@ -165,13 +167,20 @@ def average(file_list: list, images: list) -> list:
     img_list
         list of TiffImage
     """
-    film_list = list(set([file[:-7] for file in file_list]))
-    img_list = []
 
-    for film in film_list:
+    # Create paths as string
+    file_list_as_str = []
+    for path in file_list:
+        file_list_as_str.append(str(path))
+
+    # Create a list with no duplicate names
+    unique_films = list(set([file[:-7] for file in file_list_as_str]))
+    
+    img_list = []
+    for film in unique_films:
         merge_list =[]
         first_img = copy.deepcopy(images[0])  # Placeholder
-        for file, image in zip(file_list, images):
+        for file, image in zip(file_list_as_str, images):
             if file[:-7] == film:
                 merge_list.append(image)
         
