@@ -150,7 +150,7 @@ def equate_array_size(
     return cropped_images
 
 
-def average(file_list: list[str | Path], images: list) -> list:
+def average_images(file_list: list[str | Path], images: list) -> list:
     """
     Average images with the same file name. Last 7 characters are not accounted.
 
