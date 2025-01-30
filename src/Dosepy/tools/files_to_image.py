@@ -150,13 +150,13 @@ def equate_array_size(
     return cropped_images
 
 
-def average_images(file_list: list[str | Path], images: list) -> list:
+def average_tiff_images(paths: list[str | Path], images: list) -> list:
     """
-    Average images with the same file name. Last 7 characters are not accounted.
+    Average images with the same file name, ignoring last 7 characters.
 
     Parameters
     ----------
-    file_list : list
+    paths : list
         list of strings with the tiff file path.
 
     images : list
@@ -164,33 +164,43 @@ def average_images(file_list: list[str | Path], images: list) -> list:
 
     Return
     ------
-    img_list
+    averaged_images : list
         list of TiffImage
+
+    Note
+    ----
+    Since the last 7 characters of the file name are ignored, the function
+    average the next files:
+
+    - my_file_name_001.tif
+    - my_file_name_002.tif
+    - my_file_name_003.tif
+
     """
 
-    # Create paths as string
-    file_list_as_str = []
-    for path in file_list:
-        file_list_as_str.append(str(path))
+    # Create paths as strings
+    paths_as_str = []
+    for path in paths:
+        paths_as_str.append(str(path))
 
     # Create a list with no duplicate names
-    unique_films = list(set([file[:-7] for file in file_list_as_str]))
+    unique_names = list(set([file[:-7] for file in paths_as_str]))
     
-    img_list = []
-    for film in unique_films:
-        merge_list =[]
-        first_img = copy.deepcopy(images[0])  # Placeholder
-        for file, image in zip(file_list_as_str, images):
-            if file[:-7] == film:
-                merge_list.append(image)
-        
-        new_array = np.stack(tuple(img.array for img in merge_list), axis=-1)
-        combined_arr = np.mean(new_array, axis=3)
-        first_img.array = combined_arr
+    averaged_images = []
+    for unique in unique_names:
+        to_merge =[]
+        buff = copy.deepcopy(images[0])
 
-        img_list.append(first_img)
+        # Catch files with same name
+        for file_name, image in zip(paths_as_str, images):
+            if file_name[:-7] == unique:
+                to_merge.append(image)
+        
+        new_array = np.stack(tuple(img.array for img in to_merge), axis=-1)
+        buff.array = np.mean(new_array, axis=3)
+        averaged_images.append(buff)
     
-    return img_list
+    return averaged_images
 
 
 def stack_images(img_list, axis=0, padding=0):

@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 
-from Dosepy.tools.files_to_image import average_images
+from Dosepy.tools.files_to_image import average_tiff_images
 from Dosepy.image import load
 
 import os
@@ -32,8 +32,8 @@ def get_file_paths(directory: str, type: str) -> list[str]:
     return file_paths
 
 
-# Test average_images function using 18 files
-def test_average_images_with_path_as_str():
+# Test average_tiff_images function using 18 files
+def test_average_tiff_images_with_path_as_str():
     path_to_folder = "/media/luis/TOMO/Dosepy/BQT_INCAN/Cal_Der/"
 
     # Colocar en una lista el path a los archivos en el folder
@@ -44,15 +44,15 @@ def test_average_images_with_path_as_str():
     for path in path_to_files:
         all_images.append(load(path))
 
-    images = average_images(path_to_files, all_images)
+    images = average_tiff_images(path_to_files, all_images)
 
     # The number of files with different 
     # (excluding las 7 character) name is 9
     assert len(images) == 9
 
 
-# Test average_images using path as pathlib.PosixPath
-def test_average_images_with_path_as_PosixPath():
+# Test average_tiff_images using path as pathlib.PosixPath
+def test_average_tiff_images_with_path_as_PosixPath():
     path_to_folder = "/media/luis/TOMO/Dosepy/BQT_INCAN/Cal_Der/"
 
     path_to_files = get_file_paths(path_to_folder, type="posix_path")
@@ -61,6 +61,6 @@ def test_average_images_with_path_as_PosixPath():
     for path in path_to_files:
         all_images.append(load(path))
 
-    images = average_images(path_to_files, all_images)
+    images = average_tiff_images(path_to_files, all_images)
 
     assert len(images) == 9

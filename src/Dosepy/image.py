@@ -28,7 +28,7 @@ from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 from skimage.transform import rotate
 from .tools.resol import equate_resolution
-from .tools.files_to_image import equate_array_size, average_images, stack_images
+from .tools.files_to_image import equate_array_size, average_tiff_images, stack_images
 from .tools.array_utils import filter_array
 
 import math
@@ -140,7 +140,7 @@ def load_multiples(files: list[str]) -> ImageLike:
         
         img = load(files[0]) # Placeholder
         equated_images = equate_array_size(images, axis=("width", "height"))
-        averaged_images = average_images(files, equated_images)
+        averaged_images = average_tiff_images(files, equated_images)
         stacked = stack_images(averaged_images, padding=6)
         img.array = stacked.array
         return img
