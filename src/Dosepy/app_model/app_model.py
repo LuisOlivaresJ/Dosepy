@@ -1,6 +1,6 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load, load_multiples, ImageLike, TiffImage, ArrayImage
+from Dosepy.image import _is_tif_file, load, load_multiples, ImageLike, TiffImage, ArrayImage
 import imageio.v3 as iio
 import numpy as np
 from numpy import ndarray
@@ -34,7 +34,7 @@ class Model:
 
 
     def are_valid_tif_files(self, files: list) -> bool:
-        return all([_is_image_file(file) and _is_RGB(file) for file in files])
+        return all([_is_tif_file(file) for file in files])
         
 
     def are_files_equal_shape(self, files: list) -> bool:

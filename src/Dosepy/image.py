@@ -13,7 +13,7 @@ DESCRIPTION
 from pathlib import Path
 import numpy as np
 import os.path as osp
-from typing import Any, Union
+from typing import Any, Union, BinaryIO
 import imageio.v3 as iio
 from abc import ABC, abstractmethod
 
@@ -41,7 +41,7 @@ MIN_AREA_FOR_FILMS = 400  # 20x20 mm^2
 ImageLike = Union["ArrayImage", "TiffImage"]
 
 
-def load(path: str | Path | np.ndarray, **kwargs) -> ImageLike:
+def load(path: str | Path | np.ndarray | BinaryIO, **kwargs) -> ImageLike:
     r"""Load a DICOM image, TIF image, or numpy 2D array.
 
     Parameters
@@ -95,18 +95,9 @@ def load(path: str | Path | np.ndarray, **kwargs) -> ImageLike:
 
         return ArrayImage(d_array, dpi=MM_PER_INCH/resolution_mm[0])
     
-    elif _is_image_file(path):
-        if _is_tif_file(path):
-            if _is_RGB(path):
-                tiff_image = TiffImage(path, **kwargs)
-                return tiff_image
-            
-            else:
-                raise TypeError(f"The argument '{path}' was not found to be\
-                                a RGB TIFF file.")
-        else:
-            raise TypeError(f"The argument '{path}' was not found to be\
-                            a valid TIFF file.")
+    elif _is_tif_file(path):
+        return TiffImage(path, **kwargs)
+
     else:
         raise TypeError(f"The argument '{path}' was not found to be\
                         a valid file.")
@@ -156,29 +147,13 @@ def _is_dicom(path: str | Path) -> bool:
     return is_dicom_image(file=path)
 
 
-def _is_image_file(path: str | Path) -> bool:
-    """Whether the file is a readable image file via imageio.v3."""
+def _is_tif_file(path: str | Path | BinaryIO) -> bool:
+    """Whether the file is a RGB tif image file."""
     try:
-        iio.improps(path)
-        return True
+        img_props = iio.improps(path)
+        if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
+            return True
     except:
-        return False
-
-
-def _is_tif_file(path: str | Path) -> bool:
-    """Whether the file is a tif image file."""
-    if Path(path).suffix in (".tif", ".tiff"):
-        return True
-    else:
-        return False
-
-
-def _is_RGB(path: str | Path) -> bool:
-    """Whether the image is RGB."""
-    img_props = iio.improps(path)
-    if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
-        return True
-    else:
         return False
 
 
@@ -364,7 +339,7 @@ class TiffImage(BaseImage):
         try:
             dpi = self.props.spacing[0]
 
-        except AttributeError:
+        except:
             pass
 
         self._dpi = dpi

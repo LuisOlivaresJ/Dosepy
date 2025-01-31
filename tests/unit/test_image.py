@@ -21,9 +21,6 @@ class TestReadableImage(unittest.TestCase):
         file_path = cwd / "fixtures" / "calibracion.png"
         self.assertFalse(image._is_tif_file(file_path))
 
-    def test_bad_RGB(self):
-        file_path = cwd / "fixtures" / "red_channel.tif"
-        self.assertFalse(image._is_RGB(file_path))
 
     def test_readable_image(self):
         #cwd = Path(__file__).parent

@@ -127,8 +127,7 @@ def is_dicom_image(file: str | Path) -> bool:
     try:
         pydicom.dcmread(file)
         result = True
-    except InvalidDicomError as error:
-        #print(f"A {type(error).__name__} has occurred.")
+    except:
         pass
 
     return result
