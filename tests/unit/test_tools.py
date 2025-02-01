@@ -4,6 +4,7 @@ from pathlib import Path
 from Dosepy.tools.files_to_image import (
     average_tiff_images,
     equate_array_size,
+    stack_images,
 )
 from Dosepy.image import load
 
@@ -111,3 +112,15 @@ def test_equate_array_size_height_and_width():
         )
 
     assert new1.shape == (5, 5)
+
+
+# Test stack_images
+
+def test_stack_images():
+
+    img1 = load(np.ones((5, 5, 3)), dpi=1)
+    img2 = load(np.ones((5, 5, 3)), dpi=1)
+
+    img = stack_images([img1, img2])
+
+    assert img.shape == (10, 5, 3)

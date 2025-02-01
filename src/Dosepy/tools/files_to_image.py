@@ -160,12 +160,12 @@ def average_tiff_images(paths: list[str | Path], images: list) -> list:
         list of strings with the tiff file path.
 
     images : list
-        list of TiffImage
+        list of TiffImage or ArrayImage objects.
 
     Return
     ------
     averaged_images : list
-        list of TiffImage
+        list of TiffImage or ArrayImage objects.
 
     Note
     ----
@@ -203,7 +203,7 @@ def average_tiff_images(paths: list[str | Path], images: list) -> list:
     return averaged_images
 
 
-def stack_images(img_list, axis=0, padding=0):
+def stack_images(img_list: list, axis=0, padding=0):
     """
     Takes in a list of images and concatenate them side by side.
     Useful for film calibration, when more than one image is needed
@@ -214,7 +214,7 @@ def stack_images(img_list, axis=0, padding=0):
     Parameters
     ----------
     img_list : list
-        The images to be stacked. List of TiffImage objects.
+        The images to be stacked. List of TiffImage or ArrayImage.
 
     axis : int, default: 0
         The axis along which the arrays will be joined. 0 if vertical or 1 if horizontal.
@@ -227,6 +227,15 @@ def stack_images(img_list, axis=0, padding=0):
     ::class:`~Dosepy.image.TiffImage`
         Instance of a TiffImage class.
 
+    Example
+    -------
+
+        >>> img1 = load(np.ones((5, 5, 3)), dpi=1)
+        >>> img2 = load(np.ones((5, 5, 3)), dpi=1)
+
+        >>> img = stack_images([img1, img2])
+
+        >>> img.shape  # (10, 5, 3)
     """
 
     first_img = copy.deepcopy(img_list[0])
