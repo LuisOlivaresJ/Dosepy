@@ -1,8 +1,13 @@
 import pytest
 from pathlib import Path
 
-from Dosepy.tools.files_to_image import average_tiff_images
+from Dosepy.tools.files_to_image import (
+    average_tiff_images,
+    equate_array_size,
+)
 from Dosepy.image import load
+
+import numpy as np
 
 import os
 
@@ -64,3 +69,45 @@ def test_average_tiff_images_with_path_as_PosixPath():
     images = average_tiff_images(path_to_files, all_images)
 
     assert len(images) == 9
+
+
+# Test width reduction with equate_array_size function
+def test_equate_array_size():
+
+    img1 = load(np.ones((6, 6)), dpi=1)
+    img2 = load(np.ones((5, 5)), dpi=1)
+
+    (new1, new2) = equate_array_size(
+        image_list=[img1, img2],
+        axis=("width")
+        )
+
+    assert new1.shape == (6, 5)
+
+
+# Test height reduction with equate_array_size function
+def test_equate_array_size_height():
+
+    img1 = load(np.ones((6, 6)), dpi=1)
+    img2 = load(np.ones((5, 5)), dpi=1)
+
+    (new1, new2) = equate_array_size(
+        image_list=[img1, img2],
+        axis=("height")
+        )
+
+    assert new1.shape == (5, 6)
+
+
+# Test height and width reduction with equate_array_size function
+def test_equate_array_size_height_and_width():
+
+    img1 = load(np.ones((8, 8)), dpi=1)
+    img2 = load(np.ones((5, 5)), dpi=1)
+
+    (new1, new2) = equate_array_size(
+        image_list=[img1, img2],
+        axis=("height", "width")
+        )
+
+    assert new1.shape == (5, 5)
