@@ -4,7 +4,7 @@ import pytest
 
 import numpy as np
 
-from Dosepy.calibration import LUT#, _get_dose_from_fit
+from Dosepy.calibration import LUT, passed_QC
 from Dosepy.image import load, TiffImage
 
 from pathlib import Path
@@ -16,6 +16,13 @@ cwd = Path(__file__).parent
 def example_image():
     file_path = cwd / "fixtures" / "CAL" / "film20240620_002.tif"
     return load(file_path)
+
+
+@pytest.fixture
+def cal_img_without_filters():
+    file_path = cwd / "fixtures" / "image.tif"
+    return load(file_path)
+
 
 @pytest.fixture
 def example_profile():
@@ -39,6 +46,14 @@ def cal_img_with_filters():
     cal_img = load(file_path)
 
     return cal_img
+
+
+@pytest.fixture
+def verification_image_with_filters():
+    file_path = cwd / "fixtures/Ver_050dpi20241106_001.tif"
+    ver_img = load(file_path)
+
+    return ver_img
 
 # Test the instance of the LUT class
 def test_instance(example_image, example_metadata):
@@ -444,3 +459,50 @@ def test_coordinate_optical_filters(cal_img_with_filters):
     assert rois[2].get("x") == pytest.approx(960, abs=20)
     assert rois[2].get("y") == pytest.approx(455, abs=20)
     assert rois[2].get("radius") == pytest.approx(15, abs=10)
+
+# Test the passed_QC function
+def test_qc_function(
+          cal_img_with_filters,
+          verification_image_with_filters,
+          ):
+     
+    cal = LUT(cal_img_with_filters)
+    cal.set_central_rois()
+    cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
+
+    cal.compute_central_lut(filter=3)
+
+    assert passed_QC(verification_image_with_filters, cal)
+
+
+# Test passed_QC() using an image without optical filers
+def test_qc_using_an_image_without_filters(
+    cal_img_with_filters,
+    example_image,
+    ):
+     
+    cal = LUT(cal_img_with_filters)
+    cal.set_central_rois()
+    cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
+
+    cal.compute_central_lut(filter=3)
+
+    assert not passed_QC(example_image, cal)
+
+
+# Test passed_QC() using a lut without optical filters
+def test_qc_using_a_lut_without_filters(
+    cal_img_without_filters,
+    verification_image_with_filters,
+    ):
+
+    cal = LUT(cal_img_without_filters)
+    cal.set_central_rois()
+    cal.set_doses([0, 0.5, 1, 1.5, 2, 3, 5, 8, 10])
+
+    cal.compute_central_lut()
+
+    assert not passed_QC(
+        verification_image_with_filters,
+        cal,
+        )

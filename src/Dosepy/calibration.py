@@ -141,7 +141,7 @@ class LUT:
 
         self.lut['filter'] = None
         self.lut['rois_for_optical_filters'] = None
-        self.lut['intensities_of_optical_filters'] = None
+        self.lut['intensities_of_optical_filters'] = []
 
         # Check if the doses are provided.
         if doses:
@@ -1191,7 +1191,28 @@ class LUT:
         return u_dose
 
 
-def passed_QC(img: TiffImage, lut: LUT) -> bool:
+def passed_QC(img: TiffImage, lut: LUT, rtol=1e-2) -> bool:
+    """
+    Quality control test to check reproducibility of the scanner
+    using mean intensity of optical filters in red channel. 
+    This test is passed if the intensity of the optical filters in
+    the image is equal to the intensity of the optical filters in the
+    image used for calibration, within a relative tolerance.
+
+    Parameters
+    ----------
+    img : TiffImage
+        The image to check.
+    lut : LUT
+        The look-up table used for calibration.
+    rtol : float
+        The relative tolerance parameter (0 - 1). Default is 1%
+
+    Returns
+    -------
+    bool
+        True if the test passed, False otherwise.
+    """
 
     # Do not perform the check if lut or img does not have optical filters.
     if len(lut.get_intensities_of_optical_filters()) == 0:
@@ -1202,15 +1223,16 @@ def passed_QC(img: TiffImage, lut: LUT) -> bool:
         print("QC not peformed. There is not optical filter in the image.")
         return False
     
+    # Get mean intensity of optical filters in red channel.
     calibration_optical_filter_intensities = lut.get_intensities_of_optical_filters(),
-    img_optical_filter_intensities = img.get_optical_filters().get("intesities_of_optical_filters")
+    img_optical_filter_intensities = img.get_optical_filters().get("intensities_of_optical_filters")
 
     are_close = all(
             np.isclose(
             calibration_optical_filter_intensities,
             img_optical_filter_intensities,
-            rtol=1e-2,
-            )
+            rtol=rtol,
+            ).tolist()
         )
     
     return are_close

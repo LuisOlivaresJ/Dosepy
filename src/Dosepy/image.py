@@ -741,17 +741,17 @@ class TiffImage(BaseImage):
         >>> optical_filters["intensities_of_optical_filters"]
         """
 
+        optical_filters = {}
+
         if not self._is_labeled:
             self.set_labeled_films_and_filters()
 
         if self.number_of_optical_filters == 0:
             print("Optical filters not found")
-            return
         
         # Get the central region of each filter.
         rois = []
         intensities = []
-        optical_filters = {}
         
         for region in regionprops(self.labeled_optical_filters, self.array[:, :, 0]):
 
