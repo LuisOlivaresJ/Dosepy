@@ -1189,3 +1189,28 @@ class LUT:
 
 
         return u_dose
+
+
+def passed_QC(img: TiffImage, lut: LUT) -> bool:
+
+    # Do not perform the check if lut or img does not have optical filters.
+    if len(lut.get_intensities_of_optical_filters()) == 0:
+        print("QC not peformed. There is not optical filter in lut.")
+        return False
+    
+    if len(img.get_optical_filters().get("intensities_of_optical_filters", [])) == 0:
+        print("QC not peformed. There is not optical filter in the image.")
+        return False
+    
+    calibration_optical_filter_intensities = lut.get_intensities_of_optical_filters(),
+    img_optical_filter_intensities = img.get_optical_filters().get("intesities_of_optical_filters")
+
+    are_close = all(
+            np.isclose(
+            calibration_optical_filter_intensities,
+            img_optical_filter_intensities,
+            rtol=1e-2,
+            )
+        )
+    
+    return are_close

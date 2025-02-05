@@ -458,7 +458,7 @@ class TiffImage(BaseImage):
             The threshold values used to detect ojects.
             The first value is used as a threshold for dark regions (< 0.1) and the second value for bright regions (> 0.9).
         min_area : float
-            The minimum area in mm^2 of a region to be considered an onject.
+            The minimum area in mm^2 of a region to be considered an object.
         show : bool
             If True, the image and histogram are shown.
 
