@@ -37,6 +37,7 @@ from Dosepy.tools.functions import optical_density, uncertainty_optical_density,
 from Dosepy.tools.functions import polynomial_g3, rational_function, polynomial_n
 
 import yaml
+from pathlib import Path
 
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
@@ -202,7 +203,7 @@ class LUT:
         """
 
         # Check if the beam profile is a string.
-        if not isinstance(beam_profile, str):
+        if not isinstance(beam_profile, (str, Path)):
             raise Exception("Beam profile must be a string that has the path to the file.")
 
         # Load the beam profile.
@@ -797,7 +798,7 @@ class LUT:
 
     def get_intensities_of_optical_filters(self) -> list[float]:
         """
-        Return the intensities of the optical filters in the red channel.
+        Return the mean intensities of the optical filters in the red channel.
         """
        
         return self.lut.get("intensities_of_optical_filters")

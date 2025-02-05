@@ -376,6 +376,7 @@ class TiffImage(BaseImage):
         self._dpi = dpi
 
         # Use set_labeled_films_and_filters() method to fill these attributes.
+        self._is_labeled = False
         self.labeled_films = None
         self.labeled_optical_filters = None
 
@@ -435,6 +436,8 @@ class TiffImage(BaseImage):
         self.number_of_films = film_counter
         self.labeled_optical_filters = label(filters)
         self.number_of_optical_filters = filter_counter
+
+        self._is_labeled = True
 
 
     def get_labeled_objects(
@@ -565,9 +568,7 @@ class TiffImage(BaseImage):
         >>> list(zip(mean, std))
         """
 
-        # TODO If self.labeled_films is currently calculated (i.e. an np.ndarray), this check will result in an error.
-        #if not self.labeled_films.any():
-        if not isinstance(self.labeled_films, np.ndarray):
+        if not self._is_labeled:
             self.set_labeled_films_and_filters()
 
         if show:
@@ -718,6 +719,55 @@ class TiffImage(BaseImage):
             self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
         else:
             raise ValueError("Channel not suported. Use 'R', 'G' or 'B'.")
+        
+    
+    def get_optical_filters(self) -> dict:
+        """
+        Return the rois and mean intensities of the optical filters in the red channel.
+
+        Returns
+        -------
+        dict
+            A dictionary with the rois as a dict and intensities as an array of the optical filters.
+
+        Example
+        -------
+        >>> from Dosepy.image import load
+        >>> path_to_image = r"C:\QA\image.tif"
+        >>> img = load(path_to_image)
+        >>> optical_filters = img.get_optical_filters()
+
+        >>> optical_filters["rois_for_optical_filters"]
+        >>> optical_filters["intensities_of_optical_filters"]
+        """
+
+        if not self._is_labeled:
+            self.set_labeled_films_and_filters()
+
+        if self.number_of_optical_filters == 0:
+            print("Optical filters not found")
+            return
+        
+        # Get the central region of each filter.
+        rois = []
+        intensities = []
+        optical_filters = {}
+        
+        for region in regionprops(self.labeled_optical_filters, self.array[:, :, 0]):
+
+            rois.append(
+                {
+                    'x': int(region.centroid[0]),
+                    'y': int(region.centroid[1]),
+                    'radius': int(region.axis_minor_length/2)
+                }
+            )
+            intensities.append(region.intensity_mean)
+
+        optical_filters["rois_for_optical_filters"] = rois
+        optical_filters["intensities_of_optical_filters"] = sorted(intensities)
+
+        return optical_filters
             
 
 class ArrayImage(BaseImage):
