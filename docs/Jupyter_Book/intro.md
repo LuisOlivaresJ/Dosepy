@@ -25,6 +25,7 @@ scanned films are **automatically detected**.
 **Film dosimetry**
 
 Using EBT 3 radiochromic film, total dispersion factors (also known as Output factors) were measured for a 6 FFF beam from a Clinac-iX linear accelerator. Following the IAEA-AAPM TRS 483 code of practice, the results were compared with measurements from two ionization chambers. [The results](https://smf.mx/programas/congreso-nacional-de-fisica/memorias-cnf/) were presented at the LXIII National Physics Congress (2020).
+
 ![Image_factores_campo](../assets/Factores_de_campo_6FFF.png)
 
 ## Scientific publications where Dosepy was used
