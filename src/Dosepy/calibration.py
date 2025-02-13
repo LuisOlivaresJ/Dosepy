@@ -142,6 +142,7 @@ class LUT:
         self.lut['filter'] = None
         self.lut['rois_for_optical_filters'] = None
         self.lut['intensities_of_optical_filters'] = []
+        self.lut['beam_profile'] = []
 
         # Check if the doses are provided.
         if doses:
@@ -1019,19 +1020,18 @@ class LUT:
         list
             A list of doses for each film.
         """
-        # Check if the beam profile is loaded.
-        #if self.lut.get("beam_profile"):
-        #    raise Exception("No beam profile loaded.")
+        # Check if beam profile is loaded. If not, flat dose 
+        # distribution in the film is assumed.
+        if not self.lut["beam_profile"]:
+            # No correction  
+            profile = 1
 
-        # Check if the doses are set.
-        #if not self.lut.get("nominal_doses"):
-        #    raise Exception("No doses set.")
-
-        profile = np.interp(
-            position,
-            np.array(self.lut['beam_profile']['positions']),
-            np.array(self.lut['beam_profile']['doses']) / 100,
-            )
+        else:
+            profile = np.interp(
+                position,
+                np.array(self.lut['beam_profile']['positions']),
+                np.array(self.lut['beam_profile']['doses']) / 100,
+                )
 
         lateral_doses = sorted([float(dose * profile) for dose in self.lut["nominal_doses"]])
 
@@ -1197,7 +1197,7 @@ def passed_QC(img: TiffImage, lut: LUT, rtol=1e-2) -> bool:
     """
     Quality control test to check reproducibility of the scanner
     using mean intensity of optical filters in red channel. 
-    This test is passed if the intensity of the optical filters in
+    The test pass if the intensity of the optical filters in
     the image is equal to the intensity of the optical filters in the
     image used for calibration, within a relative tolerance.
 
@@ -1228,6 +1228,11 @@ def passed_QC(img: TiffImage, lut: LUT, rtol=1e-2) -> bool:
     # Get mean intensity of optical filters in red channel.
     calibration_optical_filter_intensities = lut.get_intensities_of_optical_filters(),
     img_optical_filter_intensities = img.get_optical_filters().get("intensities_of_optical_filters")
+
+    print("Intensity of optical filter(s) in calibration.")
+    print(calibration_optical_filter_intensities)
+    print("Intensity of optical filter(s) in the image.")
+    print(img_optical_filter_intensities)
 
     are_close = all(
             np.isclose(
