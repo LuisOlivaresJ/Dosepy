@@ -54,7 +54,7 @@ cal.plot_lateral_response(channel = "red")
 
 """
 cal.plot_fit(
-    fit_type="rational",
+    fit="rational",
     position=0,
     channel="red",
     )
@@ -93,7 +93,7 @@ print(std)
 fig, axes = plt.subplots(1, 2)
 
 cal.plot_fit(
-    fit_type = fit_function,
+    fit = fit_function,
     position = position,
     channel = channel,
     ax=axes[0],
@@ -102,7 +102,7 @@ cal.plot_fit(
 cal.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
-    fit_function=fit_function,
+    fit=fit_function,
     ax=axes[1],
 )
 
@@ -118,7 +118,7 @@ cal_filter.compute_lateral_lut(filter = 3)
 
 
 cal_filter.plot_fit(
-    fit_type=fit_function,
+    fit=fit_function,
     position=position,
     channel=channel,
     ax=axes_filter[0],
@@ -127,7 +127,7 @@ cal_filter.plot_fit(
 cal_filter.plot_dose_fit_uncertainty(
     position=position,
     channel=channel,
-    fit_function=fit_function,
+    fit=fit_function,
     ax=axes[1],
     alpha = 0.5,
 )

@@ -167,7 +167,7 @@ class CalibrationWidget(QWidget):
         self.axe_curve.clear()
         cal.plot_fit(
             channel=channel,
-            fit_type=fit_function,
+            fit=fit_function,
             position=0,
             ax=self.axe_curve,
             )

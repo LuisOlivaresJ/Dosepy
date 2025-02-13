@@ -831,7 +831,7 @@ class ArrayImage(BaseImage):
             File name as a string
 
         """
-        np_tif = self.array.astype(np.uint16)
+        np_tif = self.array.astype(np.float32)
         #np_tif = self.array
         tif_encoded = iio.imwrite(
             "<bytes>",
@@ -1366,7 +1366,7 @@ def stack_images(img_list: list, axis=0, padding=0):
         new_img_list.append(new_img)
     
     new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
-    first_img.array = new_array
+    first_img.array = new_array.astype(np.uint16)
 
     return first_img
 

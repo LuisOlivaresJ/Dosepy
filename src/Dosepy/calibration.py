@@ -512,7 +512,7 @@ class LUT:
 
     def plot_fit(
         self,
-        fit_type: str = 'rational',
+        fit: str = 'rational',
         channel: str = 'red',
         position: float = 0,
         ax: plt.Axes = None,
@@ -522,7 +522,7 @@ class LUT:
 
         Parameters
         ----------
-        fit_type : str
+        fit : str
             The type of fit to use. "rational" or "polynomial".
         channel : str
             The color channel to plot. "red", "green", "blue" or "mean".
@@ -531,7 +531,7 @@ class LUT:
         ax : plt.Axes
             The axis to plot the image to. If None, creates a new figure.
         """
-        if fit_type.lower() not in ["rational", "polynomial"]:
+        if fit.lower() not in ["rational", "polynomial"]:
             raise Exception("Invalid fit type. Choose between 'rational' or 'polynomial'.")
         
         if channel.lower() not in ["red", "green", "blue", "mean"]:
@@ -547,12 +547,12 @@ class LUT:
         calib_intensities, std = self.get_intensities(position, channel)
         calib_intensities_curve = np.linspace(calib_intensities[0], calib_intensities[-1], endpoint=True, num=100)
 
-        if fit_type == "rational":
+        if fit == "rational":
             response = ratio(calib_intensities, calib_intensities[0])
             response_curve = ratio(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_ratio(calib_intensities, std, calib_intensities[0], std[0])
 
-        elif fit_type == "polynomial":
+        elif fit == "polynomial":
             response = optical_density(calib_intensities, calib_intensities[0])
             response_curve = optical_density(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_optical_density(calib_intensities, std, calib_intensities[0], std[0])
@@ -566,7 +566,7 @@ class LUT:
         dose_curve, _, _ = self._get_dose_from_fit(
             calib_film_intensities = calib_intensities,
             calib_dose = doses,
-            fit_function = fit_type,
+            fit_function = fit,
             intensities = calib_intensities_curve,
         )
 
@@ -577,13 +577,15 @@ class LUT:
 
         axe.errorbar(response, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
         axe.plot(response_curve, dose_curve, color = channel)
+        axe.set_xlabel("Film response")
+        axe.set_ylabel("Dose [Gy]")
 
 
     def plot_dose_fit_uncertainty(
         self,
         position: float = 0,
         channel: str = "red",
-        fit_function: str = "rational",
+        fit: str = "rational",
         ax: plt.Axes = None,
         **kwargs
         ):
@@ -596,7 +598,7 @@ class LUT:
             The lateral position in milimeters.
         channel : str
             The color channel to plot. "red", "green", "blue" or "mean".
-        fit_function : str
+        fit : str
             The type of fit to use. "rational" or "polynomial".
         """
         if self.lut["lateral_correction"]:
@@ -605,7 +607,7 @@ class LUT:
             doses = self.lut.get("nominal_doses")
 
         intensities, std = self.get_intensities(position, channel)
-        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit_function)
+        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit)
         u_percent = uncertainty[1:] / doses[1:] * 100
         
         if ax is None:
