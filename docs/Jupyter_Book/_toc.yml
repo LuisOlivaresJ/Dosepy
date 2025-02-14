@@ -7,6 +7,7 @@ chapters:
 - file: installation
 - file: usage
 - file: film_dosimetry
+- file: uncertainty
 - file: gamma
 - file: dicom
 - file: bibliography

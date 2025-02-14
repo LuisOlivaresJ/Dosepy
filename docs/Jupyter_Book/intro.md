@@ -1,18 +1,10 @@
 # Welcome to Dosepy
 
-![Portada_Dosepy](../assets/Calibration_tab.png)
+![Portada_Dosepy](../assets/films_and_curve_fit.png)
 
 Dosepy is an open-source Python library to perform radiochromic film dosimetry.
 
 Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform film dosimetry with effortless.
-
-## GUI
-
-Dosepy has a graphical user interface to perform film dosimetry. Just import the app module as
-
-```
-import Dosepy.app
-```
 
 ## Features
 

@@ -26,9 +26,11 @@ See the Python for Beginners [getting started tutorial](https://opentechschool.g
 
 ## Features
 
-## Film dosimetry
-
-Dosepy has a graphical user interface (GUI) to perform film dosimetry. Once a TIFF file is loaded, scanned films are automatically detected. Multiple scans of the same film can be loaded and averaged automatically for noise reduction.
+* Automatic film detection.
+* Uncertainty analysis.
+* Quality control test for error detection.
+* Average of multiple scans for noise reduction.
+* Handle for lateral scanner response artifact.
 
 ## Gamma index
 
