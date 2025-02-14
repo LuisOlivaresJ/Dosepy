@@ -291,4 +291,16 @@ def test_stack_images():
     assert img.shape == (10, 5, 3)
 
 
+# Test get_optical_filters
+def test_get_optical_filters():
 
+    img = load(cwd / "fixtures" / "Ver_050dpi20241106_001.tif")
+
+    optical_filters = img.get_optical_filters()
+    intensities = optical_filters["intensities_of_optical_filters"]
+
+    assert all(np.isclose(
+        intensities,
+        [9335, 13275, 20734],
+        rtol=1e-2,
+    ))

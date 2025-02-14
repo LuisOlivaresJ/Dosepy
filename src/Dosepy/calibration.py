@@ -37,6 +37,7 @@ from Dosepy.tools.functions import optical_density, uncertainty_optical_density,
 from Dosepy.tools.functions import polynomial_g3, rational_function, polynomial_n
 
 import yaml
+from pathlib import Path
 
 
 BIN_WIDTH = 1  # Width of the bin in milimeters used to compute the calibration LUT.
@@ -140,7 +141,8 @@ class LUT:
 
         self.lut['filter'] = None
         self.lut['rois_for_optical_filters'] = None
-        self.lut['intensities_of_optical_filters'] = None
+        self.lut['intensities_of_optical_filters'] = []
+        self.lut['beam_profile'] = []
 
         # Check if the doses are provided.
         if doses:
@@ -202,7 +204,7 @@ class LUT:
         """
 
         # Check if the beam profile is a string.
-        if not isinstance(beam_profile, str):
+        if not isinstance(beam_profile, (str, Path)):
             raise Exception("Beam profile must be a string that has the path to the file.")
 
         # Load the beam profile.
@@ -511,7 +513,7 @@ class LUT:
 
     def plot_fit(
         self,
-        fit_type: str = 'rational',
+        fit: str = 'rational',
         channel: str = 'red',
         position: float = 0,
         ax: plt.Axes = None,
@@ -521,7 +523,7 @@ class LUT:
 
         Parameters
         ----------
-        fit_type : str
+        fit : str
             The type of fit to use. "rational" or "polynomial".
         channel : str
             The color channel to plot. "red", "green", "blue" or "mean".
@@ -530,7 +532,7 @@ class LUT:
         ax : plt.Axes
             The axis to plot the image to. If None, creates a new figure.
         """
-        if fit_type.lower() not in ["rational", "polynomial"]:
+        if fit.lower() not in ["rational", "polynomial"]:
             raise Exception("Invalid fit type. Choose between 'rational' or 'polynomial'.")
         
         if channel.lower() not in ["red", "green", "blue", "mean"]:
@@ -546,12 +548,12 @@ class LUT:
         calib_intensities, std = self.get_intensities(position, channel)
         calib_intensities_curve = np.linspace(calib_intensities[0], calib_intensities[-1], endpoint=True, num=100)
 
-        if fit_type == "rational":
+        if fit == "rational":
             response = ratio(calib_intensities, calib_intensities[0])
             response_curve = ratio(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_ratio(calib_intensities, std, calib_intensities[0], std[0])
 
-        elif fit_type == "polynomial":
+        elif fit == "polynomial":
             response = optical_density(calib_intensities, calib_intensities[0])
             response_curve = optical_density(calib_intensities_curve, calib_intensities_curve[0])
             std_response = uncertainty_optical_density(calib_intensities, std, calib_intensities[0], std[0])
@@ -565,7 +567,7 @@ class LUT:
         dose_curve, _, _ = self._get_dose_from_fit(
             calib_film_intensities = calib_intensities,
             calib_dose = doses,
-            fit_function = fit_type,
+            fit_function = fit,
             intensities = calib_intensities_curve,
         )
 
@@ -576,13 +578,15 @@ class LUT:
 
         axe.errorbar(response, doses, xerr = std_response, color = channel, marker = '*', linestyle="None")
         axe.plot(response_curve, dose_curve, color = channel)
+        axe.set_xlabel("Film response")
+        axe.set_ylabel("Dose [Gy]")
 
 
     def plot_dose_fit_uncertainty(
         self,
         position: float = 0,
         channel: str = "red",
-        fit_function: str = "rational",
+        fit: str = "rational",
         ax: plt.Axes = None,
         **kwargs
         ):
@@ -595,7 +599,7 @@ class LUT:
             The lateral position in milimeters.
         channel : str
             The color channel to plot. "red", "green", "blue" or "mean".
-        fit_function : str
+        fit : str
             The type of fit to use. "rational" or "polynomial".
         """
         if self.lut["lateral_correction"]:
@@ -604,7 +608,7 @@ class LUT:
             doses = self.lut.get("nominal_doses")
 
         intensities, std = self.get_intensities(position, channel)
-        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit_function)
+        uncertainty = self._get_dose_fit_uncertainty(intensities, std, doses, fit)
         u_percent = uncertainty[1:] / doses[1:] * 100
         
         if ax is None:
@@ -797,7 +801,7 @@ class LUT:
 
     def get_intensities_of_optical_filters(self) -> list[float]:
         """
-        Return the intensities of the optical filters in the red channel.
+        Return the mean intensities of the optical filters in the red channel.
         """
        
         return self.lut.get("intensities_of_optical_filters")
@@ -1016,19 +1020,18 @@ class LUT:
         list
             A list of doses for each film.
         """
-        # Check if the beam profile is loaded.
-        #if self.lut.get("beam_profile"):
-        #    raise Exception("No beam profile loaded.")
+        # Check if beam profile is loaded. If not, flat dose 
+        # distribution in the film is assumed.
+        if not self.lut["beam_profile"]:
+            # No correction  
+            profile = 1
 
-        # Check if the doses are set.
-        #if not self.lut.get("nominal_doses"):
-        #    raise Exception("No doses set.")
-
-        profile = np.interp(
-            position,
-            np.array(self.lut['beam_profile']['positions']),
-            np.array(self.lut['beam_profile']['doses']) / 100,
-            )
+        else:
+            profile = np.interp(
+                position,
+                np.array(self.lut['beam_profile']['positions']),
+                np.array(self.lut['beam_profile']['doses']) / 100,
+                )
 
         lateral_doses = sorted([float(dose * profile) for dose in self.lut["nominal_doses"]])
 
@@ -1085,9 +1088,6 @@ class LUT:
         elif fit_function == "polynomial":
             
             calib_response = optical_density(calib_film_intensities, calib_film_intensities[0])
-            print("_get_dose_from_fit")
-            print("calib_response")
-            print(calib_response)
 
             popt, pcov = curve_fit(
                 polynomial_n,
@@ -1188,3 +1188,55 @@ class LUT:
 
 
         return u_dose
+
+
+def passed_QC(img: TiffImage, lut: LUT, rtol=1e-2) -> bool:
+    """
+    Quality control test to check reproducibility of the scanner
+    using mean intensity of optical filters in red channel. 
+    The test pass if the intensity of the optical filters in
+    the image is equal to the intensity of the optical filters in the
+    image used for calibration, within a relative tolerance.
+
+    Parameters
+    ----------
+    img : TiffImage
+        The image to check.
+    lut : LUT
+        The look-up table used for calibration.
+    rtol : float
+        The relative tolerance parameter (0 - 1). Default is 1%
+
+    Returns
+    -------
+    bool
+        True if the test passed, False otherwise.
+    """
+
+    # Do not perform the check if lut or img does not have optical filters.
+    if len(lut.get_intensities_of_optical_filters()) == 0:
+        print("QC not peformed. There is not optical filter in lut.")
+        return False
+    
+    if len(img.get_optical_filters().get("intensities_of_optical_filters", [])) == 0:
+        print("QC not peformed. There is not optical filter in the image.")
+        return False
+    
+    # Get mean intensity of optical filters in red channel.
+    calibration_optical_filter_intensities = lut.get_intensities_of_optical_filters(),
+    img_optical_filter_intensities = img.get_optical_filters().get("intensities_of_optical_filters")
+
+    print("Intensity of optical filter(s) in calibration.")
+    print(calibration_optical_filter_intensities)
+    print("Intensity of optical filter(s) in the image.")
+    print(img_optical_filter_intensities)
+
+    are_close = all(
+            np.isclose(
+            calibration_optical_filter_intensities,
+            img_optical_filter_intensities,
+            rtol=rtol,
+            ).tolist()
+        )
+    
+    return are_close

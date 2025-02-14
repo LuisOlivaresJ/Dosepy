@@ -143,7 +143,6 @@ class DoseConverter(ABC):
         Returns the mean intensity of the film and a dictionary 
         with the region of interest used to get a median of the intensities.
         """
-        print("Inside RedPolynomialDoseConverter.get_zero_dose_intensity method")
         
         if channel == "red":
             intensity_array = img.array[:, :, 0]
