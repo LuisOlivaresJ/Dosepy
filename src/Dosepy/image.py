@@ -511,7 +511,6 @@ class TiffImage(BaseImage):
 
             else:
                 film_counter += 1
-                print(f"Object num. {film_counter}")
                 labeled_img[labeled_img == n] = film_counter
                 
 

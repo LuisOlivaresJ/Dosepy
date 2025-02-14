@@ -1088,9 +1088,6 @@ class LUT:
         elif fit_function == "polynomial":
             
             calib_response = optical_density(calib_film_intensities, calib_film_intensities[0])
-            print("_get_dose_from_fit")
-            print("calib_response")
-            print(calib_response)
 
             popt, pcov = curve_fit(
                 polynomial_n,

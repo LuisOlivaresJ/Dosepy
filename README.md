@@ -9,12 +9,9 @@
 
 Main [documentation](https://dosepy.readthedocs.io/en/latest/intro.html)
 
-Dosepy is an open source application to perform radiochromic film dosimetry.
+Dosepy is an open-source Python library to perform radiochromic film dosimetry.
 
-Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform patient-specific dose verification based on film measurements.
-
-The software works with scanned films (in TIFF format) and a DICOM file (typically exported from a treatment planning system, TPS).
-A 2D gamma analysis can be performed in order to evaluate the similarity between the measured (scanned film) and the planed (DICOM file) dose distributions.
+Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform film dosimetry with effortless.
 
 ## Installation
 
