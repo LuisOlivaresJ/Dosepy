@@ -48,14 +48,7 @@ STREAM_TYPE = "stream"
 
 ImageLike = Union["ArrayImage", "TiffImage"]
 
-
-logging.basicConfig(
-    format="{asctime} - {levelname} - {message}",
-    style="{",
-    datefmt="%Y-%m-%d %H:%M",
-    level=logging.WARNING,
-    filename="image_module.log",
-    )
+logging.getLogger(__name__)
 
 
 def load(path: str | Path | np.ndarray | BinaryIO, **kwargs) -> ImageLike:
