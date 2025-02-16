@@ -277,181 +277,68 @@ class DoseConverter(ABC):
         return zero_dose_intensities, positions
 
 
-class RedPolynomialDoseConverter(DoseConverter):
+class PolynomialDoseConverter(DoseConverter):
     """
-    Class to convert a tiff image to a dose array using the red channel and 
-    a polynomial fit function of the form y = a*x + b*x**n, where a, b and n are
-    the fit coefficients.
-    
+    Base class to convert a tiff image to a dose array using a polynomial fit function.
     This class implements the DoseConverter interface.
     """
-    
+
+    def __init__(self, channel: str, p0: list):
+        super().__init__()
+        self.channel = channel
+        self.p0 = p0
+
     def convert2dose(self, img: TiffImage, lut: LUT) -> ArrayImage:
-
-        # Film detection
-        img.set_labeled_films_and_filters()
-
-        # Without lateral correction
-        if not lut.lut["lateral_correction"]:
-
-            # Get calibration intensities and calibration doses at the center
-            calibration_intensities, std = lut.get_intensities(
-                lateral_position = 0,
-                channel = "red",
-            )
-
-            calibration_doses = lut.lut["nominal_doses"]
-
-            # Compute fit coefficients
-            cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
-
-            popt, pcov = curve_fit(
-                polynomial_n,
-                cal_responses,
-                calibration_doses,
-                p0=[11, 22, 2])
-
-            # Median intensity of zero dose
-            median_intensity_zero_dose, _ = self._get_zero_dose_intensity(img, "red", at_zero_position = False)
-
-            # Compute film response as optical density
-            film_response = optical_density(img.array[:, :, 0], median_intensity_zero_dose)
-            
-            # Compute dose
-            dose_array = polynomial_n(film_response, *popt)
         
-        # Use lateral correction
-        else:
-            # Create lateral positions in milimeters
-            self._set_lateral_positions(img)
-
-            # Apply filter if it was usesd for calibration
-            if lut.lut["filter"]:
-                img.filter_channel(lut.lut["filter"], channel="R")
-
-
-            if not self.check_optical_filters(img, lut):
-                print("The mean intensity of the filters are not equal.")
-
-            # Get lateral intensities for the unexposed film scanned with the film to be converted to dose
-            lateral_intensities_for_zero_dose, positions = self._get_lateral_intensities_for_zero_dose(img, lut, channel="red")
-
-            # Convert image to dose, one column at a time
-            # Buffer array to store dose array
-            dose_array = np.empty(img.array[:, :, 0].shape)
-            width_in_pixels = img.shape[1]
-            for column in range(0, width_in_pixels):
-
-                # Get pixel position in milimeters
-                pix_position = self.pixel_positions_mm[column]
-
-                # Round pixel position to work inside LUT limits.
-                rounded_floor_position = math.floor(pix_position)
-                rounded_ceil_position = math.ceil(pix_position)
-                if rounded_floor_position <= lut.lut["lateral_limits"]["left"] or rounded_ceil_position >= lut.lut["lateral_limits"]["right"]:
-                    dose_array[:, column] = 0
-                    continue
-
-                # Get calibration intensities and calibration doses at pixel position
-
-                calibration_intensities = lut.get_interpolated_intensities_at_position(
-                    position = pix_position,
-                    channel = "red",
-                )
-                calibration_doses = lut.get_interpolated_doses_at_position(
-                    position = pix_position,
-                )
-
-                # Compute fit coefficients
-                cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
-
-                popt, pcov = curve_fit(
-                    polynomial_n,
-                    cal_responses,
-                    calibration_doses,
-                    p0=[11, 22, 2]
-                    )
-
-                # index for pixel position
-                idx_pixel_position = np.argwhere(positions == rounded_floor_position)
-
-                # Compute film response as optical density
-                film_response = optical_density(
-                    img.array[:, column, 0],
-                    lateral_intensities_for_zero_dose[idx_pixel_position]
-                    )
-                
-                # Compute dose
-                dose_array[:, column] = polynomial_n(film_response, *popt)
-
-        # Remove unphysical values
-        dose_array[dose_array < 0] = 0
-        dose_array[np.isnan(dose_array)] = 0
-
-        # Limit maximum dose to 1.3 times the maximum dose used for calibration
-        max = lut.lut.get("nominal_doses")[-1]*1.3
-        dose_array[dose_array > max] = max
-
-        return ArrayImage(dose_array, dpi=img.dpi)
-
-
-class GreenPolynomialDoseConverter(DoseConverter):
-    """
-    Class to convert a tiff image to a dose array using the green channel and 
-    a polynomial fit function of the form y = a*x + b*x**n, where a, b and n are
-    the fit coefficients.
-    
-    This class implements the DoseConverter interface.
-    """
-    def convert2dose(self, img: TiffImage, lut: LUT) -> ArrayImage:
-
+        # Film detection
         img.set_labeled_films_and_filters()
 
         # Without lateral correction
         if not lut.lut["lateral_correction"]:
             calibration_intensities, std = lut.get_intensities(
                 lateral_position=0,
-                channel="green"
+                channel=self.channel
             )
             calibration_doses = lut.lut["nominal_doses"]
 
             cal_responses = optical_density(
                 calibration_intensities,
                 calibration_intensities[0]
-                )
-            
+            )
+
             popt, pcov = curve_fit(
                 polynomial_n,
                 cal_responses,
                 calibration_doses,
-                p0 = [18, 26, 2],
-                )
-
-            median_intensity_zero_dose, _ = self._get_zero_dose_intensity(
-                img, "green", at_zero_position=False
+                p0=self.p0,
             )
 
-            film_response = optical_density(img.array[:, :, 1], median_intensity_zero_dose)
+            median_intensity_zero_dose, _ = self._get_zero_dose_intensity(
+                img, self.channel, at_zero_position=False
+            )
+
+            film_response = optical_density(img.array[:, :, {"red": 0, "green": 1, "blue": 2}[self.channel]], median_intensity_zero_dose)
 
             dose_array = polynomial_n(film_response, *popt)
-        
+
         # With lateral correction
         else:
             self._set_lateral_positions(img)
-            
+
             if lut.lut["filter"]:
-                img.filter_channel(lut.lut["filter"], channel="G")
-            
+                img.filter_channel(lut.lut["filter"], channel=self.channel[0].upper())
+
             if not self.check_optical_filters(img, lut):
                 print("TODO")
 
             lateral_intensities_for_zero_dose, positions = self._get_lateral_intensities_for_zero_dose(
-                img, lut, channel="green"
-                )
-            
-            dose_array = np.empty(img.array[:, :, 1].shape)
+                img, lut, channel=self.channel
+            )
+
+            dose_array = np.empty(img.array[:, :, {"red": 0, "green": 1, "blue": 2}[self.channel]].shape)
             width_in_pixels = img.shape[1]
-            
+
+            # Convert each column of the image to dose
             for column in range(0, width_in_pixels):
                 pix_position = self.pixel_positions_mm[column]
 
@@ -464,11 +351,11 @@ class GreenPolynomialDoseConverter(DoseConverter):
 
                 calibration_intensities = lut.get_interpolated_intensities_at_position(
                     position=pix_position,
-                    channel = "green",
+                    channel=self.channel,
                 )
 
                 calibration_doses = lut.get_interpolated_doses_at_position(
-                    position = pix_position,
+                    position=pix_position,
                 )
 
                 cal_responses = optical_density(calibration_intensities, calibration_intensities[0])
@@ -477,32 +364,46 @@ class GreenPolynomialDoseConverter(DoseConverter):
                     polynomial_n,
                     cal_responses,
                     calibration_doses,
-                    p0 = [18, 26, 2],
-                    )
+                    p0=self.p0,
+                )
 
                 idx_pixel_position = np.argwhere(positions == rounded_floor_position)
 
                 film_response = optical_density(
-                    img.array[:, column, 1],
+                    img.array[:, column, {"red": 0, "green": 1, "blue": 2}[self.channel]],
                     lateral_intensities_for_zero_dose[idx_pixel_position]
                 )
 
                 dose_array[:, column] = polynomial_n(film_response, *popt)
 
-        # Reomove unphysical values
+        # Remove unphysical values
         dose_array[dose_array < 0] = 0
         dose_array[np.isnan(dose_array)] = 0
 
-        # Limit macimum dose to 1.3 times the maximum dose used for calubration
-        max = lut.lut.get("nominal_doses")[-1]*1.3
-        dose_array[dose_array > max] = max
+        # Limit maximum dose to 1.3 times the maximum dose used for calibration
+        max_dose = lut.lut.get("nominal_doses")[-1] * 1.3
+        dose_array[dose_array > max_dose] = max_dose
 
-        return ArrayImage(dose_array, dpi = img.dpi)
+        return ArrayImage(dose_array, dpi=img.dpi)
 
 
+class RedPolynomialDoseConverter(PolynomialDoseConverter):
+    def __init__(self):
+        super().__init__(channel="red", p0=[11, 22, 2])
+
+
+class GreenPolynomialDoseConverter(PolynomialDoseConverter):
+    def __init__(self):
+        super().__init__(channel="green", p0=[18, 26, 2])
+
+
+class BluePolynomialDoseConverter(PolynomialDoseConverter):
+    def __init__(self):
+        super().__init__(channel="blue", p0=[45, 55, 2])
 
 
 dose_converter_factory = Tiff2DoseFactory()
 dose_converter_factory.register_method("RP", RedPolynomialDoseConverter)
 dose_converter_factory.register_method("GP", GreenPolynomialDoseConverter)
+dose_converter_factory.register_method("BP", BluePolynomialDoseConverter)
 
