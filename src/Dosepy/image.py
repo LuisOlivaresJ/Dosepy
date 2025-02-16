@@ -682,7 +682,7 @@ class TiffImage(BaseImage):
         self,
         size: float | int = 0.05,
         kind: str = "median",
-        channel: str = "R"
+        channel: str = "red"
     ) -> None:
         """Apply a filter to the given channel.
 
@@ -710,7 +710,7 @@ class TiffImage(BaseImage):
         elif channel in ["B", "Blue", "b", "blue"]:
             self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
         else:
-            raise ValueError("Channel not suported. Use 'R', 'G' or 'B'.")
+            raise ValueError("Channel not suported. Use 'red', 'green' or 'blue'.")
         
     
     def get_optical_filters(self) -> dict:
