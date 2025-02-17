@@ -203,3 +203,139 @@ def test_RP_cal_lateral_without_profile(
 ##################################################################
 ##################################################################
 # RATIONAL
+
+# Test red rational calibration with rois at center
+def test_RR_cal_rois_center(verif_img, cal_center):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="RR",
+        lut=cal_center,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test green rational, calibration with rois at center
+def test_GR_cal_rois_center(verif_img, cal_center):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="GR",
+        lut=cal_center,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test blue rational, calibration with rois at center
+def test_BR_cal_rois_center(verif_img, cal_center):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="BR",
+        lut=cal_center,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.1)
+
+# Test red rational, lateral calibration without relative dose profile
+def test_RR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_without_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="RR",
+        lut=cal_lateral_without_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test green rational, lateral calibration without relative dose profile
+def test_GR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_without_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="GR",
+        lut=cal_lateral_without_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test green rational, lateral calibration without relative dose profile
+def test_BR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_without_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="BR",
+        lut=cal_lateral_without_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.1)
+
+
+# Test red rational, lateral calibration with relative dose profile
+def test_RR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_with_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="RR",
+        lut=cal_lateral_with_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test green rational, lateral calibration with relative dose profile
+def test_GR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_with_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="GR",
+        lut=cal_lateral_with_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.05)
+
+# Test blue rational, lateral calibration with relative dose profile
+def test_BR_cal_lateral_without_profile(
+        verif_img,
+        cal_lateral_with_profile,
+        ):
+    t2d = Tiff2DoseM()
+    dose = t2d.get_dose(
+        img=verif_img,
+        format="BR",
+        lut=cal_lateral_with_profile,
+    )
+    dose_at_center = dose.array[110:140, 450:480]
+    dose_mean = np.mean(dose_at_center)
+
+    assert dose_mean == pytest.approx(5, rel=0.1)
