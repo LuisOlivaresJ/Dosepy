@@ -11,7 +11,7 @@ Main [documentation](https://dosepy.readthedocs.io/en/latest/intro.html)
 
 Dosepy is an open-source Python library to perform radiochromic film dosimetry.
 
-Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform film dosimetry with effortless.
+Dosepy is intended to be an accessible tool for medical physicists in radiation oncology to perform film dosimetry effortlessly.
 
 ## Installation
 
@@ -30,7 +30,7 @@ See the Python for Beginners [getting started tutorial](https://opentechschool.g
 * Uncertainty analysis.
 * Quality control test for error detection.
 * Average of multiple scans for noise reduction.
-* Handle for lateral scanner response artifact.
+* Handle lateral scanner response artifact.
 
 ## Gamma index
 
@@ -50,7 +50,7 @@ See the Python for Beginners [getting started tutorial](https://opentechschool.g
 * [Numpy](https://numpy.org/) for data array manipulation.
 * [PySide6](https://doc.qt.io/qtforpython-6/) for graphical user interface (GUI).
 * [Pydicom](https://pydicom.github.io/) to read files in DICOM format.
-* [Imageio](imageio) to read files in TIFF format.
+* [Imageio](https://imageio.github.io/) to read files in TIFF format.
 * [Scikit-image](https://scikit-image.org/) and [scipy](https://scipy.org/) for image processing.
 
 ## Warning!
@@ -60,9 +60,9 @@ Dosepy is currently **under development** to meet quality standards. To achieve 
 
 ## Contributing
 
-Dosepy uses GitHub as a plataform to store and develop the software.
-* To report software bugs create an issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
-* To commit changes, create an issue, [fork](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) the respository, make your changes and make a new pull request.
+Dosepy uses GitHub as a platform to store and develop the software.
+* To report software bugs, create an issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
+* To commit changes, create an issue, [fork](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) the repository, make your changes, and make a new pull request.
 
 ## Discussion
 Have questions? Ask them on the Dosepy [discussion forum](https://groups.google.com/g/dosepy).

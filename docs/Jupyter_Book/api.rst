@@ -7,14 +7,14 @@ Dosepy.image
 .. automodule:: Dosepy.image
     :members:
 
-Dosepy.tools
-------------
-
-.. automodule:: Dosepy.tools.resol
-    :members:
-
 Dosepy.calibration
 ------------------
 
 .. automodule:: Dosepy.calibration
+    :members:
+
+Dosepy.tiff2dose
+------------------
+
+.. automodule:: Dosepy.tiff2dose
     :members:

@@ -3,7 +3,7 @@
 Changelog
 =========
 
-v 0.8.0 (JAN-2025)
+v 0.8.0 (FEB-2025)
 ------------------
 
 Improvements
@@ -13,36 +13,35 @@ Improvements
 * Automatic quality control test between scanned images.
 * Improved algorithm for automatic film detection.
 
-Improvements for developing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* New LUT class on calibration module, used to manipulate data for film calibration. The class is an adoption of the LUT class from `OMG Dosimetry package <https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT>`_
-* Tiff2Dose module uses the DoseConverter interface to handle conversion to dose using a different channel or fit function.
-* Dosepy has a MIT license on belief that open source is better science.
+Improvements for development
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* New LUT class in the calibration module, used to manipulate data for film calibration. The class is an adoption of the LUT class from `OMG Dosimetry package <https://omg-dosimetry.readthedocs.io/en/latest/_modules/omg_dosimetry/calibration.html#LUT>`_
+* Tiff2Dose module uses the DoseConverter interface to handle conversion to dose using different channels or fit functions.
+* Dosepy uses MIT license on the belief that open source is better science.
 
 Issue
 ^^^^^
-* On Dosepy GUI, changed settings by the user were not updated to the application.
+* In Dosepy GUI, changed settings by the user were not updated in the application.
 
 Change
 ^^^^^^
-* On image module, TiffImage.get_labeled_objects() was remplaced with TiffImage.set_labeled_films_and_filters() method.
-* On image module, load_images was replaced with load_multiples fucntion. The to_dose() and dose_in_central_rois() methods where deleted.
-* On module calibration, Calibration class was deleted to use LUT class instead.
+* In the image module, TiffImage.get_labeled_objects() was replaced with TiffImage.set_labeled_films_and_filters() method.
+* In the image module, load_images was replaced with load_multiples function. The to_dose() and dose_in_central_rois() methods were deleted.
+* In the calibration module, the Calibration class was deleted to use the LUT class instead.
 
 v 0.7.0 (SEP-2024)
 ------------------
 
 Improvements
 ^^^^^^^^^^^^
-* The app now allows to store configuration settings for film calibration (with a .toml file).
+* The app now allows storing configuration settings for film calibration (with a .toml file).
 * New functionalities for the GUI, like buttons for dose image manipulation.
-* New method for resolution management, called reduce_resolution_as(). The user can now reduce the resolution of some image to match the resolution of a reference one (useful for gamma analysis).
+* New method for resolution management, called reduce_resolution_as(). The user can now reduce the resolution of some images to match the resolution of a reference one (useful for gamma analysis).
 * README update to be user-friendly for Python developers.
 
-Improvements for developing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* New name and new functionalities for build_and_installing.sh file. Now it is called packaging_installing_testing.sh and it is used to build, install and test the package.
+Improvements for development
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* New name and new functionalities for build_and_installing.sh file. Now it is called packaging_installing_testing.sh and it is used to build, install, and test the package.
 * Better management of dependencies using pyproject.toml file.
 * First steps with Test-Driven Development.
 
@@ -52,8 +51,8 @@ Refactor
 
 Issue
 ^^^^^
-* There is no function called equate_images() in Dosepy.image module, as it was stated in readthedocs documentation.To solve this, a new method called reduce_resolution_as() is created as a method of ArrayImage class.
-* _equate_height() function from tools.files_to_image module did not worked properly. It is now fixed.
+* There is no function called equate_images() in Dosepy.image module, as it was stated in the readthedocs documentation. To solve this, a new method called reduce_resolution_as() is created as a method of the ArrayImage class.
+* _equate_height() function from tools.files_to_image module did not work properly. It is now fixed.
 * Dosepy.old.gui_components.Bloque_Imagenes used a float for the axes.set_xdata() method instead of a sequence.
 
 V 0.6.4 (JUN-2024)
@@ -62,7 +61,7 @@ V 0.6.4 (JUN-2024)
 Issue
 ^^^^^
 
-* Loading TIFF files with the same size but different name, were merged.
+* Loading TIFF files with the same size but different names were merged.
 
 V 0.6.3 (JUN-2024)
 ------------------
@@ -70,8 +69,7 @@ V 0.6.3 (JUN-2024)
 Improvements
 ^^^^^^^^^^^^
 
-* New functions to equate and stack images of different sizes (adapted from OMG_Dosimetry and pylinac). They are useful
-if each film has been scanned in separate TIFF images.
+* New functions to equate and stack images of different sizes (adapted from OMG_Dosimetry and pylinac). They are useful if each film has been scanned in separate TIFF images.
 
 Issue
 ^^^^^
@@ -84,13 +82,13 @@ V 0.6.2 (MAY-2024)
 
 Improvements
 ^^^^^^^^^^^^
-* New *clip* parameter for *to_dose* method to limit the maximum dose, (usefull for brachytherapy film dosimetry).
-* New *exclude_above* parameter for *gamma2D* method. Any point in the evaluated distribution greater than exclude_above, is not accounted in the pass rate.
-* set_labeled_img method from TiffImage uses a default threshold of 90% for films identification. Previously, it used threshold_otsu but were not useful for tif images where there is a small region of empty area relative to the film area.
+* New *clip* parameter for *to_dose* method to limit the maximum dose (useful for brachytherapy film dosimetry).
+* New *exclude_above* parameter for *gamma2D* method. Any point in the evaluated distribution greater than exclude_above is not accounted for in the pass rate.
+* set_labeled_img method from TiffImage uses a default threshold of 90% for film identification. Previously, it used threshold_otsu but was not useful for tif images where there is a small region of empty area relative to the film area.
 
 Issue
 ^^^^^
-* Now it is possible to open many tif files when Browse button is clicked in Dosepy.app.
+* Now it is possible to open many tif files when the Browse button is clicked in Dosepy.app.
 
 V 0.6.1 (APR-2024)
 --------------------
