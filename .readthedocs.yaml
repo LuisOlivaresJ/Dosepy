@@ -22,4 +22,4 @@ formats:
 
 sphinx:
   # Path to your Sphinx configuration file.
-  configuration: docs/_config.yml
+  configuration: docs/Jupyter_Book/_config.yml
