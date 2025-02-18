@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # How to use this script on Linux:
-# 1. Run this script from the root directory of the project as ./_build_and_install.sh
+# 1. Run this script from the root directory of the project as ./packaging_installing_testing.sh
 # 2. The script will create a source distribution of the package and install it.
 # 3. The script will also uninstall the package if it is already installed.
 
@@ -32,7 +32,7 @@ python3 -m build
 # Install the package from the source distribution
 cd dist
 #python3 -m pip install *.tar.gz
-python3 -m uv pip install *.tar.gz
+python3 -m pip install *.tar.gz
 
 # Delete __pycache__ directories
 find . -type d -name __pycache__ -exec rm -rf {} +
@@ -40,4 +40,4 @@ find . -type d -name __pycache__ -exec rm -rf {} +
 # Testing the application
 python3 -m pip install pytest
 cd ..
-python3 -m pytest
+python3 -m pytest -v

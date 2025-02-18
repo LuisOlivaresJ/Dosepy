@@ -23,7 +23,7 @@ import Dosepy.app
 Click on the *Browse* button to load a tif file. The software will automatically find the scanned films. A table is then displayed to allow user's inputs for imparted doses to the films.
 
 ```{note}
-The internal algorithm uses a 16 mm width and 8 mm height roi size on the center of each founded film.
+ROI size, color channel and other parameters can be changed on settings.
 ```
 
 ![Portada_Dosepy](../assets/Calibration_tab.png)

@@ -9,12 +9,9 @@
 
 Main [documentation](https://dosepy.readthedocs.io/en/latest/intro.html)
 
-Dosepy is an open source application to perform radiochromic film dosimetry.
+Dosepy is an open-source Python library to perform radiochromic film dosimetry.
 
-Dosepy is intended to be an accessible tool for medical physicist in radiation oncology to perform patient-specific dose verification based on film measurements.
-
-The software works with scanned films (in TIFF format) and a DICOM file (typically exported from a treatment planning system, TPS).
-A 2D gamma analysis can be performed in order to evaluate the similarity between the measured (scanned film) and the planed (DICOM file) dose distributions.
+Dosepy is intended to be an accessible tool for medical physicists in radiation oncology to perform film dosimetry effortlessly.
 
 ## Installation
 
@@ -29,9 +26,11 @@ See the Python for Beginners [getting started tutorial](https://opentechschool.g
 
 ## Features
 
-## Film dosimetry
-
-Dosepy has a graphical user interface (GUI) to perform film dosimetry. Once a TIFF file is loaded, scanned films are automatically detected. Multiple scans of the same film can be loaded and averaged automatically for noise reduction.
+* Automatic film detection.
+* Uncertainty analysis.
+* Quality control test for error detection.
+* Average of multiple scans for noise reduction.
+* Handle lateral scanner response artifact.
 
 ## Gamma index
 
@@ -51,7 +50,7 @@ Dosepy has a graphical user interface (GUI) to perform film dosimetry. Once a TI
 * [Numpy](https://numpy.org/) for data array manipulation.
 * [PySide6](https://doc.qt.io/qtforpython-6/) for graphical user interface (GUI).
 * [Pydicom](https://pydicom.github.io/) to read files in DICOM format.
-* [Imageio](imageio) to read files in TIFF format.
+* [Imageio](https://imageio.github.io/) to read files in TIFF format.
 * [Scikit-image](https://scikit-image.org/) and [scipy](https://scipy.org/) for image processing.
 
 ## Warning!
@@ -61,9 +60,9 @@ Dosepy is currently **under development** to meet quality standards. To achieve 
 
 ## Contributing
 
-Dosepy uses GitHub as a plataform to store and develop the software.
-* To report software bugs create an issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
-* To commit changes, create an issue, [fork](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) the respository, make your changes and make a new pull request.
+Dosepy uses GitHub as a platform to store and develop the software.
+* To report software bugs, create an issue [here](https://github.com/LuisOlivaresJ/Dosepy/issues)
+* To commit changes, create an issue, [fork](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) the repository, make your changes, and make a new pull request.
 
 ## Discussion
 Have questions? Ask them on the Dosepy [discussion forum](https://groups.google.com/g/dosepy).

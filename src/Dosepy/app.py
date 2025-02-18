@@ -1,75 +1,27 @@
 import sys
 
-from PySide6.QtWidgets import (
-    QApplication,
-    QVBoxLayout,
-    QWidget,
-    QLabel,
-    QTabWidget,
-    QMainWindow,
+from PySide6.QtWidgets import QApplication
+
+# App Controllers
+from Dosepy.app_controller.app_controller import (
+    CalibrationController,
+    Tiff2DoseController,
+    ToolbarController,
 )
-from PySide6.QtGui import QAction
-from PySide6.QtCore import Qt
-
-# Import app views
-from Dosepy.app_components.calibration_widget import CalibrationWidget
-from Dosepy.app_components.tiff2dose_widget import Tiff2DoseWidget
-from Dosepy.app_components.tif_widget import TifWidget
-from Dosepy.app_components.config_window import ConfigWindow
-
-# Import app controllers
-from Dosepy.app_controller.app_controller import CalibrationController, Tiff2DoseController, ToolbarController
-# Import app model
+# App Model
 from Dosepy.app_model.app_model import Model
 
+# App View
+from Dosepy.app_components.main_window import MainWindow
 
-class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
-        super().__init__()
-
-        self.setWindowTitle("Dosepy")
-
-        self.main_widget = QWidget()
-
-        self._create_actions()
-        self._create_toolbar()
-        self._create_body()
-
-        self.setCentralWidget(self.main_widget)
-
-
-    def _create_actions(self):
-        self.calib_setings_action = QAction("Settings", self)
-
-
-    def _create_toolbar(self):
-        toolbar = self.addToolBar("Settings")
-        toolbar.addAction(self.calib_setings_action)
-        toolbar.setOrientation(Qt.Orientation.Horizontal)
-        self.conf_window = ConfigWindow()
-
-
-    def _create_body(self):
-        self.tab_layout = QVBoxLayout()
-        tabs = QTabWidget()
-
-        self.cal_widget = CalibrationWidget()
-        tabs.addTab(self.cal_widget, "Calibration")
-        self.dose_widget = Tiff2DoseWidget()
-        tabs.addTab(self.dose_widget, "Film2Dose")
-        #self.tif_widget = TifWidget()
-        #tabs.addTab(self.tif_widget, "Tif Image")
-        self.tab_layout.addWidget(tabs)
-
-        self.main_widget.setLayout(self.tab_layout)
 
 # Create the application
 app = QApplication(sys.argv)
+
 # Create the main window (view)
 root_window = MainWindow()
 # Create the model
 dosepy_model = Model()
-
 # Create the controllers
 dosepy_calibration_controller = CalibrationController(model=dosepy_model, view=root_window)
 dosepy_tiff2dose_controller = Tiff2DoseController(model=dosepy_model, view=root_window)

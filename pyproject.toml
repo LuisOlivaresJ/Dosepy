@@ -7,13 +7,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.7.0"
+version = "0.8.0"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
 description = "Film dosimetry and gamma analysis for dose distributions in radiotherapy"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = {file = "LICENCE"}
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -40,6 +40,7 @@ dependencies = [
   "scikit-image >= 0.24.0",
   "tomlkit >= 0.13.2",
   "tqdm >= 4.66.5",
+  "pyyaml >= 6.0.2",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"

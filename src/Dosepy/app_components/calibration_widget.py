@@ -21,6 +21,7 @@ from matplotlib.backends.backend_qtagg import \
     NavigationToolbar2QT as NavigationToolbar
 
 from .styles.styles import Size
+from Dosepy.calibration import LUT
 from enum import Enum
 
 
@@ -161,7 +162,13 @@ class CalibrationWidget(QWidget):
         img.plot(ax = self.axe_image, show=False)
         self.canvas_widg.draw()
 
-    def plot_cal_curve(self, cal):
+
+    def plot_cal_curve(self, cal: LUT, channel: str, fit_function: str):
         self.axe_curve.clear()
-        cal.plot(self.axe_curve, show=False)
+        cal.plot_fit(
+            channel=channel,
+            fit=fit_function,
+            position=0,
+            ax=self.axe_curve,
+            )
         self.canvas_widg.draw()

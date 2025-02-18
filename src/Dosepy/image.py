@@ -6,43 +6,52 @@ DESCRIPTION
     This module holds functionalities for tif image loading and manipulation.
     ArryaImage class is used as representation of dose distributions.
     The content is heavily based from 
-    `pylinac <https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html>`_, and `omg_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_
+    `pylinac <https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html>`_,
+    and `omg_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_
 
 """
 
 from pathlib import Path
 import numpy as np
 import os.path as osp
-from typing import Any, Union
+from typing import Any, Union, BinaryIO
 import imageio.v3 as iio
 from abc import ABC, abstractmethod
+
+import copy
+import math
+import logging
+
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from skimage.color import rgb2gray
+import skimage
+from skimage.color import rgb2gray, rgb2hsv
 from skimage.filters import threshold_otsu
 from skimage.morphology import square, erosion
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 from skimage.transform import rotate
 from .tools.resol import equate_resolution
-from .tools.files_to_image import equate_array_size
 
-import math
+from .tools.array_utils import filter_array
 
-from .calibration import polynomial_g3, rational_func, Calibration
 from .i_o import retrieve_dicom_file, is_dicom_image
 
 MM_PER_INCH = 25.4
+MIN_AREA_FOR_FILMS = 400  # 20x20 mm^2
 
-ImageLike = Union["ArrayImage", "TiffImage", "CalibImage"]
+FILE_TYPE = "file"
+STREAM_TYPE = "stream"
+
+ImageLike = Union["ArrayImage", "TiffImage"]
+
+logging.getLogger(__name__)
 
 
-def load(path: str | Path | np.ndarray,
-         for_calib: bool = False,
-         filter: int | None = None,
-         **kwargs) -> "ImageLike":
+def load(path: str | Path | np.ndarray | BinaryIO, **kwargs) -> ImageLike:
     r"""Load a DICOM image, TIF image, or numpy 2D array.
 
     Parameters
@@ -50,16 +59,9 @@ def load(path: str | Path | np.ndarray,
     path : str, file-object
         The path to the image file or array.
 
-    for_calib : bool, default = False
-        True if the image is going to be used to get a calibration curve.
-
-    filter : int
-        If None (default), no filtering will be done to the image.
-        If an int, will perform median filtering over image of size ``filter``.
-
     kwargs
-        See :class:`~Dosepy.image.ArrayImage`, :class:`~Dosepy.image.TiffImage`,
-        or :class:`~Dosepy.image.CalibImage` for keyword arguments.
+        See :class:`~Dosepy.image.ArrayImage` or :class:`~Dosepy.image.TiffImage`,
+        for keyword arguments.
 
     Returns
     -------
@@ -103,53 +105,46 @@ def load(path: str | Path | np.ndarray,
 
         return ArrayImage(d_array, dpi=MM_PER_INCH/resolution_mm[0])
     
-    elif _is_image_file(path):
-        if _is_tif_file(path):
-            if _is_RGB(path):
-                if for_calib:
-                    calib_image = CalibImage(path, **kwargs)
-                    if isinstance(filter, int):
-                        for i in range(3):
-                            calib_image.array[:, :, i] = mean(
-                                calib_image.array[:, :, i],
-                                footprint=square(filter))
-                    return calib_image
-                else:
-                    tiff_image = TiffImage(path, **kwargs)
-                    if isinstance(filter, int):
-                        for i in range(3):
-                            tiff_image.array[:, :, i] = mean(
-                                tiff_image.array[:, :, i],
-                                footprint=square(filter))
-                    return tiff_image
-            else:
-                raise TypeError(f"The argument '{path}' was not found to be\
-                                a RGB TIFF file.")
-        else:
-            raise TypeError(f"The argument '{path}' was not found to be\
-                            a valid TIFF file.")
+    elif _is_tif_file(path):
+        return TiffImage(path, **kwargs)
+
     else:
         raise TypeError(f"The argument '{path}' was not found to be\
                         a valid file.")
 
 
-def load_images(paths: list):
+def load_multiples(files: list[str | Path | BinaryIO]) -> ImageLike:
     """
+    Load multiple images into a single one. 
+    Equate TIFF files to have the same array size.
+    Average images with the same file name and stack imges with different name.
+     
     Parameters
     ----------
-    paths : list
-        List with the paths to the TIFF files.
-
-    Return
-    ------
-    list of TIffImage
+    files : list[str]
+        List of paths to the images.
+        
+    Returns
+    -------
+    ImageLike
+        The merged image.
     """
-    images = []
-
-    for file in paths:
-        images.append(load(file))
     
-    return images
+    if len(files) == 1:
+        return load(files[0])
+    
+    else:
+        # Load images
+        images = []
+        for file in files:
+            images.append(load(file))
+        
+        img = load(files[0]) # Placeholder
+        equated_images = equate_array_size(images, axis=("width", "height"))
+        averaged_images = average_tiff_images(equated_images)
+        stacked = stack_images(averaged_images, padding=6)
+        img.array = stacked.array
+        return img
 
 
 def _is_array(obj: Any) -> bool:
@@ -162,29 +157,13 @@ def _is_dicom(path: str | Path) -> bool:
     return is_dicom_image(file=path)
 
 
-def _is_image_file(path: str | Path) -> bool:
-    """Whether the file is a readable image file via imageio.v3."""
+def _is_tif_file(path: str | Path | BinaryIO) -> bool:
+    """Whether the file is a RGB tif image file."""
     try:
-        iio.improps(path)
-        return True
+        img_props = iio.improps(path)
+        if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
+            return True
     except:
-        return False
-
-
-def _is_tif_file(path: str | Path) -> bool:
-    """Whether the file is a tif image file."""
-    if Path(path).suffix in (".tif", ".tiff"):
-        return True
-    else:
-        return False
-
-
-def _is_RGB(path: str | Path) -> bool:
-    """Whether the image is RGB."""
-    img_props = iio.improps(path)
-    if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
-        return True
-    else:
         return False
 
 
@@ -201,6 +180,8 @@ class BaseImage(ABC):
 
     array: np.ndarray
     path: str | Path
+    base_path: str  # Name of the file
+    source: str
 
     def __init__(self, path: str | Path | np.ndarray):
         """
@@ -210,18 +191,32 @@ class BaseImage(ABC):
             The path to the image.
         """
 
+        # Check for a file
         if isinstance(path, (str, Path)) and not osp.isfile(path):
             raise FileExistsError(
                 f"File `{path}` does not exist. Verify the file path name.")
-        else:
+        
+        elif isinstance(path, (str, Path)) and osp.isfile(path):
             self.path = path
+            self.base_path = osp.basename(path)
+            self.source = FILE_TYPE
+        
+        else:
+            self.source = STREAM_TYPE
 
         super().__init__()
 
     
     @property
     def physical_shape(self) -> tuple[float, float]:
-        """The physical size of the image in mm."""
+        """
+        The physical size of the image in mm.
+
+        Returns
+        -------
+        tuple[float, float]
+            The physical size in mm. The first element is the height, the second the width.
+        """
         return self.shape[0] / self.dpmm, self.shape[1] / self.dpmm
     
 
@@ -273,6 +268,58 @@ class BaseImage(ABC):
         All parameters are passed to that function."""
         self.array = rotate(self.array, angle, mode=mode, *args, **kwargs)
 
+    def center(self) -> tuple[float, float]:
+        """
+        Return the center position of the image array as a tuple.
+        Even-length arrays will return the midpoint between central two indices. Odd will return the central index.
+        """
+        x_center = (self.shape[1] / 2) - 0.5
+        y_center = (self.shape[0] / 2) - 0.5
+
+        return x_center, y_center
+
+    def get_labeled_image(
+            self,
+            threshold: float = None,
+            erosion_pix: int = 3,
+            ) -> tuple[np.ndarray, int]:
+        """
+        Get the labeled image of the films.
+        Function used to identify the films in the image using skimage.measure.label.
+
+        Parameters
+        ----------
+        threshold : float
+            The threshold value used to detect film. Pixel values below the threshold are considered films.
+             If None, the Otsu method is used to define a threshold.
+        
+        Returns
+        -------
+        ndarray : 
+            The labeled image, where all connceted regions are assigned the same integer value.
+        num : int
+            The number of films detected.
+        """
+
+        gray_scale = rgb2gray(self.array)
+
+        if not threshold:
+            thresh = threshold_otsu(gray_scale)  # Used for films identification.
+
+        else:
+            thresh = threshold * np.amax(gray_scale)
+
+        # Number of pixels used for erosion. 
+        # Used to remove the irregular borders of the films.
+        # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
+
+        #erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)  # 6 mlimiters.
+        binary = erosion(gray_scale < thresh, square(erosion_pix))
+
+        labeled_image, number_of_films = label(binary, return_num=True)
+
+        return labeled_image, number_of_films
+
 
 class TiffImage(BaseImage):
     """An image from a tiff file.
@@ -287,54 +334,55 @@ class TiffImage(BaseImage):
 
     def __init__(
         self,
-        path: str | Path,
+        path: str | Path | BinaryIO,
         *,
         dpi: float | None = None,
-        sid: float | None = None,
-            ):
+        ):
         """
         Parameters
         ----------
         path : str, file-object
             The path to the file or a data stream.
-        dpi : int, float
+        dpi : float
             The dots-per-inch of the image, defined at isocenter.
 
             .. note:: If a X and Y Resolution tag is found in the image, that
             value will override the parameter, otherwise this one will be used.
-        sid : int, float
-            The Source-to-Image distance in mm.
         label_img : numpy.adarray
             Label image regions.
         """
         super().__init__(path)
-        self.props = iio.improps(path)
-        self.array = iio.imread(path)
+        self.props = iio.improps(path, extension=".tif")
+        if not self.props:
+            logging.WARNING("Was not possible to read image props")
+            print("Was not possible to read image props")
+        self.array = iio.imread(path, extension=".tif")
 
         try:
             dpi = self.props.spacing[0]
 
-        except AttributeError:
+        except:
+            logging.WARNING("Image props has no spacing props.")
+            print("Image props has no spacing props.")
             pass
 
         self._dpi = dpi
-        self.sid = sid
 
-        self.label_image = np.array([])
+        # Use set_labeled_films_and_filters() method to fill these attributes.
+        self._is_labeled = False
+        self.labeled_films = None
+        self.labeled_optical_filters = None
+
         self.number_of_films = None
+        self.number_of_optical_filters = None
+
 
     @property
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
 
-        dpi = None
+        return self._dpi
 
-        if self.sid is not None:
-            dpi *= self.sid / 1000
-        else:
-            dpi = self._dpi
-
-        return dpi
 
     @property
     def dpmm(self) -> float | None:
@@ -344,6 +392,136 @@ class TiffImage(BaseImage):
             return self.dpi / MM_PER_INCH
         except TypeError:
             return
+
+
+    def set_labeled_films_and_filters(self):
+        """
+        Set the labeled films and optical filters in the image.
+
+        This method sets the following class attributes: labeled_films, number_of_films, 
+        labeled_opticalfilters and numer_of_filters.
+        """
+
+        # Get labeled objects
+        labeled_objects, number_of_objects = self.get_labeled_objects(return_num = True)
+
+        # Set the labeled films and filters
+        films = np.copy(labeled_objects)
+        
+        filters = np.copy(labeled_objects)
+
+        min_area_in_pixels = int(MIN_AREA_FOR_FILMS * (1/MM_PER_INCH)**2 * (self.dpi)**2)
+        
+        properties = regionprops(label_image = labeled_objects)
+
+        film_counter = 0
+        filter_counter = 0
+        for n, p in enumerate(properties, start = 1):
+            
+            if p.area < min_area_in_pixels:
+                filter_counter += 1
+                films[films == n] = 0
+            else:
+                film_counter += 1
+                filters[filters == n] = 0
+
+        self.labeled_films = label(films)
+        self.number_of_films = film_counter
+        self.labeled_optical_filters = label(filters)
+        self.number_of_optical_filters = filter_counter
+
+        self._is_labeled = True
+
+
+    def get_labeled_objects(
+        self,
+        return_num: bool = False,
+        threshold: tuple[float, float] = (0.1, 0.8),
+        min_area: float = 100,
+        show: bool = False,
+        ) -> np.ndarray | tuple[np.ndarray, int]:
+        """
+        Get a labeled array and the number of regions in an image.
+
+        Parameters
+        ----------
+        return_num : bool
+            If True, the number of labeled regions is returned.
+        threshold : tuple
+            The threshold values used to detect ojects.
+            The first value is used as a threshold for dark regions (< 0.1) and the second value for bright regions (> 0.9).
+        min_area : float
+            The minimum area in mm^2 of a region to be considered an object.
+        show : bool
+            If True, the image and histogram are shown.
+
+        Returns
+        -------
+        labeled_img : ndarray
+            Image with labeled regions
+        num_labels : int
+            Number of labeled regions if return_num is True
+
+        """
+        # Convert to HSV
+        hsv_img = rgb2hsv(self.array)
+        #h = hsv_img[:, :, 0]
+        #s = hsv_img[:, :, 1]
+        v = hsv_img[:, :, 2]
+
+        # Get binary with thresholding
+        ## If v is LOW, it is a DARK region
+        ## If v is HIGH, it is a BRIGHT region
+        binary_img = np.logical_and(
+            v > threshold[0],
+            v < threshold[1]
+            )
+
+        # Filter for small bright spots
+        bi_img_filtered = skimage.morphology.binary_erosion(
+            binary_img,
+            mode="min",
+            footprint=square(3)
+            )
+
+        # Get labeled regions and properties
+        labeled_img = label(bi_img_filtered)
+        properties = regionprops(label_image = labeled_img)
+
+        # Remove objects with area less than 10 x 10 mm^2
+        ## What is the number of pixels in 10 x 10 mm^2?
+        ## [10 mm (1 inch / 25.4 mm) (300 pixels / 1 inch)]**2
+        ##               ^- mm to inch       ^- inch to pixels
+
+        minimum_area = int(min_area * (1/MM_PER_INCH)**2 * (self.dpi)**2)
+
+        film_counter = 0  # Used to reset label number
+
+        for n, p in enumerate(properties, start = 1):
+            
+            if p.area < minimum_area:  # Remove small regions
+                labeled_img[labeled_img == n] = 0
+
+            else:
+                film_counter += 1
+                labeled_img[labeled_img == n] = film_counter
+                
+
+        # Plot histogram if show is True
+        if show:
+            fig = plt.figure(tight_layout=True)
+            ax1 = fig.add_subplot(121)
+            ax2 = fig.add_subplot(122)
+
+            ax1.imshow(v)
+            ax1.set_title("Value")
+            ax2.hist(v.ravel(), 512)
+
+        if return_num:
+            return (labeled_img, film_counter)
+        else:
+            return labeled_img
+
 
     def get_stat(
             self,
@@ -382,39 +560,27 @@ class TiffImage(BaseImage):
         >>> list(zip(mean, std))
         """
 
-        if not self.label_image.any():
-            self.set_labeled_img(threshold = 0.90)
+        if not self._is_labeled:
+            self.set_labeled_films_and_filters()
 
         if show:
             fig, axes = plt.subplots(ncols=1)
-            #ax = axes.ravel()
             axes = plt.subplot(1, 1, 1)
-            #axes.imshow(gray_scale, cmap="gray")
-            axes.imshow(self.array/np.max(self.array))
-
-        #print(f"Number of images detected: {num}")
+            axes.imshow(self.array/np.max(self.array))         
 
         # Films
         if ch in ["R", "Red", "r", "red"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 0])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 0])
         elif ch in ["G", "Green", "g", "green"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 1])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 1])
         elif ch in ["B", "Blue", "b", "blue"]:
-            films = regionprops(self.label_image, intensity_image=self.array[:, :, 2])
+            films = regionprops(self.labeled_films, intensity_image=self.array[:, :, 2])
         elif ch in ["M", "Mean", "m", "mean"]:
-            films = regionprops(self.label_image,
+            films = regionprops(self.labeled_films,
                                 intensity_image=np.mean(self.array, axis=2)
                                 )
         else:
             print("Channel not founded")
-
-        # Find the unexposed film.
-        #mean_pixel = []
-        #for film in films:
-        #    mean_pixel.append(film.intensity_mean)
-        #index_ref = mean_pixel.index(max(mean_pixel))
-        #print(f"Index reference: {index_ref}")
-        #end Find the unexposed film.
 
         mean = []
         std = []
@@ -479,6 +645,7 @@ class TiffImage(BaseImage):
 
         return mean, std
 
+
     def plot(
         self,
         ax: plt.Axes = None,
@@ -509,190 +676,91 @@ class TiffImage(BaseImage):
         if show:
             plt.show()
         return ax
-
-    def to_dose(self, cal, clip=False):
-        """Convert the tiff image to a dose distribution. The tiff file image
-        has to contain an unirradiated film used as a reference for zero Gray.
-
-        Parameters
-        ----------
-        cal : :class:`~Dosepy.calibration.Calibration`
-            Instance of a Calibration class
-
-        clip : bool, default: False
-            If True, limit the maximum dose to the greatest used for calibration. Useful to avoid very high doses.
-
-        Returns
-        -------
-        :class:`~Dosepy.image.ArrayImage`
-            Dose distribution.
-        """
-        mean_pixel, _ = self.get_stat(
-            ch=cal.channel,
-            roi=(5, 5),
-            show=False,
-            )
-        mean_pixel = sorted(mean_pixel, reverse=True)
-
-        if cal.channel in ["R", "Red", "r", "red"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 0]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 0]/mean_pixel[0]
-
-        elif cal.channel in ["G", "Green", "g", "green"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 1]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 1]/mean_pixel[0]
-
-        elif cal.channel in ["B", "Blue", "b", "blue"]:
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(self.array[:, :, 2]/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array[:, :, 2]/mean_pixel[0]
-
-        elif cal.channel in ["M", "Mean", "m", "mean"]:
-            array = np.mean(self.array, axis=2)
-            if cal.func in ["P3", "Polynomial"]:
-                x = -np.log10(array/mean_pixel[0])
-            elif cal.func in ["RF", "Rational"]:
-                x = self.array/mean_pixel[0]
-
-        if cal.func in ["P3", "Polynomial"]:
-            dose_image = polynomial_g3(x, *cal.popt)
-        elif cal.func in ["RF", "Rational"]:
-            dose_image = rational_func(x, *cal.popt)
-
-        dose_image[dose_image < 0] = 0  # Remove unphysical doses < 0
-
-        if clip:  # Limit the maximum dose
-            max_calib_dose = cal.doses[-1]
-            dose_image[dose_image > max_calib_dose] = max_calib_dose
-
-        return load(dose_image, dpi=self.dpi)
-
-    def doses_in_central_rois(self, cal, roi, show):
-        """Dose in central film rois.
-
-        Parameters
-        ----------
-        cal : Dosepy.calibration.Calibration
-            Instance of a Calibration class
-        roi : tuple
-            Width and height of a region of interest (roi) in millimeters (mm), at the
-            center of the film.
-        show : bool
-            Whether to actually show the image and rois.
-
-        Returns
-        -------
-        array : numpy.ndarray
-            Doses on heach founded film.
-        """
-        mean_pixel, _ = self.get_stat(ch=cal.channel, roi=roi, show=show)
-        #
-        if cal.func in ["P3", "Polynomial"]:
-            mean_pixel = sorted(mean_pixel)  # Film response.
-            optical_density = -np.log10(mean_pixel/mean_pixel[0])
-            dose_in_rois = polynomial_g3(optical_density, *cal.popt)
-
-        elif cal.func in ["RF", "Rational"]:
-            # Pixel normalization 
-            mean_pixel = sorted(mean_pixel, reverse = True)
-            norm_pixel = np.array(mean_pixel)/mean_pixel[0]
-            dose_in_rois = rational_func(norm_pixel, *cal.popt)
-
-        return dose_in_rois
     
-    def set_labeled_img(self, threshold=None):
-        
-        erosion_pix = int(6*self.dpmm)  # Number of pixels used for erosion.
-        #print(f"Number of pixels to remove borders: {erosion_pix}")
 
-        gray_scale = rgb2gray(self.array)
-        if not threshold:
-            thresh = threshold_otsu(gray_scale)  # Used for films identification.
-        else:
-            thresh = threshold * np.amax(gray_scale)
-        binary = erosion(gray_scale < thresh, square(erosion_pix))
-        self.label_image, self.number_of_films = label(binary, return_num=True)
-        
+    def filter_channel(
+        self,
+        size: float | int = 0.05,
+        kind: str = "median",
+        channel: str = "red"
+    ) -> None:
+        """Apply a filter to the given channel.
 
-class CalibImage(TiffImage):
-    """A tiff image used for calibration."""
-
-    def __init__(self, path: str | Path, **kwargs):
-        """
         Parameters
         ----------
-        path : str, file-object
-            The path to the file.
+        size : int, float
+            Size of the median filter to apply.
+            If a float, the size is the ratio of the length. Must be in the range 0-1.
+            E.g. if size=0.1 for a 1000-element array, the filter will be 100 elements.
+            If an int, the filter is the size passed.
+        kind : {'median', 'gaussian'}
+            The kind of filter to apply. If gaussian, *size* is the sigma value.
+        channel : {'R', 'G', 'B'}
+            The color channel to filter
 
-        dpi : float
-            The dots-per-inch of the image, defined at isocenter.
-
-            .. note:: If a DPI tag is found in the image, that value will
-            override the parameter, otherwise this one will be used.
+        Notes
+        -----
+        This function was adapted from the `pylinac` library filter fuction.
+        https://github.com/jrkerns/pylinac/blob/f16b70a1c70e15061211c853942296287cb865d3/pylinac/core/image.py#L618
         """
-        super().__init__(path, **kwargs)
-        self.calibration_curve_computed = False
-
-    def get_calibration(
-        self,
-        doses: list,
-        func="P3",
-        channel="R",
-        roi=(5, 5),
-        threshold=None,
-        ):
-        r"""Computes calibration curve. Use non-linear least squares to
-        fit a function, func, to data. For more information see
-        scipy.optimize.curve_fit.
-
-        Parameter
-        ---------
-        doses : list
-            Doses values used to expose films for calibration.
-        func : string
-            "P3": Polynomial function of degree 3, using optical density as film response. "RF" or "Rational": Rational function, using normalized pixel value relative to the unexposed film.
-        channel : str
-            Color channel. "R": Red, "G": Green and "B": Blue, "M": mean.
-        roi : tuple
-            Width and height region of interest (roi) in millimeters, at the
-            center of the film.
+        if channel in ["R", "Red", "r", "red"]:
+            self.array[:, :, 0] = filter_array(self.array[:, :, 0], size=size, kind=kind)
+        elif channel in ["G", "Green", "g", "green"]:
+            self.array[:, :, 1] = filter_array(self.array[:, :, 1], size=size, kind=kind)
+        elif channel in ["B", "Blue", "b", "blue"]:
+            self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
+        else:
+            raise ValueError("Channel not suported. Use 'red', 'green' or 'blue'.")
+        
+    
+    def get_optical_filters(self) -> dict:
+        """
+        Return the rois and mean intensities of the optical filters in the red channel.
 
         Returns
         -------
-        ::class:`~Dosepy.calibration.Calibration`
-            Instance of a Calibration class.
+        dict
+            A dictionary with the rois as a dict and intensities as an array of the optical filters.
 
-        Examples
-        --------
-        Load an image from a file and compute a calibration curve using green
-        channel::
-
+        Example
+        -------
         >>> from Dosepy.image import load
         >>> path_to_image = r"C:\QA\image.tif"
-        >>> cal_image = load(path_to_image, for_calib = True)
-        >>> cal = cal_image.get_calibration(doses = [0, 0.5, 1, 2, 4, 6, 8, 10], channel = "G")
-        >>> # Plot the calibration curve
-        >>> cal.plot()
+        >>> img = load(path_to_image)
+        >>> optical_filters = img.get_optical_filters()
+
+        >>> optical_filters["rois_for_optical_filters"]
+        >>> optical_filters["intensities_of_optical_filters"]
         """
 
-        doses = sorted(doses)
-        mean_pixel, _ = self.get_stat(ch=channel, roi=roi)
-        mean_pixel = sorted(mean_pixel, reverse=True)
-        mean_pixel = np.array(mean_pixel)
+        optical_filters = {}
 
-        if func in ["P3", "Polynomial"]:
-            x = -np.log10(mean_pixel/mean_pixel[0])  # Optical density
+        if not self._is_labeled:
+            self.set_labeled_films_and_filters()
 
-        elif func in ["RF", "Rational"]:
-            x = mean_pixel/mean_pixel[0]
+        if self.number_of_optical_filters == 0:
+            print("Optical filters not found")
+        
+        # Get the central region of each filter.
+        rois = []
+        intensities = []
+        
+        for region in regionprops(self.labeled_optical_filters, self.array[:, :, 0]):
 
-        return Calibration(y=doses, x=x, func=func, channel=channel)
+            rois.append(
+                {
+                    'x': int(region.centroid[0]),
+                    'y': int(region.centroid[1]),
+                    'radius': int(region.axis_minor_length/2)
+                }
+            )
+            intensities.append(region.intensity_mean)
 
+        optical_filters["rois_for_optical_filters"] = rois
+        optical_filters["intensities_of_optical_filters"] = sorted(intensities)
+
+        return optical_filters
+            
 
 class ArrayImage(BaseImage):
     """An image constructed solely from a numpy array."""
@@ -702,7 +770,6 @@ class ArrayImage(BaseImage):
         array: np.ndarray,
         *,
         dpi: float = None,
-        sid: float = None,
         dtype=None,
     ):
         """
@@ -726,7 +793,6 @@ class ArrayImage(BaseImage):
         else:
             self.array = array
         self._dpi = dpi
-        self.sid = sid
 
     @property
     def dpmm(self) -> float | None:
@@ -739,12 +805,8 @@ class ArrayImage(BaseImage):
     @property
     def dpi(self) -> float | None:
         """The dots-per-inch of the image, defined at isocenter."""
-        dpi = None
-        if self._dpi is not None:
-            dpi = self._dpi
-            if self.sid is not None:
-                dpi *= self.sid / 1000
-        return dpi
+
+        return self._dpi
 
     @property
     def physical_shape(self):
@@ -761,7 +823,8 @@ class ArrayImage(BaseImage):
             File name as a string
 
         """
-        np_tif = self.array.astype(np.uint16)
+        np_tif = self.array.astype(np.float32)
+        #np_tif = self.array
         tif_encoded = iio.imwrite(
             "<bytes>",
             np_tif,
@@ -862,7 +925,7 @@ class ArrayImage(BaseImage):
         (useful for example for spot labels are used in films).
 
         It is assumed that both distributions have exactly the same physical dimensions, and the positions
-        ​​for each point coincide with each other, that is, the images are registered.
+        for each point coincide with each other, that is, the images are registered.
 
         Interpolation is not supported yet.
 
@@ -889,7 +952,7 @@ class ArrayImage(BaseImage):
         >>> from Dosepy.image import load
         >>> import numpy as np
 
-        >>> # We generate the arrays, A and B, with the values ​​96 and 100 in all their elements.
+        >>> # We generate the arrays, A and B, with the values 96 and 100 in all their elements.
         >>> A = np.zeros((30, 30)) + 96
         >>> B = np.zeros((30, 30)) + 100
 
@@ -1131,3 +1194,243 @@ class DoseImage(ArrayImage):
         self._reference_point  = reference_point
         self._orientation = orientation
         self._dose_unit = dose_unit
+
+
+def equate_array_size(
+        image_list: list,
+        axis: tuple[str, ...] = ("height", "width"),
+        ) -> list:
+    """
+    Equate TIFF files to have the same array size with respect of the smallest one.
+    Pixels are cropped equally from both sides.
+
+    Parameters
+    ----------
+    image_list : list
+        List with images (TiffImage, ArrayImage instance).
+
+    axis : str
+        Axis to equate: height, width or both.
+
+    Return
+    ------
+        A list with the new images.
+    """
+    
+    cropped_images = copy.deepcopy(image_list)
+    idx_min_height, idx_min_width = _find_smallest_image(image_list)
+
+    if "height" in axis:
+        for count, img in enumerate(image_list):
+            if count == idx_min_height: continue
+            cropped_images[count] = _equate_height(image_list[idx_min_height], img)
+            
+    image_list = cropped_images
+    if "width" in axis:
+
+        for count, img in enumerate(image_list):
+            if count == idx_min_width: continue
+            cropped_images[count] = _equate_width(image_list[idx_min_width], img)
+
+    return cropped_images
+
+
+def average_tiff_images(images: list[TiffImage | ArrayImage]) -> list:
+    """
+    Average images with the same file name, ignoring last 7 characters.
+
+    Parameters
+    ----------
+    paths : list
+        list of strings with the tiff file path.
+
+    images : list
+        list of TiffImage or ArrayImage objects.
+
+    Return
+    ------
+    averaged_images : list
+        list of TiffImage or ArrayImage objects.
+
+    Note
+    ----
+    Since the last 7 characters of the file name are ignored, the function
+    average the next files:
+
+    - my_file_name_001.tif
+    - my_file_name_002.tif
+    - my_file_name_003.tif
+
+    """
+
+    # Get base_name for identification
+    paths_as_str = [img.base_path for img in images]
+
+    # Create a list with no duplicate names
+    unique_names = list(set([file[:-7] for file in paths_as_str]))
+    
+    averaged_images = []
+    for unique in unique_names:
+        to_merge =[]
+        buff = copy.deepcopy(images[0])
+
+        # Catch files with same name
+        for file_name, image in zip(paths_as_str, images):
+            if file_name[:-7] == unique:
+                to_merge.append(image)
+        
+        new_array = np.stack(tuple(img.array for img in to_merge), axis=-1)
+        buff.array = np.mean(new_array, axis=3)
+        averaged_images.append(buff)
+    
+    return averaged_images
+
+
+def stack_images(img_list: list, axis=0, padding=0):
+    """
+    Takes in a list of images and concatenate them side by side.
+    Useful for film calibration, when more than one image is needed
+    to scan all gafchromic bands.
+    
+    Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
+
+    Parameters
+    ----------
+    img_list : list
+        The images to be stacked. List of TiffImage or ArrayImage.
+
+    axis : int, default: 0
+        The axis along which the arrays will be joined. 0 if vertical or 1 if horizontal.
+
+    padding : float, default: 0
+        Add padding in milimeters to simulate an empty space betwen films.
+
+    Returns
+    -------
+    ::class:`~Dosepy.image.TiffImage`
+        Instance of a TiffImage class.
+
+    Example
+    -------
+
+        >>> img1 = load(np.ones((5, 5, 3)), dpi=1)
+        >>> img2 = load(np.ones((5, 5, 3)), dpi=1)
+
+        >>> img = stack_images([img1, img2])
+
+        >>> img.shape  # (10, 5, 3)
+    """
+
+    first_img = copy.deepcopy(img_list[0])
+
+    # Check that all images are the same width
+    for img in img_list:
+        
+        if axis == 0:
+            if img.shape[1] != first_img.shape[1]:
+                raise ValueError("Images were not the same width")
+        if axis == 1:
+            if img.shape[0] != first_img.shape[0]:
+                raise ValueError("Images were not the same height")
+
+    #height = first_img.shape[0]
+    width = first_img.shape[1]
+
+    padding_pixels = int(padding * img_list[0].dpmm)
+
+    new_img_list = []
+    
+    for img in img_list:
+
+        height = img.shape[0]
+
+        background = np.zeros(
+            (2*padding_pixels + height, 2*padding_pixels + width, 3)
+            ) + int(2**16 - 1)
+
+        background[
+            padding_pixels: padding_pixels + height,
+            padding_pixels: padding_pixels + width,
+            :
+            ] = img.array
+        new_img = copy.deepcopy(img)
+        new_img.array = background
+        new_img_list.append(new_img)
+    
+    new_array = np.concatenate(tuple(img.array for img in new_img_list), axis)
+    first_img.array = new_array.astype(np.uint16)
+
+    return first_img
+
+def _find_smallest_image(images: list[ImageLike]):
+
+    min_higth = images[0].shape[0]
+    min_width = images[0].shape[1]
+
+    index_min_height = 0
+    index_min_width = 0
+
+    for count, img in enumerate(images[1:], start=1):
+
+        if img.shape[0] < min_higth:
+            min_higth = img.shape[0]
+            index_min_height = count
+
+        if img.shape[1] < min_width:
+            min_width = img.shape[1]
+            index_min_width = count
+
+    logging.debug(f"Smallest height: {min_higth} at index {index_min_height}")
+    logging.debug(f"Smallest width: {min_width} at index {index_min_width}")
+    return index_min_height, index_min_width
+
+
+def _equate_height(small_image, image):
+    """
+    Crop the image to have the same height as the small_image. 
+    If the difference is odd, the extra pixel is cropped from the top.
+    Otherwise, the extra pixels are cropped equally from both sides.
+    """
+    logging.debug(f"Image height before cropping: {image.shape}")
+    height_diff = abs(int(image.shape[0] - small_image.shape[0]))
+    logging.debug(f"Height difference: {height_diff}")
+
+    if height_diff > 0:
+                
+        if height_diff == 1:
+            image.crop(height_diff, edges="bottom")
+
+        elif not(height_diff%2):
+            image.crop(int(height_diff/2), edges=('bottom', 'top'))
+
+        else:
+            image.crop(int(math.floor(height_diff/2)), edges="top")
+            image.crop(int(math.floor(height_diff/2) + 1), edges="bottom")
+
+
+    logging.debug(f"Image height after cropping: {image.shape}")
+    return image
+
+
+def _equate_width(small_image, image):
+    """
+    Crop the image to have the same width as the small_image.
+    If the difference is odd, the extra pixel is cropped from the left.
+    Otherwise, the extra pixels are cropped equally from both sides.
+    """
+
+    width_diff = abs(int(image.shape[1] - small_image.shape[1]))
+
+    if width_diff > 0:
+
+        if width_diff==1:
+            image.crop(width_diff, edges="right")
+
+        elif not(width_diff%2):
+            image.crop(int(width_diff/2), edges=("left", "right"))
+
+        else:
+            image.crop(int(math.floor(width_diff/2)), edges="left")
+            image.crop(int(math.floor(width_diff/2) + 1), edges="right")
+
+    return image

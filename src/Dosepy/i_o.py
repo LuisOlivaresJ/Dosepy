@@ -11,6 +11,8 @@ from tqdm import tqdm
 from urllib.request import urlopen, urlretrieve
 from urllib.error import HTTPError, URLError
 
+import numpy as np
+
 
 def get_url(
     url: str, destination: str | Path | None = None, progress_bar: bool = True
@@ -125,8 +127,53 @@ def is_dicom_image(file: str | Path) -> bool:
     try:
         pydicom.dcmread(file)
         result = True
-    except InvalidDicomError as error:
-        #print(f"A {type(error).__name__} has occurred.")
+    except:
         pass
 
     return result
+
+
+def load_beam_profile(file: str | Path, **kwargs) -> dict:
+    """
+    Load a beam profile. The beam profile is a comma-separated
+    values (CSV) file with the following columns:
+    - Position [mm]
+    - Normalized dose to the center of the field [0 - 100]
+
+    Parameters
+    ----------
+    file : str
+        The path to the file.
+
+    kwargs
+        Arbitrary keyword arguments used by numpy.genfromtxt.
+
+    Returns
+    -------
+    dict
+        A dictionary with the following keys:
+        - positions [mm].
+        - doses [0 - 100].
+
+    Notes
+    -----
+    This is a grapper function that uses numpy.genfromtxt to load the beam profile.
+    You can use keyword arguments used by numpy.genfromtxt, 
+    for example: comments="#", skip_header=1, etc.
+    https://numpy.org/doc/stable/reference/generated/numpy.genfromtxt.html
+
+    """
+
+    # Check if the file exists.
+    if not os.path.exists(file):
+        raise Exception("Beam profile file does not exist.")
+    
+    profile = {
+        "positions": [],
+        "doses": [],
+    }
+    data = np.genfromtxt(file, delimiter=",", **kwargs)
+    profile["positions"] = [float(p) for p in data[:, 0]]
+    profile["doses"] = [float(d) for d in data[:, 1]]
+
+    return profile

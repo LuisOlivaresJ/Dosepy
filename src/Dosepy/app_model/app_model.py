@@ -1,12 +1,13 @@
 """Functions used as a model. VMC pattern."""
 
-from Dosepy.image import _is_RGB, _is_image_file, load, load_images, ImageLike
-from Dosepy.tools.files_to_image import equate_array_size, merge, stack_images
+from Dosepy.image import _is_tif_file, load, load_multiples, ImageLike, TiffImage, ArrayImage
 import imageio.v3 as iio
 import numpy as np
+from numpy import ndarray
 from importlib import resources
 import pickle
-from Dosepy.config.io_settings import load_settings
+from Dosepy.config.io_settings import Settings, load_settings
+from Dosepy.calibration import LUT
 
 
 class Model:
@@ -17,15 +18,23 @@ class Model:
     save or load a lut.
     """
     def __init__(self):
-        self.calibration_img = None  # The image used to produce a calibration curve
-        self.tif_img = None  # The tif image to be analysed
-        self.lut = None  # The calibration object used for tif to dose calculation
-        self.ref_dose_img = None  # The reference dose distribution (usally calculated from a tif file)
+        self.calibration_img: TiffImage = None  # The image used to produce a calibration curve
+        self.tif_img: TiffImage = None  # The tif image to be analysed
+        self.lut: LUT = None  # The calibration object used for tif to dose calculation
+        self.dose_img_from_film = ArrayImage  # The dose distribution calculated from a tiff file
 
-        self.config = load_settings()  # The settings for the application (settings.toml file)
+        self.config: Settings = load_settings()  # The settings for the application.
+        
+        self.ct_array_img: ndarray = None  # The CT image to be used for user mark localization
+        # Index of the user's mark in the CT image.
+        # Row as +y, column as +x, slice as +z. The same as DICOM convention.
+        self.ct_index: list[int, int, int] = None
+        # Aspect ratio of the CT image.
+        self.ct_aspect: dict[str, float] = None
+
 
     def are_valid_tif_files(self, files: list) -> bool:
-        return all([_is_image_file(file) and _is_RGB(file) for file in files])
+        return all([_is_tif_file(file) for file in files])
         
 
     def are_files_equal_shape(self, files: list) -> bool:
@@ -34,95 +43,24 @@ class Model:
             if iio.improps(file).shape != first_img_shape:
                 return False
         return True
-    
-    def load_calib_files(self, files: list) -> ImageLike:
-
-        if len(files) == 1:
-
-            return load(files[0], for_calib=True)
-        
-        elif len(files) > 1:
-
-            img = load(files[0], for_calib=True) # Placeholder
-            images = load_images(files)
-            equated_images = equate_array_size(images, axis=("width", "height"))
-            merged_images = merge(files, equated_images)
-            stacked = stack_images(merged_images, padding=6)
-            img.array = stacked.array
-
-            return img
 
 
     def load_files(self, files: list) -> ImageLike:
-        if len(files) == 1:
-            return load(files[0])
-        
-        else:
-            img = load(files[0]) # Placeholder
-            images = load_images(files)
-            equated_images = equate_array_size(images, axis=("width", "height"))
-            merged_images = merge(files, equated_images)
-            stacked = stack_images(merged_images, padding=6)
-            img.array = stacked.array
-            return img
-
-
-    def create_dosepy_lut(self, doses, roi):
-        #channel = ["m", "r", "g", "b"]
-        doses = np.array(doses)
-        lut = np.zeros([6, len(doses)])
-        lut[0,:] = doses
-        lut[1,:] = doses * 1  # Correct doses for machine daily output
-        lut[2,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="m",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-        lut[3,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="r",
-                roi=roi,
-                show=False,
-                threshold=None
-               )
-            )
-        lut[4,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="g",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-        lut[5,:], _ = np.array(
-            self.calibration_img.get_stat(
-                ch="b",
-                roi=roi,
-                show=False,
-                threshold=None
-                )
-            )
-
-        return lut
+        # TODO Perform input validation
+        return load_multiples(files)
+    
     
     def save_lut(self, file_path: str):
-        
-        file = open(file_path + ".cal", 'wb')
-        pickle.dump(self.lut, file, pickle.HIGHEST_PROTOCOL)
-        file.close()
+        self.lut.to_yaml_file(file_path)
 
-    def load_lut(self, lut_path: str):
-        file = open(lut_path, 'rb')
-        lut = pickle.load(file)
-        file.close()
-        return lut
+
+    def load_lut(self, lut_path: str):     
+        return LUT.from_yaml_file(lut_path)
     
+
     def save_dose_as_tif(self, file_name: str):
-        data_array = self.ref_dose_img.array*100  # Gy to cGy
+        data_array = self.dose_img_from_film.array*100  # Gy to cGy
         data = data_array.astype(np.uint16)
-        img = load(data, dpi = self.ref_dose_img.dpi)
+        img = load(data, dpi = self.dose_img_from_film.dpi)
         img.save_as_tif(file_name)
 
