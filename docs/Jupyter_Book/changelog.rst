@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.8.1 (FEB-2025)
+------------------
+
+Issue
+^^^^^
+
+* Updating scikit-image to 0.25, in order to use skimage.morphology.footprint_rectangle instead of square. Square will be removed in version 0.27.
+
 v 0.8.0 (FEB-2025)
 ------------------
 

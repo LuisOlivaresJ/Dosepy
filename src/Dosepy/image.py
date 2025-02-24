@@ -30,7 +30,7 @@ import matplotlib.patches as mpatches
 import skimage
 from skimage.color import rgb2gray, rgb2hsv
 from skimage.filters import threshold_otsu
-from skimage.morphology import square, erosion
+from skimage.morphology import erosion, footprint_rectangle
 from skimage.measure import label, regionprops
 from skimage.filters.rank import mean
 from skimage.transform import rotate
@@ -86,7 +86,7 @@ def load(path: str | Path | np.ndarray | BinaryIO, **kwargs) -> ImageLike:
     if _is_array(path):
         array_image = ArrayImage(path, **kwargs)
         if isinstance(filter, int):
-            array_image.array = mean(array_image.array, footprint=square(filter))
+            array_image.array = mean(array_image.array, footprint=footprint_rectangle((filter, filter)))
         return array_image
     
     elif _is_dicom(path):
@@ -314,7 +314,7 @@ class BaseImage(ABC):
         # https://scikit-image.org/docs/stable/api/skimage.morphology.html#skimage.morphology.binary_erosion
 
         #erosion_pix = int(6*self.lut["resolution"]/MM_PER_INCH)  # 6 mlimiters.
-        binary = erosion(gray_scale < thresh, square(erosion_pix))
+        binary = erosion(gray_scale < thresh, footprint_rectangle((erosion_pix, erosion_pix)))
 
         labeled_image, number_of_films = label(binary, return_num=True)
 
@@ -481,7 +481,7 @@ class TiffImage(BaseImage):
         bi_img_filtered = skimage.morphology.binary_erosion(
             binary_img,
             mode="min",
-            footprint=square(3)
+            footprint=footprint_rectangle((3, 3))
             )
 
         # Get labeled regions and properties
