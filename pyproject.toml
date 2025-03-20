@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.8.1"
+version = "0.8.2"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
@@ -32,15 +32,14 @@ dependencies = [
   "matplotlib >= 3.9.2",
   "tifffile >= 2024.09.20",
   "scipy >= 1.14.1",
-  "PyQt6 >= 6.7.1",
-  "relative_dose_1d >= 0.1.7",
-  "PySide6 >= 6.7.2",
   "pydantic >= 2.9.2",
   "pydicom >= 3.0.1",
   "scikit-image >= 0.25.0",
   "tomlkit >= 0.13.2",
   "tqdm >= 4.66.5",
   "pyyaml >= 6.0.2",
+  "pytest >= 8.3.5",
+  "pip >= 25.0.1",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
