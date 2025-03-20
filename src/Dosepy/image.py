@@ -3,9 +3,9 @@ NAME
     Image module
 
 DESCRIPTION
-    This module holds functionalities for tif image loading and manipulation.
-    ArryaImage class is used as representation of dose distributions.
-    The content is heavily based from 
+    This module holds functionalities for TIFF image loading and manipulation.
+    ArrayImage class is used as a representation of dose distributions.
+    The content is heavily based on 
     `pylinac <https://pylinac.readthedocs.io/en/latest/_modules/pylinac/core/image.html>`_,
     and `omg_dosimetry <https://omg-dosimetry.readthedocs.io/en/latest/>`_
 
@@ -52,7 +52,7 @@ logging.getLogger(__name__)
 
 
 def load(path: str | Path | np.ndarray | BinaryIO, **kwargs) -> ImageLike:
-    r"""Load a DICOM image, TIF image, or numpy 2D array.
+    r"""Load a DICOM image, TIFF image, or numpy 2D array.
 
     Parameters
     ----------
@@ -158,7 +158,7 @@ def _is_dicom(path: str | Path) -> bool:
 
 
 def _is_tif_file(path: str | Path | BinaryIO) -> bool:
-    """Whether the file is a RGB tif image file."""
+    """Whether the file is an RGB TIFF image file."""
     try:
         img_props = iio.improps(path)
         if len((img_props.shape)) == 3 and img_props.shape[2] == 3:
@@ -256,11 +256,11 @@ class BaseImage(ABC):
 
 
     def flipud(self) -> None:
-        """Flip the image array upside down. Wrapper for np.flipud()"""
+        """Flip the image array upside down. Wrapper for np.flipud()."""
         self.array = np.flipud(self.array)
 
     def fliplr(self) -> None:
-        """Flip the image array in the left/right direction. Wrapper for np.fliplr()"""
+        """Flip the image array in the left/right direction. Wrapper for np.fliplr()."""
         self.array = np.fliplr(self.array)
 
     def rotate(self, angle: float, mode: str = "edge", *args, **kwargs):
@@ -271,7 +271,7 @@ class BaseImage(ABC):
     def center(self) -> tuple[float, float]:
         """
         Return the center position of the image array as a tuple.
-        Even-length arrays will return the midpoint between central two indices. Odd will return the central index.
+        Even-length arrays will return the midpoint between the central two indices. Odd will return the central index.
         """
         x_center = (self.shape[1] / 2) - 0.5
         y_center = (self.shape[0] / 2) - 0.5
@@ -290,13 +290,13 @@ class BaseImage(ABC):
         Parameters
         ----------
         threshold : float
-            The threshold value used to detect film. Pixel values below the threshold are considered films.
-             If None, the Otsu method is used to define a threshold.
+            The threshold value used to detect films. Pixel values below the threshold are considered films.
+            If None, the Otsu method is used to define a threshold.
         
         Returns
         -------
         ndarray : 
-            The labeled image, where all connceted regions are assigned the same integer value.
+            The labeled image, where all connected regions are assigned the same integer value.
         num : int
             The number of films detected.
         """
@@ -322,7 +322,7 @@ class BaseImage(ABC):
 
 
 class TiffImage(BaseImage):
-    """An image from a tiff file.
+    """An image from a TIFF file.
 
     Attributes
     ----------
@@ -354,16 +354,16 @@ class TiffImage(BaseImage):
         super().__init__(path)
         self.props = iio.improps(path, extension=".tif")
         if not self.props:
-            logging.WARNING("Was not possible to read image props")
-            print("Was not possible to read image props")
+            logging.WARNING("It was not possible to read image properties.")
+            print("It was not possible to read image properties.")
         self.array = iio.imread(path, extension=".tif")
 
         try:
             dpi = self.props.spacing[0]
 
         except:
-            logging.WARNING("Image props has no spacing props.")
-            print("Image props has no spacing props.")
+            logging.WARNING("Image properties have no spacing attributes.")
+            print("Image properties have no spacing attributes.")
             pass
 
         self._dpi = dpi
@@ -399,7 +399,7 @@ class TiffImage(BaseImage):
         Set the labeled films and optical filters in the image.
 
         This method sets the following class attributes: labeled_films, number_of_films, 
-        labeled_opticalfilters and numer_of_filters.
+        labeled_optical_filters, and number_of_filters.
         """
 
         # Get labeled objects
@@ -448,7 +448,7 @@ class TiffImage(BaseImage):
         return_num : bool
             If True, the number of labeled regions is returned.
         threshold : tuple
-            The threshold values used to detect ojects.
+            The threshold values used to detect objects.
             The first value is used as a threshold for dark regions (< 0.1) and the second value for bright regions (> 0.9).
         min_area : float
             The minimum area in mm^2 of a region to be considered an object.
@@ -458,10 +458,9 @@ class TiffImage(BaseImage):
         Returns
         -------
         labeled_img : ndarray
-            Image with labeled regions
+            Image with labeled regions.
         num_labels : int
-            Number of labeled regions if return_num is True
-
+            Number of labeled regions if return_num is True.
         """
         # Convert to HSV
         hsv_img = rgb2hsv(self.array)
@@ -529,7 +528,7 @@ class TiffImage(BaseImage):
             roi=(5, 5),
             show=False,
             ) -> list:
-        r"""Get average and standar deviation from pixel values at a central ROI in each film.
+        r"""Get average and standard deviation from pixel values at a central ROI in each film.
 
         Parameter
         ---------
@@ -660,12 +659,12 @@ class TiffImage(BaseImage):
         ax : matplotlib.Axes instance
             The axis to plot the image to. If None, creates a new figure.
         show : bool
-            Whether to actually show the image. Set to false when plotting
+            Whether to actually show the image. Set to False when plotting
             multiple items.
         clear_fig : bool
             Whether to clear the prior items on the figure before plotting.
         kwargs
-            kwargs passed to plt.imshow()
+            kwargs passed to plt.imshow().
         """
         if ax is None:
             fig, ax = plt.subplots()
@@ -691,16 +690,16 @@ class TiffImage(BaseImage):
         size : int, float
             Size of the median filter to apply.
             If a float, the size is the ratio of the length. Must be in the range 0-1.
-            E.g. if size=0.1 for a 1000-element array, the filter will be 100 elements.
+            E.g., if size=0.1 for a 1000-element array, the filter will be 100 elements.
             If an int, the filter is the size passed.
         kind : {'median', 'gaussian'}
             The kind of filter to apply. If gaussian, *size* is the sigma value.
         channel : {'R', 'G', 'B'}
-            The color channel to filter
+            The color channel to filter.
 
         Notes
         -----
-        This function was adapted from the `pylinac` library filter fuction.
+        This function was adapted from the `pylinac` library filter function.
         https://github.com/jrkerns/pylinac/blob/f16b70a1c70e15061211c853942296287cb865d3/pylinac/core/image.py#L618
         """
         if channel in ["R", "Red", "r", "red"]:
@@ -710,17 +709,17 @@ class TiffImage(BaseImage):
         elif channel in ["B", "Blue", "b", "blue"]:
             self.array[:, :, 2] = filter_array(self.array[:, :, 2], size=size, kind=kind)
         else:
-            raise ValueError("Channel not suported. Use 'red', 'green' or 'blue'.")
+            raise ValueError("Channel not supported. Use 'red', 'green' or 'blue'.")
         
     
     def get_optical_filters(self) -> dict:
         """
-        Return the rois and mean intensities of the optical filters in the red channel.
+        Return the ROIs and mean intensities of the optical filters in the red channel.
 
         Returns
         -------
         dict
-            A dictionary with the rois as a dict and intensities as an array of the optical filters.
+            A dictionary with the ROIs as a dict and intensities as an array of the optical filters.
 
         Example
         -------
@@ -815,13 +814,12 @@ class ArrayImage(BaseImage):
 
 
     def save_as_tif(self, file_name):
-        """Used to save a dose distribution (in Gy) as a tif file (in cGy).
+        """Used to save a dose distribution (in Gy) as a TIFF file (in cGy).
         
         Parameters
         ----------
         file_name : str
-            File name as a string
-
+            File name as a string.
         """
         np_tif = self.array.astype(np.float32)
         #np_tif = self.array
@@ -1113,14 +1111,16 @@ class ArrayImage(BaseImage):
 
     def reduce_resolution_as(self, reference):
         """
-        Reduce the spatial resolution of the image to have the same a reference image. Usefull for gamma analysis.
+        Reduce the spatial resolution of the image to match a reference image. Useful for gamma analysis.
         The physical dimensions of the images must be the same (within half of the reference resolution).
-        The algorithm averages a number of pixels given by reference_resolution // image_resolution.
-
+        The algorithm averages a number of pixels given by image_resolution [dpi] / reference_resolution [dpi].
+        For example, if the image comes from a TIFF file with a resolution of 75 dpi, and the reference image
+        comes from a treatment planning system with a resolution of 25.4 dpi (1 point per millimeter), the rounded
+        number of pixels to average is 75 / 25.4 = 3.
 
         Parameters
         ----------
-        reference : :class:`~Dosepy.image.ArrayImage`
+        reference ::class:`~Dosepy.image.ArrayImage`
             The reference image that has the target resolution.
 
         Raises
@@ -1130,33 +1130,33 @@ class ArrayImage(BaseImage):
 
         Examples
         --------
-        Create two images with different resolutions and reduce the resolution of one of them::
+        Create two images with different resolution, same physical dimensions, and reduce the resolution of one of them::
         
         >>> from Dosepy.image import load
         >>> import numpy as np
 
-        >>> # Generate the arrays, A and B.
-        >>> A = np.random.rand(100, 100)
-        >>> B = np.random.rand(10, 10)
+        >>> # Generate the arrays, eval and ref.
+        >>> eval = np.random.rand(100, 100)
+        >>> ref = np.random.rand(10, 10)
 
         >>> # Create the dose distributions.
-        >>> D_eval = load(A, dpi = 10)
-        >>> D_ref = load(B, dpi = 1)
+        >>> D_eval = load(eval, dpi=10)
+        >>> D_ref = load(ref, dpi=1)
 
-        >>> # Reduce the resolution of the image D_eval to have the same resolution as D_ref.
+        >>> # Reduce the resolution of the image D_eval to match the resolution of D_ref.
         >>> D_eval.reduce_resolution_as(D_ref)
 
         >>> # Print the new shape of the D_eval array.
-        >>> print(D_eval.shape) # (10, 10)
+        >>> print(D_eval.shape)  # (10, 10)
         """
 
-        # Check that reference has a higher resolution
+        # Check that reference has a smaller resolution
         if reference.dpi > self.dpi:
             raise AttributeError(
-                "The reference image must have a higher resolution than the image to be reduced."
-            )
+                "The reference image must have a smaller resolution than the image to be reduced."
+                )
         elif reference.dpi == self.dpi:
-            print("The spatial resolution of both images is the same.")
+            print("The spatial resolution of both images are the same.")
             return
 
         ## Check if the physical dimensions are the same within a tolerance
@@ -1201,7 +1201,7 @@ def equate_array_size(
         axis: tuple[str, ...] = ("height", "width"),
         ) -> list:
     """
-    Equate TIFF files to have the same array size with respect of the smallest one.
+    Equate TIFF files to have the same array size with respect to the smallest one.
     Pixels are cropped equally from both sides.
 
     Parameters
@@ -1210,10 +1210,11 @@ def equate_array_size(
         List with images (TiffImage, ArrayImage instance).
 
     axis : str
-        Axis to equate: height, width or both.
+        Axis to equate: height, width, or both.
 
-    Return
-    ------
+    Returns
+    -------
+    list
         A list with the new images.
     """
     
@@ -1237,30 +1238,29 @@ def equate_array_size(
 
 def average_tiff_images(images: list[TiffImage | ArrayImage]) -> list:
     """
-    Average images with the same file name, ignoring last 7 characters.
+    Average images with the same file name, ignoring the last 7 characters.
 
     Parameters
     ----------
     paths : list
-        list of strings with the tiff file path.
+        List of strings with the TIFF file paths.
 
     images : list
-        list of TiffImage or ArrayImage objects.
+        List of TiffImage or ArrayImage objects.
 
-    Return
-    ------
+    Returns
+    -------
     averaged_images : list
-        list of TiffImage or ArrayImage objects.
+        List of TiffImage or ArrayImage objects.
 
     Note
     ----
     Since the last 7 characters of the file name are ignored, the function
-    average the next files:
+    averages the following files:
 
     - my_file_name_001.tif
     - my_file_name_002.tif
     - my_file_name_003.tif
-
     """
 
     # Get base_name for identification
@@ -1288,9 +1288,9 @@ def average_tiff_images(images: list[TiffImage | ArrayImage]) -> list:
 
 def stack_images(img_list: list, axis=0, padding=0):
     """
-    Takes in a list of images and concatenate them side by side.
-    Useful for film calibration, when more than one image is needed
-    to scan all gafchromic bands.
+    Takes in a list of images and concatenates them side by side.
+    Useful for film calibration when more than one image is needed
+    to scan several films.
     
     Adapted from OMG_Dosimetry (https://omg-dosimetry.readthedocs.io/en/latest/)
 
@@ -1303,7 +1303,7 @@ def stack_images(img_list: list, axis=0, padding=0):
         The axis along which the arrays will be joined. 0 if vertical or 1 if horizontal.
 
     padding : float, default: 0
-        Add padding in milimeters to simulate an empty space betwen films.
+        Add padding in millimeters to simulate an empty space between films.
 
     Returns
     -------

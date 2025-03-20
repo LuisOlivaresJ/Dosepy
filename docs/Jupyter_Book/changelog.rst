@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.8.2 (MAR-2025)
+
+Issue
+-----
+
+* Fixed wrong documentation and error message when using ArrayImage.reduce_resolution_as() method. An error message occurs if the image has a smaller resolution than the reference image. Thank you Josip Atelj for the correction.
+* Fixed wrong documentation about the number of pixels used to equate resolution. The number of pixels to average is given by image_resolution / reference_resolution.
+
 v 0.8.1 (FEB-2025)
 ------------------
 

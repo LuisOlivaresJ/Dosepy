@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.8.1"
+version = "0.8.2"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
@@ -41,6 +41,8 @@ dependencies = [
   "tomlkit >= 0.13.2",
   "tqdm >= 4.66.5",
   "pyyaml >= 6.0.2",
+  "pytest >= 8.3.5",
+  "pip >= 25.0.1",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"

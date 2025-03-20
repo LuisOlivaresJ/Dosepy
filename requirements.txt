@@ -13,3 +13,6 @@ tifffile==2024.9.20
 tomlkit==0.13.2
 tqdm==4.66.5
 pyyaml == 6.0.2
+plotly>=6.0.0
+ipykernel>=6.29.5
+nbformat>=5.10.4
