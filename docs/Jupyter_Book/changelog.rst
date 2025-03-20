@@ -3,6 +3,27 @@
 Changelog
 =========
 
+v 0.8.2 (MAR-2025)
+
+Issue
+^^^^^
+
+* Fixed wrong documentation and error message when using ArrayImage.reduce_resolution_as() method. An error message occurs if the image has a smaller resolution than the reference image. Thank you Josip Atelj for the correction.
+* Fixed wrong documentation about the number of pixels used to equate resolution. The number of pixels to average is given by image_resolution / reference_resolution.
+
+Change
+^^^^^^
+
+* The PySide6 library is removed from requirements sice it is not a core dependency. If requiered, it can be installed.
+
+v 0.8.1 (FEB-2025)
+------------------
+
+Issue
+^^^^^
+
+* Updating scikit-image to 0.25, in order to use skimage.morphology.footprint_rectangle instead of square. Square will be removed in version 0.27.
+
 v 0.8.0 (FEB-2025)
 ------------------
 
