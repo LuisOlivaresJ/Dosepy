@@ -81,10 +81,9 @@ def test_mixing_large():
         column_dicom = 1,
     )
 
-    print(film_result.physical_shape)
-    print(dicom_result.physical_shape)
     assert film_result.shape == (9, 5)
     assert dicom_result.shape == (6, 4)
+    assert np.mean(dicom_result.array) == 1
     
 
 def test_mixing():
@@ -104,3 +103,4 @@ def test_mixing():
 
     assert film_result.shape == (8, 4)
     assert dicom_result.shape == (5, 3)
+    assert np.mean(dicom_result.array) == 1
