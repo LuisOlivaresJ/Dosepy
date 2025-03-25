@@ -3,7 +3,16 @@
 Changelog
 =========
 
+v 0.9.0 (MAR-2025)
+------------------
+
+New Features
+^^^^^^^^^^^^
+
+* New crop_using_ref_position function to allow matching film and dicom images based on a reference position.
+
 v 0.8.2 (MAR-2025)
+------------------
 
 Issue
 ^^^^^
