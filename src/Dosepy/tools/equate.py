@@ -1,5 +1,5 @@
 from Dosepy.image import ArrayImage
-from math import ceil, floor
+from math import floor
 
 def crop_using_ref_position(
         img_film: ArrayImage,
@@ -10,15 +10,16 @@ def crop_using_ref_position(
         column_dicom: int,
     ) -> tuple[ArrayImage, ArrayImage]:
     """
-    Function used to equate two images with different physical size and spatial resolution.
-    The algorithm uses a reference point on both images to cut the largest.
+    Function used to crop two images with different physical size and spatial resolution.
+    The algorithm uses a reference point on both images to crop the largest. 
+    If dicom is larger, crop only lowest integer values.
     """
 
     def calculate_points_to_remove(distance_film, distance_dicom, dpi_film, dpi_dicom):
         difference_inch = distance_film - distance_dicom
 
         if difference_inch > 0:
-            return ceil(difference_inch * dpi_film), 0
+            return round(difference_inch * dpi_film), 0
         else:
             return 0, floor(abs(difference_inch) * dpi_dicom)
 
@@ -41,7 +42,7 @@ def crop_using_ref_position(
     )
     points_to_remove_on_film_right, points_to_remove_on_dicom_right = calculate_points_to_remove(
         (img_film.shape[1] - column_film - 0.5) / img_film.dpi,
-        (img_dicom.shape[1] - column_dicom- 0.5) / img_dicom.dpi,
+        (img_dicom.shape[1] - column_dicom - 0.5) / img_dicom.dpi,
         img_film.dpi, img_dicom.dpi
     )
 
