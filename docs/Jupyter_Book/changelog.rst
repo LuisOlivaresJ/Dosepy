@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.9.1 (MAR-2025)
+------------------
+
+Issue
+^^^^^
+
+* Now, it is possible to read dicom files as bytes.
+
 v 0.9.0 (MAR-2025)
 ------------------
 
