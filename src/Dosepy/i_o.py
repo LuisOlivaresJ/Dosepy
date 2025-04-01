@@ -125,7 +125,10 @@ def is_dicom_image(file: str | Path) -> bool:
     """
     result = False
     try:
-        pydicom.dcmread(file)
+        img = pydicom.dcmread(file, force=True)
+        if "TransferSyntaxUID" not in img.file_meta:
+            img.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian
+        img.pixel_array
         result = True
     except:
         pass
