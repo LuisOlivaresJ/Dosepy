@@ -841,7 +841,7 @@ class ArrayImage(BaseImage):
         *,
         dose_threshold=10,
         dose_ta_Gy=False,
-        local_norm=False,
+        local_dose=False,
         mask_radius=10,
         max_as_percentile=True,
         exclude_above=None
@@ -861,12 +861,10 @@ class ArrayImage(BaseImage):
             The reference image.
 
         dose_ta : float, default = 3
-            Dose-to-agreement.
-            This value can be interpreted in 3 different ways depending on the dose_ta_Gy,
-            local_norm and max_as_percentile parameters, which are described below.
+            Dose tolerance as a percentage (0 - 100).
 
         dist_ta : float, default = 3
-            Distance-to-agreement in mm.
+            Distance tolerance in mm.
 
         dose_threshold : float, default = 10
             Dose threshold in percentage (0 to 100) with respect to the maximum dose of the
@@ -878,12 +876,12 @@ class ArrayImage(BaseImage):
             If True, then dose_ta is interpreted as an absolute value in Gray.
             If False (default), dose_ta is interpreted as a percentage.
 
-        local_norm : bool, default: False
-            If True (local normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the local dose
+        local_dose : bool, default: False
+            If True, the dose tolerance percentage (dose_ta) is interpreted with respect to the local dose
             (dose at the reference distribution).
-            If the argument is False (global normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the
-            maximum of the distribution to be evaluated. Maximum from reference is not used because of film uncertainties.
-            * The dose_ta_Gy and local_norm arguments must NOT be selected as True simultaneously.
+            If the argument is False, the dose tolerance percentage is interpreted with respect to the
+            maximum of the distribution to be evaluated. The maximum from reference is not used because of film uncertainties.
+            * The dose_ta_Gy and local_dose arguments must NOT be selected as True simultaneously.
             * If you want to use the maximum of the distribution directly, use the parameter max_as_percentile = False (see explanation below).
 
         mask_radius : float, default: 10
@@ -990,19 +988,14 @@ class ArrayImage(BaseImage):
                 f"The images are not the same size: {self.shape} vs. {reference.shape}"
                 )
 
-        if local_norm and dose_ta_Gy:
+        if local_dose and dose_ta_Gy:
             raise AttributeError(
-                "Simultaneous selection of dose_ta_Gy and local_norm is not possible."
+                "Simultaneous selection of dose_ta_Gy and local_dose is not possible."
                 )
 
         if not self.dpi:
             raise AttributeError(
                 "The distribution has no associated spatial resolution."
-                )
-
-        if reference.dpi != self.dpi:
-            raise AttributeError(
-                f"The image DPIs to not match: {self.dpi:.2f} vs. {reference.dpi:.2f}"
                 )
 
         #%%
@@ -1019,12 +1012,8 @@ class ArrayImage(BaseImage):
         Dose_threshold = (dose_threshold/100)*maximum_dose
         #print(f'Dose_threshold: {Dose_threshold:.1f}')
 
-        # Absolute or relative dose-to-agreement
-        if dose_ta_Gy:
-            pass
-        elif local_norm:
-            pass
-        else:
+        # Absolute or relative tolerance dose
+        if not (dose_ta_Gy or local_dose):
             dose_ta = (dose_ta/100) * maximum_dose
 
         # Number of pixels that will be used to define a neighborhood on the evaluated dose distribution
@@ -1067,8 +1056,8 @@ class ArrayImage(BaseImage):
                         dose_dif = D_eval[i + m, j + n] - D_ref[i,j]
 
 
-                        if local_norm:
-                            # The dose-to-agreement is updated as a percentage 
+                        if local_dose:
+                            # The tolerance dose is updated as a percentage 
                             # of local dose in the reference distribution.
                             dose_t_local = dose_ta * D_ref[i,j] / 100
 

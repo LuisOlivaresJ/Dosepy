@@ -6,10 +6,18 @@ Changelog
 v 0.10.1 (APR-2024)
 -------------------
 
+New Features
+^^^^^^^^^^^^
+
+* New module for gamma analysis
+
 Issue
 ^^^^^
 
-* Fixed wrong documentation on ArrayImage.gamma method. Maximum is calculated from the evaluated dose distribution, not the reference one.
+* Fixed wrong documentation ArrayImage.gamma method: 
+* Maximum is calculated from the evaluated dose distribution, not the reference one.
+* Local_norm parameter changes to local_dose, because normalization is not performed in the method.
+
 
 v 0.9.1 (MAR-2025)
 ------------------
