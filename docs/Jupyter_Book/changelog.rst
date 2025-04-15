@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.10.1 (APR-2024)
+-------------------
+
+Issue
+^^^^^
+
+* Fixed wrong documentation on ArrayImage.gamma method. Maximum is calculated from the evaluated dose distribution, not the reference one.
+
 v 0.9.1 (MAR-2025)
 ------------------
 

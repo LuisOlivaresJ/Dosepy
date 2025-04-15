@@ -13,8 +13,9 @@ DESCRIPTION
 
 from pathlib import Path
 import numpy as np
+from numpy import ndarray
 import os.path as osp
-from typing import Any, Union, BinaryIO
+from typing import Any, Union, BinaryIO, Tuple
 import imageio.v3 as iio
 from abc import ABC, abstractmethod
 
@@ -834,22 +835,23 @@ class ArrayImage(BaseImage):
 
 
     def gamma2D(self,
-                reference,
-                dose_ta=3,
-                dist_ta=3,
-                *,
-                dose_threshold=10,
-                dose_ta_Gy=False,
-                local_norm=False,
-                mask_radius=10,
-                max_as_percentile=True,
-                exclude_above=None
-                ):
+        reference,
+        dose_ta=3,
+        dist_ta=3,
+        *,
+        dose_threshold=10,
+        dose_ta_Gy=False,
+        local_norm=False,
+        mask_radius=10,
+        max_as_percentile=True,
+        exclude_above=None
+        ) -> Tuple[ndarray, float]:
         '''
-        Calculate gamma between the current image against a reference image.
-        The images must have the same spatial resolution (dpi) to be comparable. The size of the images must also be the same.
-        An array is ​​obtained. It represents the gamma indices at each position of the dose distribution,
-        as well as the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
+        Calculate gammas between the current image and a reference image.
+        A tupe is ​​obtained. First elmenet represents the gamma indices at each position of the reference dose distribution,
+        The second one represents the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
+
+        The images must have the same spatial resolution (dpi) and array size.
         The registration of dose distributions is assumed, i.e. the spatial coordinate of a point in the
         reference dose distribution is equal to the coordinate of the same point in the distribution to be evaluated.
 
@@ -861,26 +863,26 @@ class ArrayImage(BaseImage):
         dose_ta : float, default = 3
             Dose-to-agreement.
             This value can be interpreted in 3 different ways depending on the dose_ta_Gy,
-            local_norm and max_as_percentile  parameters, which are described below.
+            local_norm and max_as_percentile parameters, which are described below.
 
         dist_ta : float, default = 3
             Distance-to-agreement in mm.
 
         dose_threshold : float, default = 10
             Dose threshold in percentage (0 to 100) with respect to the maximum dose of the
-            reference distribution (or to 99th percentile if max_as_percentile = True).
+            evaluated distribution (or to 99th percentile if max_as_percentile = True).
             Any point in the dose distribution with a value less than the dose threshold,
             is excluded from the analysis.
             
         dose_ta_Gy : bool, default: False
-            If True, then "dose_ta" (the tolerance dose) is interpreted as an absolute value in Gray.
-            If False (default), "dose_ta" is interpreted as a percentage.
+            If True, then dose_ta is interpreted as an absolute value in Gray.
+            If False (default), dose_ta is interpreted as a percentage.
 
         local_norm : bool, default: False
-            If the argument is True (local normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the local dose
-            at each point of the reference distribution.
+            If True (local normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the local dose
+            (dose at the reference distribution).
             If the argument is False (global normalization), the tolerance dose percentage "dose_ta" is interpreted with respect to the
-            maximum of the distribution to be evaluated.
+            maximum of the distribution to be evaluated. Maximum from reference is not used because of film uncertainties.
             * The dose_ta_Gy and local_norm arguments must NOT be selected as True simultaneously.
             * If you want to use the maximum of the distribution directly, use the parameter max_as_percentile = False (see explanation below).
 
@@ -890,7 +892,7 @@ class ArrayImage(BaseImage):
             The use of this mask allows reducing the calculation time due to the following process:
             
                 For each point in the reference distribution, the calculation of the Gamma function is performed only
-                with those points or positions of the distribution to be evaluated that are at a relative distance
+                with those points or positions of the evaluated distribution that are at a relative distance
                 less than or equal to mask_radius, that is, with the points that are within the neighborhood given by mask_radius.
                 The length of one side of the square mask is 2*mask_radius + 1.
 
@@ -899,7 +901,7 @@ class ArrayImage(BaseImage):
 
         max_as_percentile : bool, default: True
             If the argument is True, 99th percentile is used as an approximation of the maximum value of the
-            dose distribution. This allows us to exclude artifacts or errors in specific positions.
+            evaluated dose distribution. This allows us to exclude artifacts.
             If the argument is False, the maximum value of the distribution is used.
 
         exclude_above : float, default: None
@@ -917,10 +919,6 @@ class ArrayImage(BaseImage):
 
         Notes
         -----
-
-        Percentile 99th of the dose distribution can be used as an approximation of the maximum value.
-        This allows us to avoid artifacts or errors in specific positions of the distribution.
-        (useful for example for spot labels are used in films).
 
         It is assumed that both distributions have exactly the same physical dimensions, and the positions
         for each point coincide with each other, that is, the images are registered.
@@ -1029,7 +1027,7 @@ class ArrayImage(BaseImage):
         else:
             dose_ta = (dose_ta/100) * maximum_dose
 
-        # Number of pixels that will be used to define a neighborhood 
+        # Number of pixels that will be used to define a neighborhood on the evaluated dose distribution
         # over which the gamma index will be calculated.
         neighborhood = round(mask_radius*self.dpmm)
 
@@ -1039,8 +1037,10 @@ class ArrayImage(BaseImage):
 
 
         #%%
+        # Perform gamma for each point in reference distribution
         for i in np.arange( D_ref.shape[0] ):
-            # Code that allows including points near the border of the dose distribution
+            # The next two lines allows to exlude evaluated points outside the image if the reference point is 
+            # near a border.
             mi = -(neighborhood - max(0, neighborhood - i))
             mf = neighborhood - max(0, neighborhood - (D_eval.shape[0] - (i+1))) + 1
 
@@ -1048,7 +1048,7 @@ class ArrayImage(BaseImage):
                 ni = -(neighborhood - max(0, neighborhood - j))
                 nf = neighborhood - max(0, neighborhood - (D_eval.shape[1] - (j+1))) + 1
 
-                # To temporarily store the Gamma function values ​​for 
+                # Place holder for the Gamma function values ​​at
                 # each point in the reference distribution
                 Gamma = []
 
@@ -1068,23 +1068,22 @@ class ArrayImage(BaseImage):
 
 
                         if local_norm:
-                            # The dose-to-agreement is updated to the percentage 
-                            # with respect to the value
+                            # The dose-to-agreement is updated as a percentage 
                             # of local dose in the reference distribution.
                             dose_t_local = dose_ta * D_ref[i,j] / 100
 
                             Gamma.append(
                                 np.sqrt(
-                                    (distance**2) / (dist_ta**2)
-                                    + (dose_dif**2) / (dose_t_local**2))
-                                        )
+                                    (distance**2)/(dist_ta**2) + (dose_dif**2)/(dose_t_local**2)
+                                )
+                            )
 
                         else :
                             Gamma.append(
                                 np.sqrt(
-                                    (distance**2) / (dist_ta**2)
-                                    + (dose_dif**2) / (dose_ta**2))
-                                        )
+                                    (distance**2)/(dist_ta**2) + (dose_dif**2)/(dose_ta**2)
+                                )
+                            )
 
                 gamma[i,j] = min(Gamma)
 
