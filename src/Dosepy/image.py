@@ -848,8 +848,8 @@ class ArrayImage(BaseImage):
         ) -> Tuple[ndarray, float]:
         '''
         Calculate gammas between the current image and a reference image.
-        A tupe is ​​obtained. First elmenet represents the gamma indices at each position of the reference dose distribution,
-        The second one represents the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
+        A tuple is ​​obtained. First elmenet represents the gamma indices at each position of the reference dose distribution.
+        The second element represents the approval rate defined as the percentage of gamma values ​​that are less or equal to 1.
 
         The images must have the same spatial resolution (dpi) and array size.
         The registration of dose distributions is assumed, i.e. the spatial coordinate of a point in the
@@ -864,7 +864,7 @@ class ArrayImage(BaseImage):
             Dose tolerance as a percentage (0 - 100).
 
         dist_ta : float, default = 3
-            Distance tolerance in mm.
+            Distance tolerance (distance-to-agrement) in mm.
 
         dose_threshold : float, default = 10
             Dose threshold in percentage (0 to 100) with respect to the maximum dose of the

@@ -16,7 +16,7 @@ Issue
 
 * Fixed wrong documentation ArrayImage.gamma method: 
 * Maximum is calculated from the evaluated dose distribution, not the reference one.
-* Local_norm parameter changes to local_dose, because normalization is not performed in the method.
+* Local_norm parameter changes to local_dose to avoid confusion. Normalization is not performed in the method.
 
 
 v 0.9.1 (MAR-2025)
