@@ -725,7 +725,7 @@ class TiffImage(BaseImage):
         Example
         -------
         >>> from Dosepy.image import load
-        >>> path_to_image = r"C:\QA\image.tif"
+        >>> path_to_image = "image.tif"
         >>> img = load(path_to_image)
         >>> optical_filters = img.get_optical_filters()
 

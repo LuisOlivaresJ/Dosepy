@@ -108,13 +108,13 @@ def chi(
             )
 
         # invalidate dose values below threshold so gamma doesn't calculate over it
-        ref_img.array[ref_img < threshold/100 * np.max(ref_img)] = np.nan
+        ref_img.array[ref_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
 
         # convert distance value from mm to pixels
         distTA_pixels = reference_image.dpmm * distTA
 
         # Calculate doseTa
-        doseTA_Gray = doseTA/100 * np.amax(ref_img)
+        doseTA_Gray = doseTA/100 * np.amax(ref_img.array)
 
         # construct image gradient using sobel filter
         img_x = sobel(ref_img.as_type(np.float32), 1)
@@ -122,10 +122,18 @@ def chi(
         grad_img = np.hypot(img_x, img_y)
 
         # equation: (measurement - reference) / sqrt ( doseTA^2 + distTA^2 * image_gradient^2 )
-        subtracted_img = np.abs(comp_img - ref_img)
+        subtracted_img = np.abs(comp_img.array - ref_img.array)
         denominator = np.sqrt(
             ((doseTA_Gray) ** 2) + ((distTA_pixels**2) * (grad_img**2))
         )
-        gamma_map = subtracted_img / denominator
 
-        return gamma_map
+        chi_map = subtracted_img / denominator
+
+        # Number of values that are not np.nan
+        total_points = np.sum(~np.isnan(chi_map))
+
+        # Pass rate
+        chi_less_than_1 = np.sum(chi_map <= 1)
+        chi_rate = chi_less_than_1/total_points*100
+
+        return chi_map, chi_rate
