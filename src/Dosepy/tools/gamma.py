@@ -5,15 +5,16 @@ from scipy.ndimage import sobel, zoom
 
 from Dosepy.image import ArrayImage, MM_PER_INCH
 
+
 def is_close(val: float, target: float, delta: float):
     """Return whether the value is neat the target."""
     if target - delta < val < target + delta:
         return True
     return False
 
+
 class GammaManager:
     
-
     def gamma(
         method,
         reference: ArrayImage,
@@ -95,15 +96,16 @@ def chi(
 
         # interpolate reference and comparison images to have a 
         # spatial resolution of dpmm = 1 (dpi = 25.4)
-        ref_img = ArrayImage(
-            zoom(reference_image.array, zoom = 1/reference_image.dpmm),
-            dpi=MM_PER_INCH,
-        )
+        if interpolate:
+            ref_img = ArrayImage(
+                zoom(reference_image.array, zoom = 1/reference_image.dpmm),
+                dpi=MM_PER_INCH,
+            )
 
-        comp_img = ArrayImage(
-            zoom(comparison_image.array, zoom = 1/comparison_image.dpmm),
-            dpi=MM_PER_INCH,
-        )
+            comp_img = ArrayImage(
+                zoom(comparison_image.array, zoom = 1/comparison_image.dpmm),
+                dpi=MM_PER_INCH,
+            )
 
         # invalidate dose values below threshold so gamma doesn't calculate over it
         ref_img.array[ref_img < threshold/100 * np.max(ref_img)] = np.nan
