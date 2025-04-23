@@ -117,8 +117,8 @@ def chi(
         doseTA_Gray = doseTA/100 * np.amax(ref_img.array)
 
         # construct image gradient using sobel filter
-        img_x = sobel(ref_img.array, 1)
-        img_y = sobel(ref_img.array, 0)
+        img_x = np.gradient(ref_img.array, axis=1)
+        img_y = np.gradient(ref_img.array, axis=0)
         grad_img = np.hypot(img_x, img_y)
 
         # equation: (measurement - reference) / sqrt ( doseTA^2 + distTA^2 * image_gradient^2 )

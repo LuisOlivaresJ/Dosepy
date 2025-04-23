@@ -41,6 +41,7 @@ dependencies = [
   "pytest >= 8.3.5",
   "pip >= 25.0.1",
   "plotly>=6.0.1",
+  "nbformat>=5.10.4",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
