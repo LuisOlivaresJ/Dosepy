@@ -16,12 +16,12 @@ def is_close(val: float, target: float, delta: float):
 def chi(
         reference_image: ArrayImage,
         comparison_image: ArrayImage,
-        doseTA: float = 3,
-        distTA: float = 3,
+        dose_ta: float = 3,
+        dist_ta: float = 3,
         threshold: float = 10,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Calculate the chi between the current image (reference) and a comparison image.
+        """Calculate the chi (analogous to gamma) between the current image (reference) and a comparison image.
         Adapted from pylinac.core.image.
 
         The chi calculation is based on `Bakai et al
@@ -35,13 +35,15 @@ def chi(
         comparison_image : {:class:`~Dosepy.image.ArrayImage`}
             The comparison image. The image must have the same DPI/DPMM to be comparable.
             The size of the images must also be the same.
-        doseTA : int, float
+        dose_ta : int, float
             Dose-to-agreement in percent; e.g. 2 is 2%.
-        distTA : int, float
+        dist_ta : int, float
             Distance-to-agreement in mm.
         threshold : float
             The dose threshold percentage of the maximum dose, below which is not analyzed.
             Must be between 0 and 100.
+        interpolate : bool
+            True to perfom interpolation (recommended)
 
         Returns
         -------
@@ -76,20 +78,20 @@ def chi(
             )
 
         # Convert distance value from mm to pixels
-        distTA_pixels = reference_image.dpmm * distTA
+        dist_ta_pixels = reference_image.dpmm * dist_ta
 
-        # Calculate doseTa
-        doseTA_Gray = doseTA/100 * np.amax(ref_img.array)
+        # Calculate dose_ta
+        dose_ta_Gray = dose_ta/100 * np.amax(ref_img.array)
 
         # Construct image gradient
         img_x = np.gradient(ref_img.array, axis=1)
         img_y = np.gradient(ref_img.array, axis=0)
         grad_img = np.hypot(img_x, img_y)
 
-        # Equation: (measurement - reference) / sqrt ( doseTA^2 + distTA^2 * image_gradient^2 )
+        # Equation: (measurement - reference) / sqrt ( dose_ta^2 + dist_ta^2 * image_gradient^2 )
         subtracted_img = np.abs(comp_img.array - ref_img.array)
         denominator = np.sqrt(
-            ((doseTA_Gray) ** 2) + ((distTA_pixels**2) * (grad_img**2))
+            ((dose_ta_Gray) ** 2) + ((dist_ta_pixels**2) * (grad_img**2))
         )
 
         chi_map = subtracted_img / denominator

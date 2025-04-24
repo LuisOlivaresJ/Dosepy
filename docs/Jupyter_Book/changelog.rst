@@ -3,13 +3,13 @@
 Changelog
 =========
 
-v 0.10.1 (APR-2024)
+v 0.10.0 (APR-2024)
 -------------------
 
 New Features
 ^^^^^^^^^^^^
 
-* New module for gamma analysis
+* New fast method for quantitative evaluation of dose distributions based on Bakai's work, the Chi metric.(`DOI 10.1088/0031-9155/48/21/006 <10.1088/0031-9155/48/21/006>`_).
 
 Issue
 ^^^^^

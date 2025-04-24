@@ -21,8 +21,8 @@ def test_small_dose_ta():
     chi_analysis = chi(
         reference_image = D_ref,
         comparison_image = D_eval,
-        doseTA = 3,
-        distTA = 1,
+        dose_ta = 3,
+        dist_ta = 1,
     )
 
     # With a dose to agreement 3%, pass rate = 0.0
@@ -41,8 +41,8 @@ def test_big_dose_ta():
     chi_analysis = chi(
         reference_image = D_ref,
         comparison_image = D_eval,
-        doseTA = 3,
-        distTA = 1,
+        dose_ta = 3,
+        dist_ta = 1,
     )
 
     # With a dose to agreement 3%, pass rate = 100.0
@@ -68,8 +68,8 @@ def test_using_spine_dose_distribution():
     _, chi_rate = chi(
         reference_image=dcm,
         comparison_image=film,
-        doseTA=3,
-        distTA=2,
+        dose_ta=3,
+        dist_ta=2,
         threshold=10,
     )
 
@@ -97,8 +97,8 @@ def test_using_lattice():
     _, chi_rate = chi(
         reference_image=dcm,
         comparison_image=film,
-        doseTA=3,
-        distTA=2,
+        dose_ta=3,
+        dist_ta=2,
         threshold=10,
     )
 
@@ -125,8 +125,8 @@ def test_threshold():
     _, chi_rate = chi(
         reference_image=dcm,
         comparison_image=film,
-        doseTA=3,
-        distTA=2,
+        dose_ta=3,
+        dist_ta=2,
         threshold=30,
     )
 
