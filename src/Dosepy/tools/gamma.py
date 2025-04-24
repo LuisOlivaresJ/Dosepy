@@ -95,20 +95,18 @@ def chi(
             )
 
         # interpolate reference and comparison images to have a 
-        # spatial resolution of dpmm = 1 (dpi = 25.4)
+        # spatial resolution of dpmm = 2 (dpi = 50.8)
+        new_dpmm = 2
         if interpolate:
             ref_img = ArrayImage(
-                zoom(reference_image.array, zoom = 1/reference_image.dpmm),
-                dpi=MM_PER_INCH,
+                zoom(reference_image.array, zoom = new_dpmm/reference_image.dpmm),
+                dpi=new_dpmm*MM_PER_INCH,
             )
 
             comp_img = ArrayImage(
-                zoom(comparison_image.array, zoom = 1/comparison_image.dpmm),
-                dpi=MM_PER_INCH,
+                zoom(comparison_image.array, zoom = new_dpmm/comparison_image.dpmm),
+                dpi=new_dpmm*MM_PER_INCH,
             )
-
-        # invalidate dose values below threshold so gamma doesn't calculate over it
-        ref_img.array[ref_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
 
         # convert distance value from mm to pixels
         distTA_pixels = reference_image.dpmm * distTA
@@ -128,6 +126,9 @@ def chi(
         )
 
         chi_map = subtracted_img / denominator
+
+        # invalidate dose values below threshold
+        chi_map[ref_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
 
         # Number of values that are not np.nan
         total_points = np.sum(~np.isnan(chi_map))
