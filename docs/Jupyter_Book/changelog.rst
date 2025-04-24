@@ -3,6 +3,22 @@
 Changelog
 =========
 
+v 0.10.0 (APR-2024)
+-------------------
+
+New Features
+^^^^^^^^^^^^
+
+* New fast method for quantitative evaluation of dose distributions based on Bakai's work, the Chi metric.(`DOI 10.1088/0031-9155/48/21/006 <10.1088/0031-9155/48/21/006>`_).
+
+Issue
+^^^^^
+
+* Fixed wrong documentation ArrayImage.gamma method: 
+* Maximum is calculated from the evaluated dose distribution, not the reference one.
+* Local_norm parameter changes to local_dose to avoid confusion. Normalization is not performed in the method.
+
+
 v 0.9.1 (MAR-2025)
 ------------------
 

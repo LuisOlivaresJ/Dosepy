@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Dosepy"
-version = "0.9.1"
+version = "0.10.0"
 authors = [
   { name="Luis Alfonso Olivares Jimenez", email="alfonso.cucei.udg@gmail.com" },
 ]
@@ -40,6 +40,8 @@ dependencies = [
   "pyyaml >= 6.0.2",
   "pytest >= 8.3.5",
   "pip >= 25.0.1",
+  "plotly>=6.0.1",
+  "nbformat>=5.10.4",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"

@@ -60,6 +60,7 @@ class TestGammaParameters(unittest.TestCase):
 
         self.assertEqual(nan_points, 20)
 
+
     def test_exclude_above(self):
 
         row = np.arange(10, 101, 10)
