@@ -185,10 +185,11 @@ class DoseConverter(ABC):
 
             # Is the film in the center of the image?
             min_row, min_col, max_row, max_col = zero_film_properties.bbox
-            img_center_x, img_center_y = img.center()
+            img_center_column, img_center_row = img.center()
 
-            if not min_col < img_center_y < max_col:
+            if not min_col < img_center_column < max_col:
                 print("The film is not in the center of the scaner.")
+                print(f"{min_col=}, {img_center_column=}, {max_col=}")
                 raise ValueError("The film is not in the center of the scaner.")
             
             # Center of the film
@@ -203,13 +204,13 @@ class DoseConverter(ABC):
             median_intensity = np.median(
                 intensity_array[
                     min_row_roi : max_row_roi,
-                    int(img_center_y) - 1 : int(img_center_y) + 1
+                    int(img_center_column) - 1 : int(img_center_column) + 1
                     ]
                 )
             
             roi = {
                 'x': min_row_roi,
-                'y': int(img_center_y) - 1,
+                'y': int(img_center_column) - 1,
                 'width': 3,
                 'height': min_lenght 
             }

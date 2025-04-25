@@ -3,7 +3,17 @@
 Changelog
 =========
 
-v 0.10.0 (APR-2024)
+
+v 0.10.1 (APR-2025)
+-------------------
+
+Issue
+^^^^^
+
+* DoseConverter class from Tiff2dose module issue on _get_zero_dose_intensity() method. Lateral ROI center now uses culumn instead of row of the labeled film.
+
+
+v 0.10.0 (APR-2025)
 -------------------
 
 New Features

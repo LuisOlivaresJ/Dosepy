@@ -125,7 +125,7 @@ def test_get_zero_dose_intensity(verif_img_with_filters):
         at_zero_position = True
         )
 
-    assert intensity == pytest.approx(40604, abs = 100)
+    assert intensity == pytest.approx(40050, abs = 100)
 
 # Test _get_lateral_intensities_for_zero_dose method
 def test_get_lateral_intensities_for_zero_dose(
