@@ -141,7 +141,7 @@ def load_multiples(files: list[str | Path | BinaryIO]) -> ImageLike:
             images.append(load(file))
         
         img = load(files[0]) # Placeholder
-        equated_images = equate_array_size(images, axis=("width", "height"))
+        equated_images = equate_array_size(images, axis=("width"))
         averaged_images = average_tiff_images(equated_images)
         stacked = stack_images(averaged_images, padding=6)
         img.array = stacked.array
