@@ -1,5 +1,9 @@
 version: 2
 
+sphinx:
+  # Path to your Sphinx configuration file.
+  configuration: docs/Jupyter_Book/_config.yml
+
 # Set the version of Python and other tools you might need
 build:
   os: ubuntu-22.04
