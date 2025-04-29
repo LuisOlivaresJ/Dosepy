@@ -98,6 +98,7 @@ def chi(
 
         # Invalidate dose values below threshold
         chi_map[ref_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
+        chi_map[comp_img.array < threshold/100 * np.max(comp_img.array)] = np.nan
 
         # Number of values that are not np.nan
         total_points = np.sum(~np.isnan(chi_map))

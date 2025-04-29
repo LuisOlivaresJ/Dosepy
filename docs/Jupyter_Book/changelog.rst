@@ -4,6 +4,15 @@ Changelog
 =========
 
 
+v 0.10.2 (APR-2025)
+-------------------
+
+Change
+^^^^^^
+
+* On Dosepy.tools.gamma.chi, threshold parameter is used on both dose distributions, reference and comparison, to invalidate points for chi analysis.
+
+
 v 0.10.1 (APR-2025)
 -------------------
 
