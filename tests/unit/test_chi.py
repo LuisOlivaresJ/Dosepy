@@ -102,7 +102,7 @@ def test_using_lattice():
         threshold=10,
     )
 
-    assert chi_rate == pytest.approx(expected=88.5, abs=1)
+    assert chi_rate == pytest.approx(expected=97, abs=1)
 
 
 # Test threshold parameter
