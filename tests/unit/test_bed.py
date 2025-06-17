@@ -1,7 +1,7 @@
 import pytest
 from Dosepy import bed
 from pathlib import Path
-
+import SimpleITK as sitk
 
 # Test the bed module
 
@@ -15,6 +15,17 @@ def test_load_file_not_found():
     with pytest.raises(FileNotFoundError):
         bed.load("/non/existent/file.dcm")
 
-# Test: ValueError if file is not a valid DICOM (missing DICM magic)
-#def test_load_invalid_dicom():
+# Test: ValueError if file is not a valid DICOM
+def test_load_invalid_dicom():
+    with pytest.raises(ValueError):
+        bed.load(Path(__file__).parent / "fixtures" / "calibracion.png")
 
+# Test: ValueError if DICOM does not contain required metadata tag
+def test_load_missing_metadata():
+    with pytest.raises(ValueError):
+        bed.load(Path(__file__).parent / "fixtures" / "CT_image.dcm")
+
+# Test: Load a valid DICOM file
+def test_load_valid_dicom():
+    dose = bed.load(Path(__file__).parent / "fixtures" / "RD_20x20cm2_256x256pix.dcm")
+    assert isinstance(dose, sitk.Image)
