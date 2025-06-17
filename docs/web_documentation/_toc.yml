@@ -6,6 +6,7 @@ root: intro
 chapters:
 - file: installation
 - file: usage
+- file: guidelines
 - file: film_dosimetry
 - file: uncertainty
 - file: gamma

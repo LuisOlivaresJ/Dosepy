@@ -2,7 +2,7 @@ version: 2
 
 sphinx:
   # Path to your Sphinx configuration file.
-  configuration: docs/Jupyter_Book/_config.yml
+  configuration: docs/web_documentation/_config.yml
 
 # Set the version of Python and other tools you might need
 build:
@@ -12,11 +12,11 @@ build:
   jobs:
     pre_build:
       # Generate on-the-fly Sphinx configuration from Jupyter Book's _config.yml
-      - "jupyter-book config sphinx docs/Jupyter_Book/"
+      - "jupyter-book config sphinx docs/web_documentation/"
 
 python:
    install:
-   - requirements: docs/Jupyter_Book/requirements.txt
+   - requirements: docs/web_documentation/requirements.txt
 #   - method: pip
 #     path: .
 
