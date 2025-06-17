@@ -1,0 +1,1039 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Film dosimetry &#8212; Dosepy Jupyter Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'film_dosimetry';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dose uncertainty" href="uncertainty.html" />
+    <link rel="prev" title="General guidelines" href="guidelines.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/Logo_Dosepy.png" class="logo__image only-light" alt="Dosepy Jupyter Book - Home"/>
+    <script>document.write(`<img src="_static/Logo_Dosepy.png" class="logo__image only-dark" alt="Dosepy Jupyter Book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Dosepy
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guidelines.html">General guidelines</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Film dosimetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uncertainty.html">Dose uncertainty</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dicom.html">DICOM example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/LuisOlivaresJ/Dosepy/tree/main/docs/Jupyter_Book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/LuisOlivaresJ/Dosepy/tree/main/docs/Jupyter_Book/issues/new?title=Issue%20on%20page%20%2Ffilm_dosimetry.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/film_dosimetry.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Film dosimetry</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-for-the-tiff-image">Prerequisites for the tiff image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#show-results">Show results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lateral-response">Lateral response</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3">Example 3</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-multiple-files-for-noise-reduction">Load multiple files for noise reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-calibration-curve-for-example-at-50-mm">Plot calibration curve, for example, at 50 mm.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-uncertainty-at-different-lateral-positions">Show uncertainty at different lateral positions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#film-to-dose">Film to dose</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-quality-control-using-optical-filters">(Optional) Quality control using optical filters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-at-center">Dose at center</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="film-dosimetry">
+<h1>Film dosimetry<a class="headerlink" href="#film-dosimetry" title="Link to this heading">#</a></h1>
+<section id="prerequisites-for-the-tiff-image">
+<h2>Prerequisites for the tiff image<a class="headerlink" href="#prerequisites-for-the-tiff-image" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A minimum distance of 5 mm between films.</p></li>
+<li><p>Rectangular films aligned to the sides of the scanner.</p></li>
+<li><p>The tiff image has to be 16-bit per channel, RGB.</p></li>
+<li><p>For lateral response artifact:</p>
+<ul>
+<li><p>The image must have the full width of the scanner.</p></li>
+<li><p>The isocenter (on films) has to be in the center of the scanner.</p></li>
+</ul>
+</li>
+</ul>
+<p>This is a common example for film calibration.</p>
+<p><img alt="example scanned films" src="_images/cal_example_v2.png" /></p>
+<p>Optional</p>
+<p>Optical filters are added as a quality control test for error detection. Useful for example if auto correction for color or brightness has been applied unconsciously. Also, as a way to measure inter-scan reproducibility of the lamp/detector system.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="example-1">
+<h3>Example 1<a class="headerlink" href="#example-1" title="Link to this heading">#</a></h3>
+<p>Start importing the load funtion and LUT class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Dosepy.image</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Dosepy.calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">LUT</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the tiff file for film calibration</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change this to your file path</span>
+<span class="n">path_to_file</span> <span class="o">=</span> <span class="s2">&quot;/home/luis/Dosepy/tests/unit/fixtures/CAL20241106_001.tif&quot;</span>
+
+<span class="n">cal_image</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Create a LUT object with the image as argument. This will store all the data needed for calibration.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span> <span class="o">=</span> <span class="n">LUT</span><span class="p">(</span><span class="n">cal_image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Dosepy automatically detects each object in the image.</p>
+<p>Create central rois on each film and show them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">set_central_rois</span><span class="p">()</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">plot_rois</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/7678da5e30aefe4c22753eaae9aa1f948436859e3ab1ae75894a9a1b62544514.png" src="_images/7678da5e30aefe4c22753eaae9aa1f948436859e3ab1ae75894a9a1b62544514.png" />
+</div>
+</div>
+<p>Change the ROI size to 16 x 8 mm, (if needed)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">set_central_rois</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cal</span><span class="o">.</span><span class="n">plot_rois</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+<img alt="_images/d3b9da0a868533d1fe9f56de2e8637b9864e2140a83f8f2bb8151fee644c1907.png" src="_images/d3b9da0a868533d1fe9f56de2e8637b9864e2140a83f8f2bb8151fee644c1907.png" />
+</div>
+</div>
+<p>To set-up the <strong>calibration or cal</strong> object we need to perform the following steps:</p>
+<ul class="simple">
+<li><p>Set the imparted doses to the films [Gy].</p></li>
+<li><p>Compute the lut.</p></li>
+<li><p>Optional, apply a filer of size of 3 pixels for noise reduction.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">set_doses</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">compute_central_lut</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="show-results">
+<h4>Show results<a class="headerlink" href="#show-results" title="Link to this heading">#</a></h4>
+<p>Plot the calibration curve, using the red channel and rational function of the form</p>
+<div class="math notranslate nohighlight">
+\[ y = -c + \frac{b}{x-a} \]</div>
+<p>where $<span class="math notranslate nohighlight">\( x = \frac{I}{I_0} \)</span>$ represents the film response as the quotient of intensities of unexposed and exposed films, respectively.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_fit</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="s2">&quot;rational&quot;</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1e0a6660a058d8b4cbfe7888d23b75e1b49f96005aba9b8eb1f98cadc9fa713f.png" src="_images/1e0a6660a058d8b4cbfe7888d23b75e1b49f96005aba9b8eb1f98cadc9fa713f.png" />
+</div>
+</div>
+<p>Plot dose uncertainty with <strong>plot_dose_fit_unertainty</strong> method</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_dose_fit_uncertainty</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="s2">&quot;rational&quot;</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c5c5d14a74b4cff0aabc2bad12a1479b4aa910321a719c88615ba69b3c95eb18.png" src="_images/c5c5d14a74b4cff0aabc2bad12a1479b4aa910321a719c88615ba69b3c95eb18.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="example-2">
+<h2>Example 2<a class="headerlink" href="#example-2" title="Link to this heading">#</a></h2>
+<section id="lateral-response">
+<h3>Lateral response<a class="headerlink" href="#lateral-response" title="Link to this heading">#</a></h3>
+<p>Lateral response artifact is handled by computing a calibration curve at every milimeter in lateral direction.</p>
+<p>If film irradiation has been done in a x-ray beam from a linear acelerator, we need to account for the “beam horns”. To do that, we need to load a relative dose profile of the field used. In this example, a 6 MV beam of size 150 mm x 150 mm and 5 mm deep was used for film calibration.</p>
+<p>The file must have an array of two columns:</p>
+<ul class="simple">
+<li><p>First column should be for positions, given in mm, with 0 being at beam center.</p></li>
+<li><p>Second column should be the relative values [%], normalized to 100 at center.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span> <span class="o">=</span> <span class="n">LUT</span><span class="p">(</span><span class="n">cal_image</span><span class="p">)</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">set_central_rois</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cal</span><span class="o">.</span><span class="n">set_doses</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">cal</span><span class="o">.</span><span class="n">plot_rois</span><span class="p">()</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">set_beam_profile</span><span class="p">(</span><span class="s2">&quot;/home/luis/Dosepy/tests/unit/fixtures/CAL/BeamProfile.csv&quot;</span><span class="p">)</span>  <span class="c1"># Change this to your path</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b43a5330a83b2ba9ba31a1e1e0c2e7b9e50847378fcbb7fe482ace853d8655dd.png" src="_images/b43a5330a83b2ba9ba31a1e1e0c2e7b9e50847378fcbb7fe482ace853d8655dd.png" />
+</div>
+</div>
+<p>Next we need to call the <strong>compute_lateral_lut()</strong> (instead of compute_central_lut()). We’ll use a filter of size 3 pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">compute_lateral_lut</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Optional, show green intensity values on lateral direction. The zero position is located in the center of the image, i.e. the center of the scanner if the full width has been acquired.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_lateral_response</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/726a90384ebb411645e12c9a6ff5451959a7ef875720e799708bb8d3db0c02e5.png" src="_images/726a90384ebb411645e12c9a6ff5451959a7ef875720e799708bb8d3db0c02e5.png" />
+</div>
+</div>
+<p>We can use the green channel and a polynomial fit function of the form</p>
+<div class="math notranslate nohighlight">
+\[  y = ax + bx^n \]</div>
+<p>To see the calibration curve at say, position 5 mm from the center, we can use the plot_fit() method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_fit</span><span class="p">(</span>
+    <span class="n">fit</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+    <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+    <span class="n">position</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3ff96d4ce38d1990d06930d0f59b613da2fbcd9cf29e76a98084967c9c4ffc70.png" src="_images/3ff96d4ce38d1990d06930d0f59b613da2fbcd9cf29e76a98084967c9c4ffc70.png" />
+</div>
+</div>
+<p>Show uncertainty at 5 mm.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_dose_fit_uncertainty</span><span class="p">(</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">fit</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+    <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;green&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5438d1d3e92689b0242bc6e4467a338a21484290905cfc0a3e3f15b2549e2aaa.png" src="_images/5438d1d3e92689b0242bc6e4467a338a21484290905cfc0a3e3f15b2549e2aaa.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="example-3">
+<h2>Example 3<a class="headerlink" href="#example-3" title="Link to this heading">#</a></h2>
+<section id="load-multiple-files-for-noise-reduction">
+<h3>Load multiple files for noise reduction<a class="headerlink" href="#load-multiple-files-for-noise-reduction" title="Link to this heading">#</a></h3>
+<p>Multiple files can be averaged. As a prerequisite, the file name has to be the same, ignoring the last three characters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Dosepy.image</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_multiples</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_001.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_002.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_003.tif&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">img_m</span> <span class="o">=</span> <span class="n">load_multiples</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img_m</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c4b8fca4dc423138f0d79a6c3c3b511c8dfb2cc4713ca6d9fc22a35b6d16f7af.png" src="_images/c4b8fca4dc423138f0d79a6c3c3b511c8dfb2cc4713ca6d9fc22a35b6d16f7af.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span> <span class="o">=</span> <span class="n">LUT</span><span class="p">(</span><span class="n">img_m</span><span class="p">)</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">set_central_rois</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cal</span><span class="o">.</span><span class="n">set_doses</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">plot_rois</span><span class="p">()</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">set_beam_profile</span><span class="p">(</span><span class="s2">&quot;/home/luis/Dosepy/tests/unit/fixtures/CAL/BeamProfile.csv&quot;</span><span class="p">)</span>
+
+<span class="n">cal</span><span class="o">.</span><span class="n">compute_lateral_lut</span><span class="p">(</span><span class="nb">filter</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b3b26ea0c95293935f4045ca5e034f4cdca626dd67ece1d6f40d086c62aecd82.png" src="_images/b3b26ea0c95293935f4045ca5e034f4cdca626dd67ece1d6f40d086c62aecd82.png" />
+</div>
+</div>
+</section>
+<section id="plot-calibration-curve-for-example-at-50-mm">
+<h3>Plot calibration curve, for example, at 50 mm.<a class="headerlink" href="#plot-calibration-curve-for-example-at-50-mm" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cal</span><span class="o">.</span><span class="n">plot_fit</span><span class="p">(</span>
+    <span class="n">fit</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+    <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+    <span class="n">position</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/25155fb88b7efe1289a46d9e5435d4e6cd1a160094d132bd4aafa128c2c8c65d.png" src="_images/25155fb88b7efe1289a46d9e5435d4e6cd1a160094d132bd4aafa128c2c8c65d.png" />
+</div>
+</div>
+</section>
+<section id="show-uncertainty-at-different-lateral-positions">
+<h3>Show uncertainty at different lateral positions<a class="headerlink" href="#show-uncertainty-at-different-lateral-positions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">]</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>  <span class="c1"># In milimeters</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+    <span class="n">cal</span><span class="o">.</span><span class="n">plot_dose_fit_uncertainty</span><span class="p">(</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span>
+        <span class="n">fit</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+        <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">,</span>
+        <span class="n">markeredgecolor</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+        <span class="n">markerfacecolor</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7476a9f60650&gt;
+</pre></div>
+</div>
+<img alt="_images/805a6e00496b98ad6dbe6cb0bbcd90278c7f8270536f0fd9aa4cf10caab5400d.png" src="_images/805a6e00496b98ad6dbe6cb0bbcd90278c7f8270536f0fd9aa4cf10caab5400d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clear memory</span>
+<span class="k">del</span> <span class="n">img_m</span><span class="p">,</span> <span class="n">cal_image</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="film-to-dose">
+<h2>Film to dose<a class="headerlink" href="#film-to-dose" title="Link to this heading">#</a></h2>
+<p>The next image is going to be used for verification. It was irradiated with 5.0 Gy (a dose value not used for calibration).</p>
+<p>Note</p>
+<p>The image must also have an unirradiated film as a reference for 0 Gy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the images</span>
+
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_001.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_002.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_003.tif&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">qa_image</span> <span class="o">=</span> <span class="n">load_multiples</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+<span class="n">qa_image</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ca01e4e14e0886b7011abd771568526a3781a915a88995ba0d571eb86ddcafd8.png" src="_images/ca01e4e14e0886b7011abd771568526a3781a915a88995ba0d571eb86ddcafd8.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="optional-quality-control-using-optical-filters">
+<h3>(Optional) Quality control using optical filters<a class="headerlink" href="#optional-quality-control-using-optical-filters" title="Link to this heading">#</a></h3>
+<p>Quality control test to check reproducibility of the scanner
+using mean intensity of optical filters using red channel.
+The test pass if the intensity of the optical filters in
+the image is equal to the intensity of the optical filters in the
+image used for calibration, within a relative tolerance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Dosepy.calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">passed_QC</span>
+
+<span class="n">passed_QC</span><span class="p">(</span><span class="n">img</span><span class="o">=</span><span class="n">qa_image</span><span class="p">,</span> <span class="n">lut</span><span class="o">=</span><span class="n">cal</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>  <span class="c1"># Relative tolerance of 1%</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intensity of optical filter(s) in calibration.
+([np.float64(9345.198660714286), np.float64(13275.963083604778), np.float64(20718.336886993602)],)
+Intensity of optical filter(s) in the image.
+[np.float64(9429.098324022347), np.float64(13383.234273318873), np.float64(20924.68770053476)]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>Import the tiff to dose manager. Use “GP” for green channel and a polynomial fit function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Dosepy.tiff2dose</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tiff2DoseM</span>
+
+<span class="n">t2d</span> <span class="o">=</span> <span class="n">Tiff2DoseM</span><span class="p">()</span>
+
+<span class="n">dose</span> <span class="o">=</span> <span class="n">t2d</span><span class="o">.</span><span class="n">get_dose</span><span class="p">(</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">qa_image</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span>
+    <span class="n">lut</span><span class="o">=</span><span class="n">cal</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/luis/miniconda3/envs/dp/lib/python3.11/site-packages/Dosepy/tools/functions.py:19: RuntimeWarning: invalid value encountered in power
+  return a*x + b*x**n
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot the dose distribution</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">axeI</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">dose</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;nipy_spectral&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mf">5.5</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">axeI</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7476a80f1c10&gt;
+</pre></div>
+</div>
+<img alt="_images/3387e4e374a0e62e34093e61bf4dafa7eb5cbce9da5ce28d0c51742f3f09f338.png" src="_images/3387e4e374a0e62e34093e61bf4dafa7eb5cbce9da5ce28d0c51742f3f09f338.png" />
+</div>
+</div>
+<p>Save the dose distribution as a tif file (in cGy). Useful for further analysis using <a class="reference external" href="https://imagej.net/ij/">ImageJ</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#dose.save_as_tif(&quot;dose_in_tif_file&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dose-at-center">
+<h3>Dose at center<a class="headerlink" href="#dose-at-center" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dose_at_center</span> <span class="o">=</span> <span class="n">dose</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">110</span><span class="p">:</span><span class="mi">140</span><span class="p">,</span> <span class="mi">450</span><span class="p">:</span><span class="mi">480</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dose_at_center</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(5.12134267080905)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show the ROI</span>
+
+<span class="n">roi</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">450</span><span class="p">,</span> <span class="mi">110</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span>
+
+<span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a1f42cf568189f0db2b94b89b511960f42b5a528134a04b98a9b717061016347.png" src="_images/a1f42cf568189f0db2b94b89b511960f42b5a528134a04b98a9b717061016347.png" />
+</div>
+</div>
+<p>A difference of 0.12 Gy (2.4%) is obtainded, with respect to the known dose of 5.0 Gy. As previously showed, it is within dose uncertainty.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="guidelines.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">General guidelines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="uncertainty.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dose uncertainty</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-for-the-tiff-image">Prerequisites for the tiff image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#show-results">Show results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lateral-response">Lateral response</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3">Example 3</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-multiple-files-for-noise-reduction">Load multiple files for noise reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-calibration-curve-for-example-at-50-mm">Plot calibration curve, for example, at 50 mm.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-uncertainty-at-different-lateral-positions">Show uncertainty at different lateral positions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#film-to-dose">Film to dose</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-quality-control-using-optical-filters">(Optional) Quality control using optical filters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dose-at-center">Dose at center</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Luis Alfonso Olivares Jimenez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
