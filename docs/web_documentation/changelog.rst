@@ -8,7 +8,7 @@ v 0.10.3 (JUN-2025)
 -------------------
 New Features
 ^^^^^^^^^^^^
-* New module to compute biological equivalent dose.
+* New module to compute biological equivalent dose and dose volume histograms.
 
 
 v 0.10.2 (APR-2025)
