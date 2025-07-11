@@ -32,7 +32,7 @@ def load_dose(path_to_file: str | Path):
     if not path_to_file.is_file():
         raise FileNotFoundError(f"The file {path_to_file} does not exist.")
 
-    # Check if the file is DICOM file
+    # Check if the file is a DICOM file
     with open(path_to_file, "rb") as my_file:
         my_file.read(128)  # Skip first 128 bytes
 
@@ -56,14 +56,32 @@ def load_dose(path_to_file: str | Path):
 
 def eqd2(dose: sitk.Image, alpha_beta: float, number_fractions: int) -> sitk.Image:
     """
-    Calculating a equivalent radiation dose (EQD2) that would have the same biological 
-    effect as a standard fractionation schedule of 2 Gy per fraction.
+    Equivalent dose in 2 Gy per fraction calculation for every boxel.
+
+    Parameters
+    ----------
+    dose : SimpleITK.Image
+        Dose distribution
+    alpha_beta : float
+        Alpha / beta ratio
+    number_fractions : int
+        Number of fractions
+
+    Returns
+    -------
+    SimpleITK.Image
+        Dose distribution in EQD2Gy
+
+    Note
+    ----
+    The equivalent dose is calculated using the formula:
 
     EQD2 = D * (d + alpha_beta) / (2 + alpha_beta), 
     where D is the total dose, d is the dose per fraction (D/number_fractions) 
     and alpha_beta is the alpha/beta ratio.
 
-    input: dose distribution, alpha/beta ratio, number of fractions and 
+    EQD2 represents an equivalent radiation dose (EQD2) that would have the same biological 
+    effect as a standard fractionation schedule of 2 Gy per fraction.
     """
 
     # Check if dose is a valid sitk.Image object
