@@ -4,7 +4,7 @@ from pathlib import Path
 import SimpleITK as sitk
 
 
-def load(path_to_file: str | Path):
+def load_dose(path_to_file: str | Path):
     """
     Load a dose distribution from a DICOM file.
 
@@ -16,7 +16,7 @@ def load(path_to_file: str | Path):
     Returns
     -------
     sitk.Image
-        A SimpleITK image object representing the dose distribution.
+        A SimpleITK image representing the dose distribution.
         
     """
 
@@ -34,7 +34,7 @@ def load(path_to_file: str | Path):
 
     # Check if the file is DICOM file
     with open(path_to_file, "rb") as my_file:
-        my_file.read(128)  # Skip first bytes
+        my_file.read(128)  # Skip first 128 bytes
 
         if my_file.read(4) != b'DICM':
             print(f"{path_to_file} is not a valid dcm file.")
@@ -44,7 +44,7 @@ def load(path_to_file: str | Path):
     # Load the DICOM file using SimpleITK
     img = sitk.ReadImage(str(path_to_file), outputPixelType=sitk.sitkFloat64)
 
-    # Check if the tag '3004|000e' exists in the metadata
+    # Check if the tag '3004|000e' (DoseGridScaling) exists in the metadata
     if not img.HasMetaDataKey('3004|000e'):
         raise ValueError(f"The DICOM file {path_to_file} does not contain the required metadata tag DoseGridScaling (3004|000e).")
 
@@ -52,3 +52,46 @@ def load(path_to_file: str | Path):
     dose = img * float(img.GetMetaData('3004|000e'))
 
     return dose
+
+
+def eqd2(dose: sitk.Image, alpha_beta: float, number_fractions: int) -> sitk.Image:
+    """
+    Calculating a equivalent radiation dose (EQD2) that would have the same biological 
+    effect as a standard fractionation schedule of 2 Gy per fraction.
+
+    EQD2 = D * (d + alpha_beta) / (2 + alpha_beta), 
+    where D is the total dose, d is the dose per fraction (D/number_fractions) 
+    and alpha_beta is the alpha/beta ratio.
+
+    input: dose distribution, alpha/beta ratio, number of fractions and 
+    """
+
+    # Check if dose is a valid sitk.Image object
+    if not isinstance(dose, sitk.Image):
+        raise ValueError(f"Invalid parameter for dose. It has to be a SimpleITK.Image")
+    # Check if alpha_beta is a number
+    if not isinstance(alpha_beta, (int, float)):
+        raise ValueError(f"Invalid parameter for alpha_beta. It has to be a number")
+    # Check if alpha_beta is a valid number
+    if not 1 <= alpha_beta <= 15:
+        raise ValueError(f"Invalid aplha_beta parameter. It has to be between 1 and 15")
+    # Check if number_fractions is a valid number
+    if not isinstance(number_fractions, (int, float)):
+        raise ValueError(f"Invalid parameter for number_fractions. It has to be a number")
+    # Check if number_fractions is a valid integer
+    if number_fractions % 1 != 0:
+        raise ValueError(f"Invalid parameter for number_fractions. It has to be an integer")
+
+    # Image as numpy array
+    dose_array = sitk.GetArrayFromImage(dose)
+
+    # EQD2 calculation
+    dose_eqd2_array = dose_array * (dose_array/number_fractions + alpha_beta) / (2 + alpha_beta)
+    
+    # Back to SimpleITK
+    dose_eqd2 = sitk.GetImageFromArray(dose_eqd2_array)
+    dose_eqd2.CopyInformation(dose)
+
+    return dose_eqd2
+
+
