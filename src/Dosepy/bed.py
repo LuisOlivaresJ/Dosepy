@@ -2,6 +2,8 @@
 
 from pathlib import Path
 import SimpleITK as sitk
+from matplotlib.pylab import f
+import pydicom
 
 
 def load_dose(path_to_file: str | Path):
@@ -113,3 +115,54 @@ def eqd2(dose: sitk.Image, alpha_beta: float, number_fractions: int) -> sitk.Ima
     return dose_eqd2
 
 
+def get_structures(path_to_file: str | Path) -> list[str]:
+    """
+    Get the structure names from a DICOM RTSTRUCT file.
+
+    Parameters
+    ----------
+    path_to_file : str or Path
+        The path to the DICOM RTSTRUCT file.
+
+    Returns
+    -------
+    dict[str, int]
+        A dictionary with structure names as keys and their corresponding index.
+    """
+    
+    # Check if the input is a string or Path object
+    if not isinstance(path_to_file, (str, Path)):
+        raise TypeError("path_to_file must be a string or a Path object.")
+
+    # Check if the given path is a file and exists
+    if isinstance(path_to_file, str):
+        path_to_file = Path(path_to_file)
+    if not path_to_file.is_file():
+        raise FileNotFoundError(f"The file {path_to_file} does not exist.")
+
+    # Check if the file is a DICOM file
+    with open(path_to_file, "rb") as my_file:
+        my_file.read(128) # Skip first 128 bytes
+        if my_file.read(4) != b'DICM':
+            raise ValueError(f"{path_to_file} is not a valid DICOM file.")
+        
+    # Read the DICOM file
+    ds = pydicom.dcmread(path_to_file)
+
+    # Check if the DICOM file represents structures, using SOP class name RT Structure Set Storage
+    # https://dicom.nema.org/dicom/2013/output/chtml/part04/sect_I.4.html
+    if not ds.get("SOPClassUID") == '1.2.840.10008.5.1.4.1.1.481.3':
+        raise ValueError(f"{path_to_file} is not a valid DICOM RTSTRUCT file.")
+    
+    # Get the structure names
+    structures = [s.ROIName for s in ds.StructureSetROISequence]
+    # Get the structure numbers
+    structure_numbers = [int(s.ROINumber) for s in ds.StructureSetROISequence]
+    # Check if there are any structures
+    if not structures:
+        raise ValueError(f"No structures found in the DICOM RTSTRUCT file {path_to_file}.")
+    
+    # Create a dictionary with structure names and their corresponding index
+    structures = {name: number for name, number in zip(structures, structure_numbers)}
+    
+    return structures

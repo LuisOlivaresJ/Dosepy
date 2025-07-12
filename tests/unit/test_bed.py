@@ -83,3 +83,31 @@ def test_invalid_type_number_fractions_parameter_float():
     with pytest.raises(ValueError):
         bed.eqd2(dose8Gy, 3, 10.5)
 
+
+## Test load_structures
+#----------------------
+
+# Test: Get structures from a DICOM file
+def test_get_structures_valid_file():
+    structures = bed.get_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    structures == {"BODY": 1, "PTV_High": 2, "CouchSurface": 3, "CouchInterior": 4}
+
+# Test: TypeError if path_to_file is not str or Path
+def test_load_structures_type_error():
+    with pytest.raises(TypeError):
+        bed.get_structures(123)
+
+# Test: FileNotFoundError if file does not exist
+def test_get_structures_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        bed.get_structures("/non/existent/file.dcm")
+
+# Test: ValueError if DICOM is not a RT structure set
+def test_get_structures_invalid_DICOM():
+    with pytest.raises(ValueError):
+        bed.get_structures(Path(__file__).parent / "fixtures" / "CT_image.dcm")
+
+# Test: ValueError if file is not a valid DICOM
+def test_load_invalid_dicom():
+    with pytest.raises(ValueError):
+        bed.get_structures(Path(__file__).parent / "fixtures" / "calibracion.png")
