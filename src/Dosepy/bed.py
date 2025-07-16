@@ -1,12 +1,13 @@
 """This module contains tools to calculate Biological Equivalent Dose"""
 
 from pathlib import Path
+
+import numpy as np
 import SimpleITK as sitk
-from matplotlib.pylab import f
 import pydicom
 
 
-def load_dose(path_to_file: str | Path):
+def load_dose(path_to_file: str | Path) -> sitk.Image:
     """
     Load a dose distribution from a DICOM file.
 
@@ -56,7 +57,10 @@ def load_dose(path_to_file: str | Path):
     return dose
 
 
-def eqd2(dose: sitk.Image, alpha_beta: float, number_fractions: int) -> sitk.Image:
+def eqd2(
+    dose: sitk.Image,
+    alpha_beta: float,
+    number_fractions: int) -> sitk.Image:
     """
     Equivalent dose in 2 Gy per fraction calculation for every boxel.
 
@@ -115,7 +119,7 @@ def eqd2(dose: sitk.Image, alpha_beta: float, number_fractions: int) -> sitk.Ima
     return dose_eqd2
 
 
-def get_structures(path_to_file: str | Path) -> list[str]:
+def get_structures_names(path_to_file: str | Path) -> dict:
     """
     Get the structure names from a DICOM RTSTRUCT file.
 
@@ -166,3 +170,81 @@ def get_structures(path_to_file: str | Path) -> list[str]:
     structures = {name: number for name, number in zip(structures, structure_numbers)}
     
     return structures
+
+
+def get_structure_coordinates(
+    structure: str,
+    path_to_file: str) -> list[np.ndarray]:
+    """
+    Get the coordinates of a structure from a DICOM RTSTRUCT file.
+    Parameters
+    ----------
+    structure : str
+        The name of the structure to get the coordinates for.
+    path_to_file : str
+        The path to the DICOM RTSTRUCT file.
+
+    Returns
+    -------
+    list[np.ndarray]
+        A list of numpy arrays of shape (N, 3), each containing the coordinates of the structure in 3D space
+        (x, y, z) for each contour slice.
+    
+    """
+    
+    # Check if the input is a string or Path object
+    if not isinstance(path_to_file, (str, Path)):
+        raise TypeError("path_to_file must be a string or a Path object.")
+    # Check if the given path is a file and exists
+    if isinstance(path_to_file, str):
+        path_to_file = Path(path_to_file)
+    if not path_to_file.is_file():
+        raise FileNotFoundError(f"The file {path_to_file} does not exist.")
+    # Check if the file is a DICOM file
+    with open(path_to_file, "rb") as my_file:
+        my_file.read(128)  # Skip first 128 bytes
+        if my_file.read(4) != b'DICM':
+            raise ValueError(f"{path_to_file} is not a valid DICOM file.")
+    # Check if the parameter structure is a string
+    if not isinstance(structure, str):
+        raise TypeError("structure must be a string.")
+    
+    # Read the DICOM file
+    ds = pydicom.dcmread(path_to_file)
+
+    # Check if the DICOM file represents structures, using SOP class name RT Structure Set Storage
+    if not ds.get("SOPClassUID") == '1.2.840.10008.5.1.4.1.1.481.3':
+        raise ValueError(f"{path_to_file} is not a valid DICOM RTSTRUCT file.")
+
+    # Create a dictionary with structure names and their corresponding index
+    structures_names = [s.ROIName for s in ds.StructureSetROISequence]
+    structure_numbers = [int(s.ROINumber) for s in ds.StructureSetROISequence]
+
+    
+    structures = {name: number for name, number in zip(structures_names, structure_numbers)}
+
+    # Get index of the structure
+    structure_index = structures.get(structure) - 1
+
+    # Check if the structure is in the list of structures
+    if structure not in structures:
+        raise ValueError(f"The structure {structure} is not in the DICOM RTSTRUCT file {path_to_file}.")
+
+    # Get the structure coordinates
+    coordinates = []
+    for slice in ds.ROIContourSequence[structure_index].ContourSequence:
+        points = slice.NumberOfContourPoints
+        slice_coordinates = np.array(slice.ContourData).reshape(points, 3)
+        coordinates.append(slice_coordinates)
+    
+    return coordinates
+
+# Por cada elemento en coordenadas (por cada slice) obtenemos la coordenada,
+# después buscamos los planos de dosis más cercanos a la coordenada 
+# interpolar para obtener la dosis en la misma coordenada
+def get_dose_plane_by_coordinate(
+    dose: sitk.Image,
+    z_coordinate: float) -> sitk.Image:
+    
+
+    pass

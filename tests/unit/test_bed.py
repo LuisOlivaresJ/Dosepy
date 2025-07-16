@@ -84,30 +84,45 @@ def test_invalid_type_number_fractions_parameter_float():
         bed.eqd2(dose8Gy, 3, 10.5)
 
 
-## Test load_structures
-#----------------------
+## Test get_structures
+#---------------------
 
 # Test: Get structures from a DICOM file
 def test_get_structures_valid_file():
-    structures = bed.get_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    structures = bed.get_structures_names(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
     structures == {"BODY": 1, "PTV_High": 2, "CouchSurface": 3, "CouchInterior": 4}
+
+# Test: Check that the result has a correct shape
+def test_get_structures_shape_ptv():
+    structures = bed.get_structure_coordinates(
+         "PTV_High",
+        Path(__file__).parent / "fixtures" / "RS_anonymized.dcm"
+    )
+    assert structures[0].shape == (742, 3)
+
+def test_get_structures_shape_body():
+    structures = bed.get_structure_coordinates(
+        "BODY",
+        Path(__file__).parent / "fixtures" / "RS_anonymized.dcm",
+    )
+    assert len(structures) == 119
 
 # Test: TypeError if path_to_file is not str or Path
 def test_load_structures_type_error():
     with pytest.raises(TypeError):
-        bed.get_structures(123)
+        bed.get_structures_names(123)
 
 # Test: FileNotFoundError if file does not exist
 def test_get_structures_file_not_found():
     with pytest.raises(FileNotFoundError):
-        bed.get_structures("/non/existent/file.dcm")
+        bed.get_structures_names("/non/existent/file.dcm")
 
 # Test: ValueError if DICOM is not a RT structure set
 def test_get_structures_invalid_DICOM():
     with pytest.raises(ValueError):
-        bed.get_structures(Path(__file__).parent / "fixtures" / "CT_image.dcm")
+        bed.get_structures_names(Path(__file__).parent / "fixtures" / "CT_image.dcm")
 
 # Test: ValueError if file is not a valid DICOM
 def test_load_invalid_dicom():
     with pytest.raises(ValueError):
-        bed.get_structures(Path(__file__).parent / "fixtures" / "calibracion.png")
+        bed.get_structures_names(Path(__file__).parent / "fixtures" / "calibracion.png")
