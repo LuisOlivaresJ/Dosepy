@@ -126,3 +126,39 @@ def test_get_structures_invalid_DICOM():
 def test_load_invalid_dicom():
     with pytest.raises(ValueError):
         bed.get_structures_names(Path(__file__).parent / "fixtures" / "calibracion.png")
+
+
+## Test _get_dose_plane_by_coordinate
+#------------------------------------
+# Test: Get a dose plane by z coordinate that is not in the dose distribution (interpolation)
+def test_get_dose_plane_by_coordinate():
+    dose_distribution = bed.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    z_coordinate = 0.0  # Example z coordinate
+    dose_plane = bed._get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+    
+    assert pytest.approx(dose_plane[50, 50, 0], abs = 0.1) == 13.4
+
+
+# Test _get_dose_plane_by_coordinate with invalid z coordinate
+def test_get_dose_plane_by_coordinate_invalid_z():
+    dose_distribution = bed.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    z_coordinate = 100.0  # Example z coordinate outside the range of the dose distribution
+    
+    with pytest.raises(ValueError):
+        bed._get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+
+# Test: Get a dose plane by z coordinate that is in the dose distribution (not interpolation needed)
+def test_get_dose_plane_by_coordinate_valid_z():
+    dose_distribution = bed.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    z_coordinate = 1  # Example z coordinate that is in the dose distribution
+    dose_plane = bed._get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+    
+    assert pytest.approx(dose_plane[50, 50, 0], abs = 0.1) == 13.2
+
+# Test: Give a z_coordinate that is not a number
+def test_get_dose_plane_by_coordinate_invalid_z_type():
+    dose_distribution = bed.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    
+    with pytest.raises(ValueError):
+        bed._get_dose_plane_by_coordinate(dose_distribution, "invalid_z")
+

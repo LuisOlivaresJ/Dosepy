@@ -23,26 +23,7 @@ def load_dose(path_to_file: str | Path) -> sitk.Image:
         
     """
 
-    # Check if the input is a string or Path object
-    if not isinstance(path_to_file, (str, Path)):
-        raise TypeError("path_to_file must be a string or a Path object.")
-
-    # Convert str to Path if necessary
-    if isinstance(path_to_file, str):
-        path_to_file = Path(path_to_file)
-
-    # Check if the file exists
-    if not path_to_file.is_file():
-        raise FileNotFoundError(f"The file {path_to_file} does not exist.")
-
-    # Check if the file is a DICOM file
-    with open(path_to_file, "rb") as my_file:
-        my_file.read(128)  # Skip first 128 bytes
-
-        if my_file.read(4) != b'DICM':
-            print(f"{path_to_file} is not a valid dcm file.")
-            raise ValueError(f"{path_to_file} is not a valid dcm file.")
-        
+    _is_dicom(path_to_file)
         
     # Load the DICOM file using SimpleITK
     img = sitk.ReadImage(str(path_to_file), outputPixelType=sitk.sitkFloat64)
@@ -187,8 +168,8 @@ def get_structure_coordinates(
     Returns
     -------
     list[np.ndarray]
-        A list of numpy arrays of shape (N, 3), each containing the coordinates of the structure in 3D space
-        (x, y, z) for each contour slice.
+        A list of numpy arrays of shape (N, 3), each array containing the coordinates of the structure
+        (x, y, z) for a slice (z = constants).
     
     """
     
@@ -242,9 +223,133 @@ def get_structure_coordinates(
 # Por cada elemento en coordenadas (por cada slice) obtenemos la coordenada,
 # después buscamos los planos de dosis más cercanos a la coordenada 
 # interpolar para obtener la dosis en la misma coordenada
-def get_dose_plane_by_coordinate(
+def _get_dose_plane_by_coordinate(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
+    """
+    Get a 2D dose plane at a specific z-coordinate from a 3D dose distribution.
+
+    Parameters
+    ----------
+    dose : sitk.Image
+        The 3D dose distribution.
+    z_coordinate : float
+        The z-coordinate at which to extract the dose plane.
+
+    Returns
+    -------
+    sitk.Image
+        A 2D dose plane at the specified z-coordinate.
+
+    Raises
+    ------
+    ValueError
+        If the z_coordinate is not a number or is not within the range of the dose distribution.
+    """
+
+    # Check if z_coordinate is a number
+    if not isinstance(z_coordinate, (int, float)):
+        raise ValueError(f"Invalid parameter for z_coordinate. It has to be a number")
+    
+    # Check if z_coordinate is between coordinates of the dose distribution
+    z_min = dose.GetOrigin()[2]
+    z_max = dose.GetOrigin()[2] + dose.GetDepth() * dose.GetSpacing()[2]
+
+    if not z_min < z_coordinate < z_max:
+        raise ValueError(
+            f"The z_coordinate {z_coordinate} is not between the coordinates of the dose distribution "
+            f"({z_min}, {z_max})."
+        )
+
+    # Reference image with the required location
+    reference_image = sitk.Image(
+        (dose.GetSize()[0], dose.GetSize()[1], 1),
+        dose.GetPixelIDValue()
+    )
+
+    reference_image.SetOrigin((dose.GetOrigin()[0], dose.GetOrigin()[1], z_coordinate))
+    reference_image.SetDirection(dose.GetDirection())
+    reference_image.SetSpacing(dose.GetSpacing())
+
+    interpolated_dose = sitk.Resample(
+        dose,
+        reference_image,  
+        sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
+        sitk.sitkLinear,  # Uses linear interpolation
+    )
+    
+    return interpolated_dose
+
+
+def _get_dvh_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> list[float]:
+    pass
+
+def get_mask_by_coordinates_and_dose_shape(
+    coordinates: np.ndarray,
+    dose: sitk.Image) -> np.ndarray:
+    """
+    Get a mask from the coordinates of a structure.
+    Parameters
+    ----------
+    coordinates : np.ndarray
+        The coordinates of the structure, with shape (N, 3),
+        where N is the number of points and each point is represented by (x, y, z).
+    dose : sitk.Image
+        A 2D dose distribution.
+    Returns
+    -------
+    np.ndarray
+        A mask of the structure. The shape is the same as the given dose distribution.
+    """
+
     
 
-    pass
+
+def get_dvh(
+    path_to_dose_file: str,
+    path_to_structures_file,
+    structure: str) -> np.ndarray:
+
+    _is_dicom(path_to_dose_file)
+    _is_dicom(path_to_structures_file)
+
+    structures = get_structures_names(path_to_structures_file)
+    if not structure in structures:
+        raise ValueError(f"The structure {structure} is not in the DICOM RTSTRUCT file.")
+    
+    structure_coordinates = get_structure_coordinates(structure, path_to_structures_file)
+
+    dose_distribution = load_dose(path_to_dose_file)
+
+    dvh = []
+    for slice in structure_coordinates:
+        z_coordinate = slice[0, 2]
+
+        dose_2D = _get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+        dvh_2D = _get_dvh_by_plane(dose_2D, slice)
+        dvh.extend(dvh_2D)
+
+    return dvh
+
+
+def _is_dicom(path_to_file: str | Path):
+
+    # Check if the input is a string or Path object
+    if not isinstance(path_to_file, (str, Path)):
+        raise TypeError("path_to_file must be a string or a Path object.")
+
+    # Convert str to Path if necessary
+    if isinstance(path_to_file, str):
+        path_to_file = Path(path_to_file)
+
+    # Check if the file exists
+    if not path_to_file.is_file():
+        raise FileNotFoundError(f"The file {path_to_file} does not exist.")
+
+    # Check if the file is a DICOM file
+    with open(path_to_file, "rb") as my_file:
+        my_file.read(128)  # Skip first 128 bytes
+
+        if my_file.read(4) != b'DICM':
+            print(f"{path_to_file} is not a valid dcm file.")
+            raise ValueError(f"{path_to_file} is not a valid dcm file.")
