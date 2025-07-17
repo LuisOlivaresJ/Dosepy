@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import SimpleITK as sitk
 import pydicom
+from skimage.draw import polygon
 
 
 def load_dose(path_to_file: str | Path) -> sitk.Image:
@@ -168,8 +169,8 @@ def get_structure_coordinates(
     Returns
     -------
     list[np.ndarray]
-        A list of numpy arrays of shape (N, 3), each array containing the coordinates of the structure
-        (x, y, z) for a slice (z = constants).
+        A list of numpy arrays of shape (N, 3). Each array represents a slice, 
+        and contains the coordinates of the structure as (x, y, z = constant).
     
     """
     
@@ -204,12 +205,12 @@ def get_structure_coordinates(
     
     structures = {name: number for name, number in zip(structures_names, structure_numbers)}
 
-    # Get index of the structure
-    structure_index = structures.get(structure) - 1
-
     # Check if the structure is in the list of structures
     if structure not in structures:
         raise ValueError(f"The structure {structure} is not in the DICOM RTSTRUCT file {path_to_file}.")
+
+    # Get index of the structure
+    structure_index = structures.get(structure) - 1
 
     # Get the structure coordinates
     coordinates = []
@@ -220,9 +221,7 @@ def get_structure_coordinates(
     
     return coordinates
 
-# Por cada elemento en coordenadas (por cada slice) obtenemos la coordenada,
-# después buscamos los planos de dosis más cercanos a la coordenada 
-# interpolar para obtener la dosis en la misma coordenada
+
 def _get_dose_plane_by_coordinate(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
@@ -281,12 +280,9 @@ def _get_dose_plane_by_coordinate(
     return interpolated_dose
 
 
-def _get_dvh_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> list[float]:
-    pass
-
-def get_mask_by_coordinates_and_dose_shape(
+def get_2D_mask_by_coordinates_and_image_shape(
     coordinates: np.ndarray,
-    dose: sitk.Image) -> np.ndarray:
+    image: sitk.Image) -> np.ndarray:
     """
     Get a mask from the coordinates of a structure.
     Parameters
@@ -294,15 +290,51 @@ def get_mask_by_coordinates_and_dose_shape(
     coordinates : np.ndarray
         The coordinates of the structure, with shape (N, 3),
         where N is the number of points and each point is represented by (x, y, z).
-    dose : sitk.Image
-        A 2D dose distribution.
+    image : sitk.Image
+        An image used as reference to create the mask shape. Only the first
+        two dimensions are used (x, y).
     Returns
     -------
     np.ndarray
-        A mask of the structure. The shape is the same as the given dose distribution.
+        A 2D mask of the structure. The shape is the same as the given image.
+
     """
 
+    # Check that coordinates is a numpy array
+    if not isinstance(coordinates, np.ndarray):
+        raise TypeError("coordinates must be a numpy array.")
     
+    # Check that image is a SimpleITK image
+    if not isinstance(image, sitk.Image):
+        raise TypeError("image must be a SimpleITK.Image object.")
+
+    # Check that the array of coordinates has the right shape
+    if not coordinates.shape[1] == 3:
+        raise ValueError("coordinates must be a 2D array with shape (N, 3), where N is the number of points.")
+
+    # Row and columns of the polygon's vertices
+    r = coordinates[:, 1]  # (x, y, z) Left-Rigth, Up-Down, Feet-Head
+    c = coordinates[:, 0]
+
+    # Vertices as index
+    r_index = (r - image.GetOrigin()[1]) / image.GetSpacing()[1]
+    c_index = (c - image.GetOrigin()[0]) / image.GetSpacing()[0]
+
+    # Size of the mask
+    shape = (image.GetSize()[1], image.GetSize()[0])
+
+    # Get the indices of the pixels inside the polygon
+    rr, cc = polygon(r_index, c_index, shape=shape)
+
+    # Create a boolean mask with the same shape as the dose distribution
+    mask = np.zeros(shape, dtype=np.bool)
+    mask[rr, cc] = 1
+
+    return mask
+
+
+def _get_dvh_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> list[float]:
+    pass
 
 
 def get_dvh(
