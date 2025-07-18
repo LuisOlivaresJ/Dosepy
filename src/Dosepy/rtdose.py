@@ -105,9 +105,13 @@ def eqd2(
     # Check if alpha_beta is a number
     if not isinstance(alpha_beta, dict):
         raise ValueError(f"Invalid parameter for alpha_beta. It has to be a dictionary")
-    # Check if alpha_beta is a valid number
-    if not 1 <= alpha_beta <= 15:
-        raise ValueError(f"Invalid aplha_beta parameter. It has to be between 1 and 15")
+    # Check if alpha_beta is a valid number, for every value in the dictionary
+    for structure, alpha_beta_value in alpha_beta.items():
+        if not isinstance(alpha_beta_value, (int, float)):
+            raise ValueError(f"Invalid parameter for alpha_beta. It has to be a number for structure {structure}")
+        # Check if alpha_beta has a value between 1 and 15
+        if not 1 <= alpha_beta_value <= 15:
+            raise ValueError(f"Invalid aplha_beta parameter for structure {structure}. It has to be between 1 and 15")
     # Check if number_fractions is a valid number
     if not isinstance(fractions, (int, float)):
         raise ValueError(f"Invalid parameter for number_fractions. It has to be a number")
