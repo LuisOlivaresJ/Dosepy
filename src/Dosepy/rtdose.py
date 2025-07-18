@@ -1,11 +1,13 @@
 """This module contains tools to calculate Biological Equivalent Dose"""
 
 from pathlib import Path
+from turtle import title
 
 import numpy as np
 import SimpleITK as sitk
 import pydicom
 from skimage.draw import polygon
+import plotly.graph_objects as go
 
 
 def load_dose(path_to_file: str | Path) -> sitk.Image:
@@ -222,7 +224,7 @@ def get_structure_coordinates(
     return coordinates
 
 
-def _get_dose_plane_by_coordinate(
+def get_dose_plane_by_coordinate(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
     """
@@ -244,6 +246,11 @@ def _get_dose_plane_by_coordinate(
     ------
     ValueError
         If the z_coordinate is not a number or is not within the range of the dose distribution.
+
+    Notes
+    -----
+    The z-coordinate should be within the range of the dose distribution's z-coordinates.
+    The algorithm uses linear interpolation to extract the dose plane.
     """
 
     # Check if z_coordinate is a number
@@ -254,7 +261,7 @@ def _get_dose_plane_by_coordinate(
     z_min = dose.GetOrigin()[2]
     z_max = dose.GetOrigin()[2] + dose.GetDepth() * dose.GetSpacing()[2]
 
-    if not z_min < z_coordinate < z_max:
+    if not z_min <= z_coordinate <= z_max:
         raise ValueError(
             f"The z_coordinate {z_coordinate} is not between the coordinates of the dose distribution "
             f"({z_min}, {z_max})."
@@ -277,7 +284,7 @@ def _get_dose_plane_by_coordinate(
         sitk.sitkLinear,  # Uses linear interpolation
     )
     
-    return interpolated_dose
+    return interpolated_dose[:, :, 0]
 
 
 def get_2D_mask_by_coordinates_and_image_shape(
@@ -333,17 +340,56 @@ def get_2D_mask_by_coordinates_and_image_shape(
     return mask
 
 
-def _get_dvh_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> list[float]:
-    pass
+def _get_dose_in_structure_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> list[float]:
+    # Check coordinates is a numpy array
+    if not isinstance(coordinates, np.ndarray):
+        raise TypeError("coordinates must be a numpy array.")
+    # Check that the array of coordinates has the right shape
+    if not coordinates.shape[1] == 3:
+        raise ValueError("coordinates must be a 2D array with shape (N, 3), where N is the number of points.")
+    # Check that dose_2D is a SimpleITK image
+    if not isinstance(dose_2D, sitk.Image):
+        raise TypeError("dose_2D must be a SimpleITK.Image object.")
+    
+    mask = get_2D_mask_by_coordinates_and_image_shape(coordinates, dose_2D)
+    dvh = sitk.GetArrayFromImage(dose_2D)[mask]
+    
+    return dvh
 
 
-def get_dvh(
+def get_dose_in_structure(
     path_to_dose_file: str,
-    path_to_structures_file,
+    path_to_structures_file: str,
     structure: str) -> np.ndarray:
+    """
+    Get the dose volume histogram (DVH) for a specific structure from a DICOM RTSTRUCT file.
 
+    Parameters
+    ----------
+    path_to_dose_file : str
+        The path to the DICOM file containing the dose distribution.
+    path_to_structures_file : str
+        The path to the DICOM RTSTRUCT file containing the structure information.
+    structure : str
+        The name of the structure for which to get the DVH.
+    
+    Returns
+    -------
+    np.ndarray
+        A numpy array containing the DVH for the specified structure.
+    
+    Raises
+    ------
+    ValueError
+        If the structure is not found in the DICOM RTSTRUCT file.
+    TypeError
+        If the path_to_dose_file or path_to_structures_file is not a string or Path object.
+    """
     _is_dicom(path_to_dose_file)
     _is_dicom(path_to_structures_file)
+    # Check if structure is a string
+    if not isinstance(structure, str):
+        raise TypeError("structure must be a string.")
 
     structures = get_structures_names(path_to_structures_file)
     if not structure in structures:
@@ -353,15 +399,65 @@ def get_dvh(
 
     dose_distribution = load_dose(path_to_dose_file)
 
-    dvh = []
-    for slice in structure_coordinates:
-        z_coordinate = slice[0, 2]
+    dose_in_structure = []
+    for slice_coordinates in structure_coordinates:
+        # Check that each slice_coordinates has a constant z coordinate
+        if not len(set(slice_coordinates[:, 2])) == 1:
+            raise ValueError("Each slice_coordinates must have a constant z coordinate.")
+        
+        z_coordinate = slice_coordinates[0, 2]
 
-        dose_2D = _get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
-        dvh_2D = _get_dvh_by_plane(dose_2D, slice)
-        dvh.extend(dvh_2D)
+        dose_2D = get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+        dose_in_structure_in_slice = _get_dose_in_structure_by_plane(dose_2D, slice_coordinates)
+        dose_in_structure.extend(dose_in_structure_in_slice)
 
-    return dvh
+    return dose_in_structure
+
+
+def plot_dvh(dose_in_structure: np.ndarray):
+    """
+    Plot the dose volume histogram (DVH) for a specific structure.
+
+    Parameters
+    ----------
+    dose_in_structure : np.ndarray
+        A numpy array containing the dose values for the specified structure.
+    
+    Returns
+    -------
+    None
+        Displays the DVH plot.
+    
+    Notes
+    -----
+    The DVH is plotted as a histogram with cumulative density.
+    """
+
+    fig = go.Figure(
+        data = [
+            go.Histogram(
+                x=dose_in_structure,
+                histnorm="percent",
+                cumulative_enabled=True,
+                cumulative={
+                    "direction": "decreasing",
+                },
+                xbins = dict( # bins used for histogram
+                    start = 0,
+                    end = np.amax(dose_in_structure),
+                    size = 0.05
+                ),
+                opacity=0.75
+            )
+        ]
+    )
+    fig.update_layout(
+        title_text='DVH', # title of plot
+        xaxis_title_text='Dose [Gy]', # xaxis label
+        yaxis_title_text='Volume [%]', # yaxis label
+    )
+
+    fig.show()
 
 
 def _is_dicom(path_to_file: str | Path):
