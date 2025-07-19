@@ -260,7 +260,7 @@ def get_dose_plane_by_coordinate(
 
     interpolated_dose = sitk.Resample(
         dose,
-        reference_image,  
+        reference_image,
         sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
         sitk.sitkLinear,  # Uses linear interpolation
     )

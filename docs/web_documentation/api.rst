@@ -18,3 +18,8 @@ Dosepy.tiff2dose
 
 .. automodule:: Dosepy.tiff2dose
     :members:
+
+Dosepy.rtdose
+-------------
+.. automodule:: Dosepy.tiff2dose
+    :members:
