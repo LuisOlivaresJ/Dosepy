@@ -11,6 +11,79 @@ from skimage.draw import polygon
 import plotly.graph_objects as go
 
 
+class StructureSet:
+
+    def __init__(self, ds : FileDataset):
+        self.ds = ds
+    
+    def get_names(self):
+        """
+        Get the structure names in a DataSet.
+
+        Returns
+        -------
+        dict[str, int]
+            A dictionary with structure names as keys and their corresponding index.
+        """
+        
+        # Get the structure names
+        structures = [s.ROIName for s in self.ds.StructureSetROISequence]
+        # Get the structure numbers
+        structure_numbers = [int(s.ROINumber) for s in self.ds.StructureSetROISequence]
+        # Check if there are any structures
+        if not structures:
+            raise ValueError(f"No structures found in the DataSet.")
+        
+        # Create a dictionary with structure names and their corresponding index
+        structures = {name: number for name, number in zip(structures, structure_numbers)}
+        
+        return structures
+    
+    def get_coordinates(self, structure: str) -> list[np.ndarray]:
+        """
+        Get the coordinates of a structure.
+        Parameters
+        ----------
+        structure : str
+            The name of the structure to get the coordinates for.
+        
+        Returns
+        -------
+        list[np.ndarray]
+            A list of numpy arrays of shape (N, 3). Each array represents a slice, 
+            and contains the coordinates of the structure as (x, y, z = constant).
+        
+        """
+        # Check if structure is a string
+        if not isinstance(structure, str):
+            raise TypeError("structure must be a string.")
+
+        # Create a dictionary with structure names and their corresponding index
+        structures_names = [s.ROIName for s in self.ds.StructureSetROISequence]
+        structure_numbers = [int(s.ROINumber) for s in self.ds.StructureSetROISequence]
+
+        structures = {name: number for name, number in zip(structures_names, structure_numbers)}
+
+        # Check if the structure is in the list of structures
+        if structure not in structures:
+            raise ValueError(f"The structure {structure} is not in the dataset.")
+
+        # Get index of the structure
+        structure_index = structures.get(structure) - 1
+
+        # Get the structure coordinates
+        coordinates = []
+        for slice in self.ds.ROIContourSequence[structure_index].ContourSequence:
+            points = slice.NumberOfContourPoints
+            slice_coordinates = np.array(slice.ContourData).reshape(points, 3)
+            coordinates.append(slice_coordinates)
+        
+        return coordinates
+    
+    def get_physical_size(self, structure: str) -> float:
+        pass
+
+
 def load_dose(path_to_file: str | Path) -> sitk.Image:
     """
     Load a dose distribution from a DICOM file.
@@ -48,7 +121,7 @@ def load_dose(path_to_file: str | Path) -> sitk.Image:
     return dose
 
 
-def load_structures(path_to_file: str) -> FileDataset:
+def load_structures(path_to_file: str) -> StructureSet:
     """ Wraps the pydicom.dcmread function to load a DICOM RTSTRUCT file."""
 
     _is_dicom(path_to_file=path_to_file)
@@ -60,7 +133,7 @@ def load_structures(path_to_file: str) -> FileDataset:
     if not ds.get("SOPClassUID") == '1.2.840.10008.5.1.4.1.1.481.3':
         raise ValueError(f"{path_to_file} is not a valid DICOM RTSTRUCT file.")
     
-    return ds
+    return StructureSet(ds=ds)
 
 
 def eqd2(
@@ -130,79 +203,6 @@ def eqd2(
     dose_eqd2.CopyInformation(dose_distribution)
 
     return dose_eqd2
-
-
-def get_structures_names(ds: FileDataset) -> dict:
-    """
-    Get the structure names in a DataSet.
-
-    Parameters
-    ----------
-    ds : pydicom.FileDataset
-        A pydicom FileDataset object representing a DICOM RTSTRUCT file.
-
-    Returns
-    -------
-    dict[str, int]
-        A dictionary with structure names as keys and their corresponding index.
-    """
-    
-    # Get the structure names
-    structures = [s.ROIName for s in ds.StructureSetROISequence]
-    # Get the structure numbers
-    structure_numbers = [int(s.ROINumber) for s in ds.StructureSetROISequence]
-    # Check if there are any structures
-    if not structures:
-        raise ValueError(f"No structures found in the DataSet.")
-    
-    # Create a dictionary with structure names and their corresponding index
-    structures = {name: number for name, number in zip(structures, structure_numbers)}
-    
-    return structures
-
-
-def get_structure_coordinates(
-    structure: str,
-    dataset: FileDataset) -> list[np.ndarray]:
-    """
-    Get the coordinates of a structure.
-    Parameters
-    ----------
-    structure : str
-        The name of the structure to get the coordinates for.
-    dataset : FileDataset
-        A pydicom FileDataset object representing a DICOM RTSTRUCT file.
-
-    Returns
-    -------
-    list[np.ndarray]
-        A list of numpy arrays of shape (N, 3). Each array represents a slice, 
-        and contains the coordinates of the structure as (x, y, z = constant).
-    
-    """
-
-    # Create a dictionary with structure names and their corresponding index
-    structures_names = [s.ROIName for s in dataset.StructureSetROISequence]
-    structure_numbers = [int(s.ROINumber) for s in dataset.StructureSetROISequence]
-
-    
-    structures = {name: number for name, number in zip(structures_names, structure_numbers)}
-
-    # Check if the structure is in the list of structures
-    if structure not in structures:
-        raise ValueError(f"The structure {structure} is not in the dataset.")
-
-    # Get index of the structure
-    structure_index = structures.get(structure) - 1
-
-    # Get the structure coordinates
-    coordinates = []
-    for slice in dataset.ROIContourSequence[structure_index].ContourSequence:
-        points = slice.NumberOfContourPoints
-        slice_coordinates = np.array(slice.ContourData).reshape(points, 3)
-        coordinates.append(slice_coordinates)
-    
-    return coordinates
 
 
 def get_dose_plane_by_coordinate(

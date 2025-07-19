@@ -1,11 +1,71 @@
 """ Test the bed module. """
 
+from turtle import rt
 import pytest
 from Dosepy import rtdose
 from pathlib import Path
 import SimpleITK as sitk
 import numpy as np
 import pydicom
+
+
+## Test StructureSet class
+#-------------------------
+
+## Test load_structures
+# Test: Correct type ourput
+def test_load_structures_ourput_type():
+    structures = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    assert isinstance(structures, rtdose.StructureSet)
+
+# Test: TypeError if path_to_file is not str or Path
+def test_load_structures_type_error():
+    with pytest.raises(TypeError):
+        rtdose.load_structures(123)
+
+# Test: FileNotFoundError if file does not exist
+def test_get_structures_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        rtdose.load_structures("/non/existent/file.dcm")
+
+# Test: ValueError if DICOM is not a RT structure set
+def test_get_structures_invalid_DICOM():
+    with pytest.raises(ValueError):
+        rtdose.load_structures(Path(__file__).parent / "fixtures" / "CT_image.dcm")
+
+# Test: ValueError if file is not a valid DICOM
+def test_load_invalid_dicom():
+    with pytest.raises(ValueError):
+        rtdose.load_structures(Path(__file__).parent / "fixtures" / "calibracion.png")
+
+## Test get_structures
+#---------------------
+
+# Test: Get structures from a DICOM file
+def test_get_structures_valid_file():
+    structures = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    #structures = rtdose.get_structures_names(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    structures.get_names == {"BODY": 1, "PTV_High": 2, "CouchSurface": 3, "CouchInterior": 4}
+
+# Test: Check that the result has a correct shape
+def test_get_structure_shape_ptv():
+    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    structures = ds.get_coordinates("PTV_High")
+    assert structures[0].shape == (742, 3)
+
+def test_get_structures_shape_body():
+    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+    structures = ds.get_coordinates("BODY")
+    assert len(structures) == 119
+
+# Test: Attempt to get coordinates for a non-existent structure
+def test_get_structure_coordinates_not_found():
+    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
+   
+    with pytest.raises(ValueError):
+        ds.get_coordinates("NonExistentStructure")
+
+
 
 
 ## Test load_dose 
@@ -85,58 +145,7 @@ def test_invalid_type_number_fractions_parameter_float():
         rtdose.eqd2(dose8Gy, 3, 10.5)
 
 
-## Test load_structures
-# Test: Correct type ourput
-def test_load_structures_ourput_type():
-    structures = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-    assert isinstance(structures, pydicom.Dataset)
 
-# Test: TypeError if path_to_file is not str or Path
-def test_load_structures_type_error():
-    with pytest.raises(TypeError):
-        rtdose.load_structures(123)
-
-# Test: FileNotFoundError if file does not exist
-def test_get_structures_file_not_found():
-    with pytest.raises(FileNotFoundError):
-        rtdose.load_structures("/non/existent/file.dcm")
-
-# Test: ValueError if DICOM is not a RT structure set
-def test_get_structures_invalid_DICOM():
-    with pytest.raises(ValueError):
-        rtdose.load_structures(Path(__file__).parent / "fixtures" / "CT_image.dcm")
-
-# Test: ValueError if file is not a valid DICOM
-def test_load_invalid_dicom():
-    with pytest.raises(ValueError):
-        rtdose.load_structures(Path(__file__).parent / "fixtures" / "calibracion.png")
-
-## Test get_structures
-#---------------------
-
-# Test: Get structures from a DICOM file
-def test_get_structures_valid_file():
-    structures = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-    #structures = rtdose.get_structures_names(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-    structures == {"BODY": 1, "PTV_High": 2, "CouchSurface": 3, "CouchInterior": 4}
-
-# Test: Check that the result has a correct shape
-def test_get_structure_shape_ptv():
-    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-    structures = rtdose.get_structure_coordinates("PTV_High", ds)
-    assert structures[0].shape == (742, 3)
-
-def test_get_structures_shape_body():
-    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-    structures = rtdose.get_structure_coordinates("BODY", ds)
-    assert len(structures) == 119
-
-# Test: Attempt to get coordinates for a non-existent structure
-def test_get_structure_coordinates_not_found():
-    ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
-   
-    with pytest.raises(ValueError):
-        rtdose.get_structure_coordinates("NonExistentStructure", ds)
 
 ## Test get_dose_plane_by_coordinate
 #------------------------------------
@@ -182,7 +191,7 @@ def test_get_2D_mask_by_coordinates_and_image_shape():
     # Load the structures
     ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
     # Get the coordinates of a structure
-    coordinates = rtdose.get_structure_coordinates("PTV_High", ds)[0]
+    coordinates = ds.get_coordinates("PTV_High")[0]
     # Get the mask by coordinates and image shape
     mask = rtdose.get_2D_mask_by_coordinates_and_image_shape(coordinates, dose)
 
@@ -212,7 +221,7 @@ def test_get_dose_ptv_mean():
     # Load the structures
     ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
     # Get the coordinates of the PTV_High structure
-    ptv_coordinates = rtdose.get_structure_coordinates("PTV_High", ds)
+    ptv_coordinates = ds.get_coordinates("PTV_High")
 
     # Get the dose values for the PTV structure
     dose_ptv = rtdose.get_dose_in_structure(
@@ -229,7 +238,7 @@ def test_get_dose_body():
     # Load the structures
     ds = rtdose.load_structures(Path(__file__).parent / "fixtures" / "RS_anonymized.dcm")
     # Get the coordinates of the BODY structure
-    body_coordinates = rtdose.get_structure_coordinates("BODY", ds)
+    body_coordinates = ds.get_coordinates("BODY")
                                          
     # Get the dose values for the BODY structure
     dose_body = rtdose.get_dose_in_structure(
