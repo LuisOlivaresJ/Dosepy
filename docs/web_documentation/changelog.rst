@@ -3,6 +3,11 @@
 Changelog
 =========
 
+v 0.11.0 (JUL-2025)
+-------------------
+New Features
+^^^^^^^^^^^^
+* New module, rtdose, to compute dose volume histograms based on DICOM files.
 
 v 0.10.2 (APR-2025)
 -------------------

@@ -11,6 +11,6 @@ chapters:
 - file: uncertainty
 - file: gamma
 - file: dicom
-- file: bibliography
+- file: rtdose
 - file: api
 - file: changelog
