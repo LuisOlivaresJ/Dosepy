@@ -1,7 +1,6 @@
-"""This module contains tools to calculate Biological Equivalent Dose"""
+"""This module contains tools to calculate dose volume histograms (DVH)."""
 
 from pathlib import Path
-from turtle import title
 
 import numpy as np
 import SimpleITK as sitk
@@ -136,75 +135,6 @@ def load_structures(path_to_file: str) -> StructureSet:
     return StructureSet(ds=ds)
 
 
-def eqd2(
-    dose_distribution: sitk.Image,
-    fractions: int | float,
-    structures: FileDataset,
-    alpha_beta: dict) -> sitk.Image:
-    """
-    Equivalent dose in 2 Gy per fraction calculation for every boxel.
-
-    Parameters
-    ----------
-    dose_distribution : sitk.Image
-        A SimpleITK image representing the dose distribution.
-    fractions : float
-        The number of fractions in the treatment.
-    structures : FileDataset
-        A pydicom FileDataset object representing the DICOM RTSTRUCT file.
-    alpha_beta : dict
-        A dictionary with structure names as keys and their corresponding alpha/beta ratios as values.
-
-    Returns
-    -------
-    SimpleITK.Image
-        Dose distribution in EQD2Gy
-
-    Note
-    ----
-    The equivalent dose is calculated using the formula:
-
-    EQD2 = D * (d + alpha_beta) / (2 + alpha_beta), 
-    where D is the total dose, d is the dose per fraction (D/number_fractions) 
-    and alpha_beta is the alpha/beta ratio.
-
-    EQD2 represents an equivalent radiation dose (EQD2) that would have the same biological 
-    effect as a standard fractionation schedule of 2 Gy per fraction.
-    """
-
-    # Check if dose is a valid sitk.Image object
-    if not isinstance(dose_distribution, sitk.Image):
-        raise ValueError(f"Invalid parameter for dose. It has to be a SimpleITK.Image")
-    # Check if alpha_beta is a number
-    if not isinstance(alpha_beta, dict):
-        raise ValueError(f"Invalid parameter for alpha_beta. It has to be a dictionary")
-    # Check if alpha_beta is a valid number, for every value in the dictionary
-    for structure, alpha_beta_value in alpha_beta.items():
-        if not isinstance(alpha_beta_value, (int, float)):
-            raise ValueError(f"Invalid parameter for alpha_beta. It has to be a number for structure {structure}")
-        # Check if alpha_beta has a value between 1 and 15
-        if not 1 <= alpha_beta_value <= 15:
-            raise ValueError(f"Invalid aplha_beta parameter for structure {structure}. It has to be between 1 and 15")
-    # Check if number_fractions is a valid number
-    if not isinstance(fractions, (int, float)):
-        raise ValueError(f"Invalid parameter for number_fractions. It has to be a number")
-    # Check if number_fractions is a valid integer
-    if fractions % 1 != 0:
-        raise ValueError(f"Invalid parameter for number_fractions. It has to be an integer")
-
-    # Image as numpy array
-    dose_array = sitk.GetArrayFromImage(dose_distribution)
-
-    # EQD2 calculation
-    dose_eqd2_array = dose_array * (dose_array/fractions + alpha_beta) / (2 + alpha_beta)
-    
-    # Back to SimpleITK
-    dose_eqd2 = sitk.GetImageFromArray(dose_eqd2_array)
-    dose_eqd2.CopyInformation(dose_distribution)
-
-    return dose_eqd2
-
-
 def get_dose_plane_by_coordinate(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
@@ -322,6 +252,10 @@ def get_2D_mask_by_coordinates_and_image_shape(
 
 
 def get_dose_in_structure_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> np.ndarray:
+    
+    # Check that dose_2D is a SimpleITK image
+    if not isinstance(dose_2D, sitk.Image):
+        raise TypeError("dose_2D must be a SimpleITK.Image object.")
     # Check dose_2D dimension
     if dose_2D.GetDimension() != 2:
         raise ValueError("dose_2D must be a 2D SimpleITK.Image object.")
@@ -332,9 +266,7 @@ def get_dose_in_structure_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray)
     # Check that the array of coordinates has the right shape
     if not coordinates.shape[1] == 3:
         raise ValueError("coordinates must be a 2D array with shape (N, 3), where N is the number of points.")
-    # Check that dose_2D is a SimpleITK image
-    if not isinstance(dose_2D, sitk.Image):
-        raise TypeError("dose_2D must be a SimpleITK.Image object.")
+
     
     mask = get_2D_mask_by_coordinates_and_image_shape(coordinates, dose_2D)
     dose_values = sitk.GetArrayFromImage(dose_2D)[mask]
@@ -428,7 +360,7 @@ def plot_dvh(dose_in_structure: np.ndarray):
         ]
     )
     fig.update_layout(
-        title_text='DVH', # title of plot
+        #title_text='DVH', # title of plot
         xaxis_title_text='Dose [Gy]', # xaxis label
         yaxis_title_text='Volume [%]', # yaxis label
     )
