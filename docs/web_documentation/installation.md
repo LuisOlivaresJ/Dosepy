@@ -3,7 +3,7 @@
 If you are working with Python packages (for example Dosepy), it is a good practice to create virtual environments for your different applications to avoid python-package dependency conflicts. To do that, first we need to install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) (a Python package manager). Once installed, open *Anaconda Prompt* (a black window) and write the following commands:
 
 ```python
-conda create -n myenv python=3.11
+conda create -n myenv python=3.12
 conda activate myenv 
 pip install Dosepy
 ```
@@ -14,7 +14,7 @@ pip install Dosepy
 
 For more information about environments, [see this guide](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#).
 
-## Open Dosepy the GUI application
+## Open Dosepy GUI application
 
 > Note:
 > In the next version, the GUI will be removed to migrate to a web application.

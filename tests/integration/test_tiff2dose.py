@@ -19,7 +19,7 @@ def cal_center():
     cal = LUT(cal_image)
     cal.set_central_rois(size=(16, 8))
     cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
-    cal.plot_rois()
+    #cal.plot_rois()
     cal.compute_central_lut(filter = 5)
 
     return cal
@@ -30,7 +30,7 @@ def cal_lateral_without_profile():
     cal = LUT(cal_image)
     cal.set_central_rois(size=(16, 8))
     cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
-    cal.plot_rois()
+    #cal.plot_rois()
     cal.compute_lateral_lut(filter = 5)
 
     return cal
@@ -41,7 +41,7 @@ def cal_lateral_with_profile():
     cal = LUT(cal_image)
     cal.set_central_rois(size = (180, 8))
     cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
-    cal.plot_rois()
+    #cal.plot_rois()
     cal.set_beam_profile("/media/luis/TOMO/Tiff Films/BeamProfile.csv")
     cal.compute_lateral_lut(filter = 5)
 
