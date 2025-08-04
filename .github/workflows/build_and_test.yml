@@ -28,6 +28,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Build
+      run: |
+        # NOTE: put your own distribution build steps here.
+        python -m pip install build
+        python -m build
+        cd dist
+        python -m pip install *.tar.gz
     - name: Test with pytest
       run: |
         pytest
