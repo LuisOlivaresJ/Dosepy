@@ -18,6 +18,7 @@ src/Dosepy/config/settings.toml
 src/Dosepy.egg-info
 src/Dosepy/__pycache__
 debugging.py
+tests/unit/fixtures/tiff_files
 tests/__pycache__
 tests/unit/__pycache__
 __pycache__/app.cpython-310.pyc

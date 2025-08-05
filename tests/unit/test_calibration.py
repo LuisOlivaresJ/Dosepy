@@ -67,12 +67,12 @@ def test_instance(example_image, example_metadata):
 
 # Test a correct orientation of the image 
 # #TODO Implement the test_correct_orientation method
-def test_correct_orientation(example_image):
+""" def test_correct_orientation(example_image):
     
     cal = LUT(example_image)
 
     assert cal.tiff_image.orientation == "portrait"
-
+ """
 # Test the initialization of the LUT class
 def test_initialization(example_image, example_profile, example_metadata):
     

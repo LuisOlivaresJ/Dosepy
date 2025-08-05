@@ -43,6 +43,7 @@ dependencies = [
   "plotly>=6.0.1",
   "nbformat>=5.10.4",
   "simpleitk>=2.5.2",
+  "gdown>=5.2.0",
 ]
 [project.urls]
 homepage = "https://dosepy.readthedocs.io/en/latest/intro.html"
