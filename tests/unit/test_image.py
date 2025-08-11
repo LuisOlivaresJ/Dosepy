@@ -14,6 +14,7 @@ from skimage.measure import label
 import numpy as np
 import pytest
 import os
+import gdown
 
 cwd = Path(__file__).parent
 
@@ -202,10 +203,44 @@ def get_file_paths(directory: str, type: str) -> list[str]:
 
     return file_paths
 
+# One film per file, 2 films per dose
+cal_files = {
+    "tests/unit/fixtures/tiff_files/individual/Cal200_D001.tif": "1wfTgGyAaW_jtoeXH07meOeS9gMMcRzxH",
+    "tests/unit/fixtures/tiff_files/individual/Cal200_D002.tif": "1bDKaWkrQMvVSHrJ-3lY0EujO0wpuBmjt",
+    "tests/unit/fixtures/tiff_files/individual/Cal400_D001.tif": "1ZXqNXonmsyGS3VjieSdMGJhmAos-iTPY",
+    "tests/unit/fixtures/tiff_files/individual/Cal400_D002.tif": "1tvIooa5-1WjKrUct2BOBIau05D3BRKVl",
+    "tests/unit/fixtures/tiff_files/individual/Cal500_D001.tif": "1RAMTOoWo4Lput1foHw98v-N7_JhliM8p",
+    "tests/unit/fixtures/tiff_files/individual/Cal500_D002.tif": "1H-i3Sn2TDQNlUzsRvsU7Ro7fo27V1x3-",
+    "tests/unit/fixtures/tiff_files/individual/Cal600D001.tif": "1VtztK-FgRlPUPVKXwJOXWYAWRJGQ_eQq",
+    "tests/unit/fixtures/tiff_files/individual/Cal600D002.tif": "12ljGw-Rk63ITiSRzZdai1QifCXH8sFcw",
+    "tests/unit/fixtures/tiff_files/individual/Cal700D001.tif": "10M6gvlf3NRjem--mzinEDnR7B3SReYlC",
+    "tests/unit/fixtures/tiff_files/individual/Cal700D002.tif": "1qdFrlp6yf_4gEu4C5kOM-RtzXo3X990o",
+    "tests/unit/fixtures/tiff_files/individual/Cal800D001.tif": "1jBS_-UTNA90wfeb3MJFlUfkUb7AMboeO",
+    "tests/unit/fixtures/tiff_files/individual/Cal800D002.tif": "1lm66v8Q0GqGRMaoHTgt0JWTvfe1zaElz",
+    "tests/unit/fixtures/tiff_files/individual/Cal900D001.tif": "1acU_DuKxLbbDpAORcoWpBQy77rNCc1rj",
+    "tests/unit/fixtures/tiff_files/individual/Cal900D002.tif": "1a3PUzHcbCCuNbxR7syxjAgW2IHQRbs-2",
+    "tests/unit/fixtures/tiff_files/individual/Cal1000D001.tif": "1Qh50WtJNowXOhQHb4yejoqR18io8l9jr",
+    "tests/unit/fixtures/tiff_files/individual/Cal1000D002.tif": "12iYrg61OvMHFePpzk6RXx3hdrtxLLAj3",
+    "tests/unit/fixtures/tiff_files/individual/sumergidaD001.tif": "1rRf9jYf4a97XpMan6esq4a29WAbU_Qou",
+    "tests/unit/fixtures/tiff_files/individual/sumergidaD002.tif": "14dfZsRcqKdpZ16QDpHnLgZupcOL_sJdl",
+}
+os.makedirs("tests/unit/fixtures/tiff_files/individual/", exist_ok=True)
+for filename, file_id in cal_files.items():
+    if not os.path.exists(filename):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        print(f"Downloading {filename}...")
+        gdown.download(url, filename, quiet=False)
+    else:
+        print(f"{filename} aldready exists.")
+
+ver_files = [file for file in cal_files.keys()]
+
+
 
 # Test average_tiff_images function using 18 files
 def test_average_tiff_images_with_path_as_str():
-    path_to_folder = "/media/luis/TOMO/Dosepy/BQT_INCAN/Cal_Der/"
+
+    path_to_folder = "tests/unit/fixtures/tiff_files/individual/"
 
     # Colocar en una lista el path a los archivos en el folder
     path_to_files = get_file_paths(path_to_folder, type="str")
@@ -224,7 +259,8 @@ def test_average_tiff_images_with_path_as_str():
 
 # Test average_tiff_images using path as pathlib.PosixPath
 def test_average_tiff_images_with_path_as_PosixPath():
-    path_to_folder = "/media/luis/TOMO/Dosepy/BQT_INCAN/Cal_Der/"
+    
+    path_to_folder = "tests/unit/fixtures/tiff_files/individual/"
 
     path_to_files = get_file_paths(path_to_folder, type="posix_path")
 
