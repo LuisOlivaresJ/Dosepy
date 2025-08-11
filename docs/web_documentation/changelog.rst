@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.11.1 (AUG-2025)
+-------------------
+
+Improvements
+^^^^^^^^^^^^
+
+* Moving files used for testing to the cloud in order to use GitHub actions for CI.
+
 v 0.11.0 (JUL-2025)
 -------------------
 New Features
