@@ -246,3 +246,23 @@ def test_get_dose_body():
         body_coordinates)
         
     assert pytest.approx(np.mean(dose_body), abs=0.1) == 0.67  # Mean dose in the BODY structure given by Eclipse V16
+
+
+
+# Test pydicom_to_simpleitk
+###########################
+
+# Test: Convert a valid pydicom Dataset to SimpleITK Image
+# Reference values are based on the RTDose_3D.dcm file
+def test_pydicom_to_simpleitk_valid():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
+    sitk_image = rtdose.pydicom_to_simpleitk(ds)
+    assert isinstance(sitk_image, sitk.Image)
+    assert sitk_image.GetDimension() == 3
+    assert sitk_image.GetSize() == (102, 90, 60)
+    assert sitk_image.GetSpacing() == (2, 2, 2)
+    assert sitk_image.GetOrigin() == (-92.9, -328.3, -59.0)
+    
+    mean_dose = np.mean(sitk.GetArrayFromImage(sitk_image[:,:,30]))
+    assert pytest.approx(mean_dose, abs = 0.1) == 2.05
+

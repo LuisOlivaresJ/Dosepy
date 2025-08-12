@@ -83,6 +83,57 @@ class StructureSet:
         pass
 
 
+def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
+    """
+    Convert a pydicom FileDataset to a SimpleITK Image.
+
+    Parameters
+    ----------
+    ds : pydicom.FileDataset
+        The pydicom FileDataset to convert.
+
+    Returns
+    -------
+    sitk.Image
+        The converted SimpleITK Image.
+    
+    Notes
+    -----
+    Dose distribution is represented by a SimpleITK.Image.
+    """
+
+    # Check if the tag '3004|000E' (DoseGridScaling) exists in the metadata
+    if not 'DoseGridScaling' in ds:
+        raise ValueError("The DICOM file does not contain the required metadata tag DoseGridScaling (3004|000e).")
+
+    # Convert pydicom FileDataset to SimpleITK Image.
+
+    array = pydicom.pixels.pixel_array(ds).astype(np.float64)
+    img = sitk.GetImageFromArray(array)
+
+    # Set image origin, spacing, and direction from DICOM metadata
+    img.SetOrigin((
+        float(ds.ImagePositionPatient[0]),
+        float(ds.ImagePositionPatient[1]),
+        float(ds.ImagePositionPatient[2])
+    ))
+    img.SetSpacing((
+        float(ds.PixelSpacing[0]),
+        float(ds.PixelSpacing[1]),
+        float(ds.PixelSpacing[1])  # Assuming isotropic spacing in z-direction
+    ))
+    img.SetDirection((
+        float(ds.ImageOrientationPatient[0]), float(ds.ImageOrientationPatient[1]), float(ds.ImageOrientationPatient[2]),
+        float(ds.ImageOrientationPatient[3]), float(ds.ImageOrientationPatient[4]), float(ds.ImageOrientationPatient[5]),
+        0.0, 0.0, 1.0
+    ))
+
+    # Convert image to a dose distribution
+    dose = img * float(ds.DoseGridScaling)
+
+    return dose
+
+
 def load_dose(path_to_file: str | Path) -> sitk.Image:
     """
     Load a dose distribution from a DICOM file.
@@ -251,7 +302,9 @@ def get_2D_mask_by_coordinates_and_image_shape(
     return mask
 
 
-def get_dose_in_structure_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> np.ndarray:
+def get_dose_in_structure_by_plane(
+        dose_2D: sitk.Image,
+        coordinates: np.ndarray) -> np.ndarray:
     
     # Check that dose_2D is a SimpleITK image
     if not isinstance(dose_2D, sitk.Image):
