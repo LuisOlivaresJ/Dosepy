@@ -151,7 +151,7 @@ def test_invalid_type_number_fractions_parameter_float():
 #------------------------------------
 # Test: Get a dose plane by z coordinate that is not in the dose distribution (interpolation)
 def testget_dose_plane_by_coordinate():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 0.0  # Example z coordinate
     dose_plane = rtdose.get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
     
@@ -160,7 +160,7 @@ def testget_dose_plane_by_coordinate():
 
 # Test get_dose_plane_by_coordinate with invalid z coordinate
 def testget_dose_plane_by_coordinate_invalid_z():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 100.0  # Example z coordinate outside the range of the dose distribution
     
     with pytest.raises(ValueError):
@@ -168,7 +168,7 @@ def testget_dose_plane_by_coordinate_invalid_z():
 
 # Test: Get a dose plane by z coordinate that is in the dose distribution (not interpolation needed)
 def testget_dose_plane_by_coordinate_valid_z():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 1  # Example z coordinate that is in the dose distribution
     dose_plane = rtdose.get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
     
@@ -176,7 +176,7 @@ def testget_dose_plane_by_coordinate_valid_z():
 
 # Test: Give a z_coordinate that is not a number
 def testget_dose_plane_by_coordinate_invalid_z_type():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     
     with pytest.raises(ValueError):
         rtdose.get_dose_plane_by_coordinate(dose_distribution, "invalid_z")
