@@ -185,6 +185,10 @@ def testget_axial_dose_plane_invalid_z_type():
 ## Test get_sagital_dose_plane
 ##############################
 
+# Test without interpolation
+def test_get_sagital_dose_plane():
+    pass
+
 # Test interpolation
 def test_get_sagital_dose_plane_with_interpolation():
     dcm_path = Path(__file__).parent / "fixtures" / "RTDose_3D.dcm"
@@ -199,12 +203,41 @@ def test_get_sagital_dose_plane_with_interpolation():
     reader.LoadPrivateTagsOn()
     reader.ReadImageInformation()
     dose_scaling = float(reader.GetMetaData("3004|000e"))
-
     img = img * dose_scaling
-    coordinate = -31.9  # Example coordinate of slice 30
+
+    coordinate = -32.9  # Coordinate of slice 30
     dose_plane = rtdose.get_sagital_dose_plane(img, coordinate)
 
-    assert pytest.approx(np.mean(sitk.GetArrayFromImage(dose_plane)), abs=0.01) == 0.459  # Mean dose in the slice 30
+    coordinate_interpolation = -31.9  # Example coordinate between slice 30 and 31
+    interpolated_dose_plane = rtdose.get_sagital_dose_plane(img, coordinate_interpolation)
+
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(dose_plane)), abs=0.01) == 0.448
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(interpolated_dose_plane)), abs=0.01) == 0.459
+
+
+## Test get_coronal_dose_plane
+##############################
+
+def test_get_coronal_dose_plane_with_interpolation():
+    dcm_path = Path(__file__).parent / "fixtures" / "RTDose_3D.dcm"
+
+    img = sitk.ReadImage(
+        dcm_path,
+        outputPixelType=sitk.sitkFloat64
+        )
+
+    reader = sitk.ImageFileReader()
+    reader.SetFileName(dcm_path)
+    reader.LoadPrivateTagsOn()
+    reader.ReadImageInformation()
+    dose_scaling = float(reader.GetMetaData("3004|000e"))
+
+    img = img * dose_scaling
+    coordinate = -267.3  # Example coordinate between slice 30 and 31
+    dose_plane = rtdose.get_coronal_dose_plane(img, coordinate)
+
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(dose_plane)), abs=0.01) == 0.449
+
 
 
 ## Test get_2D_mask_by_coordinates_and_image_shape()

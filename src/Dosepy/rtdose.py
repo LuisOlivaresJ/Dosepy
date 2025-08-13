@@ -296,6 +296,51 @@ def get_sagital_dose_plane(
     return interpolated_dose[0, :, :]
 
 
+def get_coronal_dose_plane(
+    dose: sitk.Image,
+    coordinate: float) -> sitk.Image:
+    """Get a 2D dose coronal plane at a specific y-coordinate from a 3D dose distribution.
+    Parameters
+    ----------
+    dose : sitk.Image
+        The 3D dose distribution.
+    coordinate : float
+        The y-coordinate at which to extract the dose plane.
+    Returns
+    -------
+    sitk.Image
+        A 2D dose plane at the specified y-coordinate.
+    """
+    # Check if coordinate is a number
+    if not isinstance(coordinate, (int, float)):
+        raise ValueError(f"Invalid parameter for coordinate. It has to be a number")
+    # Check if coordinate is between coordinates of the dose distribution
+    y_min = dose.GetOrigin()[1]
+    y_max = dose.GetOrigin()[1] + dose.GetHeight() * dose.GetSpacing()[1]
+    if not y_min <= coordinate <= y_max:
+        raise ValueError(
+            f"The coordinate {coordinate} is not between the coordinates of the dose distribution "
+            f"({y_min}, {y_max})."
+        )
+    # Reference image
+    reference_image = sitk.Image(
+        (dose.GetWidth(), 1, dose.GetDepth()),
+        dose.GetPixelIDValue()
+    )
+    reference_image.SetOrigin((dose.GetOrigin()[0], coordinate, dose.GetOrigin()[2]))
+    reference_image.SetDirection(dose.GetDirection())
+    reference_image.SetSpacing(dose.GetSpacing())
+
+    interpolated_dose = sitk.Resample(
+        dose,
+        reference_image,
+        sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
+        sitk.sitkLinear,  # Uses linear interpolation
+    )
+
+    return interpolated_dose[:, 0, :]
+
+
 def get_2D_mask_by_coordinates_and_image_shape(
     coordinates: np.ndarray,
     image: sitk.Image) -> np.ndarray:
