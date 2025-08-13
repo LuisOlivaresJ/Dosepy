@@ -3,6 +3,12 @@
 Changelog
 =========
 
+v 0.12.0 (AUG-2025)
+-------------------
+New Features
+^^^^^^^^^^^^
+* New function in rtdose modulo, pydicom_to_simpleitk(), to transform a pydicom object to SimpleITK.
+
 v 0.11.1 (AUG-2025)
 -------------------
 

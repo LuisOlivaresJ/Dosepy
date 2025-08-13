@@ -186,7 +186,7 @@ def load_structures(path_to_file: str) -> StructureSet:
     return StructureSet(ds=ds)
 
 
-def get_dose_plane_by_coordinate(
+def get_axial_dose_plane(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
     """
@@ -247,6 +247,53 @@ def get_dose_plane_by_coordinate(
     )
     
     return interpolated_dose[:, :, 0]
+
+
+def get_sagital_dose_plane(
+    dose: sitk.Image,
+    coordinate: float) -> sitk.Image:
+    """Get a 2D dose sagital plane at a specific x-coordinate from a 3D dose distribution.
+    Parameters
+    ----------
+    dose : sitk.Image
+        The 3D dose distribution.
+    coordinate : float
+        The x-coordinate at which to extract the dose plane.
+    Returns
+    -------
+    sitk.Image
+        A 2D dose plane at the specified x-coordinate.
+    """
+
+    # Check if coordinate is a number
+    if not isinstance(coordinate, (int, float)):
+        raise ValueError(f"Invalid parameter for coordinate. It has to be a number")
+    # Check if coordinate is between coordinates of the dose distribution
+    x_min = dose.GetOrigin()[0]
+    x_max = dose.GetOrigin()[0] + dose.GetWidth() * dose.GetSpacing()[0]
+    if not x_min <= coordinate <= x_max:
+        raise ValueError(
+            f"The coordinate {coordinate} is not between the coordinates of the dose distribution "
+            f"({x_min}, {x_max})."
+        )
+
+    # Reference image
+    reference_image = sitk.Image(
+        (1, dose.GetHeight(), dose.GetDepth()),
+        dose.GetPixelIDValue()
+    )
+    reference_image.SetOrigin((coordinate, dose.GetOrigin()[1], dose.GetOrigin()[2]))
+    reference_image.SetDirection(dose.GetDirection())
+    reference_image.SetSpacing(dose.GetSpacing())
+
+    interpolated_dose = sitk.Resample(
+        dose,
+        reference_image,
+        sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
+        sitk.sitkLinear,  # Uses linear interpolation
+    )
+    
+    return interpolated_dose[0, :, :]
 
 
 def get_2D_mask_by_coordinates_and_image_shape(
@@ -368,7 +415,7 @@ def get_dose_in_structure(
         
         z_coordinate = slice_coordinates[0, 2]
 
-        dose_2D = get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+        dose_2D = get_axial_dose_plane(dose_distribution, z_coordinate)
         dose_in_structure_in_slice = get_dose_in_structure_by_plane(dose_2D, slice_coordinates)
         dose_in_structure.extend(dose_in_structure_in_slice)
 
