@@ -5,9 +5,11 @@ Changelog
 
 v 0.12.0 (AUG-2025)
 -------------------
+
 New Features
 ^^^^^^^^^^^^
-* New function in rtdose modulo, pydicom_to_simpleitk(), to transform a pydicom object to SimpleITK.
+* New function in rtdose module, pydicom_to_simpleitk(), to transform a pydicom object to SimpleITK.
+* New functions to get sagital and coronal dose planes from 3D dose distributions (RD.dcm file).
 
 v 0.11.1 (AUG-2025)
 -------------------
