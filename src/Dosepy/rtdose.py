@@ -120,7 +120,7 @@ def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
     img.SetSpacing((
         float(ds.PixelSpacing[0]),
         float(ds.PixelSpacing[1]),
-        float(ds.PixelSpacing[1])  # Assuming isotropic spacing in z-direction
+        float(_get_z_spacing_from_dose_as_frames(ds))
     ))
     img.SetDirection((
         float(ds.ImageOrientationPatient[0]), float(ds.ImageOrientationPatient[1]), float(ds.ImageOrientationPatient[2]),
@@ -132,6 +132,24 @@ def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
     dose = img * float(ds.DoseGridScaling)
 
     return dose
+
+
+def _get_z_spacing_from_dose_as_frames(ds: pydicom.FileDataset):
+    # Check if elements in a list have unifrom spacing in z direction
+    if ds["NumberOfFrames"].value < 2:
+        # Trivial case: 0 or 1 element has uniform spacing
+        raise ValueError("The DICOM file must contain at least 2 frames to calculate the z spacing.")
+    # Create a list of offsets
+    offsets = [s for s in ds["GridFrameOffsetVector"]]
+    # Calculate the initial expwcted spacing in z direction
+    z_spacing = offsets[1] - offsets[0]
+    # Iterate through the rest of the list and compare differences
+    for i in range(2, len(offsets)):
+        difference = offsets[i] - offsets[i-1]
+        if difference != z_spacing:
+            raise ValueError("The DICOM file does no have a uniform spacing in z direction")
+        
+    return z_spacing
 
 
 def load_dose(path_to_file: str | Path) -> sitk.Image:

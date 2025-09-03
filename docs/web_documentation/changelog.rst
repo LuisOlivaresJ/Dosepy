@@ -3,6 +3,14 @@
 Changelog
 =========
 
+v 0.12.1 (SEP-2025)
+-------------------
+
+Issue
+^^^^^
+* Physical space between slices in the z-direction, according to the DICOM axis convention, is determined by the "Grid Frame Offset Vector Attribute." For Dosepy, it is essential that this spacing remains uniform.
+
+
 v 0.12.0 (AUG-2025)
 -------------------
 
@@ -30,21 +38,17 @@ v 0.10.2 (APR-2025)
 
 Change
 ^^^^^^
-
 * On Dosepy.tools.gamma.chi, threshold parameter is used on both dose distributions, reference and comparison, to invalidate points for chi analysis.
-
 
 v 0.10.1 (APR-2025)
 -------------------
 
 Issue
 ^^^^^
-
 * DoseConverter class from Tiff2dose module issue on _get_zero_dose_intensity() method. ROI center now uses culumn instead of row of the labeled film.
 
 Change
 ^^^^^^
-
 * load_multiples() method from image module, uses equate_array_size() to cut width by default instead to cut width and height. Useful if zero dose image has a smaller height than film with the dose distribution.
 
 v 0.10.0 (APR-2025)
