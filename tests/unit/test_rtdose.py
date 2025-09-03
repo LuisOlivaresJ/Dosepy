@@ -324,3 +324,15 @@ def test_pydicom_to_simpleitk_valid():
     mean_dose = np.mean(sitk.GetArrayFromImage(sitk_image[:, :, 30]))
     assert pytest.approx(mean_dose, abs = 0.1) == 2.05
 
+# Test helper function _get_z_spacing_from_dose_as_frames
+def test_get_z_spacing_from_dose_as_frames():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
+    z_spacing = rtdose._get_z_spacing_from_dose_as_frames(ds)
+    assert pytest.approx(z_spacing, abs=0.01) == 2.0
+
+# test with a DICOM file with only one frame
+def test_get_z_spacing_from_dose_as_frames_single_frame():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RD_20x20cm2_256x256pix.dcm")
+    with pytest.raises(ValueError):
+        z_spacing = rtdose._get_z_spacing_from_dose_as_frames(ds)
+    
