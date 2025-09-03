@@ -8,7 +8,7 @@ v 0.12.1 (SEP-2025)
 
 Issue
 ^^^^^
-* Physical space between slices in the z-direction, according to the DICOM axis convention, is determined by the "Grid Frame Offset Vector Attribute." For Dosepy, it is essential that this spacing remains uniform.
+* On Dosepy.rtdose pydicom_to_simpleitk() function, physical space between slices in the z-direction, according to the DICOM axis convention, is now determined by the "Grid Frame Offset Vector Attribute." For Dosepy, it is essential that this spacing remains uniform.
 
 
 v 0.12.0 (AUG-2025)

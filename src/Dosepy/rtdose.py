@@ -135,6 +135,10 @@ def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
 
 
 def _get_z_spacing_from_dose_as_frames(ds: pydicom.FileDataset):
+    # Check if array shape is 3D
+    array = pydicom.pixels.pixel_array(ds).astype(np.float64)
+    if len(array.shape) != 3:
+        raise ValueError("The DICOM file does not contain a 3D dose distribution.")
     # Check if elements in a list have unifrom spacing in z direction
     if ds["NumberOfFrames"].value < 2:
         # Trivial case: 0 or 1 element has uniform spacing
