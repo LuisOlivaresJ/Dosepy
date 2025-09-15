@@ -3,6 +3,21 @@
 Changelog
 =========
 
+v 0.12.2 (SEP-2025)
+-------------------
+
+Issue
+^^^^^
+* On tiff2dose module, tiff to dose conversion limits the maximum dose to the maximum dose used for calibration. The previous version used 130% of the maximum dose used for calibration as a limit.
+
+Documentation
+^^^^^^^^^^^^^
+* On gamma module, chi function now specifies that the percentage is respect to the maximum dose of the reference image.
+
+New Features
+^^^^^^^^^^^^
+* Chi function (gamma equivalente), allows to exclude positions where the dose is greater than the maximum dose of the reference dose distribution. Useful to handle the exclusion of positions with film saturation.
+
 v 0.12.1 (SEP-2025)
 -------------------
 
