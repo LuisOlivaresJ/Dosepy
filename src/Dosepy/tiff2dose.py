@@ -395,8 +395,8 @@ class PolynomialDoseConverter(DoseConverter):
         dose_array[dose_array < 0] = 0
         dose_array[np.isnan(dose_array)] = 0
 
-        # Limit maximum dose to 1.3 times the maximum dose used for calibration
-        max_dose = lut.lut.get("nominal_doses")[-1] * 1.3
+        # Limit maximum dose to the maximum dose used for calibration
+        max_dose = lut.lut.get("nominal_doses")[-1]
         dose_array[dose_array > max_dose] = max_dose
 
         return ArrayImage(dose_array, dpi=img.dpi)
@@ -503,8 +503,8 @@ class RationalDoseConverter(DoseConverter):
         dose_array[dose_array < 0] = 0
         dose_array[np.isnan(dose_array)] = 0
 
-        # Limit maximum dose to 1.3 times the maximum dose used for calibration
-        max_dose = lut.lut.get("nominal_doses")[-1] * 1.3
+        # Limit maximum dose to the maximum dose used for calibration
+        max_dose = lut.lut.get("nominal_doses")[-1]
         dose_array[dose_array > max_dose] = max_dose
 
         return ArrayImage(dose_array, dpi=img.dpi)

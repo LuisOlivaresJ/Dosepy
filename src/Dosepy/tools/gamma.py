@@ -1,5 +1,6 @@
 import copy
 
+from narwhals import exclude
 import numpy as np
 from scipy.ndimage import sobel, zoom
 
@@ -20,6 +21,7 @@ def chi(
         dist_ta: float = 3,
         threshold: float = 10,
         interpolate: bool = True,
+        exclude_above: bool = False,
     ) -> np.ndarray:
         """Calculate the chi (analogous to gamma) between the current image (reference) and a comparison image.
         Adapted from pylinac.core.image.
@@ -44,13 +46,22 @@ def chi(
             Must be between 0 and 100.
         interpolate : bool
             True to perfom interpolation (recommended)
+        exclude_above : bool, defatul False
+            If True, positions with dose greater than the maximum dose of the reference 
+            positions are not accounted in the pass rate. Useful to avoid positions where the
+            film saturates.
 
         Returns
         -------
         gamma_map, chi_rate : numpy.ndarray, float
             The calculated chi map and passing rate.
 
+            
+        Notes
+        -----
+        The percentage is respect to the maximum dose of the reference image.
         """
+
         # Error checking
         if not is_close(reference_image.dpmm, comparison_image.dpmm, delta=1):
             raise AttributeError(
@@ -96,9 +107,16 @@ def chi(
 
         chi_map = subtracted_img / denominator
 
-        # Invalidate dose values below threshold
+        # Invalidate positions with dose values below threshold
         chi_map[ref_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
-        chi_map[comp_img.array < threshold/100 * np.max(comp_img.array)] = np.nan
+        chi_map[comp_img.array < threshold/100 * np.max(ref_img.array)] = np.nan
+
+        # Ivalidate positions with dose values greater than the maximum dose 
+        # of the reference distribution. Useful to avoid positions where the 
+        # film saturates.
+        if exclude_above:
+            chi_map[comp_img.array > np.max(ref_img.array)] = np.nan
+
 
         # Number of values that are not np.nan
         total_points = np.sum(~np.isnan(chi_map))

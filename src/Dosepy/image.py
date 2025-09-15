@@ -1150,7 +1150,7 @@ class ArrayImage(BaseImage):
         ## Check if the physical dimensions are the same within a tolerance
         if not math.isclose(self.physical_shape[0], reference.physical_shape[0], abs_tol = 1./reference.dpmm/2):
             raise AttributeError(
-                "The physical dimensions of the images are not the same."
+                f"The physical dimensions of the images are not the same. The shapes are {self.physical_shape[0]} and {reference.physical_shape[0]}"
                 )
 
         # Average pixels to reduce resolution
