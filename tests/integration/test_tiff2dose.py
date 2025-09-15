@@ -1,17 +1,56 @@
 import pytest
 import numpy as np
+import os
+import gdown
 
 from Dosepy.calibration import LUT
 from Dosepy.image import load, load_multiples
 from Dosepy.tiff2dose import Tiff2DoseM
 
-# Calibration files with optical filters
+
+# Calibration files with optical filters.
 # Doses [0, 0.5, 1, 2, 4, 6, 8, 10]
-files = [
-    "/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_001.tif",
-    "/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_002.tif",
-    "/media/luis/TOMO/Tiff Films/EBT4/6NOV24_CAL/CAL20241106_003.tif",
-]
+# The files are downloaded from Google Drive
+
+TIFF_FILES = {
+    "tests/unit/fixtures/tiff_files/CAL20241106_001.tif": "104lJjZ4KWi4Y7KyIWb8CUaIbun2BNBBN",
+    "tests/unit/fixtures/tiff_files/CAL20241106_002.tif": "19vHQk_Bf3V8VKQJuZfU6Y5hMv_U8PZRI",
+    "tests/unit/fixtures/tiff_files/CAL20241106_003.tif": "1-zsLpqKF8j3a7YjgqUdxErE2Bq-MncYW"
+}
+
+os.makedirs("tests/unit/fixtures/tiff_files/", exist_ok=True)
+for filename, file_id in TIFF_FILES.items():
+    if not os.path.exists(filename):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        print(f"Downloading {filename}...")
+        gdown.download(url, filename, quiet=False)
+    else:
+        print(f"{filename} aldready exists.")
+
+files = [file for file in TIFF_FILES.keys()]
+
+VER_FILES = {
+    "tests/unit/fixtures/tiff_files/Ver_050dpi20241106_001.tif": "1U9RVokrM7U0swCATbKo9GiQjLyXJLh1o",
+    "tests/unit/fixtures/tiff_files/Ver_050dpi20241106_002.tif": "1dRC4DTc__HuspOrTL2vyHxv59f23j-R3",
+    "tests/unit/fixtures/tiff_files/Ver_050dpi20241106_003.tif": "1TsGLavGMBAMBfB_vgoY-shj_ewpCEr2s",
+}
+
+os.makedirs("tests/unit/fixtures/tiff_files/", exist_ok=True)
+for filename, file_id in VER_FILES.items():
+    if not os.path.exists(filename):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        print(f"Downloading {filename}...")
+        gdown.download(url, filename, quiet=False)
+    else:
+        print(f"{filename} aldready exists.")
+
+ver_files = [file for file in VER_FILES.keys()]
+
+@pytest.fixture
+def verif_img():
+
+    return load_multiples(ver_files)
+
 
 @pytest.fixture
 def cal_center():
@@ -35,6 +74,19 @@ def cal_lateral_without_profile():
 
     return cal
 
+
+beam_file = "tests/unit/fixtures/BeamProfile.csv"
+beam_file_id = "1kRXQwvN50_8b9UVAAPmpqQep0_g8ML7M"
+
+os.makedirs("tests/unit/fixtures/", exist_ok=True)
+if not os.path.exists(beam_file):
+    url = f"https://drive.google.com/uc?id={beam_file_id}"
+    print(f"Downloading {beam_file}...")
+    gdown.download(url, beam_file, quiet=False)
+else:
+    print(f"{beam_file} aldready exists.")
+
+
 @pytest.fixture
 def cal_lateral_with_profile():
     cal_image = load_multiples(files)
@@ -42,20 +94,10 @@ def cal_lateral_with_profile():
     cal.set_central_rois(size = (180, 8))
     cal.set_doses([0, 0.5, 1, 2, 4, 6, 8, 10])
     #cal.plot_rois()
-    cal.set_beam_profile("/media/luis/TOMO/Tiff Films/BeamProfile.csv")
+    cal.set_beam_profile(beam_file)
     cal.compute_lateral_lut(filter = 5)
 
-
     return cal
-
-@pytest.fixture
-def verif_img():
-    files = [
-        "/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_001.tif",
-        "/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_002.tif",
-        "/media/luis/TOMO/Tiff Films/EBT4/Verif 15x15/Ver_050dpi20241106_003.tif",
-    ]
-    return load_multiples(files)
 
 
 ##################################################################

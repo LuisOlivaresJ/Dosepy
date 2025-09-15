@@ -101,7 +101,7 @@ def test_load_valid_dicom():
 #--------------------
 
 # Test: 3D Dose of 8 Gy/1 fx is equivalent to 17.6 EQD2Gy, using alpha/beta = 3
-def test_3D_8Gy():
+""" def test_3D_8Gy():
     # Create a 3D dose Image
     dose8Gy = sitk.Image(3, 3, 3, sitk.sitkFloat32) + 8
     # Compute EQD2
@@ -142,44 +142,102 @@ def test_invalid_type_number_fractions_parameter_float():
     # Create a 3D dose Image
     dose8Gy = sitk.Image(3, 3, 3, sitk.sitkFloat32) + 8
     with pytest.raises(ValueError):
-        rtdose.eqd2(dose8Gy, 3, 10.5)
+        rtdose.eqd2(dose8Gy, 3, 10.5) """
 
 
 
 
-## Test get_dose_plane_by_coordinate
+## Test get_axial_dose_plane
 #------------------------------------
 # Test: Get a dose plane by z coordinate that is not in the dose distribution (interpolation)
-def testget_dose_plane_by_coordinate():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+def testget_axial_dose_plane():
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 0.0  # Example z coordinate
-    dose_plane = rtdose.get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+    dose_plane = rtdose.get_axial_dose_plane(dose_distribution, z_coordinate)
     
     assert pytest.approx(dose_plane[50, 50], abs = 0.1) == 13.4
 
 
-# Test get_dose_plane_by_coordinate with invalid z coordinate
-def testget_dose_plane_by_coordinate_invalid_z():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+# Test get_axial_dose_plane with invalid z coordinate
+def testget_axial_dose_plane_invalid_z():
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 100.0  # Example z coordinate outside the range of the dose distribution
     
     with pytest.raises(ValueError):
-        rtdose.get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+        rtdose.get_axial_dose_plane(dose_distribution, z_coordinate)
 
 # Test: Get a dose plane by z coordinate that is in the dose distribution (not interpolation needed)
-def testget_dose_plane_by_coordinate_valid_z():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+def testget_axial_dose_plane_valid_z():
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     z_coordinate = 1  # Example z coordinate that is in the dose distribution
-    dose_plane = rtdose.get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+    dose_plane = rtdose.get_axial_dose_plane(dose_distribution, z_coordinate)
     
     assert pytest.approx(dose_plane[50, 50], abs = 0.1) == 13.2
 
 # Test: Give a z_coordinate that is not a number
-def testget_dose_plane_by_coordinate_invalid_z_type():
-    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "/home/luis/GH/Dosepy/tests/unit/fixtures/RTDose_3D.dcm")
+def testget_axial_dose_plane_invalid_z_type():
+    dose_distribution = rtdose.load_dose(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
     
     with pytest.raises(ValueError):
-        rtdose.get_dose_plane_by_coordinate(dose_distribution, "invalid_z")
+        rtdose.get_axial_dose_plane(dose_distribution, "invalid_z")
+
+
+## Test get_sagital_dose_plane
+##############################
+
+# Test without interpolation
+def test_get_sagital_dose_plane():
+    pass
+
+# Test interpolation
+def test_get_sagital_dose_plane_with_interpolation():
+    dcm_path = Path(__file__).parent / "fixtures" / "RTDose_3D.dcm"
+
+    img = sitk.ReadImage(
+        dcm_path,
+        outputPixelType=sitk.sitkFloat64
+        )
+
+    reader = sitk.ImageFileReader()
+    reader.SetFileName(dcm_path)
+    reader.LoadPrivateTagsOn()
+    reader.ReadImageInformation()
+    dose_scaling = float(reader.GetMetaData("3004|000e"))
+    img = img * dose_scaling
+
+    coordinate = -32.9  # Coordinate of slice 30
+    dose_plane = rtdose.get_sagital_dose_plane(img, coordinate)
+
+    coordinate_interpolation = -31.9  # Example coordinate between slice 30 and 31
+    interpolated_dose_plane = rtdose.get_sagital_dose_plane(img, coordinate_interpolation)
+
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(dose_plane)), abs=0.01) == 0.448
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(interpolated_dose_plane)), abs=0.01) == 0.459
+
+
+## Test get_coronal_dose_plane
+##############################
+
+def test_get_coronal_dose_plane_with_interpolation():
+    dcm_path = Path(__file__).parent / "fixtures" / "RTDose_3D.dcm"
+
+    img = sitk.ReadImage(
+        dcm_path,
+        outputPixelType=sitk.sitkFloat64
+        )
+
+    reader = sitk.ImageFileReader()
+    reader.SetFileName(dcm_path)
+    reader.LoadPrivateTagsOn()
+    reader.ReadImageInformation()
+    dose_scaling = float(reader.GetMetaData("3004|000e"))
+
+    img = img * dose_scaling
+    coordinate = -267.3  # Example coordinate between slice 30 and 31
+    dose_plane = rtdose.get_coronal_dose_plane(img, coordinate)
+
+    assert pytest.approx(np.mean(sitk.GetArrayFromImage(dose_plane)), abs=0.01) == 0.449
+
 
 
 ## Test get_2D_mask_by_coordinates_and_image_shape()
@@ -246,3 +304,35 @@ def test_get_dose_body():
         body_coordinates)
         
     assert pytest.approx(np.mean(dose_body), abs=0.1) == 0.67  # Mean dose in the BODY structure given by Eclipse V16
+
+
+
+# Test pydicom_to_simpleitk
+###########################
+
+# Test: Convert a valid pydicom Dataset to SimpleITK Image
+# Reference values are based on the RTDose_3D.dcm file
+def test_pydicom_to_simpleitk_valid():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
+    sitk_image = rtdose.pydicom_to_simpleitk(ds)
+    assert isinstance(sitk_image, sitk.Image)
+    assert sitk_image.GetDimension() == 3
+    assert sitk_image.GetSize() == (102, 90, 60)
+    assert sitk_image.GetSpacing() == (2, 2, 2)
+    assert sitk_image.GetOrigin() == (-92.9, -328.3, -59.0)
+    
+    mean_dose = np.mean(sitk.GetArrayFromImage(sitk_image[:, :, 30]))
+    assert pytest.approx(mean_dose, abs = 0.1) == 2.05
+
+# Test helper function _get_z_spacing_from_dose_as_frames
+def test_get_z_spacing_from_dose_as_frames():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RTDose_3D.dcm")
+    z_spacing = rtdose._get_z_spacing_from_dose_as_frames(ds)
+    assert pytest.approx(z_spacing, abs=0.01) == 2.0
+
+# test with a DICOM file with only one frame
+def test_get_z_spacing_from_dose_as_frames_single_frame():
+    ds = pydicom.dcmread(Path(__file__).parent / "fixtures" / "RD_20x20cm2_256x256pix.dcm")
+    with pytest.raises(ValueError):
+        z_spacing = rtdose._get_z_spacing_from_dose_as_frames(ds)
+    

@@ -83,6 +83,79 @@ class StructureSet:
         pass
 
 
+def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
+    """
+    Convert a pydicom FileDataset to a SimpleITK Image.
+
+    Parameters
+    ----------
+    ds : pydicom.FileDataset
+        The pydicom FileDataset to convert.
+
+    Returns
+    -------
+    sitk.Image
+        The converted SimpleITK Image.
+    
+    Notes
+    -----
+    Dose distribution is represented by a SimpleITK.Image.
+    """
+
+    # Check if the tag '3004|000E' (DoseGridScaling) exists in the metadata
+    if not 'DoseGridScaling' in ds:
+        raise ValueError("The DICOM file does not contain the required metadata tag DoseGridScaling (3004|000e).")
+
+    # Convert pydicom FileDataset to SimpleITK Image.
+
+    array = pydicom.pixels.pixel_array(ds).astype(np.float64)
+    img = sitk.GetImageFromArray(array)
+
+    # Set image origin, spacing, and direction from DICOM metadata
+    img.SetOrigin((
+        float(ds.ImagePositionPatient[0]),
+        float(ds.ImagePositionPatient[1]),
+        float(ds.ImagePositionPatient[2])
+    ))
+    img.SetSpacing((
+        float(ds.PixelSpacing[0]),
+        float(ds.PixelSpacing[1]),
+        float(_get_z_spacing_from_dose_as_frames(ds))
+    ))
+    img.SetDirection((
+        float(ds.ImageOrientationPatient[0]), float(ds.ImageOrientationPatient[1]), float(ds.ImageOrientationPatient[2]),
+        float(ds.ImageOrientationPatient[3]), float(ds.ImageOrientationPatient[4]), float(ds.ImageOrientationPatient[5]),
+        0.0, 0.0, 1.0
+    ))
+
+    # Convert image to a dose distribution
+    dose = img * float(ds.DoseGridScaling)
+
+    return dose
+
+
+def _get_z_spacing_from_dose_as_frames(ds: pydicom.FileDataset):
+    # Check if array shape is 3D
+    array = pydicom.pixels.pixel_array(ds).astype(np.float64)
+    if len(array.shape) != 3:
+        raise ValueError("The DICOM file does not contain a 3D dose distribution.")
+    # Check if elements in a list have unifrom spacing in z direction
+    if ds["NumberOfFrames"].value < 2:
+        # Trivial case: 0 or 1 element has uniform spacing
+        raise ValueError("The DICOM file must contain at least 2 frames to calculate the z spacing.")
+    # Create a list of offsets
+    offsets = [s for s in ds["GridFrameOffsetVector"]]
+    # Calculate the initial expwcted spacing in z direction
+    z_spacing = offsets[1] - offsets[0]
+    # Iterate through the rest of the list and compare differences
+    for i in range(2, len(offsets)):
+        difference = offsets[i] - offsets[i-1]
+        if difference != z_spacing:
+            raise ValueError("The DICOM file does no have a uniform spacing in z direction")
+        
+    return z_spacing
+
+
 def load_dose(path_to_file: str | Path) -> sitk.Image:
     """
     Load a dose distribution from a DICOM file.
@@ -135,7 +208,7 @@ def load_structures(path_to_file: str) -> StructureSet:
     return StructureSet(ds=ds)
 
 
-def get_dose_plane_by_coordinate(
+def get_axial_dose_plane(
     dose: sitk.Image,
     z_coordinate: float) -> sitk.Image:
     """
@@ -198,6 +271,98 @@ def get_dose_plane_by_coordinate(
     return interpolated_dose[:, :, 0]
 
 
+def get_sagital_dose_plane(
+    dose: sitk.Image,
+    coordinate: float) -> sitk.Image:
+    """Get a 2D dose sagital plane at a specific x-coordinate from a 3D dose distribution.
+    Parameters
+    ----------
+    dose : sitk.Image
+        The 3D dose distribution.
+    coordinate : float
+        The x-coordinate at which to extract the dose plane.
+    Returns
+    -------
+    sitk.Image
+        A 2D dose plane at the specified x-coordinate.
+    """
+
+    # Check if coordinate is a number
+    if not isinstance(coordinate, (int, float)):
+        raise ValueError(f"Invalid parameter for coordinate. It has to be a number")
+    # Check if coordinate is between coordinates of the dose distribution
+    x_min = dose.GetOrigin()[0]
+    x_max = dose.GetOrigin()[0] + dose.GetWidth() * dose.GetSpacing()[0]
+    if not x_min <= coordinate <= x_max:
+        raise ValueError(
+            f"The coordinate {coordinate} is not between the coordinates of the dose distribution "
+            f"({x_min}, {x_max})."
+        )
+
+    # Reference image
+    reference_image = sitk.Image(
+        (1, dose.GetHeight(), dose.GetDepth()),
+        dose.GetPixelIDValue()
+    )
+    reference_image.SetOrigin((coordinate, dose.GetOrigin()[1], dose.GetOrigin()[2]))
+    reference_image.SetDirection(dose.GetDirection())
+    reference_image.SetSpacing(dose.GetSpacing())
+
+    interpolated_dose = sitk.Resample(
+        dose,
+        reference_image,
+        sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
+        sitk.sitkLinear,  # Uses linear interpolation
+    )
+    
+    return interpolated_dose[0, :, :]
+
+
+def get_coronal_dose_plane(
+    dose: sitk.Image,
+    coordinate: float) -> sitk.Image:
+    """Get a 2D dose coronal plane at a specific y-coordinate from a 3D dose distribution.
+    Parameters
+    ----------
+    dose : sitk.Image
+        The 3D dose distribution.
+    coordinate : float
+        The y-coordinate at which to extract the dose plane.
+    Returns
+    -------
+    sitk.Image
+        A 2D dose plane at the specified y-coordinate.
+    """
+    # Check if coordinate is a number
+    if not isinstance(coordinate, (int, float)):
+        raise ValueError(f"Invalid parameter for coordinate. It has to be a number")
+    # Check if coordinate is between coordinates of the dose distribution
+    y_min = dose.GetOrigin()[1]
+    y_max = dose.GetOrigin()[1] + dose.GetHeight() * dose.GetSpacing()[1]
+    if not y_min <= coordinate <= y_max:
+        raise ValueError(
+            f"The coordinate {coordinate} is not between the coordinates of the dose distribution "
+            f"({y_min}, {y_max})."
+        )
+    # Reference image
+    reference_image = sitk.Image(
+        (dose.GetWidth(), 1, dose.GetDepth()),
+        dose.GetPixelIDValue()
+    )
+    reference_image.SetOrigin((dose.GetOrigin()[0], coordinate, dose.GetOrigin()[2]))
+    reference_image.SetDirection(dose.GetDirection())
+    reference_image.SetSpacing(dose.GetSpacing())
+
+    interpolated_dose = sitk.Resample(
+        dose,
+        reference_image,
+        sitk.Transform(3, sitk.sitkIdentity),  # Do not apply any transformation
+        sitk.sitkLinear,  # Uses linear interpolation
+    )
+
+    return interpolated_dose[:, 0, :]
+
+
 def get_2D_mask_by_coordinates_and_image_shape(
     coordinates: np.ndarray,
     image: sitk.Image) -> np.ndarray:
@@ -251,7 +416,9 @@ def get_2D_mask_by_coordinates_and_image_shape(
     return mask
 
 
-def get_dose_in_structure_by_plane(dose_2D: sitk.Image, coordinates: np.ndarray) -> np.ndarray:
+def get_dose_in_structure_by_plane(
+        dose_2D: sitk.Image,
+        coordinates: np.ndarray) -> np.ndarray:
     
     # Check that dose_2D is a SimpleITK image
     if not isinstance(dose_2D, sitk.Image):
@@ -315,7 +482,7 @@ def get_dose_in_structure(
         
         z_coordinate = slice_coordinates[0, 2]
 
-        dose_2D = get_dose_plane_by_coordinate(dose_distribution, z_coordinate)
+        dose_2D = get_axial_dose_plane(dose_distribution, z_coordinate)
         dose_in_structure_in_slice = get_dose_in_structure_by_plane(dose_2D, slice_coordinates)
         dose_in_structure.extend(dose_in_structure_in_slice)
 
