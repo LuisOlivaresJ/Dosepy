@@ -1,6 +1,5 @@
 import copy
 
-from narwhals import exclude
 import numpy as np
 from scipy.ndimage import sobel, zoom
 
