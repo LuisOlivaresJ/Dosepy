@@ -3,6 +3,20 @@
 Changelog
 =========
 
+
+v 0.12.3 (NOV-2026)
+
+Issue
+^^^^^
+* The RTDose module did not support structures with cavities.
+* The RTDose module did not support structures with multiple slices.
+
+Improvements
+^^^^^^^^^^^^
+* On RTdose module, get_dose_in_structure() function uses linear interpolation to get point dose in a structure.
+
+
+
 v 0.12.2 (SEP-2025)
 -------------------
 

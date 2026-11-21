@@ -4,11 +4,201 @@ from pathlib import Path
 
 import numpy as np
 import SimpleITK as sitk
+from numpy.random import geometric
 import pydicom
 from pydicom.dataset import FileDataset
-from skimage.draw import polygon
+from skimage.draw import polygon, polygon_perimeter
 import plotly.graph_objects as go
 
+
+class RTSet:
+    """Class to wrap DICOM objects and useful functions used in radiotherapy."""
+
+    def __init__(self):
+        
+        self.ct: sitk.Image | None = None
+        self.ss: StructureSet | None = None
+        self.dose: sitk.Image | None = None
+
+    def load_ct_image(self, path_to_folder: str):
+        """
+        Parameters
+        ----------
+        path_to_folder: str
+            Path to the directory containing the .dcm files
+        """
+
+        #_is_dicom(path_to_file=path_to_file)
+
+        # 1. Get the sorted file names for the DICOM series inside the directory
+        reader = sitk.ImageSeriesReader()
+        dicom_names = reader.GetGDCMSeriesFileNames(path_to_folder)
+
+        # 2. Set the file names and execute the reader to load the 3D volume
+        reader.SetFileNames(dicom_names)
+        ct_image = reader.Execute()
+
+        #print("Loaded DICOM Series successfully!")
+        #print("Volume Shape:", ct_image.GetSize())
+
+        self.ct = ct_image
+
+    def load_structures(self, path_to_file: str):
+        """ Wraps the pydicom.dcmread function to load a DICOM RTSTRUCT file."""
+
+        _is_dicom(path_to_file=path_to_file)
+
+        # Read the DICOM file
+        ds = pydicom.dcmread(path_to_file)
+
+        # Check if the DICOM file represents structures, using SOP class name RT Structure Set Storage
+        if not ds.get("SOPClassUID") == '1.2.840.10008.5.1.4.1.1.481.3':
+            raise ValueError(f"{path_to_file} is not a valid DICOM RTSTRUCT file.")
+        
+        self.ss = StructureSet(ds=ds)
+
+    def load_dose(self, path_to_file: str | Path):
+        """
+        Load a dose distribution from a DICOM file.
+
+        Parameters
+        ----------
+        path_to_file : str or Path
+            The path to the DICOM file containing the dose distribution.
+
+        Returns
+        -------
+        sitk.Image
+            A SimpleITK image representing the dose distribution.
+        
+        Notes
+        -----
+        Dose distribution is represented by a SimpleITK.Image. Therefore we
+        can use the SimpleITK library to manipulate and analyze the dose distribution.
+        For more information about SimpleITK, see:
+        https://simpleitk.readthedocs.io/en/master/fundamentalConcepts.html
+        """
+
+        _is_dicom(path_to_file)
+            
+        # Load the DICOM file using SimpleITK
+        img = sitk.ReadImage(str(path_to_file), outputPixelType=sitk.sitkFloat64)
+
+        # Check if the tag '3004|000e' (DoseGridScaling) exists in the metadata
+        if not img.HasMetaDataKey('3004|000e'):
+            raise ValueError(f"The DICOM file {path_to_file} does not contain the required metadata tag DoseGridScaling (3004|000e).")
+
+        # Convert image to a dose distribution
+        dose = img * float(img.GetMetaData('3004|000e'))
+
+        self.dose = dose
+
+    def create_structure_mask(self, roi_number):
+        """
+        Create a mask of a structure given the roi number. The extent of
+        the array is equal to the CT shape.
+        
+        Parameters
+        ----------
+        roi_number : int
+            The number of the roi.
+        
+        Returns
+        -------
+        np.ndarray
+            Boolean array with same CT shape (slices, rows, columns)
+
+        Notes
+        -----
+            Use self.ss.get_names() to get the name and roi of each structure in the dataset.
+        """
+
+        if self.ss is None:
+            print("There is not a structure set.")
+            return
+        if self.ct is None:
+            print("There is not a CT.")
+            return
+        if self.dose is None:
+            print("There is not a dose distribution.")
+            return
+        
+        # Reference dimensions
+        rows = int(self.ct.GetHeight())
+        columns = int(self.ct.GetWidth())
+        slices = int(self.ct.GetDepth())
+
+        # Final mask
+        mask_3d = np.zeros((slices, rows, columns), dtype=bool)
+
+        # Find ROI in ROIContourSequence
+        target_roi = None
+        for roi in self.ss.ds.ROIContourSequence:
+            if roi.ReferencedROINumber == roi_number:
+                target_roi = roi
+                break
+
+        # Check contour type and ensure all contours has the same type
+        type_contour_set = set()
+        for contour in target_roi.ContourSequence:
+            type_contour_set.add(contour.ContourGeometricType)
+            if len(type_contour_set) != 1:
+                print("Structure has more than one type of ContourGeometricType")
+
+            else:
+                geometric_type = contour.ContourGeometricType
+
+        last_z_coordinate = None
+        for contour in target_roi.ContourSequence:
+            # https://dicom.nema.org /part03/sect_C.8.8.6.html
+
+            geometric_type = contour.ContourGeometricType
+            #print(f"{geometric_type}")
+            if geometric_type not in ["CLOSED_PLANAR", "CLOSEDPLANAR_XOR"]:
+                print(f"{geometric_type}. Geometric Type not suported")
+                continue
+
+            # Get points and re-size
+            num_points = contour.NumberOfContourPoints
+            points = np.array(contour.ContourData).reshape(num_points, 3)
+
+            # Get pixel index from physical coordinates
+            c_index = (points[:,0] - self.ct.GetOrigin()[0]) / self.ct.GetSpacing()[0]
+            r_index = (points[:,1] - self.ct.GetOrigin()[1]) / self.ct.GetSpacing()[1]
+
+            # Get index of the current slice
+            z_coordinate = points[0,2]
+            z_indx = int(self.ct.TransformPhysicalPointToIndex((0, 0, z_coordinate))[2])
+
+            # Get the indices of the pixels inside the polygon
+            rr, cc = polygon(r_index, c_index, shape=(rows, columns))
+            #rr_p, cc_p = polygon_perimeter(r_index, c_index, shape=shape)
+
+            # Create a boolean mask with the same shape as the dose distribution
+            mask = np.zeros((rows, columns), dtype=bool)
+            mask[rr, cc] = True
+
+            if geometric_type == "CLOSEDPLANAR_XOR":
+                mask_3d[z_indx,:,:] = np.logical_xor(mask_3d[z_indx], mask)
+            # Eclipse 18.1 does not uses CLOSEDPLANAR_XOR, instead, repeats the z coordinate to indicate XOR
+            elif last_z_coordinate is not None and z_coordinate == last_z_coordinate:
+                mask_3d[z_indx,:,:] = np.logical_xor(mask_3d[z_indx,:,:], mask)
+            else:
+                last_z_coordinate = z_coordinate
+                mask_3d[z_indx,:,:] = mask
+
+        return mask_3d
+
+    def resample_dose_in_ct_positions(self):
+
+        interpolated_dose = sitk.Resample(
+            self.dose,
+            self.ct,
+            sitk.Transform(3, sitk.sitkIdentity),
+            sitk.sitkBSpline,
+        )
+
+        return interpolated_dose
 
 class StructureSet:
 
@@ -17,7 +207,7 @@ class StructureSet:
     
     def get_names(self):
         """
-        Get the structure names in a DataSet.
+        Get the structures names and ROIs number in the DataSet.
 
         Returns
         -------
@@ -78,9 +268,13 @@ class StructureSet:
             coordinates.append(slice_coordinates)
         
         return coordinates
+      
+    def get_roi_contour(self, roi_number):
+
+        for roi_contour in self.ds.ROIContourSequence:
+            if roi_contour.ReferencedROINumber == roi_number:
+                return roi_contour
     
-    def get_physical_size(self, structure: str) -> float:
-        pass
 
 
 def pydicom_to_simpleitk(ds: pydicom.FileDataset) -> sitk.Image:
@@ -155,57 +349,6 @@ def _get_z_spacing_from_dose_as_frames(ds: pydicom.FileDataset):
         
     return z_spacing
 
-
-def load_dose(path_to_file: str | Path) -> sitk.Image:
-    """
-    Load a dose distribution from a DICOM file.
-
-    Parameters
-    ----------
-    path_to_file : str or Path
-        The path to the DICOM file containing the dose distribution.
-
-    Returns
-    -------
-    sitk.Image
-        A SimpleITK image representing the dose distribution.
-    
-    Notes
-    -----
-    Dose distribution is represented by a SimpleITK.Image. Therefore we
-    can use the SimpleITK library to manipulate and analyze the dose distribution.
-    For more information about SimpleITK, see:
-    https://simpleitk.readthedocs.io/en/master/fundamentalConcepts.html
-    """
-
-    _is_dicom(path_to_file)
-        
-    # Load the DICOM file using SimpleITK
-    img = sitk.ReadImage(str(path_to_file), outputPixelType=sitk.sitkFloat64)
-
-    # Check if the tag '3004|000e' (DoseGridScaling) exists in the metadata
-    if not img.HasMetaDataKey('3004|000e'):
-        raise ValueError(f"The DICOM file {path_to_file} does not contain the required metadata tag DoseGridScaling (3004|000e).")
-
-    # Convert image to a dose distribution
-    dose = img * float(img.GetMetaData('3004|000e'))
-
-    return dose
-
-
-def load_structures(path_to_file: str) -> StructureSet:
-    """ Wraps the pydicom.dcmread function to load a DICOM RTSTRUCT file."""
-
-    _is_dicom(path_to_file=path_to_file)
-
-    # Read the DICOM file
-    ds = pydicom.dcmread(path_to_file)
-
-    # Check if the DICOM file represents structures, using SOP class name RT Structure Set Storage
-    if not ds.get("SOPClassUID") == '1.2.840.10008.5.1.4.1.1.481.3':
-        raise ValueError(f"{path_to_file} is not a valid DICOM RTSTRUCT file.")
-    
-    return StructureSet(ds=ds)
 
 
 def get_axial_dose_plane(
@@ -363,6 +506,18 @@ def get_coronal_dose_plane(
     return interpolated_dose[:, 0, :]
 
 
+def resample_dose_in_ct_positions(dose_distribution: sitk.Image, ct_image: sitk.Image):
+
+    interpolated_dose = sitk.Resample(
+        dose_distribution,
+        ct_image[:, :, 0],
+        sitk.Transform(3, sitk.sitkIdentity),
+        sitk.sitkBSpline,
+    )
+
+    return interpolated_dose
+
+
 def get_2D_mask_by_coordinates_and_image_shape(
     coordinates: np.ndarray,
     image: sitk.Image) -> np.ndarray:
@@ -409,9 +564,16 @@ def get_2D_mask_by_coordinates_and_image_shape(
     # Get the indices of the pixels inside the polygon
     rr, cc = polygon(r_index, c_index, shape=shape)
 
+    rr_p, cc_p = polygon_perimeter(r_index, c_index, shape=shape)
+
     # Create a boolean mask with the same shape as the dose distribution
     mask = np.zeros(shape, dtype=np.bool)
     mask[rr, cc] = 1
+
+    # Remove perimeter
+    mask[rr_p, cc_p] = 0
+
+    # Show ratio number of pixels in perimeter / number of pixels in all the polygon
 
     return mask
 
@@ -443,7 +605,7 @@ def get_dose_in_structure_by_plane(
 
 def get_dose_in_structure(
     dose_distribution: sitk.Image,
-    coordinates: list[np.ndarray]) -> np.ndarray:
+    coordinates: list[np.ndarray]) -> list:
     """
     Get the dose points in a structure from a 3D dose distribution.
 
@@ -476,7 +638,7 @@ def get_dose_in_structure(
 
     dose_in_structure = []
     for slice_coordinates in coordinates:
-        # Check that each slice_coordinates has a constant z coordinate
+        # Check that each slice_coordinates has a unique z coordinate
         if not len(set(slice_coordinates[:, 2])) == 1:
             raise ValueError("Each slice_coordinates must have a constant z coordinate.")
         
@@ -534,6 +696,20 @@ def plot_dvh(dose_in_structure: np.ndarray):
 
     fig.show()
 
+
+def interpolate_dose_in_ct(
+    dose_distribution: sitk.Image,
+    ct: sitk.Image
+    ) -> sitk.Image:
+    
+    interpolated_dose = sitk.Resample(
+        dose_distribution,
+        ct,
+        sitk.Transform(3, sitk.sitkIdentity),
+        sitk.sitkLinear,
+    )
+
+    return interpolated_dose
 
 def _is_dicom(path_to_file: str | Path):
 
