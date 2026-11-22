@@ -200,6 +200,10 @@ class RTSet:
 
         return interpolated_dose
 
+    def print_rois(self) -> dict:
+        return self.ss.get_names()
+
+
 class StructureSet:
 
     def __init__(self, ds : FileDataset):
@@ -682,7 +686,7 @@ def plot_dvh(dose_in_structure: np.ndarray):
                 xbins = dict( # bins used for histogram
                     start = 0,
                     end = np.amax(dose_in_structure),
-                    size = 0.05
+                    size = 0.005
                 ),
                 opacity=0.75
             )
